@@ -30,7 +30,7 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.undo.CannotUndoException;
 
-import VerilogSimulator.Parse;
+import edu.miamioh.simulator.Parse;
 
 import java.text.*;
 import java.util.*;
@@ -55,7 +55,10 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	private MyUndo1 myUndoManager1 = null;
 	private IntegerRangeDocumentFilter filterOne;
 	// static String name;
-	static String path;
+	private static String filePath; // Path to the verilog file
+	private static String rootPath; // Path to verilog world top folder
+	private static String fileName; // Verilog file
+	
 	// static String level_number;
 	public File verilogFiles;
 	//private AnimationPanel animationPanel;
@@ -77,14 +80,16 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	 */
 	public static void main(String[] args) {
 		// name = "Traffic_signal_set_1";
-		path = args[0];
+		rootPath = args[0];
+		fileName = args[1];
+		filePath = rootPath + "core/assets/modules/" + fileName;
 		// level_number = "1";
 		new VerilogEditor();
 	}
 
 	public VerilogEditor() {
 		// Create the window
-		super("Verilog Text Editor: " + path);
+		super("Verilog Text Editor: " + filePath);
 
 		this.setSize(WIDTH, HEIGHT);
 		this.setMinimumSize(new Dimension(MINWIDTH, MINHEIGHT));
@@ -97,7 +102,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		// else
 		newLine = "\n";
 
-		checkDir(path);
+		checkDir(filePath);
 
 		// set the location the window will appear on the screen
 		Toolkit kit = Toolkit.getDefaultToolkit();
@@ -175,7 +180,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		// read in the already existed file or create a new file
 		// verilogFiles = new File(pathOfEditorJar + "VerilogFiles/" + name +
 		// ".v");
-		verilogFiles = new File(path);
+		verilogFiles = new File(filePath);
 		if (!verilogFiles.exists()) {
 			try {
 				verilogFiles.createNewFile();
@@ -329,7 +334,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		//headerMenu.add(seqHeaderMenuItem);
 
 		/* Initialize the Parser */
-		Compiler = new Parse(errorText);
+		Compiler = new Parse(errorText, rootPath);
 
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -445,7 +450,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	// This block of code create a button with image
 	protected static JButton makeToolBarButton(String imageName, String toolTipText, String altText) {
 		// Look for the image.
-		String imgLocation = "images/" + imageName + ".png";
+		String imgLocation = "/images/" + imageName + ".png";
 		URL imageURL = VerilogEditor.class.getResource(imgLocation);
 
 		// Create and initialize the button.
@@ -643,10 +648,10 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			out.close();
 
 			/* print out what we're compiling */
-			errorText.setText("Compiling " + path);
+			errorText.setText("Compiling " + fileName);
 
 			// parse the base file 
-			Compiler.compileFileForEditor(path);
+			Compiler.compileFileForEditor(fileName);
 			
 			/*
 			if (Compiler.is_compiled_yet()) {
@@ -658,6 +663,11 @@ public class VerilogEditor extends JFrame implements ActionListener {
 				animationPanel.drawAnimation(animationPanel.getGraphics());
 			}
 			*/
+			
+			// Let user know we are done
+			if (Compiler.is_compiled_yet()) {
+				errorText.setText(errorText.getText() + "\nCompiling done!");
+			}
 		} catch (Exception e1) {
 			System.out.println(e1);
 		}
