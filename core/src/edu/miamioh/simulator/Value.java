@@ -82,7 +82,7 @@ public class Value
 	{
 		if (this.v_type == ValueType.REG_WIRE_T)
 		{
-			if (this.idx > 0) {
+			if (this.idx >= 0) {
 				regWire.setBitValue(idx, this.idx, value, cycle_time);
 			}
 			else {

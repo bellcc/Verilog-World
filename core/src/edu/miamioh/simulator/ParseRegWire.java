@@ -118,11 +118,14 @@ public class ParseRegWire
 		return this.value[idx];
 	}
 
+	public static int count = 0;
 	public void setValue(int idx, int value, int cycle_time)
 	{
 		int mask = (1 << this.busSize) - 1;
 		
 		// Notify simulator that a state has changed
+		++count;
+		System.out.println(count);
 		if ((value & mask)!= this.value[idx]) {
 			visitor.setState(SimVisitor.NOT_STEADY);
 		}
