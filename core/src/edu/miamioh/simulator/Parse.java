@@ -90,6 +90,16 @@ public class Parse {
 				this.reportParseInfo(root_module.getVars_list().get(i).getName() + ": " + 
 									 root_module.getVars_list().get(i).getValue(1));
 			}
+			
+			root_module.getVisitor().next_sim_cycle();
+			root_module.getVisitor().visit(root_tree);
+			root_module.getVisitor().clean_sim_cycle();
+			
+			errorText.setText("Simulation Results:");
+			for(int i = 0; i < root_module.getVars_list().size(); ++i) {
+				this.reportParseInfo(root_module.getVars_list().get(i).getName() + ": " + 
+									 root_module.getVars_list().get(i).getValue(1));
+			}
 		}
 	}
 	
