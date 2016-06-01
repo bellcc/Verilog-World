@@ -22,12 +22,12 @@ public class ModuleInstance {
 		this.hash_vars = new Hashtable<>();
 		this.ports_list = new ArrayList<>();
 		
+		visitor = new SimVisitor(this, Compiler.getSubModules());
+		
 		// Generate symbol table and check syntax
 		ParseTreeWalker walker = new ParseTreeWalker();
-		ParseListener listener = new ParseListener(parser, Compiler, this);
+		ParseListener listener = new ParseListener(visitor, parser, Compiler, this);
 		walker.walk(listener, this.tree);
-		
-		visitor = new SimVisitor(this, Compiler.getSubModules());
 	}
 
 	public ArrayList<ParseRegWire> getVars_list() 			{return vars_list;}
