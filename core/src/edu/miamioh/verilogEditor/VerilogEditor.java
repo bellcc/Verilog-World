@@ -61,7 +61,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	
 	// static String level_number;
 	public File verilogFiles;
-	//private AnimationPanel animationPanel;
+	private AnimationPanel animationPanel;
 	//JFormattedTextField generalSensorInput1, generalSensorInput2, generalSensorInput3,
 	//	generalSensorInput4, generalSensorInput5, generalSensorInput6, generalSensorInput0;
 	JFormattedTextField simulateInput, generalSensorInput1, generalSensorInput2, generalSensorInput3,
@@ -231,7 +231,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 
 		JLabel errorLog = new JLabel("Error log");
 
-		//animationPanel = new AnimationPanel(simulateInput);
+		animationPanel = new AnimationPanel(simulateInput);
 
 		this.setVisible(true);
 
@@ -268,7 +268,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		this.setJMenuBar(menubar);
 		JMenu fileMenu = new JMenu("File");
 		JMenu editMenu = new JMenu("Edit");
-		//JMenu simulationMenu = new JMenu("Simulation");
+		JMenu simulationMenu = new JMenu("Simulation");
 		//JMenu headerMenu = new JMenu("Template");
 
 		JMenuItem saveMenuItem = new JMenuItem("Save");
@@ -298,7 +298,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		JMenuItem sarMenuItem = new JMenuItem("Search and Replace");
 		sarMenuItem.setAccelerator(KeyStroke.getKeyStroke('F', InputEvent.CTRL_MASK));
 		sarMenuItem.addActionListener(this);
-		/*
+		
 		JMenuItem simulateMenuItem = new JMenuItem("Simulate");
 		simulateMenuItem.setAccelerator(KeyStroke.getKeyStroke('M', InputEvent.CTRL_MASK));
 		simulateMenuItem.addActionListener(this);
@@ -306,7 +306,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		JMenuItem resetMenuItem = new JMenuItem("Reset Simulation");
 		resetMenuItem.setAccelerator(KeyStroke.getKeyStroke('R', InputEvent.CTRL_MASK));
 		resetMenuItem.addActionListener(this);
-		
+		/*
 		JMenuItem comboHeaderMenuItem = new JMenuItem("Combinational");
 		comboHeaderMenuItem.setAccelerator(KeyStroke.getKeyStroke('1', InputEvent.CTRL_MASK));
 		comboHeaderMenuItem.addActionListener(this);
@@ -317,7 +317,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		 */
 		menubar.add(fileMenu);
 		menubar.add(editMenu);
-		//menubar.add(simulationMenu);
+		menubar.add(simulationMenu);
 		//menubar.add(headerMenu);
 		fileMenu.add(verifyMenuItem);
 		// fileMenu.add(uploadMenuItem);
@@ -328,8 +328,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		editMenu.add(undoMenuItem);
 		editMenu.add(redoMenuItem);
 		editMenu.add(sarMenuItem);
-		//simulationMenu.add(simulateMenuItem);
-		//simulationMenu.add(resetMenuItem);
+		simulationMenu.add(simulateMenuItem);
+		simulationMenu.add(resetMenuItem);
 		//headerMenu.add(comboHeaderMenuItem);
 		//headerMenu.add(seqHeaderMenuItem);
 
@@ -516,7 +516,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			}
 		});
 		toolBar.add(searchButton);
-		/*
+		
 		JButton simulateButton = makeToolBarButton("simulate", "Simulate", "Simulate");
 		simulateButton.addActionListener(new ActionListener() {
 			@Override
@@ -558,7 +558,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			}
 		});
 		toolBar.add(simulateInput);
-		
+		/*
 		toolBar.add(new JLabel("General Sensors(6~0): "));
 		MaskFormatter formatterGeneral = null;
 		try {
@@ -755,7 +755,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		((AbstractDocument) codeText.getDocument()).setDocumentFilter(filter);
 	}
 	
-	/*		
+			
 	public void simulateButtonFunction() {
 		// add the simulate code here
 		String simulateStr = simulateInput.getText();
@@ -765,13 +765,11 @@ public class VerilogEditor extends JFrame implements ActionListener {
 
 		if (simulateStr.length() == 8 && generalSensorStr.length() == 30) {
 			if (Compiler.is_compiled_yet()) {
-				ArrayList<Integer> output_vector_list;
-
 				// first sim is for the clock cycle 
-				output_vector_list = Compiler.sim_cycle("1", simulateStr, generalSensorStr);
+				Compiler.sim_cycle(Compiler.RUN);
 				// first sim is for the combinational propagation 
-				output_vector_list = Compiler.sim_cycle("1", simulateStr, generalSensorStr);
-
+				Compiler.sim_cycle(Compiler.RUN);
+				/*
 				errorText.setText("Simulation Cycle\n" + "Clock Cycle:" + output_vector_list.get(5) + " Sensors Light: "
 						+ simulateStr + " General Sensors: " + generalSensorStr + "\nOutN Val = "
 						+ output_vector_list.get(0) + "\nOutS Val = " + output_vector_list.get(1) + "\nOutE Val = "
@@ -781,6 +779,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 				animationPanel.setSimulationResults("1" + output_vector_list.get(0) + output_vector_list.get(1)
 						+ output_vector_list.get(2) + output_vector_list.get(3));
 				animationPanel.drawAnimation(animationPanel.getGraphics());
+				*/
 			} else {
 				errorText.setText(
 						"The Verilog code has not been successfully compiled yet.  Please click the check mark above and/or fix Verilog errors.");
@@ -800,15 +799,15 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			out.close();
 
 			// print out what we're compiling 
-			errorText.setText("Compiling " + path);
+			errorText.setText("Compiling " + filePath);
 
 			// parse the base file 
-			Compiler.compileFileForEditor(path);
+			Compiler.compileFileForEditor(filePath);
 
 			if (Compiler.is_compiled_yet()) {
 				// Reset the system - takes a double simulation 
-				Compiler.sim_cycle("0", "00000000", "000000000000000000000000000000");
-				Compiler.sim_cycle("1", "00000000", "000000000000000000000000000000");
+				Compiler.sim_cycle(Compiler.RESET);
+				Compiler.sim_cycle(Compiler.RESET);
 				errorText.setText(errorText.getText() + "\nCompiling done!");
 				animationPanel.setSimulationResults("00000");
 				animationPanel.drawAnimation(animationPanel.getGraphics());
@@ -817,7 +816,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			System.out.println(e1);
 		}
 	}
-	
+	/*
 	public void comboHeaderButtonFunction() {
 		codeText.setText(readHeaderFile("header/stop_light_combo.v"));
 		filterOne.setStart(940);
