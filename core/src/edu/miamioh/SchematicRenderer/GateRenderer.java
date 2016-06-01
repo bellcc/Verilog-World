@@ -2,6 +2,7 @@ package edu.miamioh.SchematicRenderer;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import edu.miamioh.util.Constants;
 
 /**
  * Created by shaffebd.
