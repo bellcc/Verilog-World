@@ -1,11 +1,4 @@
-
-/**
- * @author Chris Bell
- * @date   05-31-2016
- * @info   The generic block object.
- */
-
-package edu.miamioh.worldEditor.blockActors;
+package edu.miamioh.worldEditor.tileActors;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -16,13 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
-import edu.miamioh.worldEditor.actors.BlocksChangeListener;
-
-public class BlankBlockActor {
+public class BlankTileActor {
 
 	private TextButton button;
 
-	public BlankBlockActor() {
+	public BlankTileActor() {
 		
 		create();
 	}
@@ -32,7 +23,7 @@ public class BlankBlockActor {
 		Skin skin = new Skin();
 		
 		Pixmap pixmap = new Pixmap(80, 80, Format.RGBA8888);
-		pixmap.setColor(Color.RED);
+		pixmap.setColor(Color.ORANGE);
 		pixmap.fill();
 			
 		skin.add("white", new Texture(pixmap));
@@ -50,9 +41,9 @@ public class BlankBlockActor {
 					
 		skin.add("default", buttonStyle);
 				
-		button = new TextButton("BLANK\nBLOCK", buttonStyle);
+		button = new TextButton("BLANK\nTILE", buttonStyle);
 
-		button.addListener(new BlankBlockChangeListener());
+		button.addListener(new BlankTileChangeListener());
 					
 	}
 	
@@ -60,5 +51,5 @@ public class BlankBlockActor {
 		
 		return button;
 	}
-
+	
 }
