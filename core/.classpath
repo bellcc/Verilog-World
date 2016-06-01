@@ -8,6 +8,6 @@
 	<classpathentry kind="src" path="assets"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
-	<classpathentry kind="lib" path="C:/Users/Kyle/Documents/dev/lib/antlr-4.5.3-complete.jar"/>
+	<classpathentry kind="lib" path="lib/antlr-4.5.3-complete.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
