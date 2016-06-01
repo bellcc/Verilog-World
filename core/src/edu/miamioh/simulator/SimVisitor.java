@@ -74,6 +74,8 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		
 		/* initialize a clock tracker */
 		this.clock_cycle = 0;
+		
+		this.state = SimVisitor.STEADY;
 	}
 
 	/* --------------------------------------------------------------------------
@@ -118,7 +120,10 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 	}
 	
 	public int getOldIndex() {return this.old_val_idx;}
-	public void setState(int state) {this.state = state;}
+	public void setState(int state) {
+		System.out.println("Change: " + state);
+		this.state = state;
+	}
 	public int getState() {return this.state;}
 
 	/* --------------------------------------------------------------------------
@@ -721,6 +726,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 			// Set their values equal to eachother
 			targetWire.setValue(new_val_idx, outWire.getValue(old_val_idx), cycle_time);
 		}
+		this.state = visitor.getState();
 		
 		return null;
 	}

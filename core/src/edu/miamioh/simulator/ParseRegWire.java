@@ -33,8 +33,10 @@ public class ParseRegWire
 	private WireRoleType role; // Is it a normal wire, an input or an output?
 	private int[]		value;
 	private int			cycle_update_time;
+	
+	private SimVisitor visitor;
 
-	public ParseRegWire()
+	public ParseRegWire(SimVisitor visitor)
 	{
 		this.busSize = 0;
 		this.name = null;
@@ -45,9 +47,10 @@ public class ParseRegWire
 		this.value[0] = 0;
 		this.value[1] = 0;
 		this.cycle_update_time = -1;
+		this.visitor = visitor;
 	}
 	
-	public ParseRegWire(String name, int busSize, WireRoleType role) {
+	public ParseRegWire(SimVisitor visitor, String name, int busSize, WireRoleType role) {
 		this.name = name;
 		this.busSize = busSize;
 		this.type = RegWireType.NO_TYPE;
@@ -56,7 +59,10 @@ public class ParseRegWire
 		this.value[0] = 0;
 		this.value[1] = 0;
 		this.cycle_update_time = -1;
+		this.visitor = visitor;
 	}
+	
+	public SimVisitor getSimVisitor() {return this.visitor;}
 
 	public void addReg(String name, int bus_size)
 	{
@@ -115,6 +121,11 @@ public class ParseRegWire
 	public void setValue(int idx, int value, int cycle_time)
 	{
 		int mask = (1 << this.busSize) - 1;
+		
+		// Notify simulator that a state has changed
+		if ((value & mask)!= this.value[idx]) {
+			visitor.setState(SimVisitor.NOT_STEADY);
+		}
 
 		this.value[idx] = value & mask;
 
@@ -130,8 +141,14 @@ public class ParseRegWire
 															// spot
 
 		this.cycle_update_time = cycle_time;
+		
+		int newValue = ((this.value[idx] & demask) | bitMask) & mask;
+		// Notify simulator that a state has changed
+		if (newValue != this.value[idx]) {
+			visitor.setState(SimVisitor.NOT_STEADY);
+		}
 
-		this.value[idx] = ((this.value[idx] & demask) | bitMask) & mask;
+		this.value[idx] = newValue;
 	}
 
 	public int getIntegerBit(int idx_bit, int idx)
