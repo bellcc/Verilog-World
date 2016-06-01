@@ -30,7 +30,7 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.undo.CannotUndoException;
 
-import VerilogSimulator.Parse;
+import edu.miamioh.simulator.Parse;
 
 import java.text.*;
 import java.util.*;
@@ -55,7 +55,10 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	private MyUndo1 myUndoManager1 = null;
 	private IntegerRangeDocumentFilter filterOne;
 	// static String name;
-	static String path;
+	private static String filePath; // Path to the verilog file
+	private static String rootPath; // Path to verilog world top folder
+	private static String fileName; // Verilog file
+	
 	// static String level_number;
 	public File verilogFiles;
 	//private AnimationPanel animationPanel;
@@ -77,14 +80,16 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	 */
 	public static void main(String[] args) {
 		// name = "Traffic_signal_set_1";
-		path = args[0];
+		rootPath = args[0];
+		fileName = args[1];
+		filePath = rootPath + "core/assets/modules/" + fileName;
 		// level_number = "1";
 		new VerilogEditor();
 	}
 
 	public VerilogEditor() {
 		// Create the window
-		super("Verilog Text Editor: " + path);
+		super("Verilog Text Editor: " + filePath);
 
 		this.setSize(WIDTH, HEIGHT);
 		this.setMinimumSize(new Dimension(MINWIDTH, MINHEIGHT));
@@ -97,7 +102,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		// else
 		newLine = "\n";
 
-		checkDir(path);
+		checkDir(filePath);
 
 		// set the location the window will appear on the screen
 		Toolkit kit = Toolkit.getDefaultToolkit();
@@ -175,7 +180,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		// read in the already existed file or create a new file
 		// verilogFiles = new File(pathOfEditorJar + "VerilogFiles/" + name +
 		// ".v");
-		verilogFiles = new File(path);
+		verilogFiles = new File(filePath);
 		if (!verilogFiles.exists()) {
 			try {
 				verilogFiles.createNewFile();
@@ -263,7 +268,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		this.setJMenuBar(menubar);
 		JMenu fileMenu = new JMenu("File");
 		JMenu editMenu = new JMenu("Edit");
-		//JMenu simulationMenu = new JMenu("Simulation");
+		JMenu simulationMenu = new JMenu("Simulation");
 		//JMenu headerMenu = new JMenu("Template");
 
 		JMenuItem saveMenuItem = new JMenuItem("Save");
@@ -293,7 +298,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		JMenuItem sarMenuItem = new JMenuItem("Search and Replace");
 		sarMenuItem.setAccelerator(KeyStroke.getKeyStroke('F', InputEvent.CTRL_MASK));
 		sarMenuItem.addActionListener(this);
-		/*
+		
 		JMenuItem simulateMenuItem = new JMenuItem("Simulate");
 		simulateMenuItem.setAccelerator(KeyStroke.getKeyStroke('M', InputEvent.CTRL_MASK));
 		simulateMenuItem.addActionListener(this);
@@ -301,7 +306,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		JMenuItem resetMenuItem = new JMenuItem("Reset Simulation");
 		resetMenuItem.setAccelerator(KeyStroke.getKeyStroke('R', InputEvent.CTRL_MASK));
 		resetMenuItem.addActionListener(this);
-		
+		/*
 		JMenuItem comboHeaderMenuItem = new JMenuItem("Combinational");
 		comboHeaderMenuItem.setAccelerator(KeyStroke.getKeyStroke('1', InputEvent.CTRL_MASK));
 		comboHeaderMenuItem.addActionListener(this);
@@ -312,7 +317,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		 */
 		menubar.add(fileMenu);
 		menubar.add(editMenu);
-		//menubar.add(simulationMenu);
+		menubar.add(simulationMenu);
 		//menubar.add(headerMenu);
 		fileMenu.add(verifyMenuItem);
 		// fileMenu.add(uploadMenuItem);
@@ -323,13 +328,13 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		editMenu.add(undoMenuItem);
 		editMenu.add(redoMenuItem);
 		editMenu.add(sarMenuItem);
-		//simulationMenu.add(simulateMenuItem);
-		//simulationMenu.add(resetMenuItem);
+		simulationMenu.add(simulateMenuItem);
+		simulationMenu.add(resetMenuItem);
 		//headerMenu.add(comboHeaderMenuItem);
 		//headerMenu.add(seqHeaderMenuItem);
 
 		/* Initialize the Parser */
-		Compiler = new Parse(errorText);
+		Compiler = new Parse(errorText, rootPath);
 
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -445,7 +450,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	// This block of code create a button with image
 	protected static JButton makeToolBarButton(String imageName, String toolTipText, String altText) {
 		// Look for the image.
-		String imgLocation = "images/" + imageName + ".png";
+		String imgLocation = "/images/" + imageName + ".png";
 		URL imageURL = VerilogEditor.class.getResource(imgLocation);
 
 		// Create and initialize the button.
@@ -511,12 +516,12 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			}
 		});
 		toolBar.add(searchButton);
-		/*
+		
 		JButton simulateButton = makeToolBarButton("simulate", "Simulate", "Simulate");
 		simulateButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// simulateButtonFunction();
+				simulateButtonFunction();
 			}
 		});
 		toolBar.add(simulateButton);
@@ -546,14 +551,14 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			public void caretUpdate(CaretEvent e) {
 				String tempStr = "";
 				tempStr = simulateInput.getText();
-				if (tempStr.length() != 8) {
-					tempStr = animationPanel.getInternalSignal();
-				}
-				animationPanel.setStates(tempStr);
+//				if (tempStr.length() != 8) {
+//					tempStr = animationPanel.getInternalSignal();
+//				}
+//				animationPanel.setStates(tempStr);
 			}
 		});
 		toolBar.add(simulateInput);
-		
+		/*
 		toolBar.add(new JLabel("General Sensors(6~0): "));
 		MaskFormatter formatterGeneral = null;
 		try {
@@ -611,8 +616,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			redoButtonFunction();
 		} else if (str.equals("Search and Replace")) {
 			salButtonFunction();
-		//} else if (str.equals("Simulate")) {
-		//	simulateButtonFunction();
+		} else if (str.equals("Simulate")) {
+			simulateButtonFunction();
 		//} else if (str.equals("Reset Simulation")) {
 		//	resetButtonFunction();
 		//} else if (str.equals("Combinational")) {
@@ -643,10 +648,10 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			out.close();
 
 			/* print out what we're compiling */
-			errorText.setText("Compiling " + path);
+			errorText.setText("Compiling " + fileName);
 
 			// parse the base file 
-			Compiler.compileFileForEditor(path);
+			Compiler.compileFileForEditor(fileName);
 			
 			/*
 			if (Compiler.is_compiled_yet()) {
@@ -658,6 +663,11 @@ public class VerilogEditor extends JFrame implements ActionListener {
 				animationPanel.drawAnimation(animationPanel.getGraphics());
 			}
 			*/
+			
+			// Let user know we are done
+			if (Compiler.is_compiled_yet()) {
+				errorText.setText(errorText.getText() + "\nCompiling done!");
+			}
 		} catch (Exception e1) {
 			System.out.println(e1);
 		}
@@ -745,39 +755,14 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		((AbstractDocument) codeText.getDocument()).setDocumentFilter(filter);
 	}
 	
-	/*		
+			
 	public void simulateButtonFunction() {
-		// add the simulate code here
-		String simulateStr = simulateInput.getText();
-		String generalSensorStr = "00" + generalSensorInput6.getText() + generalSensorInput5.getText()
-				+ generalSensorInput4.getText() + generalSensorInput3.getText() + generalSensorInput2.getText()
-				+ generalSensorInput1.getText() + generalSensorInput0.getText();
 
-		if (simulateStr.length() == 8 && generalSensorStr.length() == 30) {
-			if (Compiler.is_compiled_yet()) {
-				ArrayList<Integer> output_vector_list;
-
-				// first sim is for the clock cycle 
-				output_vector_list = Compiler.sim_cycle("1", simulateStr, generalSensorStr);
-				// first sim is for the combinational propagation 
-				output_vector_list = Compiler.sim_cycle("1", simulateStr, generalSensorStr);
-
-				errorText.setText("Simulation Cycle\n" + "Clock Cycle:" + output_vector_list.get(5) + " Sensors Light: "
-						+ simulateStr + " General Sensors: " + generalSensorStr + "\nOutN Val = "
-						+ output_vector_list.get(0) + "\nOutS Val = " + output_vector_list.get(1) + "\nOutE Val = "
-						+ output_vector_list.get(2) + "\nOutW Val = " + output_vector_list.get(3) + "\nDebugVector = "
-						+ Integer.toBinaryString(output_vector_list.get(4)));
-
-				animationPanel.setSimulationResults("1" + output_vector_list.get(0) + output_vector_list.get(1)
-						+ output_vector_list.get(2) + output_vector_list.get(3));
-				animationPanel.drawAnimation(animationPanel.getGraphics());
-			} else {
-				errorText.setText(
-						"The Verilog code has not been successfully compiled yet.  Please click the check mark above and/or fix Verilog errors.");
-			}
+		if (Compiler.is_compiled_yet()) {
+			Compiler.sim_cycle(Compiler.RUN);
 		} else {
 			errorText.setText(
-					"Simulation cycle not sucessful\nMissing Simulation vector or it vector isn't 10 characters (Hexidecimal digits) long.");
+					"The Verilog code has not been successfully compiled yet.  Please click the check mark above and/or fix Verilog errors.");
 		}
 	}
 	
@@ -790,24 +775,24 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			out.close();
 
 			// print out what we're compiling 
-			errorText.setText("Compiling " + path);
+			errorText.setText("Compiling " + filePath);
 
 			// parse the base file 
-			Compiler.compileFileForEditor(path);
+			Compiler.compileFileForEditor(filePath);
 
 			if (Compiler.is_compiled_yet()) {
 				// Reset the system - takes a double simulation 
-				Compiler.sim_cycle("0", "00000000", "000000000000000000000000000000");
-				Compiler.sim_cycle("1", "00000000", "000000000000000000000000000000");
+				Compiler.sim_cycle(Compiler.RESET);
+				Compiler.sim_cycle(Compiler.RESET);
 				errorText.setText(errorText.getText() + "\nCompiling done!");
-				animationPanel.setSimulationResults("00000");
-				animationPanel.drawAnimation(animationPanel.getGraphics());
+//				animationPanel.setSimulationResults("00000");
+//				animationPanel.drawAnimation(animationPanel.getGraphics());
 			}
 		} catch (Exception e1) {
 			System.out.println(e1);
 		}
 	}
-	
+	/*
 	public void comboHeaderButtonFunction() {
 		codeText.setText(readHeaderFile("header/stop_light_combo.v"));
 		filterOne.setStart(940);
