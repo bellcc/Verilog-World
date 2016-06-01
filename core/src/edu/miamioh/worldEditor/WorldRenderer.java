@@ -8,36 +8,21 @@
 package edu.miamioh.worldEditor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import edu.miamioh.util.Constants;
 import edu.miamioh.worldEditor.actors.BlocksActor;
 import edu.miamioh.worldEditor.actors.HomeActor;
 import edu.miamioh.worldEditor.actors.TilesActor;
+import edu.miamioh.worldEditor.blockActors.BlankBlockActor;
+import edu.miamioh.worldEditor.tileActors.BlankTileActor;
 
 public class WorldRenderer implements Disposable{
 	
@@ -53,10 +38,12 @@ public class WorldRenderer implements Disposable{
 	private int worldY;
 	
 	private Stage stage;
+	private Stage blockStage;
+	private Stage tileStage;
 	
-	private boolean homeActor;
-	private boolean blocksActor;
-	private boolean tilesActor;
+	private static boolean homeActor;
+	private static boolean blocksActor;
+	private static boolean tilesActor;
 	
 	public WorldRenderer(WorldController worldController) {
 		
@@ -78,28 +65,36 @@ public class WorldRenderer implements Disposable{
 		renderer = new ShapeRenderer();
 		
 		stage = new Stage();
-				
+		blockStage = new Stage();		
+		tileStage = new Stage();
+		
 		worldController.initInputMultiplexer();
 		
 		createToolBar();
+		createBlockStage();
+		createTileStage();
 		
 	}
 	
-	public void createOptionsMenu() {
+	public void createTileStage() {
 		
-		if(homeActor) {
-			
-			
-			
-		}else if(blocksActor) {
-			
-			
-			
-		}else if(tilesActor) {
-			
-			
-			
-		}
+		Actor tileBlock = new BlankTileActor().getButton();
+		tileBlock.setPosition(50, 500);
+		tileBlock.setHeight(100);
+		tileBlock.setWidth(100);
+		
+		tileStage.addActor(tileBlock);
+		
+	}
+
+	public void createBlockStage() {
+		
+		Actor blankBlock = new BlankBlockActor().getButton();
+		blankBlock.setPosition(50, 500);
+		blankBlock.setHeight(100);
+		blankBlock.setWidth(100);
+		
+		blockStage.addActor(blankBlock);
 		
 	}
 	
@@ -146,9 +141,31 @@ public class WorldRenderer implements Disposable{
 		
 		renderBackground();
 		renderSelector();
-
+		
+		renderToolBar();
+		
+	}
+	
+	public void renderToolBar() {
+		
 		stage.act(Gdx.graphics.getDeltaTime());
-	    stage.draw();
+		stage.draw();
+		
+		if(homeActor) {
+			
+			
+			
+		}else if(blocksActor) {
+			
+			blockStage.act(Gdx.graphics.getDeltaTime());
+			blockStage.draw();
+			
+		}else if(tilesActor) {
+			
+			tileStage.act(Gdx.graphics.getDeltaTime());
+			tileStage.draw();
+			
+		}
 		
 	}
 
@@ -369,6 +386,11 @@ public class WorldRenderer implements Disposable{
 	
 	public Stage getStage() {
 		return stage;
+	}
+	
+	public Stage getBlockStage() {
+		
+		return blockStage;
 	}
 
 	public boolean getHomeActor() {

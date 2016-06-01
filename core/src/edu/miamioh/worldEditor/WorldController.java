@@ -31,9 +31,11 @@ public class WorldController {
 	public void initInputMultiplexer() {
 		
 		Stage toolBarStage = WorldRenderer.getWorldRenderer().getStage();
+		Stage blockStage = WorldRenderer.getWorldRenderer().getBlockStage();
 		
 		InputMultiplexer multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(toolBarStage);
+		multiplexer.addProcessor(blockStage);
 		multiplexer.addProcessor(inputProcess);
 		Gdx.input.setInputProcessor(multiplexer);
 		
