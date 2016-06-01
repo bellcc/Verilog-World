@@ -81,19 +81,8 @@ public class Parse {
 	{
 		if (is_compiled)
 		{
-			root_module.getVisitor().next_sim_cycle();
-			root_module.getVisitor().visit(root_tree);
-			root_module.getVisitor().clean_sim_cycle();
-			
-			errorText.setText("Simulation Results:");
-			for(int i = 0; i < root_module.getVars_list().size(); ++i) {
-				this.reportParseInfo(root_module.getVars_list().get(i).getName() + ": " + 
-									 root_module.getVars_list().get(i).getValue(1));
-			}
-			
-			root_module.getVisitor().next_sim_cycle();
-			root_module.getVisitor().visit(root_tree);
-			root_module.getVisitor().clean_sim_cycle();
+			this.simComb(mode);
+			this.simSequ(mode);
 			
 			errorText.setText("Simulation Results:");
 			for(int i = 0; i < root_module.getVars_list().size(); ++i) {
@@ -101,6 +90,28 @@ public class Parse {
 									 root_module.getVars_list().get(i).getValue(1));
 			}
 		}
+	}
+	
+	public void simComb(int mode) {
+		
+		SimVisitor visitor = root_module.getVisitor();
+		
+		// Assume the circuit is steady at the start. 
+		// Simulate it and let it change it's own steady or not steady state.
+		visitor.setState(SimVisitor.STEADY);
+		do {
+			// Run one simulation cycle for combinational circuit
+			visitor.next_sim_cycle();
+			visitor.visit(root_tree);
+		} while(visitor.getState() == SimVisitor.NOT_STEADY);
+	}
+	
+	public void simSequ(int mode) {
+		// Toggle sequ clock, simulate with that clock, clean and toggle off
+		root_module.getVisitor().toggleSequClock();
+		root_module.getVisitor().visit(root_tree);
+		root_module.getVisitor().clean_sim_cycle();
+		root_module.getVisitor().toggleSequClock();
 	}
 	
 	public void reportParseError(String message) {

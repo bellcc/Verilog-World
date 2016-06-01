@@ -46,6 +46,17 @@ public class ParseRegWire
 		this.value[1] = 0;
 		this.cycle_update_time = -1;
 	}
+	
+	public ParseRegWire(String name, int busSize, WireRoleType role) {
+		this.name = name;
+		this.busSize = busSize;
+		this.type = RegWireType.NO_TYPE;
+		this.role = WireRoleType.NONE;
+		this.value = new int[2];
+		this.value[0] = 0;
+		this.value[1] = 0;
+		this.cycle_update_time = -1;
+	}
 
 	public void addReg(String name, int bus_size)
 	{
