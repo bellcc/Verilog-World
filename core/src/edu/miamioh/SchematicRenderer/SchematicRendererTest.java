@@ -6,7 +6,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.Disposable;
-import edu.miamioh.verilogworld.WorldController;
+import edu.miamioh.worldEditor.WorldController;
+
+/**
+ * @author bdshaffer73
+ */
 
 public class SchematicRendererTest implements Disposable {
 
