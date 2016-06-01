@@ -7,7 +7,7 @@ import edu.miamioh.simulator.*;
  *
  * Created by shaffebd.
  */
-public class SchematicVisitor<T> extends edu.miamioh.simulator.Verilog2001BaseVisitor<T> {
+public class SchematicVisitor<T> extends Verilog2001BaseVisitor<T> {
     /**
      * {@inheritDoc}
      * <p>
