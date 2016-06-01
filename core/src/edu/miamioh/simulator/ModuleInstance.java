@@ -3,6 +3,9 @@ package edu.miamioh.simulator;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+
 public class ModuleInstance {
 	
 	private SimVisitor visitor;
