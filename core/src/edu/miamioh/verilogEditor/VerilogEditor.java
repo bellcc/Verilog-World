@@ -61,7 +61,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	
 	// static String level_number;
 	public File verilogFiles;
-	private AnimationPanel animationPanel;
+	//private AnimationPanel animationPanel;
 	//JFormattedTextField generalSensorInput1, generalSensorInput2, generalSensorInput3,
 	//	generalSensorInput4, generalSensorInput5, generalSensorInput6, generalSensorInput0;
 	JFormattedTextField simulateInput, generalSensorInput1, generalSensorInput2, generalSensorInput3,
@@ -231,7 +231,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 
 		JLabel errorLog = new JLabel("Error log");
 
-		animationPanel = new AnimationPanel(simulateInput);
+		//animationPanel = new AnimationPanel(simulateInput);
 
 		this.setVisible(true);
 
@@ -521,7 +521,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		simulateButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// simulateButtonFunction();
+				simulateButtonFunction();
 			}
 		});
 		toolBar.add(simulateButton);
@@ -551,10 +551,10 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			public void caretUpdate(CaretEvent e) {
 				String tempStr = "";
 				tempStr = simulateInput.getText();
-				if (tempStr.length() != 8) {
-					tempStr = animationPanel.getInternalSignal();
-				}
-				animationPanel.setStates(tempStr);
+//				if (tempStr.length() != 8) {
+//					tempStr = animationPanel.getInternalSignal();
+//				}
+//				animationPanel.setStates(tempStr);
 			}
 		});
 		toolBar.add(simulateInput);
@@ -616,8 +616,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			redoButtonFunction();
 		} else if (str.equals("Search and Replace")) {
 			salButtonFunction();
-		//} else if (str.equals("Simulate")) {
-		//	simulateButtonFunction();
+		} else if (str.equals("Simulate")) {
+			simulateButtonFunction();
 		//} else if (str.equals("Reset Simulation")) {
 		//	resetButtonFunction();
 		//} else if (str.equals("Combinational")) {
@@ -757,36 +757,12 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	
 			
 	public void simulateButtonFunction() {
-		// add the simulate code here
-		String simulateStr = simulateInput.getText();
-		String generalSensorStr = "00" + generalSensorInput6.getText() + generalSensorInput5.getText()
-				+ generalSensorInput4.getText() + generalSensorInput3.getText() + generalSensorInput2.getText()
-				+ generalSensorInput1.getText() + generalSensorInput0.getText();
 
-		if (simulateStr.length() == 8 && generalSensorStr.length() == 30) {
-			if (Compiler.is_compiled_yet()) {
-				// first sim is for the clock cycle 
-				Compiler.sim_cycle(Compiler.RUN);
-				// first sim is for the combinational propagation 
-				Compiler.sim_cycle(Compiler.RUN);
-				/*
-				errorText.setText("Simulation Cycle\n" + "Clock Cycle:" + output_vector_list.get(5) + " Sensors Light: "
-						+ simulateStr + " General Sensors: " + generalSensorStr + "\nOutN Val = "
-						+ output_vector_list.get(0) + "\nOutS Val = " + output_vector_list.get(1) + "\nOutE Val = "
-						+ output_vector_list.get(2) + "\nOutW Val = " + output_vector_list.get(3) + "\nDebugVector = "
-						+ Integer.toBinaryString(output_vector_list.get(4)));
-
-				animationPanel.setSimulationResults("1" + output_vector_list.get(0) + output_vector_list.get(1)
-						+ output_vector_list.get(2) + output_vector_list.get(3));
-				animationPanel.drawAnimation(animationPanel.getGraphics());
-				*/
-			} else {
-				errorText.setText(
-						"The Verilog code has not been successfully compiled yet.  Please click the check mark above and/or fix Verilog errors.");
-			}
+		if (Compiler.is_compiled_yet()) {
+			Compiler.sim_cycle(Compiler.RUN);
 		} else {
 			errorText.setText(
-					"Simulation cycle not sucessful\nMissing Simulation vector or it vector isn't 10 characters (Hexidecimal digits) long.");
+					"The Verilog code has not been successfully compiled yet.  Please click the check mark above and/or fix Verilog errors.");
 		}
 	}
 	
@@ -809,8 +785,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 				Compiler.sim_cycle(Compiler.RESET);
 				Compiler.sim_cycle(Compiler.RESET);
 				errorText.setText(errorText.getText() + "\nCompiling done!");
-				animationPanel.setSimulationResults("00000");
-				animationPanel.drawAnimation(animationPanel.getGraphics());
+//				animationPanel.setSimulationResults("00000");
+//				animationPanel.drawAnimation(animationPanel.getGraphics());
 			}
 		} catch (Exception e1) {
 			System.out.println(e1);
