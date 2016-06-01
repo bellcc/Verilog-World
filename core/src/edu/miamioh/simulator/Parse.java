@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
+import edu.miamioh.util.DebugUtils;
 
 import javax.swing.JTextPane;
 
@@ -35,20 +36,20 @@ public class Parse {
 	public Parse() throws Exception {
 		this(null, null);
 	}
-	public Parse(JTextPane errorText, String rootPath) throws Exception {
+	public Parse(JTextPane errorText, String rootPath) {
 		
 		this.errorText = errorText;
 		this.rootPath = rootPath;
 	}
 	
-	public void compileFileForEditor(String fileName, String path) throws IOException {
+	public void compileFileForEditor(String fileName) throws IOException {
 		
 		errorText.setText("Compiling " + fileName + "...");
 
 		subTrees = new ArrayList<>();
 		subTreesHash = new Hashtable<>();
 		subModules = new Hashtable<>();
-		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(path + "modules/" + fileName));
+		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(rootPath + "core/assets/modules/" + fileName));
 		Verilog2001Lexer lexer = new Verilog2001Lexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		Verilog2001Parser parser = new Verilog2001Parser(tokens);
@@ -115,7 +116,8 @@ public class Parse {
 		
 		ANTLRInputStream input = null;
 		try {
-			input = new ANTLRInputStream(new FileInputStream(rootPath + "modules/" + moduleName + ".v"));
+			String newModulePath = rootPath + "core/bin/modules/" + moduleName + ".v";
+			input = new ANTLRInputStream(new FileInputStream(newModulePath));
 		} catch (FileNotFoundException e) {
 			this.reportParseError("Source file '" + moduleName + ".v' not found in modules directory.");
 			return null;
