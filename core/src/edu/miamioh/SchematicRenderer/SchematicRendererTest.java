@@ -32,9 +32,14 @@ public class SchematicRendererTest implements Disposable {
         schematic.addInput("A");
         schematic.addInput("B");
         schematic.addGate("AND", 2, "AND0", 1);
-        schematic.connectPorts("A", "OUT", 0, "AND", "IN", 0);
+        schematic.addInput("C");
+        schematic.addGate("OR", 2, "OR0", 2);
+        schematic.connectPorts("A", "OUT", 0, "AND0", "IN", 0);
+        schematic.connectPorts("B", "OUT", 0, "AND0", "IN", 1);
+        schematic.connectPorts("AND0", "OUT", 0, "OR0", "IN", 0);
+        schematic.connectPorts("C", "OUT", 0, "OR0", "IN", 1);
         schematic.addOutput("O");
-        schematic.connectPorts("AND", "OUT", 0, "O", "IN", 0);
+        schematic.connectPorts("OR0", "OUT", 0, "O", "IN", 0);
         schematic.render();
 
     }

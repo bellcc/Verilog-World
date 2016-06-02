@@ -89,7 +89,7 @@ public class SchematicRenderer implements Disposable {
      */
     public void addOutput(String id) {
 
-        Port temp = new Port("OUTPUT", id, maxLevel++);
+        Port temp = new Port("OUTPUT", id, maxLevel + 1);
         ports.add(temp);
 
     }
@@ -203,7 +203,7 @@ public class SchematicRenderer implements Disposable {
                 tempP = ports.get(k);
                 if (tempP.getType().equals("OUTPUT")) {
 
-                    tempP.setCX(getXCenter(maxLevel++));
+                    tempP.setCX(getXCenter(maxLevel + 1));
                     tempP.setCY(getYCenter(k - totalIns));
                     grenderer.render(renderer, tempP.getType(), tempP.getCX(), tempP.getCY(), scaleFactor);
                 } else
@@ -271,7 +271,7 @@ public class SchematicRenderer implements Disposable {
                 if (tempP == null) {
                     for (j = 0; j < gates.size(); j++) {
                         if (gates.get(j).getID().equals(portDetails[0])) {
-                            tempG = gates.get(i);
+                            tempG = gates.get(j);
                             x2 = tempG.getPortX(portDetails[1]);
                             y2 = tempG.getPortY(portDetails[1]);
                             j = gates.size();
