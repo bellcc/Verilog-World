@@ -1,4 +1,5 @@
 module Nums(clk);
+	input clk;
 	
 	wire zero;
 	wire one;

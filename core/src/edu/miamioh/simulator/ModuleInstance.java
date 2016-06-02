@@ -6,6 +6,8 @@ import java.util.Hashtable;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
+import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
+
 public class ModuleInstance {
 	
 	private SimVisitor visitor;
@@ -23,7 +25,9 @@ public class ModuleInstance {
 		this.hash_vars = new Hashtable<>();
 		this.ports_list = new ArrayList<>();
 		
-		visitor = new SimVisitor(this, Compiler.getSubModulesHash());
+		visitor = new SimVisitor(this, 
+								 Compiler.getSubModulesHash(), 
+								 Compiler.getSubModulesList());
 		
 		// Generate symbol table and check syntax
 		ParseTreeWalker walker = new ParseTreeWalker();

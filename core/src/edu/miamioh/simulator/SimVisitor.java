@@ -30,6 +30,9 @@ import java.util.Hashtable;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import edu.miamioh.simulator.AntlrGen.Verilog2001BaseVisitor;
+import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
+
 public class SimVisitor extends Verilog2001BaseVisitor<Value>
 {
 	private boolean							is_sequential_sim_cycle;
@@ -39,7 +42,8 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 	private boolean							is_sequential;
 
 	private ModuleInstance					module;
-	private Hashtable<String, ModuleInstance> subModules;
+	private Hashtable<String, ModuleInstance> subModules_hash;
+	private ArrayList<ModuleInstance> 		subModules_list;
 	private Hashtable<String, ParseRegWire>	hash_vars;
 	private ArrayList<ParseRegWire>			vars_list;
 	private ArrayList<String>				ports_list;
@@ -55,7 +59,9 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 	
 	private Value case_expression;
 
-	public SimVisitor(ModuleInstance module, Hashtable<String, ModuleInstance> subModules)
+	public SimVisitor(ModuleInstance module, 
+					  Hashtable<String, ModuleInstance> subModules_hash,
+					  ArrayList<ModuleInstance> subModules_list)
 	{
 		this.is_combinational = false;
 		this.is_sequential = module.isSequ();
@@ -66,7 +72,8 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		this.new_val_idx = 0;
 		this.old_val_idx = 1;
 
-		this.subModules = subModules;
+		this.subModules_hash = subModules_hash;
+		this.subModules_list = subModules_list;
 		this.module = module;
 		this.ports_list = module.getPorts_list();
 		this.vars_list = module.getVars_list();
@@ -117,8 +124,38 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		// Pass the clock signal
 		int clockValue = 0;
 		if (is_sequential_sim_cycle) {clockValue = 1;}
-		module.getHash_vars().get("clk").setValue(new_val_idx, clockValue, 1);
-		module.getHash_vars().get("clk").setValue(old_val_idx, clockValue, 1);
+		
+		// Update root module clock
+		ParseRegWire wire = module.getHash_vars().get("clk");
+		if (wire != null) {
+			wire.setValue(new_val_idx, clockValue, 1);
+			wire.setValue(old_val_idx, clockValue, 1);
+		}
+		
+		// Update clock in all other modules
+		for (ModuleInstance sub : this.subModules_list) {
+			wire = sub.getHash_vars().get("clk");
+			
+			if (wire != null) {
+				wire.setValue(new_val_idx, clockValue, 1);
+				wire.setValue(old_val_idx, clockValue, 1);
+			}
+		}
+	}
+	
+	public void resetSequUpdateFlag() {
+		
+		// Reset wires in root module
+		for(ParseRegWire wire : module.getVars_list()) {
+			wire.resetUpdateFlag();
+		}
+		
+		// Reset wires in all other modules
+		for (ModuleInstance sub : this.subModules_list) {
+			for(ParseRegWire wire : sub.getVars_list()) {
+				wire.resetUpdateFlag();
+			}
+		}
 	}
 	
 	// Updates sim information from parent module into child module
@@ -684,7 +721,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		
 		// Get the module
 		String moduleName = ctx.module_instance(0).name_of_instance().module_instance_identifier().getText();
-		ModuleInstance targetModule = subModules.get(moduleName);
+		ModuleInstance targetModule = subModules_hash.get(moduleName);
 		
 		SimVisitor visitor = targetModule.getVisitor();
 		
