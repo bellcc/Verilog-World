@@ -56,6 +56,11 @@
 			<type>2</type>
 			<locationURI>PARENT-1-PROJECT_LOC/core/assets</locationURI>
 		</link>
+		<link>
+			<name>assets_______</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/core/assets</locationURI>
+		</link>
 	</linkedResources>
 	<filteredResources>
 		<filter>
