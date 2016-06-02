@@ -99,22 +99,10 @@ public class MyInputProcessor implements InputProcessor{
 
 		int worldWidth = Constants.WORLD_WIDTH;
 		int worldHeight = Constants.WORLD_HEIGHT;
-		
-		//RESET the selected if you click on the selected row/column.
-		if(row == WorldRenderer.getSelectedRow() && column == WorldRenderer.getSelectedColumn()) {
-			
-			WorldRenderer.setSelectedColumn(-1);
-			WorldRenderer.setSelectedRow(-1);
-			
-			return true;
-			
-		}
-		
+
 		if(row >= 0 && row <= (worldHeight -1) && column >= 0 && column <= (worldWidth - 1)) {
 			
-			WorldRenderer.setSelectedColumn(column);
-			WorldRenderer.setSelectedRow(row);
-			
+			WorldController.getCurrentWorldController().gridPressed(row, column);
 			return true;
 			
 		}
