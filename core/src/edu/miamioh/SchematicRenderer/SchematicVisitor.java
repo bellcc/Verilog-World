@@ -2,6 +2,8 @@ package edu.miamioh.SchematicRenderer;
 
 import edu.miamioh.simulator.*;
 
+import java.util.ArrayList;
+
 /**
  * Visits nodes on the parse tree to build the schematic.
  *
