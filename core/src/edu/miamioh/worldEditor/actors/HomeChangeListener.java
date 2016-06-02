@@ -18,6 +18,7 @@ public class HomeChangeListener extends ChangeListener{
 		WorldController.getCurrentWorldController().updateInputMultiplexer();
 	
 		WorldRenderer.getWorldRenderer().resetSelectedItems();
+		WorldRenderer.getWorldRenderer().resetStates();
 
 	}
 

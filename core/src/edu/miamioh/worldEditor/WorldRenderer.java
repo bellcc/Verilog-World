@@ -48,7 +48,7 @@ public class WorldRenderer implements Disposable{
 	private static boolean tilesActor;
 	
 	private boolean blankBlockState;
-	
+
 	private boolean blankTileState;
 	
 	private static int selectedRow;
@@ -78,6 +78,8 @@ public class WorldRenderer implements Disposable{
 				
 		blankBlockState = false;
 		blankTileState = false;
+
+		resetStates();
 		
 		stage = new Stage();
 		blockStage = new Stage();		
@@ -94,7 +96,25 @@ public class WorldRenderer implements Disposable{
 	public void resetSelectedItems() {
 		
 		blankBlockState = false;
+
+	}
+		
+	public void resetStates() {
+		
+		resetTileStates();
+		resetBlockStates();
+		
+	}
+	
+	public void resetTileStates() {
+		
 		blankTileState = false;
+		
+	}
+	
+	public void resetBlockStates() {
+		
+		blankBlockState = false;
 		
 	}
 	

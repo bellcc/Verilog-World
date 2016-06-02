@@ -17,8 +17,6 @@ public class BlankTileChangeListener extends ChangeListener{
 	@Override
 	public void changed(ChangeEvent event, Actor actor) {
 		
-		System.out.println("Blank Tile Change Listener");
-
 		boolean blankTileState = WorldRenderer.getWorldRenderer().getBlankTileState();
 		
 		if(blankTileState) {
@@ -28,7 +26,7 @@ public class BlankTileChangeListener extends ChangeListener{
 		}
 		
 		WorldRenderer.getWorldRenderer().setBlankTileState(true);
-				
+		
 	}
 	
 }

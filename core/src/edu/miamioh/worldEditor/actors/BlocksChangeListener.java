@@ -18,7 +18,8 @@ public class BlocksChangeListener extends ChangeListener{
 		WorldController.getCurrentWorldController().updateInputMultiplexer();
 		
 		WorldRenderer.getWorldRenderer().resetSelectedItems();
-		
+		WorldRenderer.getWorldRenderer().resetStates();
+
 	}
 	
 }
