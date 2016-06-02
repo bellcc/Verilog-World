@@ -40,7 +40,7 @@ public class ParseRegWire
 	{
 		this.busSize = 0;
 		this.name = null;
-		this.type = RegWireType.NO_TYPE;
+		//this.type = RegWireType.NO_TYPE;
 		this.role = WireRoleType.NONE;
 		/* initialize two spots for new and old values */
 		this.value = new int[2];
@@ -53,7 +53,7 @@ public class ParseRegWire
 	public ParseRegWire(SimVisitor visitor, String name, int busSize, WireRoleType role) {
 		this.name = name;
 		this.busSize = busSize;
-		this.type = RegWireType.NO_TYPE;
+		//this.type = RegWireType.NO_TYPE;
 		this.role = WireRoleType.NONE;
 		this.value = new int[2];
 		this.value[0] = 0;
@@ -87,15 +87,15 @@ public class ParseRegWire
 		this.value[1] = constant_value;
 	}
 
-	public void setCombinational()
-	{
-		this.type = RegWireType.COMBINATIONAL;
-	}
-
-	public void setSequential()
-	{
-		this.type = RegWireType.SEQUENTIAL;
-	}
+//	public void setCombinational()
+//	{
+//		this.type = RegWireType.COMBINATIONAL;
+//	}
+//
+//	public void setSequential()
+//	{
+//		this.type = RegWireType.SEQUENTIAL;
+//	}
 	
 	public void setRole(WireRoleType role) {
 		this.role = role;
@@ -118,14 +118,11 @@ public class ParseRegWire
 		return this.value[idx];
 	}
 
-	public static int count = 0;
 	public void setValue(int idx, int value, int cycle_time)
 	{
 		int mask = (1 << this.busSize) - 1;
 		
 		// Notify simulator that a state has changed
-		++count;
-		System.out.println(count);
 		if ((value & mask)!= this.value[idx]) {
 			visitor.setState(SimVisitor.NOT_STEADY);
 		}

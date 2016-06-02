@@ -110,15 +110,14 @@ public class Parse {
 			// Run one simulation cycle for combinational circuit
 			visitor.next_sim_cycle();
 			visitor.visit(root_tree);
-			System.out.println("State Check: " + visitor.getState());
 		} while(visitor.getState() == SimVisitor.NOT_STEADY);
 	}
 	
 	public void simSequ(int mode) {
-		// Toggle sequ clock, simulate with that clock, and toggle off
+		// Toggle sequ clock and simulate
 		root_module.getVisitor().toggleSequClock();
-		root_module.getVisitor().visit(root_tree);
-		root_module.getVisitor().toggleSequClock();
+		simComb(mode);
+		//root_module.getVisitor().toggleSequClock();
 	}
 	
 	public void reportParseError(String message) {

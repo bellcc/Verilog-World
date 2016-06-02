@@ -541,7 +541,7 @@ public class ParseListener extends Verilog2001BaseListener
 		ParseRegWire var = hash_vars.get(name);
 
 		if (var != null) {
-			var.setCombinational();
+			//var.setCombinational();
 		}
 		else {
 			// Report if the variable has not been declared.
