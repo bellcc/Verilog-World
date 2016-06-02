@@ -23,7 +23,7 @@ public class SchematicRendererMain implements ApplicationListener {
 
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
         worldController = new WorldController();
-        parse = new Parse();
+        parse = new Parse(null, "/home/pheonix/USS/Verilog-World/core/assets/modules");
         schematic = new SchematicRenderer(parse);
 
     }
@@ -57,6 +57,7 @@ public class SchematicRendererMain implements ApplicationListener {
         schematic.connectPorts("C", "OUT", 0, "OR0", "IN", 1);
         schematic.addOutput("O");
         schematic.connectPorts("OR0", "OUT", 0, "O", "IN", 0);
+
         schematic.render();
 
     }
@@ -80,31 +81,6 @@ public class SchematicRendererMain implements ApplicationListener {
 
     public SchematicRendererMain() {
         super();
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
     }
 
     /**

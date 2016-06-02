@@ -145,7 +145,7 @@ public class SchematicRenderer implements Disposable {
         //Actual drawing
         this.renderer.setColor(Color.BLACK);
 
-        this.verified = true;
+//        this.verified = true;
 
         if (verified) {
             render(this.renderer);
