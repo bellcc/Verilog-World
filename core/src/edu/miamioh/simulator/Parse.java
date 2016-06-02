@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
+
+import edu.miamioh.simulator.AntlrGen.Verilog2001Lexer;
+import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
 import edu.miamioh.util.DebugUtils;
 
 import javax.swing.JTextPane;
@@ -100,6 +103,7 @@ public class Parse {
 		SimVisitor visitor = root_module.getVisitor();
 		
 		do {
+			DebugUtils.printModuleVars(visitor, this.root_module);
 			// Assume 6the circuit is steady at the start. 
 			// Simulate it and let it change it's own steady or not steady state.
 			visitor.setState(SimVisitor.STEADY);
@@ -110,15 +114,17 @@ public class Parse {
 			// Run one simulation cycle for combinational circuit
 			visitor.next_sim_cycle();
 			visitor.visit(root_tree);
-			System.out.println("State Check: " + visitor.getState());
+			
 		} while(visitor.getState() == SimVisitor.NOT_STEADY);
 	}
 	
 	public void simSequ(int mode) {
-		// Toggle sequ clock, simulate with that clock, and toggle off
+		// Toggle sequ clock and simulate
 		root_module.getVisitor().toggleSequClock();
-		root_module.getVisitor().visit(root_tree);
-		root_module.getVisitor().toggleSequClock();
+		simComb(mode);
+
+		// Reset sequential wire update flags
+		root_module.getVisitor().resetSequUpdateFlag();
 	}
 	
 	public void reportParseError(String message) {

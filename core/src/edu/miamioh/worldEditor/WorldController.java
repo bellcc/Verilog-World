@@ -13,11 +13,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import edu.miamioh.gameObjects.Block;
+import edu.miamioh.gameObjects.Tile;
 import edu.miamioh.worldEditor.types.Point;
 
 public class WorldController {
 	
 	private static WorldController currentWorldController;
+	private static Level currentLevel;
 		
 	private MyInputProcessor inputProcess;
 	private InputMultiplexer multiplexer;
@@ -98,6 +101,8 @@ public class WorldController {
 	 */
 	public void initWorld() {
 		
+		currentLevel = new Level();
+		
 	}
 	
 	/**
@@ -115,6 +120,51 @@ public class WorldController {
 	 */
 	public void update() {
 		
+	}
+	
+	public void gridPressed(int row, int column) {
+				
+		boolean isBlock = currentLevel.isBlock(row, column);
+		boolean isTile = currentLevel.isTile(row, column);
+		
+		if(isBlock || isTile) {
+		
+			//TODO Show an options menu to the user that 
+			//give the option for the verilog editor, 
+			//schematic editor, and delete actor buttons.
+			
+			return;
+		}
+		
+		boolean blocksActor = WorldRenderer.getWorldRenderer().getBlocksActor();
+		boolean tileActor = WorldRenderer.getWorldRenderer().getTilesActor();
+		
+		if(blocksActor && WorldRenderer.getWorldRenderer().getBlankBlockState()) {
+					
+			Block block = new Block();
+			block.setRow(row);
+			block.setColumn(column);
+			//block.setId(currentLevel.generateBlockID(block));
+			
+			currentLevel.addBlock(block);
+			WorldRenderer.getWorldRenderer().resetBlockStates();
+			
+		}else if(tileActor) {
+			
+			
+			
+		}
+		
+	}
+	
+	public void addNewBlock(Block aBlock) {
+		
+		currentLevel.addBlock(aBlock);
+	}
+	
+	public void addNewTile(Tile tile) {
+		
+		currentLevel.addTile(tile);
 	}
 	
 	/**
@@ -136,6 +186,10 @@ public class WorldController {
 	
 	public static WorldController getCurrentWorldController() {
 		return currentWorldController;
+	}
+	
+	public Level getCurrentLevel() {
+		return currentLevel;
 	}
 	
 }

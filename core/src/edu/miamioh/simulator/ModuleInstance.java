@@ -6,10 +6,13 @@ import java.util.Hashtable;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
+import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
+
 public class ModuleInstance {
 	
 	private SimVisitor visitor;
 	private ParseTree tree;
+	private boolean is_sequ;
 	
 	private ArrayList<ParseRegWire> vars_list;
 	private Hashtable<String, ParseRegWire> hash_vars;
@@ -22,12 +25,22 @@ public class ModuleInstance {
 		this.hash_vars = new Hashtable<>();
 		this.ports_list = new ArrayList<>();
 		
-		visitor = new SimVisitor(this, Compiler.getSubModulesHash());
+		visitor = new SimVisitor(this, 
+								 Compiler.getSubModulesHash(), 
+								 Compiler.getSubModulesList());
 		
 		// Generate symbol table and check syntax
 		ParseTreeWalker walker = new ParseTreeWalker();
 		ParseListener listener = new ParseListener(visitor, parser, Compiler, this);
 		walker.walk(listener, this.tree);
+		
+		// Find out if we use the clock or not
+		if (this.hash_vars.containsKey("clk")) {
+			this.is_sequ = true;
+		}
+		else {
+			this.is_sequ = false;
+		}
 	}
 
 	public ArrayList<ParseRegWire> getVars_list() 			{return vars_list;}
@@ -35,4 +48,5 @@ public class ModuleInstance {
 	public ArrayList<String> getPorts_list() 				{return ports_list;}
 	public SimVisitor getVisitor() 							{return visitor;}
 	public ParseTree getParseTree()							{return tree;}
+	public boolean isSequ() 								{return this.is_sequ;}
 }

@@ -33,6 +33,8 @@ public class ParseRegWire
 	private WireRoleType role; // Is it a normal wire, an input or an output?
 	private int[]		value;
 	private int			cycle_update_time;
+	private boolean		hasUpdated; // Used for sequential wires. Must only be updated once
+	
 	
 	private SimVisitor visitor;
 
@@ -48,6 +50,7 @@ public class ParseRegWire
 		this.value[1] = 0;
 		this.cycle_update_time = -1;
 		this.visitor = visitor;
+		this.hasUpdated = false;
 	}
 	
 	public ParseRegWire(SimVisitor visitor, String name, int busSize, WireRoleType role) {
@@ -60,6 +63,7 @@ public class ParseRegWire
 		this.value[1] = 0;
 		this.cycle_update_time = -1;
 		this.visitor = visitor;
+		this.hasUpdated = false;
 	}
 	
 	public SimVisitor getSimVisitor() {return this.visitor;}
@@ -97,6 +101,9 @@ public class ParseRegWire
 		this.type = RegWireType.SEQUENTIAL;
 	}
 	
+	public RegWireType getType() {return this.type;}
+	public void resetUpdateFlag() {this.hasUpdated = false;}
+	
 	public void setRole(WireRoleType role) {
 		this.role = role;
 	}
@@ -118,21 +125,26 @@ public class ParseRegWire
 		return this.value[idx];
 	}
 
-	public static int count = 0;
 	public void setValue(int idx, int value, int cycle_time)
 	{
 		int mask = (1 << this.busSize) - 1;
 		
-		// Notify simulator that a state has changed
-		++count;
-		System.out.println(count);
-		if ((value & mask)!= this.value[idx]) {
-			visitor.setState(SimVisitor.NOT_STEADY);
+		// Only update if it's sequential and we haven't already updated or
+		// if it is not a sequential wire
+		if ((this.type == RegWireType.SEQUENTIAL && !this.hasUpdated) 
+		 || (this.type == RegWireType.COMBINATIONAL)) {
+			
+			// Notify simulator that a state has changed
+			if ((value & mask)!= this.value[idx]) {
+				visitor.setState(SimVisitor.NOT_STEADY);
+			}
+	
+			this.value[idx] = value & mask;
+	
+			this.cycle_update_time = cycle_time;
+			
+			this.hasUpdated = true;
 		}
-
-		this.value[idx] = value & mask;
-
-		this.cycle_update_time = cycle_time;
 	}
 
 	public void setBitValue(int idx, int bitIdx, int bit_value, int cycle_time)
@@ -142,16 +154,23 @@ public class ParseRegWire
 		int bitLoc = (1 << bitIdx); // all 0s except a 1 in the bit spot
 		int demask = ((1 << this.busSize) - 1) ^ bitLoc; // all 1s except bit
 															// spot
-
-		this.cycle_update_time = cycle_time;
-		
-		int newValue = ((this.value[idx] & demask) | bitMask) & mask;
-		// Notify simulator that a state has changed
-		if (newValue != this.value[idx]) {
-			visitor.setState(SimVisitor.NOT_STEADY);
+		// Only update if it's sequential and we haven't already updated or
+		// if it is not a sequential wire
+		if ((this.type == RegWireType.SEQUENTIAL && !this.hasUpdated) 
+		 || (this.type == RegWireType.COMBINATIONAL)) {
+			
+			this.cycle_update_time = cycle_time;
+			
+			int newValue = ((this.value[idx] & demask) | bitMask) & mask;
+			// Notify simulator that a state has changed
+			if (newValue != this.value[idx]) {
+				visitor.setState(SimVisitor.NOT_STEADY);
+			}
+	
+			this.value[idx] = newValue;
+			
+			this.hasUpdated = true;
 		}
-
-		this.value[idx] = newValue;
 	}
 
 	public int getIntegerBit(int idx_bit, int idx)

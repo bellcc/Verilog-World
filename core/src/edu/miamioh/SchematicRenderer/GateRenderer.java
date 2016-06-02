@@ -7,7 +7,7 @@ import edu.miamioh.util.Constants;
 /**
  * Created by shaffebd.
  */
-public class GateRenderer {
+class GateRenderer {
 
     Constants constants = new Constants();
 

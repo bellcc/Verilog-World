@@ -25,6 +25,8 @@ public final class Constants {
 	public static final int STEP_WIDTH = 5;
 	public static final int STEP_HEIGHT = 5;
 	
+	public static final int MAX_ID = 1000000;
+	
 	public static final int GENERAL_OBJECT_SIZE = 1;
 	
 	public static final int GENERAL_OBJECT_RED = 255;
@@ -50,6 +52,6 @@ public final class Constants {
 	public final int bottomEdge = leftEdge;
 	public final int topEdge = WINDOW_HEIGHT - bottomEdge;
 	public static boolean frame = false;
-	public static int scaleFactor = 40;
+	public static int scaleFactor = 20;
 
 }

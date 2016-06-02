@@ -5,7 +5,7 @@ module Nums(in, out);
 	reg [7:0]sum;
 	reg cin, cout;
 
-	assign a = 8'd149;
+	assign a = 8'd141;
 	assign b = 8'd107;
 	assign cin = 0;
 
