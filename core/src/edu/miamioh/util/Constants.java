@@ -31,15 +31,6 @@ public final class Constants {
 	public static final int GENERAL_OBJECT_GREEN = 255;
 	public static final int GENERAL_OBJECT_BLUE = 255;
 	
-	//General Object constants
-	public int generalObjectSize = 1;
-	
-	public int generalObjectRed = 255;
-	
-	public int generalObjectBlue = 255;
-	
-	public int generalObjectGreen = 255;
-	
-	public boolean moveable = false;
-	
+	public static final boolean MOVEABLE = false;
+
 }

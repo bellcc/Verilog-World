@@ -5,8 +5,9 @@ package edu.miamioh.SchematicRenderer;
  */
 public class Constants {
 
-    edu.miamioh.verilogworld.Constants worldConstants = new edu.miamioh.verilogworld.Constants();
-    //SchematicRenderer constants
+    //edu.miamioh.util.Constants worldConstants = new edu.miamioh.util.Constants();
+	//SchematicRenderer constants
+	
     public final int DEFAULT_WIDTH = worldConstants.DEFAULT_WIDTH;
     public final int DEFAULT_HEIGHT = worldConstants.DEFAULT_HEIGHT;
     public final int gateSize = 2;

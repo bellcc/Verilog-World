@@ -38,12 +38,21 @@ public class WorldRenderer implements Disposable{
 	private int worldY;
 	
 	private Stage stage;
+	
+	private Stage homeStage;
 	private Stage blockStage;
 	private Stage tileStage;
 	
 	private static boolean homeActor;
 	private static boolean blocksActor;
 	private static boolean tilesActor;
+	
+	private boolean blankBlock;
+	
+	private boolean blankTile;
+	
+	private static int selectedRow;
+	private static int selectedColumn;
 	
 	public WorldRenderer(WorldController worldController) {
 		
@@ -63,6 +72,12 @@ public class WorldRenderer implements Disposable{
 		camera.setToOrtho(false, w, h);
 
 		renderer = new ShapeRenderer();
+		
+		selectedRow = -1;
+		selectedColumn = -1;
+		
+		blankBlock = false;
+		blankTile = false;
 		
 		stage = new Stage();
 		blockStage = new Stage();		
@@ -143,6 +158,7 @@ public class WorldRenderer implements Disposable{
 		renderSelector();
 		
 		renderToolBar();
+		renderSelectedCell();
 		
 	}
 	
@@ -226,6 +242,26 @@ public class WorldRenderer implements Disposable{
 		camera.setToOrtho(false, w, h);
 		//camera.translate(translateX, translateY);
 		camera.translate(translateX - 50, translateY);	
+		
+	}
+	
+	public void renderSelectedCell() {
+		
+		int worldWidth = Constants.WORLD_WIDTH;
+		int worldHeight = Constants.WORLD_HEIGHT;
+		
+		if(selectedRow >= 0 && selectedRow <= (worldHeight -1) && selectedColumn >= 0 && selectedColumn <= (worldWidth - 1)) {
+
+			int x = selectedColumn * Constants.GRID_WIDTH;
+			int y = selectedRow * Constants.GRID_HEIGHT;
+				
+			renderer.begin(ShapeType.Filled);
+			renderer.setColor(Color.DARK_GRAY);
+			renderer.rect(x, y, Constants.GRID_WIDTH, Constants.GRID_HEIGHT);
+
+			renderer.end();
+			
+		}
 		
 	}
 	
@@ -392,13 +428,18 @@ public class WorldRenderer implements Disposable{
 		
 		return blockStage;
 	}
+	
+	public Stage getTileStage() {
+		
+		return tileStage;
+	}
 
 	public boolean getHomeActor() {
 		return homeActor;
 	}
 
 	public void setHomeActor(boolean homeActor) {
-		this.homeActor = homeActor;
+		WorldRenderer.homeActor = homeActor;
 	}
 
 	public boolean getBlocksActor() {
@@ -406,7 +447,7 @@ public class WorldRenderer implements Disposable{
 	}
 
 	public void setBlocksActor(boolean blocksActor) {
-		this.blocksActor = blocksActor;
+		WorldRenderer.blocksActor = blocksActor;
 	}
 
 	public boolean getTilesActor() {
@@ -414,7 +455,47 @@ public class WorldRenderer implements Disposable{
 	}
 
 	public void setTilesActor(boolean tilesActor) {
-		this.tilesActor = tilesActor;
+		WorldRenderer.tilesActor = tilesActor;
+	}
+
+	public boolean getBlankBlock() {
+		return blankBlock;
+	}
+
+	public void setBlankBlock(boolean blankBlock) {
+		this.blankBlock = blankBlock;
+	}
+
+	public boolean getBlankTile() {
+		return blankTile;
+	}
+
+	public void setBlankTile(boolean blankTile) {
+		this.blankTile = blankTile;
+	}
+
+	public static int getSelectedRow() {
+		return selectedRow;
+	}
+
+	public static void setSelectedRow(int selectedRow) {
+		WorldRenderer.selectedRow = selectedRow;
+	}
+
+	public static int getSelectedColumn() {
+		return selectedColumn;
+	}
+
+	public static void setSelectedColumn(int selectedColumn) {
+		WorldRenderer.selectedColumn = selectedColumn;
+	}
+
+	public Stage getHomeStage() {
+		return homeStage;
+	}
+
+	public void setHomeStage(Stage homeStage) {
+		this.homeStage = homeStage;
 	}
 
 }
