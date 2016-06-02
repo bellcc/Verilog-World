@@ -11,13 +11,14 @@ public class TilesChangeListener extends ChangeListener{
 	@Override
 	public void changed(ChangeEvent event, Actor actor) {
 			
-		System.out.println("New Tiles Change Listener");
 		WorldRenderer.getWorldRenderer().setHomeActor(false);
 		WorldRenderer.getWorldRenderer().setBlocksActor(false);
 		WorldRenderer.getWorldRenderer().setTilesActor(true);
 	
 		WorldController.getCurrentWorldController().updateInputMultiplexer();
 		
+		WorldRenderer.getWorldRenderer().resetSelectedItems();
+
 	}
 	
 }

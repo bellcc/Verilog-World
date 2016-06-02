@@ -19,15 +19,15 @@ public class BlankTileChangeListener extends ChangeListener{
 		
 		System.out.println("Blank Tile Change Listener");
 
-		boolean blankTile = WorldRenderer.getWorldRenderer().getBlankTile();
+		boolean blankTileState = WorldRenderer.getWorldRenderer().getBlankTileState();
 		
-		if(blankTile) {
+		if(blankTileState) {
 			
-			WorldRenderer.getWorldRenderer().setBlankTile(false);
+			WorldRenderer.getWorldRenderer().setBlankTileState(false);
 			return;	
 		}
 		
-		WorldRenderer.getWorldRenderer().setBlankTile(true);
+		WorldRenderer.getWorldRenderer().setBlankTileState(true);
 				
 	}
 	

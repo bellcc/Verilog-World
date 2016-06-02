@@ -47,13 +47,13 @@ public class WorldRenderer implements Disposable{
 	private static boolean blocksActor;
 	private static boolean tilesActor;
 	
-	private boolean blankBlock;
+	private boolean blankBlockState;
 	
-	private boolean blankTile;
+	private boolean blankTileState;
 	
 	private static int selectedRow;
 	private static int selectedColumn;
-	
+		
 	public WorldRenderer(WorldController worldController) {
 		
 		init();
@@ -75,9 +75,9 @@ public class WorldRenderer implements Disposable{
 		
 		selectedRow = -1;
 		selectedColumn = -1;
-		
-		blankBlock = false;
-		blankTile = false;
+				
+		blankBlockState = false;
+		blankTileState = false;
 		
 		stage = new Stage();
 		blockStage = new Stage();		
@@ -88,6 +88,13 @@ public class WorldRenderer implements Disposable{
 		createToolBar();
 		createBlockStage();
 		createTileStage();
+		
+	}
+	
+	public void resetSelectedItems() {
+		
+		blankBlockState = false;
+		blankTileState = false;
 		
 	}
 	
@@ -158,7 +165,10 @@ public class WorldRenderer implements Disposable{
 		renderSelector();
 		
 		renderToolBar();
-		renderSelectedCell();
+		//renderSelectedCell();
+		
+		System.out.println("Block: " + blankBlockState);
+		System.out.println("Tile : " + blankTileState);
 		
 	}
 	
@@ -458,20 +468,20 @@ public class WorldRenderer implements Disposable{
 		WorldRenderer.tilesActor = tilesActor;
 	}
 
-	public boolean getBlankBlock() {
-		return blankBlock;
+	public boolean getBlankBlockState() {
+		return blankBlockState;
 	}
 
-	public void setBlankBlock(boolean blankBlock) {
-		this.blankBlock = blankBlock;
+	public void setBlankBlockState(boolean blankBlock) {
+		this.blankBlockState = blankBlock;
 	}
 
-	public boolean getBlankTile() {
-		return blankTile;
+	public boolean getBlankTileState() {
+		return blankTileState;
 	}
 
-	public void setBlankTile(boolean blankTile) {
-		this.blankTile = blankTile;
+	public void setBlankTileState(boolean blankTile) {
+		this.blankTileState = blankTile;
 	}
 
 	public static int getSelectedRow() {

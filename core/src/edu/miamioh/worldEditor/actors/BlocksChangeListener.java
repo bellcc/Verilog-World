@@ -11,12 +11,13 @@ public class BlocksChangeListener extends ChangeListener{
 	@Override
 	public void changed(ChangeEvent event, Actor actor) {
 			
-		System.out.println("New Blocks Change Listener");
 		WorldRenderer.getWorldRenderer().setHomeActor(false);
 		WorldRenderer.getWorldRenderer().setBlocksActor(true);
 		WorldRenderer.getWorldRenderer().setTilesActor(false);
 	
 		WorldController.getCurrentWorldController().updateInputMultiplexer();
+		
+		WorldRenderer.getWorldRenderer().resetSelectedItems();
 		
 	}
 	

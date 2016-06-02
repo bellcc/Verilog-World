@@ -11,13 +11,14 @@ public class HomeChangeListener extends ChangeListener{
 	@Override
 	public void changed(ChangeEvent event, Actor actor) {
 				
-		System.out.println("New Home Change Listener");
 		WorldRenderer.getWorldRenderer().setHomeActor(true);
 		WorldRenderer.getWorldRenderer().setBlocksActor(false);
 		WorldRenderer.getWorldRenderer().setTilesActor(false);
 		
 		WorldController.getCurrentWorldController().updateInputMultiplexer();
-		
+	
+		WorldRenderer.getWorldRenderer().resetSelectedItems();
+
 	}
 
 }

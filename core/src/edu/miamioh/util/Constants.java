@@ -32,5 +32,24 @@ public final class Constants {
 	public static final int GENERAL_OBJECT_BLUE = 255;
 	
 	public static final boolean MOVEABLE = false;
+	//General Object constants
+	public int generalObjectSize = 1;
+	
+	public int generalObjectRed = 255;
+	
+	public int generalObjectBlue = 255;
+	
+	public int generalObjectGreen = 255;
+	
+	public boolean moveable = false;
+
+	//SchematicRenderer constants
+	public final int gateSize = 2;
+	public final int leftEdge = WINDOW_WIDTH / 20;
+	public final int rightEdge = WINDOW_WIDTH - leftEdge;
+	public final int bottomEdge = leftEdge;
+	public final int topEdge = WINDOW_HEIGHT - bottomEdge;
+	public static boolean frame = false;
+	public static int scaleFactor = 40;
 
 }

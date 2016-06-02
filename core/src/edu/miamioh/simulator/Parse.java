@@ -19,7 +19,8 @@ public class Parse {
 	private String							rootPath;
 	
 	private ParseTree 						root_tree;
-	private Hashtable<String, ModuleInstance> subModules;
+	private ArrayList<ModuleInstance> 		subModules_list;
+	private Hashtable<String, ModuleInstance> subModules_hash;
 	private ArrayList<ParseTree> 			subTrees;
 	private Hashtable<String, ParseTree> 	subTreesHash;
 	
@@ -48,7 +49,8 @@ public class Parse {
 
 		subTrees = new ArrayList<>();
 		subTreesHash = new Hashtable<>();
-		subModules = new Hashtable<>();
+		subModules_hash = new Hashtable<>();
+		subModules_list = new ArrayList<>();
 		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(rootPath + "core/assets/modules/" + fileName));
 		Verilog2001Lexer lexer = new Verilog2001Lexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -83,6 +85,7 @@ public class Parse {
 		{
 			this.simComb(mode);
 			this.simSequ(mode);
+			root_module.getVisitor().clean_sim_cycle();
 			
 			errorText.setText("Simulation Results:");
 			for(int i = 0; i < root_module.getVars_list().size(); ++i) {
@@ -96,21 +99,25 @@ public class Parse {
 		
 		SimVisitor visitor = root_module.getVisitor();
 		
-		// Assume the circuit is steady at the start. 
-		// Simulate it and let it change it's own steady or not steady state.
-		visitor.setState(SimVisitor.STEADY);
 		do {
+			// Assume 6the circuit is steady at the start. 
+			// Simulate it and let it change it's own steady or not steady state.
+			visitor.setState(SimVisitor.STEADY);
+			for(ModuleInstance module : this.subModules_list) {
+				module.getVisitor().setState(SimVisitor.STEADY);
+			}
+			
 			// Run one simulation cycle for combinational circuit
 			visitor.next_sim_cycle();
 			visitor.visit(root_tree);
+			System.out.println("State Check: " + visitor.getState());
 		} while(visitor.getState() == SimVisitor.NOT_STEADY);
 	}
 	
 	public void simSequ(int mode) {
-		// Toggle sequ clock, simulate with that clock, clean and toggle off
+		// Toggle sequ clock, simulate with that clock, and toggle off
 		root_module.getVisitor().toggleSequClock();
 		root_module.getVisitor().visit(root_tree);
-		root_module.getVisitor().clean_sim_cycle();
 		root_module.getVisitor().toggleSequClock();
 	}
 	
@@ -165,9 +172,11 @@ public class Parse {
 	public void setIs_no_parse_errors(Boolean value) {this.is_no_parse_errors = value;}
 	public Boolean is_compiled_yet() { return is_compiled;}
 	
+	public ParseTree getRootTree() {return this.root_tree;}
 	public ArrayList<ParseTree> getSubTrees() 				{return this.subTrees;}
 	public Hashtable<String, ParseTree> getSubTreesHash() 	{return this.subTreesHash;}
-	public Hashtable<String, ModuleInstance> getSubModules() {return this.subModules;}
+	public Hashtable<String, ModuleInstance> getSubModulesHash() {return this.subModules_hash;}
+	public ArrayList<ModuleInstance> getSubModulesList() {return this.subModules_list;}
 	
 	public class VerboseListenerE extends BaseErrorListener
 	{ 

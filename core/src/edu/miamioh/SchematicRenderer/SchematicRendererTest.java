@@ -6,15 +6,20 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.Disposable;
-import edu.miamioh.verilogworld.WorldController;
+import edu.miamioh.worldEditor.WorldController;
+import edu.miamioh.util.Constants;
+
+/**
+ * @author bdshaffer73
+ */
 
 public class SchematicRendererTest implements Disposable {
 
     private WorldController worldController;
     private Constants constants = new Constants();
 
-    private int SCREEN_WIDTH = constants.DEFAULT_WIDTH;
-    private int SCREEN_HEIGHT = constants.DEFAULT_HEIGHT;
+    private int SCREEN_WIDTH = constants.WINDOW_WIDTH;
+    private int SCREEN_HEIGHT = constants.WINDOW_HEIGHT;
     private int leftEdge = constants.leftEdge;
     private int rightEdge = constants.rightEdge;
     private int topEdge = constants.topEdge;

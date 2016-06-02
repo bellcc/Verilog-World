@@ -60,8 +60,9 @@ public class ParseListener extends Verilog2001BaseListener
 	private ArrayList<ParseTree>			subTrees;
 	private Hashtable<String, ParseTree>	subTreesHash;
 	private Parse							Compiler;
+	private SimVisitor						visitor;
 
-	public ParseListener(Verilog2001Parser parser, Parse Compiler, ModuleInstance module)
+	public ParseListener(SimVisitor visitor, Verilog2001Parser parser, Parse Compiler, ModuleInstance module)
 	{
 		this.is_var_identifier = false;
 		this.is_number = false;
@@ -80,6 +81,7 @@ public class ParseListener extends Verilog2001BaseListener
 		this.parameter_value_stack = new Stack<Integer>();
 		
 		this.Compiler = Compiler;
+		this.visitor = visitor;
 	}
 
 	/* --------------------------------------------------------------------------
@@ -114,7 +116,7 @@ public class ParseListener extends Verilog2001BaseListener
 			int value = parameter_value_stack.pop();
 
 			/* create the var */
-			new_var = new ParseRegWire();
+			new_var = new ParseRegWire(visitor);
 			new_var.addParameter(name, MSB_range - LSB_range + 1, value);
 
 			/* add to the hash and list */
@@ -159,7 +161,7 @@ public class ParseListener extends Verilog2001BaseListener
 			String name = var_stack.pop();
 
 			/* create the var */
-			new_var = new ParseRegWire();
+			new_var = new ParseRegWire(visitor);
 			new_var.addWire(name, MSB_range - LSB_range + 1);
 
 			/* add to the hash and list */
@@ -193,7 +195,7 @@ public class ParseListener extends Verilog2001BaseListener
 			String name = var_stack.pop();
 
 			/* create the var */
-			new_var = new ParseRegWire();
+			new_var = new ParseRegWire(visitor);
 			new_var.addReg(name, MSB_range - LSB_range + 1);
 
 			/* add to the hash and list */
@@ -237,7 +239,7 @@ public class ParseListener extends Verilog2001BaseListener
 
 			if (ports_list.contains(name)) {
 				/* create the var */
-				new_var = new ParseRegWire();
+				new_var = new ParseRegWire(visitor);
 				new_var.addReg(name, MSB_range - LSB_range + 1);
 				new_var.setRole(WireRoleType.INPUT);
 
@@ -349,7 +351,7 @@ public class ParseListener extends Verilog2001BaseListener
 			
 			if (ports_list.contains(name)) {
 				/* create the var */
-				new_var = new ParseRegWire();
+				new_var = new ParseRegWire(visitor);
 				new_var.addWire(name, MSB_range - LSB_range + 1);
 				new_var.setRole(WireRoleType.OUTPUT);
 	
@@ -397,7 +399,7 @@ public class ParseListener extends Verilog2001BaseListener
 			String name = var_stack.pop();
 
 			/* create the var */
-			new_reg = new ParseRegWire();
+			new_reg = new ParseRegWire(visitor);
 			new_reg.addReg(name, MSB_range - LSB_range + 1);
 			new_reg.setRole(WireRoleType.OUTPUT);
 
@@ -641,7 +643,8 @@ public class ParseListener extends Verilog2001BaseListener
 		// Create the new module instance
 		if (newTree != null) {
 			ModuleInstance newModule = new ModuleInstance(parser, Compiler, newTree);
-			Compiler.getSubModules().put(instanceName, newModule);
+			Compiler.getSubModulesHash().put(instanceName, newModule);
+			Compiler.getSubModulesList().add(newModule);
 		}
 	}
 	

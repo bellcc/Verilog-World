@@ -50,15 +50,12 @@ public class WorldController {
 		//Stage homeStage = WorldRenderer.getWorldRenderer().getHomeStage();
 		Stage blockStage = WorldRenderer.getWorldRenderer().getBlockStage();
 		Stage tileStage = WorldRenderer.getWorldRenderer().getTileStage();
-		
-		//**
-		for(int index=0;index<multiplexer.size();index++) {
-			
-			multiplexer.removeProcessor(index);
-		
-		}
-		
-		System.out.println("Multiplexer Size: " + multiplexer.size());
+
+		multiplexer.removeProcessor(toolsStage);
+		//multiplexer.removeProcessor(homeStage);
+		multiplexer.removeProcessor(blockStage);
+		multiplexer.removeProcessor(tileStage);
+		multiplexer.removeProcessor(inputProcess);
 		
 		boolean homeActor = WorldRenderer.getWorldRenderer().getHomeActor();
 		boolean blockActor = WorldRenderer.getWorldRenderer().getBlocksActor();
@@ -80,8 +77,7 @@ public class WorldController {
 			
 		}
 		
-		multiplexer.addProcessor(inputProcess);
-		
+		multiplexer.addProcessor(inputProcess);		
 		Gdx.input.setInputProcessor(multiplexer);
 		
 	}
