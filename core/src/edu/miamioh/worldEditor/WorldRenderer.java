@@ -8,36 +8,21 @@
 package edu.miamioh.worldEditor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import edu.miamioh.util.Constants;
 import edu.miamioh.worldEditor.actors.BlocksActor;
 import edu.miamioh.worldEditor.actors.HomeActor;
 import edu.miamioh.worldEditor.actors.TilesActor;
+import edu.miamioh.worldEditor.blockActors.BlankBlockActor;
+import edu.miamioh.worldEditor.tileActors.BlankTileActor;
 
 public class WorldRenderer implements Disposable{
 	
@@ -54,10 +39,21 @@ public class WorldRenderer implements Disposable{
 	
 	private Stage stage;
 	
-	private boolean homeActor;
-	private boolean blocksActor;
-	private boolean tilesActor;
+	private Stage homeStage;
+	private Stage blockStage;
+	private Stage tileStage;
 	
+	private static boolean homeActor;
+	private static boolean blocksActor;
+	private static boolean tilesActor;
+	
+	private boolean blankBlockState;
+
+	private boolean blankTileState;
+	
+	private static int selectedRow;
+	private static int selectedColumn;
+		
 	public WorldRenderer(WorldController worldController) {
 		
 		init();
@@ -77,29 +73,70 @@ public class WorldRenderer implements Disposable{
 
 		renderer = new ShapeRenderer();
 		
-		stage = new Stage();
+		selectedRow = -1;
+		selectedColumn = -1;
 				
+		blankBlockState = false;
+		blankTileState = false;
+
+		resetStates();
+		
+		stage = new Stage();
+		blockStage = new Stage();		
+		tileStage = new Stage();
+		
 		worldController.initInputMultiplexer();
 		
 		createToolBar();
+		createBlockStage();
+		createTileStage();
 		
 	}
 	
-	public void createOptionsMenu() {
+	public void resetSelectedItems() {
 		
-		if(homeActor) {
-			
-			
-			
-		}else if(blocksActor) {
-			
-			
-			
-		}else if(tilesActor) {
-			
-			
-			
-		}
+		blankBlockState = false;
+
+	}
+		
+	public void resetStates() {
+		
+		resetTileStates();
+		resetBlockStates();
+		
+	}
+	
+	public void resetTileStates() {
+		
+		blankTileState = false;
+		
+	}
+	
+	public void resetBlockStates() {
+		
+		blankBlockState = false;
+		
+	}
+	
+	public void createTileStage() {
+		
+		Actor tileBlock = new BlankTileActor().getButton();
+		tileBlock.setPosition(50, 500);
+		tileBlock.setHeight(100);
+		tileBlock.setWidth(100);
+		
+		tileStage.addActor(tileBlock);
+		
+	}
+
+	public void createBlockStage() {
+		
+		Actor blankBlock = new BlankBlockActor().getButton();
+		blankBlock.setPosition(50, 500);
+		blankBlock.setHeight(100);
+		blankBlock.setWidth(100);
+		
+		blockStage.addActor(blankBlock);
 		
 	}
 	
@@ -146,9 +183,35 @@ public class WorldRenderer implements Disposable{
 		
 		renderBackground();
 		renderSelector();
-
+		
+		renderToolBar();
+		//renderSelectedCell();
+		
+		System.out.println("Block: " + blankBlockState);
+		System.out.println("Tile : " + blankTileState);
+		
+	}
+	
+	public void renderToolBar() {
+		
 		stage.act(Gdx.graphics.getDeltaTime());
-	    stage.draw();
+		stage.draw();
+		
+		if(homeActor) {
+			
+			
+			
+		}else if(blocksActor) {
+			
+			blockStage.act(Gdx.graphics.getDeltaTime());
+			blockStage.draw();
+			
+		}else if(tilesActor) {
+			
+			tileStage.act(Gdx.graphics.getDeltaTime());
+			tileStage.draw();
+			
+		}
 		
 	}
 
@@ -209,6 +272,26 @@ public class WorldRenderer implements Disposable{
 		camera.setToOrtho(false, w, h);
 		//camera.translate(translateX, translateY);
 		camera.translate(translateX - 50, translateY);	
+		
+	}
+	
+	public void renderSelectedCell() {
+		
+		int worldWidth = Constants.WORLD_WIDTH;
+		int worldHeight = Constants.WORLD_HEIGHT;
+		
+		if(selectedRow >= 0 && selectedRow <= (worldHeight -1) && selectedColumn >= 0 && selectedColumn <= (worldWidth - 1)) {
+
+			int x = selectedColumn * Constants.GRID_WIDTH;
+			int y = selectedRow * Constants.GRID_HEIGHT;
+				
+			renderer.begin(ShapeType.Filled);
+			renderer.setColor(Color.DARK_GRAY);
+			renderer.rect(x, y, Constants.GRID_WIDTH, Constants.GRID_HEIGHT);
+
+			renderer.end();
+			
+		}
 		
 	}
 	
@@ -370,13 +453,23 @@ public class WorldRenderer implements Disposable{
 	public Stage getStage() {
 		return stage;
 	}
+	
+	public Stage getBlockStage() {
+		
+		return blockStage;
+	}
+	
+	public Stage getTileStage() {
+		
+		return tileStage;
+	}
 
 	public boolean getHomeActor() {
 		return homeActor;
 	}
 
 	public void setHomeActor(boolean homeActor) {
-		this.homeActor = homeActor;
+		WorldRenderer.homeActor = homeActor;
 	}
 
 	public boolean getBlocksActor() {
@@ -384,7 +477,7 @@ public class WorldRenderer implements Disposable{
 	}
 
 	public void setBlocksActor(boolean blocksActor) {
-		this.blocksActor = blocksActor;
+		WorldRenderer.blocksActor = blocksActor;
 	}
 
 	public boolean getTilesActor() {
@@ -392,7 +485,47 @@ public class WorldRenderer implements Disposable{
 	}
 
 	public void setTilesActor(boolean tilesActor) {
-		this.tilesActor = tilesActor;
+		WorldRenderer.tilesActor = tilesActor;
+	}
+
+	public boolean getBlankBlockState() {
+		return blankBlockState;
+	}
+
+	public void setBlankBlockState(boolean blankBlock) {
+		this.blankBlockState = blankBlock;
+	}
+
+	public boolean getBlankTileState() {
+		return blankTileState;
+	}
+
+	public void setBlankTileState(boolean blankTile) {
+		this.blankTileState = blankTile;
+	}
+
+	public static int getSelectedRow() {
+		return selectedRow;
+	}
+
+	public static void setSelectedRow(int selectedRow) {
+		WorldRenderer.selectedRow = selectedRow;
+	}
+
+	public static int getSelectedColumn() {
+		return selectedColumn;
+	}
+
+	public static void setSelectedColumn(int selectedColumn) {
+		WorldRenderer.selectedColumn = selectedColumn;
+	}
+
+	public Stage getHomeStage() {
+		return homeStage;
+	}
+
+	public void setHomeStage(Stage homeStage) {
+		this.homeStage = homeStage;
 	}
 
 }

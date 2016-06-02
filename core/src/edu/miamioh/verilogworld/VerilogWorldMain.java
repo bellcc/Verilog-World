@@ -13,11 +13,13 @@ import com.badlogic.gdx.Gdx;
 
 import edu.miamioh.worldEditor.WorldController;
 import edu.miamioh.worldEditor.WorldRenderer;
+import edu.miamioh.SchematicRenderer.*;
 
 public class VerilogWorldMain implements ApplicationListener {
 	
 	private WorldController worldController;
 	private WorldRenderer worldRenderer;
+	private SchematicRendererTest srTest;
 	
 	private boolean paused;
 	
@@ -30,6 +32,7 @@ public class VerilogWorldMain implements ApplicationListener {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		worldController = new WorldController();
 		worldRenderer = new WorldRenderer(worldController);
+		srTest = new SchematicRendererTest(worldController);
 		
 		paused = false;
 		
@@ -67,6 +70,7 @@ public class VerilogWorldMain implements ApplicationListener {
 		}
 		
 		worldRenderer.render();
+//		srTest.render();
 		
 	}
 	
