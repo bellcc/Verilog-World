@@ -19,8 +19,9 @@ public class WorldController {
 	
 	private static WorldController currentWorldController;
 		
-	private MyInputProcessor inputProcess = new MyInputProcessor();
-
+	private MyInputProcessor inputProcess;
+	private InputMultiplexer multiplexer;
+	
 	public WorldController() {
 		
 		currentWorldController = this;
@@ -30,13 +31,59 @@ public class WorldController {
 	
 	public void initInputMultiplexer() {
 		
-		Stage toolBarStage = WorldRenderer.getWorldRenderer().getStage();
-		Stage blockStage = WorldRenderer.getWorldRenderer().getBlockStage();
+		Stage toolsStage = WorldRenderer.getWorldRenderer().getStage();
+
+		inputProcess = new MyInputProcessor();
+		multiplexer = new InputMultiplexer();
 		
-		InputMultiplexer multiplexer = new InputMultiplexer();
-		multiplexer.addProcessor(toolBarStage);
-		multiplexer.addProcessor(blockStage);
+		multiplexer.addProcessor(toolsStage);
 		multiplexer.addProcessor(inputProcess);
+		
+		Gdx.input.setInputProcessor(multiplexer);
+		
+	}
+	
+	public void updateInputMultiplexer() {
+		
+		Stage toolsStage = WorldRenderer.getWorldRenderer().getStage();
+		
+		Stage homeStage = WorldRenderer.getWorldRenderer().getHomeStage();
+		Stage blockStage = WorldRenderer.getWorldRenderer().getBlockStage();
+		Stage tileStage = WorldRenderer.getWorldRenderer().getTileStage();
+		
+		//**
+		for(int index=0;index<multiplexer.size();index++) {
+			
+			multiplexer.removeProcessor(index);
+		
+		}
+		
+		//multiplexer = new InputMultiplexer();
+		
+		multiplexer.removeProcessor(inputProcess);
+		
+		boolean homeActor = WorldRenderer.getWorldRenderer().getHomeActor();
+		boolean blockActor = WorldRenderer.getWorldRenderer().getBlocksActor();
+		boolean tileActor = WorldRenderer.getWorldRenderer().getTilesActor();
+
+		multiplexer.addProcessor(toolsStage);
+		
+		if(homeActor) {
+			
+			//multiplexer.addProcessor(homeStage);
+			
+		}else if(blockActor) {
+			
+			multiplexer.addProcessor(blockStage);
+			
+		}else if(tileActor) {
+			
+			multiplexer.addProcessor(tileStage);
+			
+		}
+		
+		multiplexer.addProcessor(inputProcess);
+		
 		Gdx.input.setInputProcessor(multiplexer);
 		
 	}
@@ -93,7 +140,7 @@ public class WorldController {
 		
 	}
 	
-	public WorldController getCurrentWorldController() {
+	public static WorldController getCurrentWorldController() {
 		return currentWorldController;
 	}
 	

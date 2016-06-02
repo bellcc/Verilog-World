@@ -14,6 +14,7 @@ import edu.miamioh.util.Constants;
 import edu.miamioh.verilogworld.VerilogWorldMain;
 
 public class DesktopLauncher {
+
 	public static void main (String[] arg) {
 		
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
