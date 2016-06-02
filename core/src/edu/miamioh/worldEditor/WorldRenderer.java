@@ -17,6 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Disposable;
 
+import edu.miamioh.gameObjects.Block;
+import edu.miamioh.linked.LinkedList;
 import edu.miamioh.util.Constants;
 import edu.miamioh.worldEditor.actors.BlocksActor;
 import edu.miamioh.worldEditor.actors.HomeActor;
@@ -50,9 +52,6 @@ public class WorldRenderer implements Disposable{
 	private boolean blankBlockState;
 
 	private boolean blankTileState;
-	
-	private static int selectedRow;
-	private static int selectedColumn;
 		
 	public WorldRenderer(WorldController worldController) {
 		
@@ -72,9 +71,6 @@ public class WorldRenderer implements Disposable{
 		camera.setToOrtho(false, w, h);
 
 		renderer = new ShapeRenderer();
-		
-		selectedRow = -1;
-		selectedColumn = -1;
 				
 		blankBlockState = false;
 		blankTileState = false;
@@ -185,10 +181,30 @@ public class WorldRenderer implements Disposable{
 		renderSelector();
 		
 		renderToolBar();
+		renderLevelBlocks();
 		//renderSelectedCell();
 		
-		System.out.println("Block: " + blankBlockState);
-		System.out.println("Tile : " + blankTileState);
+		//System.out.println("Block: " + blankBlockState);
+		//System.out.println("Tile : " + blankTileState);
+		
+	}
+	
+	public void renderLevelBlocks() {
+		
+		LinkedList<Block> blockList = worldController.getCurrentLevel().blockList;
+		
+		for(int i=1;i<=blockList.getLength();i++) {
+			
+			int y = blockList.getEntry(i).getRow() * Constants.GRID_WIDTH;
+			int x = blockList.getEntry(i).getColumn() * Constants.GRID_HEIGHT;
+			
+			renderer.begin(ShapeType.Filled);
+			renderer.setColor(Color.PINK);
+			renderer.rect(x, y, Constants.GRID_WIDTH, Constants.GRID_HEIGHT);
+
+			renderer.end();			
+			
+		}
 		
 	}
 	
@@ -272,26 +288,6 @@ public class WorldRenderer implements Disposable{
 		camera.setToOrtho(false, w, h);
 		//camera.translate(translateX, translateY);
 		camera.translate(translateX - 50, translateY);	
-		
-	}
-	
-	public void renderSelectedCell() {
-		
-		int worldWidth = Constants.WORLD_WIDTH;
-		int worldHeight = Constants.WORLD_HEIGHT;
-		
-		if(selectedRow >= 0 && selectedRow <= (worldHeight -1) && selectedColumn >= 0 && selectedColumn <= (worldWidth - 1)) {
-
-			int x = selectedColumn * Constants.GRID_WIDTH;
-			int y = selectedRow * Constants.GRID_HEIGHT;
-				
-			renderer.begin(ShapeType.Filled);
-			renderer.setColor(Color.DARK_GRAY);
-			renderer.rect(x, y, Constants.GRID_WIDTH, Constants.GRID_HEIGHT);
-
-			renderer.end();
-			
-		}
 		
 	}
 	
@@ -502,22 +498,6 @@ public class WorldRenderer implements Disposable{
 
 	public void setBlankTileState(boolean blankTile) {
 		this.blankTileState = blankTile;
-	}
-
-	public static int getSelectedRow() {
-		return selectedRow;
-	}
-
-	public static void setSelectedRow(int selectedRow) {
-		WorldRenderer.selectedRow = selectedRow;
-	}
-
-	public static int getSelectedColumn() {
-		return selectedColumn;
-	}
-
-	public static void setSelectedColumn(int selectedColumn) {
-		WorldRenderer.selectedColumn = selectedColumn;
 	}
 
 	public Stage getHomeStage() {
