@@ -35,11 +35,13 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import edu.miamioh.simulator.Verilog2001Parser.IdentifierContext;
-import edu.miamioh.simulator.Verilog2001Parser.Identifier_typesContext;
-import edu.miamioh.simulator.Verilog2001Parser.List_of_identifiersContext;
-import edu.miamioh.simulator.Verilog2001Parser.List_of_port_connectionsContext;
-import edu.miamioh.simulator.Verilog2001Parser.Variable_lvalueContext;
+import edu.miamioh.simulator.AntlrGen.Verilog2001BaseListener;
+import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
+import edu.miamioh.simulator.AntlrGen.Verilog2001Parser.IdentifierContext;
+import edu.miamioh.simulator.AntlrGen.Verilog2001Parser.Identifier_typesContext;
+import edu.miamioh.simulator.AntlrGen.Verilog2001Parser.List_of_identifiersContext;
+import edu.miamioh.simulator.AntlrGen.Verilog2001Parser.List_of_port_connectionsContext;
+import edu.miamioh.simulator.AntlrGen.Verilog2001Parser.Variable_lvalueContext;
 
 public class ParseListener extends Verilog2001BaseListener
 {
@@ -49,6 +51,7 @@ public class ParseListener extends Verilog2001BaseListener
 	private boolean							is_var_identifier;
 	private boolean							is_number;
 	private boolean							is_var_assign_left;
+	private boolean 						isInSequAlways;
 	
 	private int								MSB_range;
 	private int								LSB_range;
@@ -67,6 +70,7 @@ public class ParseListener extends Verilog2001BaseListener
 		this.is_var_identifier = false;
 		this.is_number = false;
 		this.is_var_assign_left = false;
+		this.isInSequAlways = false;
 
 		this.parser = parser;
 		
@@ -163,6 +167,8 @@ public class ParseListener extends Verilog2001BaseListener
 			/* create the var */
 			new_var = new ParseRegWire(visitor);
 			new_var.addWire(name, MSB_range - LSB_range + 1);
+			if (isInSequAlways) {new_var.setSequential();}
+			else {new_var.setCombinational();}
 
 			/* add to the hash and list */
 			vars_list.add(new_var);
@@ -197,6 +203,8 @@ public class ParseListener extends Verilog2001BaseListener
 			/* create the var */
 			new_var = new ParseRegWire(visitor);
 			new_var.addReg(name, MSB_range - LSB_range + 1);
+			if (isInSequAlways) {new_var.setSequential();}
+			else {new_var.setCombinational();}
 
 			/* add to the hash and list */
 			vars_list.add(new_var);
@@ -541,7 +549,7 @@ public class ParseListener extends Verilog2001BaseListener
 		ParseRegWire var = hash_vars.get(name);
 
 		if (var != null) {
-			var.setCombinational();
+			//var.setCombinational();
 		}
 		else {
 			// Report if the variable has not been declared.
@@ -556,6 +564,16 @@ public class ParseListener extends Verilog2001BaseListener
 	@Override
 	public void exitVariable_init(Verilog2001Parser.Variable_initContext ctx) {
 		
+	}
+	
+	@Override
+	public void enterSEQUENTIAL_ALWAYS(Verilog2001Parser.SEQUENTIAL_ALWAYSContext ctx) {
+		this.isInSequAlways = true;
+	}
+	
+	@Override
+	public void exitSEQUENTIAL_ALWAYS(Verilog2001Parser.SEQUENTIAL_ALWAYSContext ctx) {
+		this.isInSequAlways = false;
 	}
 	
 	@Override

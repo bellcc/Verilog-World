@@ -3,8 +3,18 @@ package edu.miamioh.util;
 
 import org.antlr.v4.runtime.tree.*;
 import org.antlr.v4.runtime.*;
+import edu.miamioh.simulator.SimVisitor;
+import edu.miamioh.simulator.ModuleInstance;
+import edu.miamioh.simulator.ParseRegWire;
 
 public class DebugUtils {
+	
+	public static void printModuleVars(SimVisitor visitor, ModuleInstance module) {
+		System.out.println("*********** Cycle ************");
+		for(ParseRegWire var : module.getVars_list()) {
+			System.out.println(var.getName() + ": " + var.getValue(visitor.getOldIndex()));
+		}
+	}
 	
 	/*
 	 * Prints a nicely formatted parse tree

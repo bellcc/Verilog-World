@@ -30,6 +30,9 @@ import java.util.Hashtable;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import edu.miamioh.simulator.AntlrGen.Verilog2001BaseVisitor;
+import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
+
 public class SimVisitor extends Verilog2001BaseVisitor<Value>
 {
 	private boolean							is_sequential_sim_cycle;
@@ -39,7 +42,8 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 	private boolean							is_sequential;
 
 	private ModuleInstance					module;
-	private Hashtable<String, ModuleInstance> subModules;
+	private Hashtable<String, ModuleInstance> subModules_hash;
+	private ArrayList<ModuleInstance> 		subModules_list;
 	private Hashtable<String, ParseRegWire>	hash_vars;
 	private ArrayList<ParseRegWire>			vars_list;
 	private ArrayList<String>				ports_list;
@@ -55,18 +59,21 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 	
 	private Value case_expression;
 
-	public SimVisitor(ModuleInstance module, Hashtable<String, ModuleInstance> subModules)
+	public SimVisitor(ModuleInstance module, 
+					  Hashtable<String, ModuleInstance> subModules_hash,
+					  ArrayList<ModuleInstance> subModules_list)
 	{
 		this.is_combinational = false;
-		this.is_sequential = false;
+		this.is_sequential = module.isSequ();
 
-		this.is_sequential_sim_cycle = true;
+		this.is_sequential_sim_cycle = false;
 		this.cycle_time = 0;
 
 		this.new_val_idx = 0;
 		this.old_val_idx = 1;
 
-		this.subModules = subModules;
+		this.subModules_hash = subModules_hash;
+		this.subModules_list = subModules_list;
 		this.module = module;
 		this.ports_list = module.getPorts_list();
 		this.vars_list = module.getVars_list();
@@ -108,22 +115,59 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		}
 	}
 	
+	// Only called for root module
 	public void toggleSequClock() {
 		
 		/* toggle between sequential sims and combinational sims */
 		is_sequential_sim_cycle = (is_sequential_sim_cycle) ? false : true;
+		
+		// Pass the clock signal
+		int clockValue = 0;
+		if (is_sequential_sim_cycle) {clockValue = 1;}
+		
+		// Update root module clock
+		ParseRegWire wire = module.getHash_vars().get("clk");
+		if (wire != null) {
+			wire.setValue(new_val_idx, clockValue, 1);
+			wire.setValue(old_val_idx, clockValue, 1);
+		}
+		
+		// Update clock in all other modules
+		for (ModuleInstance sub : this.subModules_list) {
+			wire = sub.getHash_vars().get("clk");
+			
+			if (wire != null) {
+				wire.setValue(new_val_idx, clockValue, 1);
+				wire.setValue(old_val_idx, clockValue, 1);
+			}
+		}
 	}
 	
-	public void syncSimTime(SimVisitor visitor) {
+	public void resetSequUpdateFlag() {
+		
+		// Reset wires in root module
+		for(ParseRegWire wire : module.getVars_list()) {
+			wire.resetUpdateFlag();
+		}
+		
+		// Reset wires in all other modules
+		for (ModuleInstance sub : this.subModules_list) {
+			for(ParseRegWire wire : sub.getVars_list()) {
+				wire.resetUpdateFlag();
+			}
+		}
+	}
+	
+	// Updates sim information from parent module into child module
+	public void syncSimInfo(SimVisitor visitor) {
+		
 		this.new_val_idx = visitor.new_val_idx;
 		this.old_val_idx = visitor.old_val_idx;
+		this.is_sequential_sim_cycle = visitor.is_sequential_sim_cycle;
 	}
 	
 	public int getOldIndex() {return this.old_val_idx;}
-	public void setState(int state) {
-		System.out.println("Change: " + state);
-		this.state = state;
-	}
+	public void setState(int state) {this.state = state;}
 	public int getState() {return this.state;}
 
 	/* --------------------------------------------------------------------------
@@ -141,6 +185,8 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 	{
 		for (int i = 0; i < ctx.statement().size(); i++)
 		{
+			Verilog2001Parser.ExpressionContext expr = ctx.expression(i);
+			int test = ctx.statement().size();
 			if (ctx.expression(i) == null && i == ctx.statement().size() - 1)
 			{
 				/* ELSE statment */
@@ -271,25 +317,20 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 	public Value visitNonblocking_assignment(
 			Verilog2001Parser.Nonblocking_assignmentContext ctx)
 	{
-		if (is_sequential_sim_cycle)
+		/* Only store on simulate cycles */
+		if (!is_sequential)
 		{
-			/* Only store on simulate cycles */
-			if (!is_sequential)
-			{
-				System.out.println("ERROR: Non Blocking Statement in a combinational block");
-				return new Value(false);
-			}
-
-			// System.out.println("Visit:"+ctx.getText());
-
-			Value left = visit(ctx.variable_lvalue());
-			Value right = visit(ctx.expression());
-
-			/* Update the data structure with the right value */
-			left.setVar(new_val_idx, right.asInt(), cycle_time);
-
-			// System.out.println("AssignNonBlocking:"+left.getVarName()+" Value = "+right);
+			System.out.println("ERROR: Non Blocking Statement in a combinational block");
+			return new Value(false);
 		}
+
+		// System.out.println("Visit:"+ctx.getText());
+
+		Value left = visit(ctx.variable_lvalue());
+		Value right = visit(ctx.expression());
+
+		/* Update the data structure with the right value */
+		left.setVar(new_val_idx, right.asInt(), cycle_time);
 
 		return null;
 	}
@@ -504,6 +545,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 	public Value visitCOMPARES(Verilog2001Parser.COMPARESContext ctx)
 	{
 		Value left = visit(ctx.expression(0));
+		if (left == null) {return null;}
 		Value right = visit(ctx.expression(1));
 
 		switch (ctx.op.getType())
@@ -679,7 +721,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		
 		// Get the module
 		String moduleName = ctx.module_instance(0).name_of_instance().module_instance_identifier().getText();
-		ModuleInstance targetModule = subModules.get(moduleName);
+		ModuleInstance targetModule = subModules_hash.get(moduleName);
 		
 		SimVisitor visitor = targetModule.getVisitor();
 		
@@ -705,7 +747,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		}
 		
 		// Simulate new module
-		visitor.syncSimTime(this); // Must syncronize old and new value indicies
+		visitor.syncSimInfo(this); // Must syncronize old and new value indicies
 		visitor.visit(targetModule.getParseTree());
 		
 		// Connect output of that module to the required wires

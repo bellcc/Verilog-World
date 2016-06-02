@@ -1,13 +1,14 @@
 package edu.miamioh.SchematicRenderer;
 
 import edu.miamioh.simulator.*;
+import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
 
 /**
  * Visits nodes on the parse tree to build the schematic.
  *
  * Created by shaffebd.
  */
-public class SchematicVisitor<T> extends edu.miamioh.simulator.Verilog2001BaseVisitor<T> {
+public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001BaseVisitor<T> {
     /**
      * {@inheritDoc}
      * <p>
