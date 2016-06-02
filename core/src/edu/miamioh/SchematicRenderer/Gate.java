@@ -1,6 +1,7 @@
 package edu.miamioh.SchematicRenderer;
 
 import java.util.ArrayList;
+import edu.miamioh.util.Constants;
 
 /**
  * This class describes all gates, including ports.

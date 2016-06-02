@@ -2,7 +2,7 @@ package edu.miamioh.SchematicRenderer;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
-
+import edu.miamioh.util.Constants;
 import java.util.ArrayList;
 
 /**
@@ -19,8 +19,8 @@ public class SchematicRenderer implements Disposable {
     private int xcount = 0;
     private int yCenter = 0;
     private int maxLevel = 0;
-    private int midWidth = constants.DEFAULT_WIDTH / 2;
-    private int midHeight = constants.DEFAULT_HEIGHT / 2;
+    private int midWidth = constants.WINDOW_WIDTH / 2;
+    private int midHeight = constants.WINDOW_HEIGHT / 2;
 
     /**
      * Default schematic Renderer constructor. Does nothing.

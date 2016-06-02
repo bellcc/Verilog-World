@@ -49,6 +49,10 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 	
 	private Integer							clock_cycle;
 	
+	private int 							state;
+	public final static int 				STEADY = 0;
+	public final static int					NOT_STEADY = 1;
+	
 	private Value case_expression;
 
 	public SimVisitor(ModuleInstance module, Hashtable<String, ModuleInstance> subModules)
@@ -70,6 +74,8 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		
 		/* initialize a clock tracker */
 		this.clock_cycle = 0;
+		
+		this.state = SimVisitor.STEADY;
 	}
 
 	/* --------------------------------------------------------------------------
@@ -84,18 +90,9 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 	/* toggles the access index into the values */
 	public void next_sim_cycle()
 	{
-		/* increase the cycle stamp */
-		cycle_time++;
 		/* toggle the idx for old and new */
 		new_val_idx = old_val_idx;
 		old_val_idx = (new_val_idx == 1) ? 0 : 1;
-		/* toggle between sequential sims and combinational sims */
-		is_sequential_sim_cycle = (is_sequential_sim_cycle) ? false : true;
-
-		if (is_sequential_sim_cycle)
-		{
-			clock_cycle++;
-		}
 	}
 
 	public void clean_sim_cycle()
@@ -111,10 +108,23 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		}
 	}
 	
+	public void toggleSequClock() {
+		
+		/* toggle between sequential sims and combinational sims */
+		is_sequential_sim_cycle = (is_sequential_sim_cycle) ? false : true;
+	}
+	
 	public void syncSimTime(SimVisitor visitor) {
 		this.new_val_idx = visitor.new_val_idx;
 		this.old_val_idx = visitor.old_val_idx;
 	}
+	
+	public int getOldIndex() {return this.old_val_idx;}
+	public void setState(int state) {
+		System.out.println("Change: " + state);
+		this.state = state;
+	}
+	public int getState() {return this.state;}
 
 	/* --------------------------------------------------------------------------
 	 * -----------
@@ -716,6 +726,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 			// Set their values equal to eachother
 			targetWire.setValue(new_val_idx, outWire.getValue(old_val_idx), cycle_time);
 		}
+		this.state = visitor.getState();
 		
 		return null;
 	}

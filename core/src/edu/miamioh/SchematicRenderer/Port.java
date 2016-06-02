@@ -1,7 +1,6 @@
 package edu.miamioh.SchematicRenderer;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
-import edu.miamioh.verilogworld.*;
+import edu.miamioh.util.Constants;
 
 /**
  * Created by shaffebd.
