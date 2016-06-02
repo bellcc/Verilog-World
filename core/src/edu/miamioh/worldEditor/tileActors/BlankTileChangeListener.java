@@ -1,3 +1,10 @@
+
+/**
+ * @author Chris Bell
+ * @date   6-2-2016
+ * @info   
+ */
+
 package edu.miamioh.worldEditor.tileActors;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -11,7 +18,7 @@ public class BlankTileChangeListener extends ChangeListener{
 	public void changed(ChangeEvent event, Actor actor) {
 		
 		System.out.println("Blank Tile Change Listener");
-				
+
 		boolean blankTile = WorldRenderer.getWorldRenderer().getBlankTile();
 		
 		if(blankTile) {

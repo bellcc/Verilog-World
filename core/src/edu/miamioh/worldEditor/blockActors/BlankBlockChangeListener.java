@@ -1,3 +1,10 @@
+
+/**
+ * @author Chris Bell
+ * @date   6-2-2016
+ * @info   
+ */
+
 package edu.miamioh.worldEditor.blockActors;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -7,8 +14,9 @@ public class BlankBlockChangeListener extends ChangeListener{
 
 	@Override
 	public void changed(ChangeEvent event, Actor actor) {
-		
-		System.out.println("Blank Block Change Listener");				
+	
+		System.out.println("Blank Block Change Listener");
+				
 	}
 	
 }

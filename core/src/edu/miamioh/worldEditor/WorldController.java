@@ -47,7 +47,7 @@ public class WorldController {
 		
 		Stage toolsStage = WorldRenderer.getWorldRenderer().getStage();
 		
-		Stage homeStage = WorldRenderer.getWorldRenderer().getHomeStage();
+		//Stage homeStage = WorldRenderer.getWorldRenderer().getHomeStage();
 		Stage blockStage = WorldRenderer.getWorldRenderer().getBlockStage();
 		Stage tileStage = WorldRenderer.getWorldRenderer().getTileStage();
 		
@@ -58,9 +58,7 @@ public class WorldController {
 		
 		}
 		
-		//multiplexer = new InputMultiplexer();
-		
-		multiplexer.removeProcessor(inputProcess);
+		System.out.println("Multiplexer Size: " + multiplexer.size());
 		
 		boolean homeActor = WorldRenderer.getWorldRenderer().getHomeActor();
 		boolean blockActor = WorldRenderer.getWorldRenderer().getBlocksActor();
