@@ -643,7 +643,8 @@ public class ParseListener extends Verilog2001BaseListener
 		// Create the new module instance
 		if (newTree != null) {
 			ModuleInstance newModule = new ModuleInstance(parser, Compiler, newTree);
-			Compiler.getSubModules().put(instanceName, newModule);
+			Compiler.getSubModulesHash().put(instanceName, newModule);
+			Compiler.getSubModulesList().add(newModule);
 		}
 	}
 	

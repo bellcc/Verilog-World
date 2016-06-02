@@ -23,11 +23,5 @@ module Adder_8(a, b, cin, sum, cout);
 
 	assign sum[0] = result0;
 	assign sum[1] = result1;
-	assign sum[2] = result2;
-	assign sum[3] = result3;
-	assign sum[4] = result4;
-	assign sum[5] = result5;
-	assign sum[6] = result6;
-	assign sum[7] = result7;
 
 endmodule

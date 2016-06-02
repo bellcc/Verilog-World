@@ -22,7 +22,7 @@ public class ModuleInstance {
 		this.hash_vars = new Hashtable<>();
 		this.ports_list = new ArrayList<>();
 		
-		visitor = new SimVisitor(this, Compiler.getSubModules());
+		visitor = new SimVisitor(this, Compiler.getSubModulesHash());
 		
 		// Generate symbol table and check syntax
 		ParseTreeWalker walker = new ParseTreeWalker();

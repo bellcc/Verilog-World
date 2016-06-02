@@ -69,8 +69,8 @@ public class VerilogWorldMain implements ApplicationListener {
 			worldController.update();
 		}
 		
-//		worldRenderer.render();
-		srTest.render();
+		worldRenderer.render();
+//		srTest.render();
 		
 	}
 	

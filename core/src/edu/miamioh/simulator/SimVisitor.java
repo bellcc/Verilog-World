@@ -681,6 +681,8 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		String moduleName = ctx.module_instance(0).name_of_instance().module_instance_identifier().getText();
 		ModuleInstance targetModule = subModules.get(moduleName);
 		
+		SimVisitor visitor = targetModule.getVisitor();
+		
 		// Connects wires to new module
 		Verilog2001Parser.List_of_port_connectionsContext ports = ctx.module_instance(0).list_of_port_connections();
 		for(int i = 0; i < ports.identifier().size(); ++i) {
@@ -703,7 +705,6 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		}
 		
 		// Simulate new module
-		SimVisitor visitor = new SimVisitor(targetModule, subModules);
 		visitor.syncSimTime(this); // Must syncronize old and new value indicies
 		visitor.visit(targetModule.getParseTree());
 		
@@ -726,7 +727,11 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 			// Set their values equal to eachother
 			targetWire.setValue(new_val_idx, outWire.getValue(old_val_idx), cycle_time);
 		}
-		this.state = visitor.getState();
+		
+		// Propagate state changes in sub modules to the super module
+		if (visitor.getState() == SimVisitor.NOT_STEADY) {
+			this.state = SimVisitor.NOT_STEADY;
+		}
 		
 		return null;
 	}
