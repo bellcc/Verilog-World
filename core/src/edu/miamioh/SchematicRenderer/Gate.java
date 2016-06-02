@@ -7,7 +7,7 @@ import edu.miamioh.util.Constants;
  * This class describes all gates, including ports.
  * Created by shaffebd.
  */
-public class Gate {
+class Gate {
 
     Constants constants = new Constants();
 

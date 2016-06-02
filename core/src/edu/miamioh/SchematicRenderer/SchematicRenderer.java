@@ -1,8 +1,14 @@
 package edu.miamioh.SchematicRenderer;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
+import edu.miamioh.simulator.Parse;
 import edu.miamioh.util.Constants;
+import edu.miamioh.worldEditor.WorldController;
+
 import java.util.ArrayList;
 
 /**
@@ -10,24 +16,51 @@ import java.util.ArrayList;
  */
 public class SchematicRenderer implements Disposable {
 
-    ArrayList<Gate> gates = new ArrayList<>();
-    ArrayList<Port> ports = new ArrayList<>();
-    ArrayList<String> io = new ArrayList<>();
-    Constants constants = new Constants();
+    private ArrayList<Gate> gates = new ArrayList<>();
+    private ArrayList<Port> ports = new ArrayList<>();
+    private ArrayList<String> conPorts = new ArrayList<>();
+    private Constants constants = new Constants();
+    private ShapeRenderer renderer = new ShapeRenderer();
+    private Parse vTree;
+    private boolean verified = false;
+
+    private WorldController worldController;
 
     private int xCenter = 0;
-    private int xcount = 0;
     private int yCenter = 0;
     private int maxLevel = 0;
-    private int midWidth = constants.WINDOW_WIDTH / 2;
-    private int midHeight = constants.WINDOW_HEIGHT / 2;
 
     /**
-     * Default schematic Renderer constructor. Does nothing.
+     * SchematicRenderer constructor. Takes a Parse object to get Module details for rendering.
+     *
+     * @param vTree A Parse object containing a ParseTree with module items.
      */
-    public SchematicRenderer() {
+    public SchematicRenderer(Parse vTree) {
+
+        this.vTree = vTree;
+
+        if (vTree == null) {
+
+        } else {
+            verified = true;
+        }
+
     }
 
+    public SchematicRenderer(WorldController worldController){
+        this.worldController = worldController;
+    }
+
+    //Public methods for setting up the render
+
+    /**
+     * Adds a new Gate to the schematic.
+     *
+     * @param type   The type of gate, e.g. AND, OR, NOT, etc.
+     * @param inputs The number of inputs the gate has. All NOT gates have one input, so this doesn't affect them.
+     * @param id     The unique name of the port.
+     * @param level  The distance of the gate from the inputs.
+     */
     public void addGate(String type, int inputs, String id, int level) {
 
         if (level > maxLevel)
@@ -37,6 +70,11 @@ public class SchematicRenderer implements Disposable {
 
     }
 
+    /**
+     * Adds a new Input to the schematic.
+     *
+     * @param id The unique name of the Input. All Inputs have only one port, an output.
+     */
     public void addInput(String id) {
 
         Port temp = new Port("INPUT", id, 0);
@@ -44,65 +82,214 @@ public class SchematicRenderer implements Disposable {
 
     }
 
+    /**
+     * Adds a new Output to the schematic.
+     *
+     * @param id The unique name of the Output. All Outputs have only one port, an input.
+     */
     public void addOutput(String id) {
 
-        Port temp = new Port("OUTPUT", id, maxLevel++);
+        Port temp = new Port("OUTPUT", id, maxLevel + 1);
         ports.add(temp);
 
     }
 
-    public void render(ShapeRenderer renderer, int scaleFactor) {
+    /**
+     * Connects two ports together.
+     *
+     * @param id1       The ID of the first Gate/Port being connected
+     * @param portType1 The Type of the first Gate/Port
+     * @param portNum1  The Number of the port. If the Type is "OUT", this is overwritten to "0"
+     * @param id2       The ID of the second Gate/Port being connected
+     * @param portType2 The Type of the second Gate/Port
+     * @param portNum2  The Number of the port. If the Type is "OUT", this is overwritten to "0"
+     */
+    public void connectPorts(String id1, String portType1, int portNum1, String id2, String portType2, int portNum2) {
 
-        GateRenderer grenderer = new GateRenderer();
+        String portA = id1 + "/" + portType1 + "~" + portNum1;
+        String portB = id2 + "/" + portType2 + "~" + portNum2;
 
-        int totalOuts = 0;
-        int totalIns = 0;
-        int skips = 0;
+        conPorts.add(portA);
+        conPorts.add(portB);
 
-        Port tempP;
-        Gate tempG;
+    }
 
-        for (int i = 0; i < ports.size(); i++) {
+    /**
+     * Begins the actual rendering process.
+     */
+    public void render() {
 
-            tempP = ports.get(i);
-            if (tempP.getType().equals("INPUT")) {
+        //Set the background color to white.
+        Gdx.gl.glClearColor(255, 255, 255, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-                tempP.setCX(getXCenter(0));
-                tempP.setCY(getYCenter(i - totalOuts));
-                grenderer.render(renderer, tempP.getType(), tempP.getCX(), tempP.getCY(), scaleFactor);
+        int cxAxis = constants.WINDOW_HEIGHT / 2; /* Axis of the window where
+        y = total height / 2 */
+        int cyAxis = constants.WINDOW_WIDTH / 2; /* Axis of the window where
+        x = total width / 2 */
 
-            } else
-                totalOuts++;
+        int scaleFactor = constants.scaleFactor; //Should be changed later; int or float?;
+        //Resizes the schematics to fill more of the window.
+
+//        constants.frame = true;
+
+        this.renderer.begin(ShapeRenderer.ShapeType.Line);
+        //Template
+        if (constants.frame) {
+            renderer.setColor(Color.BLUE);
+            renderer.line(constants.leftEdge, cxAxis, constants.rightEdge, cxAxis);
+            renderer.line(cyAxis, constants.bottomEdge, cyAxis, constants.topEdge);
+            renderer.rect(constants.leftEdge, constants.bottomEdge, constants.rightEdge - constants.leftEdge,
+                    constants.topEdge - constants.bottomEdge);      //Draw a box to show the edges of the schematic.
         }
+        //Actual drawing
+        this.renderer.setColor(Color.BLACK);
 
-        for (int p = 1; p <= maxLevel; p++) {
-            for (int j = 0; j < gates.size(); j++) {
+        this.verified = true;
 
-                tempG = gates.get(j);
-                if (tempG.getLevel() == p) {
+        if (verified) {
+            render(this.renderer);
+        }
+        this.renderer.end();
+    }
 
-                    tempG.setCX(getXCenter(p));
-                    tempG.setCY(getYCenter(j - skips));
-                    grenderer.render(renderer, tempG.getType(), tempG.getCX(), tempG.getCY(), scaleFactor);
+    // Private methods to get things done
+
+    private void render(ShapeRenderer renderer) {
+
+        //Render Gates and Ports
+        {
+            GateRenderer grenderer = new GateRenderer();
+            int scaleFactor = constants.scaleFactor;
+
+            int totalOuts = 0;
+            int totalIns = 0;
+            int skips = 0;
+
+            Port tempP;
+            Gate tempG;
+
+            for (int i = 0; i < ports.size(); i++) {
+
+                tempP = ports.get(i);
+                if (tempP.getType().equals("INPUT")) {
+
+                    tempP.setCX(getXCenter(0));
+                    tempP.setCY(getYCenter(i - totalOuts));
+                    grenderer.render(renderer, tempP.getType(), tempP.getCX(), tempP.getCY(), scaleFactor);
 
                 } else
-                    skips++;
+                    totalOuts++;
             }
-            skips = 0;
+
+            for (int p = 1; p <= maxLevel; p++) {
+                for (int j = 0; j < gates.size(); j++) {
+
+                    tempG = gates.get(j);
+                    if (tempG.getLevel() == p) {
+
+                        tempG.setCX(getXCenter(p));
+                        tempG.setCY(getYCenter(j - skips));
+                        grenderer.render(renderer, tempG.getType(), tempG.getCX(), tempG.getCY(), scaleFactor);
+
+                    } else
+                        skips++;
+                }
+                skips = 0;
+            }
+
+            for (int k = 0; k < ports.size(); k++) {
+
+                tempP = ports.get(k);
+                if (tempP.getType().equals("OUTPUT")) {
+
+                    tempP.setCX(getXCenter(maxLevel + 1));
+                    tempP.setCY(getYCenter(k - totalIns));
+                    grenderer.render(renderer, tempP.getType(), tempP.getCX(), tempP.getCY(), scaleFactor);
+                } else
+                    totalIns++;
+            }
         }
 
-        for (int k = 0; k < ports.size(); k++) {
+        //Render Gate port connections
+        {
 
-            tempP = ports.get(k);
-            if (tempP.getType().equals("OUTPUT")) {
+            String portName;
+            String portDetails[] = new String[2];
 
-                tempP.setCX(getXCenter(maxLevel++));
-                tempP.setCY(getYCenter(k - totalIns));
-                grenderer.render(renderer, tempP.getType(), tempP.getCX(), tempP.getCY(), scaleFactor);
-            } else
-                totalIns++;
+            Gate tempG = null;
+            Port tempP = null;
+
+            int x1, y1, x2, y2, j;
+            x1 = y1 = x2 = y2 = 0;
+
+            for (int i = 0; i < conPorts.size(); i++) {
+
+                portName = conPorts.get(i);
+                portDetails = portName.split("/"); //0 : ID ; 1 : gatePort
+
+                tempP = null;
+                tempG = null;
+
+                for (j = 0; j < ports.size(); j++) {
+                    if (ports.get(j).getID().equals(portDetails[0])) {
+                        tempP = ports.get(j);
+                        x1 = tempP.getPortX();
+                        y1 = tempP.getPortY();
+                        j = ports.size();
+                    }
+                }
+
+                if (tempP == null) {
+                    for (j = 0; j < gates.size(); j++) {
+                        if (gates.get(j).getID().equals(portDetails[0])) {
+                            tempG = gates.get(j);
+                            x1 = tempG.getPortX(portDetails[1]);
+                            y1 = tempG.getPortY(portDetails[1]);
+                            j = gates.size();
+                        }
+                    }
+                }
+
+                i++;
+
+                portName = conPorts.get(i);
+                portDetails = portName.split("/"); //0 : ID ; 1 : gatePort
+
+                tempP = null;
+                tempG = null;
+
+                for (j = 0; j < ports.size(); j++) {
+                    if (ports.get(j).getID().equals(portDetails[0])) {
+                        tempP = ports.get(j);
+                        x2 = tempP.getPortX();
+                        y2 = tempP.getPortY();
+                        j = ports.size();
+                    }
+                }
+
+                if (tempP == null) {
+                    for (j = 0; j < gates.size(); j++) {
+                        if (gates.get(j).getID().equals(portDetails[0])) {
+                            tempG = gates.get(j);
+                            x2 = tempG.getPortX(portDetails[1]);
+                            y2 = tempG.getPortY(portDetails[1]);
+                            j = gates.size();
+                        }
+                    }
+                }
+
+                if (x1 != 0 & y1 != 0 & x2 != 0 & y2 != 0) {
+
+                    int xm = (x2 + x1) / 2;
+
+                    renderer.line(x1, y1, xm, y1);
+                    renderer.line(xm, y1, xm, y2);
+                    renderer.line(xm, y2, x2, y2);
+
+                }
+            }
         }
-
     }
 
     private int getXCenter(int level) {
@@ -118,68 +305,6 @@ public class SchematicRenderer implements Disposable {
         yCenter = constants.bottomEdge + constants.gateSize * constants.scaleFactor / 2 + row * constants.gateSize * constants.scaleFactor * 2;
 
         return this.yCenter;
-
-    }
-
-    public void connectPorts(ShapeRenderer renderer, String idFrom, String gatePortFrom, String idTo, String gatePortTo) {
-
-        int x1, y1, x2, y2, i;
-        x1 = y1 = x2 = y2 = 0;
-        Gate tempG;
-        Port tempP = null;
-
-        for(i = 0; i < ports.size(); i++){
-            if(ports.get(i).getID().equals(idFrom)) {
-                tempP = ports.get(i);
-                x1 = tempP.getPortX();
-                y1 = tempP.getPortY();
-                i = ports.size();
-            }
-        }
-
-        if(tempP == null) {
-            for(i = 0; i < gates.size(); i++){
-                if(gates.get(i).getID().equals(idFrom)) {
-                    tempG = gates.get(i);
-                    x1 = tempG.getPortX(gatePortFrom);
-                    y1 = tempG.getPortY(gatePortFrom);
-                    i = gates.size();
-                }
-            }
-        }
-
-        tempP = null;
-        tempG = null;
-
-        for(i = 0; i < ports.size(); i++){
-            if(ports.get(i).getID().equals(idTo)) {
-                tempP = ports.get(i);
-                x2 = tempP.getPortX();
-                y2 = tempP.getPortY();
-                i = ports.size();
-            }
-        }
-
-        if(tempP == null) {
-            for(i = 0; i < gates.size(); i++){
-                if(gates.get(i).getID().equals(idTo)) {
-                    tempG = gates.get(i);
-                    x2 = tempG.getPortX(gatePortTo);
-                    y2 = tempG.getPortY(gatePortTo);
-                    i = gates.size();
-                }
-            }
-        }
-
-        if(x1 != 0 & y1 != 0 & x2 != 0 & y2 != 0){
-
-            int xm = (x2 + x1) / 2;
-
-            renderer.line(x1, y1, xm, y1);
-            renderer.line(xm, y1, xm, y2);
-            renderer.line(xm, y2, x2, y2);
-
-        }
 
     }
 

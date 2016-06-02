@@ -1,10 +1,5 @@
 package edu.miamioh.SchematicRenderer;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.Disposable;
 import edu.miamioh.worldEditor.WorldController;
 import edu.miamioh.util.Constants;
@@ -16,14 +11,7 @@ import edu.miamioh.util.Constants;
 public class SchematicRendererTest implements Disposable {
 
     private WorldController worldController;
-    private Constants constants = new Constants();
-
-    private int SCREEN_WIDTH = constants.WINDOW_WIDTH;
-    private int SCREEN_HEIGHT = constants.WINDOW_HEIGHT;
-    private int leftEdge = constants.leftEdge;
-    private int rightEdge = constants.rightEdge;
-    private int topEdge = constants.topEdge;
-    private int bottomEdge = constants.bottomEdge;
+    private SchematicRenderer schematic;
 
     /**
      * Default constructor.
@@ -31,9 +19,8 @@ public class SchematicRendererTest implements Disposable {
      * @param worldController
      */
     public SchematicRendererTest(WorldController worldController) {
-
         this.worldController = worldController;
-
+        this.schematic = new SchematicRenderer(this.worldController);
     }
 
     /**
@@ -42,57 +29,53 @@ public class SchematicRendererTest implements Disposable {
      */
     public void render() {
 
-        //Set the background color to white.
-        Gdx.gl.glClearColor(255, 255, 255, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        ShapeRenderer renderer = new ShapeRenderer();
-
-        SchematicRenderer schematic = new SchematicRenderer();
-
-
-        int cxAxis = SCREEN_HEIGHT / 2; /* Axis of the window where
-        y = total height / 2 */
-        int cyAxis = SCREEN_WIDTH / 2; /* Axis of the window where
-        x = total width / 2 */
-
-        int scaleFactor = constants.scaleFactor; //Should be changed later; int or float?;
-        //Resizes the schematics to fill more of the window.
-
-//        constants.frame = true;
-
-        renderer.begin(ShapeType.Line);
-        //Template
-        if (constants.frame) {
-            renderer.setColor(Color.BLUE);
-            renderer.line(leftEdge, cxAxis, rightEdge, cxAxis);
-            renderer.line(cyAxis, bottomEdge, cyAxis, topEdge);
-            renderer.rect(leftEdge, bottomEdge, rightEdge - leftEdge, topEdge - bottomEdge);      //Draw a box to show the edges of the schematic.
-        }
-        //Actual drawing
-        renderer.setColor(Color.BLACK);
         schematic.addInput("A");
-        schematic.addGate("AND", 3, "AND0", 1);
-        schematic.addGate("NOT", 1, "NOT0", 1);
-        schematic.addGate("XOR", 2, "XOR0", 2);
-        schematic.addGate("AND", 2, "AND1", 3);
-        schematic.addGate("NOT", 1, "NOT1", 4);
+        schematic.addInput("B");
+        schematic.addGate("AND", 2, "AND0", 1);
+        schematic.addInput("C");
+        schematic.addGate("OR", 2, "OR0", 2);
+        schematic.connectPorts("A", "OUT", 0, "AND0", "IN", 0);
+        schematic.connectPorts("B", "OUT", 0, "AND0", "IN", 1);
+        schematic.connectPorts("AND0", "OUT", 0, "OR0", "IN", 0);
+        schematic.connectPorts("C", "OUT", 0, "OR0", "IN", 1);
         schematic.addOutput("O");
-        schematic.render(renderer, scaleFactor);
-        schematic.connectPorts(renderer, "A", "OUT", "AND0", "IN~0");
-        schematic.connectPorts(renderer, "A", "OUT", "AND0", "IN~1");
-        schematic.connectPorts(renderer, "A", "OUT", "AND0", "IN~2");
-        schematic.connectPorts(renderer, "A", "OUT", "NOT0", "IN~1");
-        schematic.connectPorts(renderer, "AND0", "OUT~0", "XOR0", "IN~0");
-        schematic.connectPorts(renderer, "NOT0", "OUT~0", "XOR0", "IN~1");
-        schematic.connectPorts(renderer, "XOR0", "OUT~0", "AND1", "IN~0");
-        schematic.connectPorts(renderer, "XOR0", "OUT~0", "AND1", "IN~1");
-        schematic.connectPorts(renderer, "AND1", "OUT~0", "NOT1", "IN~0");
-        schematic.connectPorts(renderer, "NOT1", "OUT~0", "O", "IN");
-        renderer.end();
+        schematic.connectPorts("OR0", "OUT", 0, "O", "IN", 0);
+        schematic.render();
 
-        }
+    }
 
+    public SchematicRendererTest() {
+        super();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+    }
+
+    /**
+     * Releases all resources of this object.
+     */
     @Override
     public void dispose() {
 

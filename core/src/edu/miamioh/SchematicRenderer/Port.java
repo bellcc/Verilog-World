@@ -5,7 +5,7 @@ import edu.miamioh.util.Constants;
 /**
  * Created by shaffebd.
  */
-public class Port {
+class Port {
 
     private String type = "";
     private String id = "";
