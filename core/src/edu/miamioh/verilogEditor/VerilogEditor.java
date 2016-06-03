@@ -30,7 +30,9 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.undo.CannotUndoException;
 
+import edu.miamioh.schematicRenderer.SchematicRendererMain;
 import edu.miamioh.simulator.Parse;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 
 import java.text.*;
 import java.util.*;
@@ -805,7 +807,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	}
 	
 	public void schemEditButtonFunction() {
-		
+		new LwjglApplication(new SchematicRendererMain(Compiler));
 	}
 	/*
 	public void comboHeaderButtonFunction() {
