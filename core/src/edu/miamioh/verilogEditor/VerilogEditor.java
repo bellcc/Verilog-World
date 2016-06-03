@@ -546,6 +546,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		});
 		toolBar.add(schematicRenderButton);
 		
+		/*
 		toolBar.add(new JLabel("Internal Sensors: "));
 		MaskFormatter formatterInternal = null;
 		try {
@@ -569,6 +570,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			}
 		});
 		toolBar.add(simulateInput);
+		*/
+		
 		/*
 		toolBar.add(new JLabel("General Sensors(6~0): "));
 		MaskFormatter formatterGeneral = null;
