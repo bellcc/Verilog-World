@@ -179,6 +179,7 @@ public class Parse {
 	public Boolean is_compiled_yet() { return is_compiled;}
 
 	public ParseTree getRootTree() {return this.root_tree;}
+	public ModuleInstance getRootModule() {return this.root_module;}
 	public ArrayList<ParseTree> getSubTrees() 				{return this.subTrees;}
 	public Hashtable<String, ParseTree> getSubTreesHash() 	{return this.subTreesHash;}
 	public Hashtable<String, ModuleInstance> getSubModulesHash() {return this.subModules_hash;}

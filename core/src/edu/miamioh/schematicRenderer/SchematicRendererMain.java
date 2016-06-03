@@ -4,6 +4,8 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.*;
 import edu.miamioh.simulator.ModuleInstance;
 import edu.miamioh.simulator.Parse;
+import edu.miamioh.simulator.ParseRegWire;
+import edu.miamioh.simulator.WireRoleType;
 
 import java.util.ArrayList;
 
@@ -41,14 +43,21 @@ public class SchematicRendererMain implements ApplicationListener {
 
     private void getData(Parse compiler){
 
-        ArrayList<ModuleInstance> rootTree = compiler.getSubModulesList();
-//        ArrayList<String> modulePorts = rootTree.get(0).;
+        ArrayList<ParseRegWire> vars_list = compiler.getRootModule().getVars_list();
 
-//        for(int i = 0; i < modulePorts.size(); i++){
+        ParseRegWire temp;
 
-//            if()
+        for(int i = 0; i < vars_list.size(); i++){
 
-//        }
+            temp = vars_list.get(i);
+
+            if(temp.getRole() == WireRoleType.INPUT){
+
+                schematic.addInput(temp.getName());
+                
+            }
+
+        }
 
     }
 
