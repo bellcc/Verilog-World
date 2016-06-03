@@ -82,8 +82,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	 */
 	public static void main(String[] args) {
 		// name = "Traffic_signal_set_1";
-		rootPath = "C:/Users/zachary/Desktop/Summer Research/Verilog-World/";//args[0];
-		fileName = "Test.v";//args[1];
+		rootPath = args[0];
+		fileName = args[1];
 		filePath = rootPath + "core/assets/modules/" + fileName;
 		// level_number = "1";
 		new VerilogEditor();
@@ -541,7 +541,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		schematicRenderButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// resetButtonFunction();
+				schemEditButtonFunction();
 			}
 		});
 		toolBar.add(schematicRenderButton);
@@ -629,8 +629,6 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			salButtonFunction();
 		} else if (str.equals("Simulate")) {
 			simulateButtonFunction();
-		} else if (str.equals("Schematic Renderer")){
-			schemEditButtonFunction();
 		//} else if (str.equals("Reset Simulation")) {
 		//	resetButtonFunction();
 		//} else if (str.equals("Combinational")) {
