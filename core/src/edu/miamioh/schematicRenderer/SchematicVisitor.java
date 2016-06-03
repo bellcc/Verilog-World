@@ -1,9 +1,6 @@
-package edu.miamioh.SchematicRenderer;
+package edu.miamioh.schematicRenderer;
 
-import edu.miamioh.simulator.*;
 import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
-
-import java.util.ArrayList;
 
 /**
  * Visits nodes on the parse tree to build the schematic.

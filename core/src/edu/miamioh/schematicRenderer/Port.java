@@ -1,4 +1,4 @@
-package edu.miamioh.SchematicRenderer;
+package edu.miamioh.schematicRenderer;
 
 import edu.miamioh.util.Constants;
 

@@ -1,13 +1,11 @@
-package edu.miamioh.SchematicRenderer;
+package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
-import edu.miamioh.simulator.Parse;
 import edu.miamioh.util.Constants;
-import edu.miamioh.worldEditor.WorldController;
 
 import java.util.ArrayList;
 
@@ -21,35 +19,12 @@ public class SchematicRenderer implements Disposable {
     private ArrayList<String> conPorts = new ArrayList<>();
     private Constants constants = new Constants();
     private ShapeRenderer renderer = new ShapeRenderer();
-    private Parse vTree;
-    private boolean verified = false;
-
-    private WorldController worldController;
 
     private int xCenter = 0;
     private int yCenter = 0;
     private int maxLevel = 0;
 
-    /**
-     * SchematicRenderer constructor. Takes a Parse object to get Module details for rendering.
-     *
-     * @param vTree A Parse object containing a ParseTree with module items.
-     */
-    public SchematicRenderer(Parse vTree) {
-
-        this.vTree = vTree;
-
-        if (vTree == null) {
-
-        } else {
-            verified = true;
-        }
-
-    }
-
-    public SchematicRenderer(WorldController worldController){
-        this.worldController = worldController;
-    }
+    public SchematicRenderer(){}
 
     //Public methods for setting up the render
 
@@ -134,6 +109,7 @@ public class SchematicRenderer implements Disposable {
 //        constants.frame = true;
 
         this.renderer.begin(ShapeRenderer.ShapeType.Line);
+
         //Template
         if (constants.frame) {
             renderer.setColor(Color.BLUE);
@@ -142,14 +118,10 @@ public class SchematicRenderer implements Disposable {
             renderer.rect(constants.leftEdge, constants.bottomEdge, constants.rightEdge - constants.leftEdge,
                     constants.topEdge - constants.bottomEdge);      //Draw a box to show the edges of the schematic.
         }
+
         //Actual drawing
         this.renderer.setColor(Color.BLACK);
-
-//        this.verified = true;
-
-        if (verified) {
-            render(this.renderer);
-        }
+        render(this.renderer);
         this.renderer.end();
     }
 

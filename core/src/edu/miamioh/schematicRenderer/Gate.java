@@ -1,4 +1,4 @@
-package edu.miamioh.SchematicRenderer;
+package edu.miamioh.schematicRenderer;
 
 import java.util.ArrayList;
 import edu.miamioh.util.Constants;
