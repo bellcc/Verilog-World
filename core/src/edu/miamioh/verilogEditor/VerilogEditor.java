@@ -80,8 +80,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	 */
 	public static void main(String[] args) {
 		// name = "Traffic_signal_set_1";
-		rootPath = args[0];
-		fileName = args[1];
+		rootPath = "C:/Users/zachary/Desktop/Summer Research/Verilog-World/";//args[0];
+		fileName = "Test.v";//args[1];
 		filePath = rootPath + "core/assets/modules/" + fileName;
 		// level_number = "1";
 		new VerilogEditor();
@@ -535,6 +535,15 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		});
 		toolBar.add(resetButton);
 		
+		JButton schematicRenderButton = makeToolBarButton("schemEdit", "Schematic Renderer", "Schematic Renderer");
+		schematicRenderButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// resetButtonFunction();
+			}
+		});
+		toolBar.add(schematicRenderButton);
+		
 		toolBar.add(new JLabel("Internal Sensors: "));
 		MaskFormatter formatterInternal = null;
 		try {
@@ -618,6 +627,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			salButtonFunction();
 		} else if (str.equals("Simulate")) {
 			simulateButtonFunction();
+		} else if (str.equals("Schematic Renderer")){
+			schemEditButtonFunction();
 		//} else if (str.equals("Reset Simulation")) {
 		//	resetButtonFunction();
 		//} else if (str.equals("Combinational")) {
@@ -791,6 +802,10 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		} catch (Exception e1) {
 			System.out.println(e1);
 		}
+	}
+	
+	public void schemEditButtonFunction() {
+		
 	}
 	/*
 	public void comboHeaderButtonFunction() {
