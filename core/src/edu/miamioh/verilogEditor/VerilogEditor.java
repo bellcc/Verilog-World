@@ -23,23 +23,23 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
-import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
-import javax.swing.undo.CannotUndoException;
-
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import edu.miamioh.schematicRenderer.SchematicRendererMain;
 import edu.miamioh.simulator.Parse;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import edu.miamioh.util.Constants;
 
-import java.text.*;
-import java.util.*;
+import javax.swing.*;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+import javax.swing.text.*;
+import javax.swing.undo.CannotUndoException;
 import java.awt.*;
 import java.awt.event.*;
-import java.net.*;
 import java.io.*;
+import java.net.URL;
+import java.text.ParseException;
+import java.util.Locale;
 
 public class VerilogEditor extends JFrame implements ActionListener {
 
@@ -807,7 +807,13 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	}
 	
 	public void schemEditButtonFunction() {
-		new LwjglApplication(new SchematicRendererMain(Compiler));
+
+		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.title = "Schematic Render of " + this.getName();
+		config.width = Constants.WINDOW_WIDTH;
+		config.height = Constants.WINDOW_HEIGHT;
+
+		new LwjglApplication(new SchematicRendererMain(Compiler), config);
 	}
 	/*
 	public void comboHeaderButtonFunction() {
