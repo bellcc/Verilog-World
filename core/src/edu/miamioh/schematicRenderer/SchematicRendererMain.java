@@ -51,13 +51,30 @@ public class SchematicRendererMain implements ApplicationListener {
 
             temp = vars_list.get(i);
 
-            if(temp.getRole() == WireRoleType.INPUT){
-
+            if(temp.getRole() == WireRoleType.INPUT) {
                 schematic.addInput(temp.getName());
-                
+                break;
+            }
+
+            if(temp.getRole() == WireRoleType.OUTPUT) {
+                schematic.addOutput(temp.getName());
+                break;
             }
 
         }
+
+//        //Test stuff
+//        schematic.addInput("A");
+//        schematic.addInput("B");
+//        schematic.addGate("AND", 2, "AND0", 1);
+//        schematic.addInput("C");
+//        schematic.addGate("OR", 2, "OR0", 2);
+//        schematic.connectPorts("A", "OUT", 0, "AND0", "IN", 0);
+//        schematic.connectPorts("B", "OUT", 0, "AND0", "IN", 1);
+//        schematic.connectPorts("AND0", "OUT", 0, "OR0", "IN", 0);
+//        schematic.connectPorts("C", "OUT", 0, "OR0", "IN", 1);
+//        schematic.addOutput("O");
+//        schematic.connectPorts("OR0", "OUT", 0, "O", "IN", 0);
 
     }
 
@@ -77,23 +94,7 @@ public class SchematicRendererMain implements ApplicationListener {
      * This method draws a new window with the schematic design determined by
      * the Verilog logic.
      */
-    public void render() {
-
-        schematic.addInput("A");
-        schematic.addInput("B");
-        schematic.addGate("AND", 2, "AND0", 1);
-        schematic.addInput("C");
-        schematic.addGate("OR", 2, "OR0", 2);
-        schematic.connectPorts("A", "OUT", 0, "AND0", "IN", 0);
-        schematic.connectPorts("B", "OUT", 0, "AND0", "IN", 1);
-        schematic.connectPorts("AND0", "OUT", 0, "OR0", "IN", 0);
-        schematic.connectPorts("C", "OUT", 0, "OR0", "IN", 1);
-        schematic.addOutput("O");
-        schematic.connectPorts("OR0", "OUT", 0, "O", "IN", 0);
-
-        schematic.render();
-
-    }
+    public void render() {schematic.render();}
 
     /**
      * Called when the {@link Application} is paused, usually when it's not active or visible on screen. An Application is also
