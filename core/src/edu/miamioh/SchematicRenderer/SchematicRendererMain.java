@@ -5,6 +5,8 @@ import com.badlogic.gdx.*;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.worldEditor.WorldController;
 
+import javax.swing.*;
+
 /**
  * @author bdshaffer73
  */
@@ -23,7 +25,8 @@ public class SchematicRendererMain implements ApplicationListener {
 
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
         worldController = new WorldController();
-        parse = new Parse(null, "/home/pheonix/USS/Verilog-World/core/assets/modules");
+        JTextPane temp = new JTextPane();
+        parse = new Parse(temp, "/home/pheonix/USS/Verilog-World/");
         schematic = new SchematicRenderer(parse);
 
     }
