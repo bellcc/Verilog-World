@@ -1,11 +1,11 @@
-package edu.miamioh.SchematicRenderer;
+package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.*;
+import edu.miamioh.simulator.ModuleInstance;
 import edu.miamioh.simulator.Parse;
-import edu.miamioh.worldEditor.WorldController;
 
-import javax.swing.*;
+import java.util.ArrayList;
 
 /**
  * @author bdshaffer73
@@ -13,9 +13,16 @@ import javax.swing.*;
 
 public class SchematicRendererMain implements ApplicationListener {
 
-    private WorldController worldController;
     private SchematicRenderer schematic;
     private Parse parse;
+
+    /**
+     * Constructor for SchematicRendererMain. Requires a Parse to have already been created.
+     * @param parse Contains information on the design to be rendered.
+     */
+    public SchematicRendererMain(Parse parse){
+        this.parse = parse;
+    }
 
     /**
      * Called when the {@link Application} is first created.
@@ -24,10 +31,24 @@ public class SchematicRendererMain implements ApplicationListener {
     public void create() {
 
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
-        worldController = new WorldController();
-        JTextPane temp = new JTextPane();
-        parse = new Parse(temp, "/home/pheonix/USS/Verilog-World/");
-        schematic = new SchematicRenderer(parse);
+        schematic = new SchematicRenderer();
+        if(this.parse.is_compiled_yet())
+            getData(this.parse);
+        else
+            this.parse.reportParseError("You must verify the file before attempting to render the schematic design.");
+
+    }
+
+    private void getData(Parse compiler){
+
+        ArrayList<ModuleInstance> rootTree = compiler.getSubModulesList();
+//        ArrayList<String> modulePorts = rootTree.get(0).;
+
+//        for(int i = 0; i < modulePorts.size(); i++){
+
+//            if()
+
+//        }
 
     }
 
