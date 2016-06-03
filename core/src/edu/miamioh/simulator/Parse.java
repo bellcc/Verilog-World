@@ -79,9 +79,14 @@ public class Parse {
 		}
 	}
 	
-	/*
-	 * 
-	 */
+	public void displayResults() {
+		errorText.setText("Simulation Results:");
+		for(int i = 0; i < root_module.getVars_list().size(); ++i) {
+			this.reportParseInfo(root_module.getVars_list().get(i).getName() + ": " + 
+								 root_module.getVars_list().get(i).getValue(1));
+		}
+	}
+	
 	public void sim_cycle(int mode)
 	{
 		if (is_compiled)
@@ -90,11 +95,7 @@ public class Parse {
 			this.simSequ(mode);
 			root_module.getVisitor().clean_sim_cycle();
 			
-			errorText.setText("Simulation Results:");
-			for(int i = 0; i < root_module.getVars_list().size(); ++i) {
-				this.reportParseInfo(root_module.getVars_list().get(i).getName() + ": " + 
-									 root_module.getVars_list().get(i).getValue(1));
-			}
+			this.displayResults();
 		}
 	}
 	
@@ -104,7 +105,7 @@ public class Parse {
 		
 		do {
 			DebugUtils.printModuleVars(visitor, this.root_module);
-			// Assume 6the circuit is steady at the start. 
+			// Assume the circuit is steady at the start. 
 			// Simulate it and let it change it's own steady or not steady state.
 			visitor.setState(SimVisitor.STEADY);
 			for(ModuleInstance module : this.subModules_list) {
@@ -114,7 +115,7 @@ public class Parse {
 			// Run one simulation cycle for combinational circuit
 			visitor.next_sim_cycle();
 			visitor.visit(root_tree);
-			
+
 		} while(visitor.getState() == SimVisitor.NOT_STEADY);
 	}
 	

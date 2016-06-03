@@ -1,29 +1,19 @@
 module MemTest(clk);
 	input clk;
 
-	reg write;
-	wire data;
-	wire clear;
-	wire out;
+	wire [1:0]one;
+	wire [1:0]cin;
+	reg [1:0]sum;
+	wire cout;
+	wire [1:0]tempSum;
 
-	Latch mod0(data, write, clear, out);
+	assign one = 2'd1;
+	assign cin = 2'd0;
 
-	always @(*)
-	begin
-		if(out == 0)
-		begin
-			data = 1;
-			clear = 0;
-		end
-		else
-		begin
-			data = 0;
-			clear = 1;
-		end
-	end
+	Adder_2 gate0(sum, one, cin, tempSum, cout);
 
 	always @(posedge clk or negedge clk)
 	begin
-		write <= ~clk;
+		sum <= tempSum;
 	end
 endmodule

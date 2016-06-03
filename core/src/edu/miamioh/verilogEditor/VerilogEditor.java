@@ -71,6 +71,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 
 	private long startTime;
 	private long totalFocusTime;
+	private boolean isFirstSimCycle;
 
 	/**
 	 * @param args
@@ -635,6 +636,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 
 	// verify
 	public void verifyButtonFunction() {
+		
+		this.isFirstSimCycle = true;
 		try {
 			FileWriter out = new FileWriter(verilogFiles);
 			out.write(codeText.getText());
@@ -750,7 +753,15 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	
 			
 	public void simulateButtonFunction() {
-
+		
+		// For first sim cycle, display starting state
+		if (this.isFirstSimCycle) {
+			Compiler.displayResults();
+			this.isFirstSimCycle = false;
+			return;
+		}
+		
+		// For all other cycels after that, actually simulate the circuit
 		if (Compiler.is_compiled_yet()) {
 			Compiler.sim_cycle(Compiler.RUN);
 		} else {

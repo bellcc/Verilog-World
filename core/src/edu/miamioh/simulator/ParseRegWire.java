@@ -132,7 +132,7 @@ public class ParseRegWire
 		// Only update if it's sequential and we haven't already updated or
 		// if it is not a sequential wire
 		if ((this.type == RegWireType.SEQUENTIAL && !this.hasUpdated) 
-		 || (this.type == RegWireType.COMBINATIONAL)) {
+		 || (this.type != RegWireType.SEQUENTIAL)) {
 			
 			// Notify simulator that a state has changed
 			if ((value & mask)!= this.value[idx]) {
@@ -182,7 +182,7 @@ public class ParseRegWire
 
 	public void seqUpdate(int cycle_time, int new_val_idx, int old_val_idx)
 	{
-		if (cycle_time != this.cycle_update_time)
+		if (cycle_time != this.cycle_update_time || true)
 		{
 			/* IF there has been no update for this value */
 			if (type == RegWireType.COMBINATIONAL)
