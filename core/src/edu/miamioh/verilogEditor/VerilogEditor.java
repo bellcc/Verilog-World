@@ -91,7 +91,6 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		// Create the window
 		super("Verilog Text Editor: " + filePath);
 
-		this.setSize(WIDTH, HEIGHT);
 		this.setMinimumSize(new Dimension(MINWIDTH, MINHEIGHT));
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
@@ -105,13 +104,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		checkDir(filePath);
 
 		// set the location the window will appear on the screen
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screenSize = kit.getScreenSize();
-		int width = screenSize.width;
-		int height = screenSize.height;
-		int x = (width - WIDTH) / 2;
-		int y = (height - HEIGHT) / 2;
-		this.setLocation(x, y);
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 
 		JPanel contentPane = new JPanel();
 		contentPane.setLayout(new GridBagLayout());
