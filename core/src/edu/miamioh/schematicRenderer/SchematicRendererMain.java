@@ -31,14 +31,8 @@ public class SchematicRendererMain implements ApplicationListener {
      */
     @Override
     public void create() {
-
-        Gdx.app.setLogLevel(Application.LOG_DEBUG);
         schematic = new SchematicRenderer();
-        if(this.parse.is_compiled_yet())
-            getData(this.parse);
-        else
-            this.parse.reportParseError("You must verify the file before attempting to render the schematic design.");
-
+        getData(this.parse);
     }
 
     private void getData(Parse compiler){
@@ -53,12 +47,10 @@ public class SchematicRendererMain implements ApplicationListener {
 
             if(temp.getRole() == WireRoleType.INPUT) {
                 schematic.addInput(temp.getName());
-                break;
             }
 
             if(temp.getRole() == WireRoleType.OUTPUT) {
                 schematic.addOutput(temp.getName());
-                break;
             }
 
         }

@@ -803,15 +803,20 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			System.out.println(e1);
 		}
 	}
-	
+
+	LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+	LwjglApplication schematicRender;
+
 	public void schemEditButtonFunction() {
 
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.title = "Schematic Render of " + this.getName();
+		config.title = "Schematic Render of " + this.fileName;
 		config.width = Constants.WINDOW_WIDTH;
 		config.height = Constants.WINDOW_HEIGHT;
+		config.forceExit = false;
 
-		new LwjglApplication(new SchematicRendererMain(Compiler), config);
+		verifyButtonFunction();
+
+		schematicRender = new LwjglApplication(new SchematicRendererMain(Compiler), config);
 	}
 	/*
 	public void comboHeaderButtonFunction() {
