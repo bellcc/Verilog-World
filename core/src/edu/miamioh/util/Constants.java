@@ -46,7 +46,7 @@ public final class Constants {
 	public boolean moveable = false;
 
 	//schematicRenderer constants
-	public final int gateSize = 2;
+	public static int gateSize = 2;
 	public final int leftEdge = WINDOW_WIDTH / 20;
 	public final int rightEdge = WINDOW_WIDTH - leftEdge;
 	public final int bottomEdge = leftEdge;
