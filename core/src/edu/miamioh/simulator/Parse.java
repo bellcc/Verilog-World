@@ -93,15 +93,15 @@ public class Parse {
 	{
 		if (is_compiled)
 		{
-			this.simComb(mode);
-			this.simSequ(mode);
+			this.simComb();
+			this.simSequ();
 			root_module.getVisitor().clean_sim_cycle();
 			
 			this.displayResults();
 		}
 	}
 	
-	public void simComb(int mode) {
+	public void simComb() {
 		
 		SimVisitor visitor = root_module.getVisitor();
 		
@@ -127,13 +127,13 @@ public class Parse {
 		} while(visitor.getState() == SimVisitor.NOT_STEADY);
 	}
 	
-	public void simSequ(int mode) {
+	public void simSequ() {
 		// Toggle sequ clock and simulate
 		System.out.print("************************\n" +
 						 "*        Clock!        *\n" +
 						 "************************\n");
 		root_module.getVisitor().toggleSequClock();
-		simComb(mode);
+		simComb();
 
 		// Reset sequential wire update flags
 		root_module.getVisitor().resetSequUpdateFlag();
