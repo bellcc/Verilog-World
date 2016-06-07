@@ -11,7 +11,7 @@ import java.util.Random;
 
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.GameObjects.Tile;
-import edu.miamioh.linked.LinkedList;
+import edu.miamioh.Linked.LinkedList;
 import edu.miamioh.util.Constants;
 
 public class Level {
