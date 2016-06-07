@@ -13,12 +13,6 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
 
     public SchematicVisitor(SchematicRenderer schematic) {this.schematic = schematic;}
 
-    public void getGates(){
-
-//        this.
-
-    }
-
     /**
      * {@inheritDoc}
      * <p>
@@ -68,6 +62,7 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      */
     @Override
     public T visitContinuous_assign(Verilog2001Parser.Continuous_assignContext ctx) {
+//        String rValue = ctx.getChild(3). ? "IN" : "OUT";
         return super.visitContinuous_assign(ctx);
     }
 
@@ -172,6 +167,7 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      */
     @Override
     public T visitUNOT(Verilog2001Parser.UNOTContext ctx) {
+        schematic.addGate(GateType.NOT, 1, "NOT0", 1);
         return super.visitUNOT(ctx);
     }
 
@@ -770,6 +766,7 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      */
     @Override
     public T visitNet_declaration(Verilog2001Parser.Net_declarationContext ctx) {
+        schematic.addGate(GateType.WIRE, 1, ctx.getText(), 1);
         return super.visitNet_declaration(ctx);
     }
 
