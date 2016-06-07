@@ -74,10 +74,31 @@ class Gate {
                 this.level = level;
                 break;
 
+            case WIRE:
+                this.type = WIRE;
+                this.setNumOfInputs(1);
+                this.id = id;
+                this.level = level;
+                break;
+
+            case REG:
+                this.type = REG;
+                this.setNumOfInputs(1);
+                this.id = id;
+                this.level = level;
+                break;
+
+            case BLANK:
+                this.type = BLANK;
+                this.setNumOfInputs(1);
+                this.id = id;
+                this.level = level;
+                break;
+
             default:
-                this.type = INVALID_ASSIGNMENT;
+                this.type = BLANK;
                 this.setNumOfInputs(0);
-                this.id = "INVALID_ASSIGNMENT";
+                this.id = "INVALID_ENTRY";
                 this.level = 0;
                 break;
 

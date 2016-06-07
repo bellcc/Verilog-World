@@ -61,7 +61,16 @@ class GateRenderer {
                 drawNOT(x, y);
                 break;
 
+            case WIRE:
+                drawWire(x, y);
+                break;
+
+            case REG:
+                drawReg(x, y);
+                break;
+
             default:
+                drawBlank(x, y);
                 break;
         }
     }
@@ -235,6 +244,62 @@ class GateRenderer {
 
         if (constants.frame)
             frame(cx, cy);
+    }
+
+    /**
+     * Draws a Wire 'Net' object.
+     *
+     * @param cx Center X coordinate.
+     * @param cy Center Y coordinate.
+     */
+    public void drawWire(int cx, int cy) {
+
+        int lx = cx - gateSize * scaleFactor / 2;
+        int rx = cx + gateSize * scaleFactor / 2;
+        int by = cy - gateSize * scaleFactor / 4;
+        int w = gateSize * scaleFactor;
+        int h = gateSize * scaleFactor / 2;
+
+        renderer.rect(lx, by, w, h);
+        renderer.line(lx, cy, rx, cy);
+
+        if (constants.frame) frame(cx, cy);
+    }
+
+    /**
+     * Draws a new Reg 'Net' object.
+     *
+     * @param cx Center X coordinate.
+     * @param cy Center Y coordinate.
+     */
+    public void drawReg(int cx, int cy) {
+        int lx = cx - gateSize * scaleFactor / 2;
+        int rx = cx + gateSize * scaleFactor / 2;
+        int by = cy - gateSize * scaleFactor / 2;
+        int w = gateSize * scaleFactor;
+        int h = w;
+
+        renderer.rect(lx, by, w, h);
+        renderer.line(lx, cy, rx, cy);
+
+        if (constants.frame) frame(cx, cy);
+    }
+
+    /**
+     * Draws a blank Gate.
+     *
+     * @param cx Center X coordinate.
+     * @param cy Center Y coordinate.
+     */
+    public void drawBlank(int cx, int cy) {
+        int lx = cx - gateSize * scaleFactor / 2;
+        int by = cy - gateSize * scaleFactor / 2;
+        int w = gateSize * scaleFactor;
+        int h = w;
+
+        renderer.rect(lx, by, w, h);
+
+        if (constants.frame) frame(cx, cy);
     }
 
     /**

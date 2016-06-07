@@ -2,7 +2,7 @@ package edu.miamioh.schematicRenderer;
 
 import edu.miamioh.util.Constants;
 
-import static edu.miamioh.schematicRenderer.GateType.INVALID_ASSIGNMENT;
+import static edu.miamioh.schematicRenderer.GateType.BLANK;
 
 /**
  * Created by shaffebd.
@@ -39,7 +39,7 @@ class Port {
                 break;
 
             default:
-                this.type = INVALID_ASSIGNMENT;
+                this.type = BLANK;
                 this.id = "INVALID_ASSIGNMENT";
                 break;
 
