@@ -9,14 +9,13 @@ package edu.miamioh.worldEditor;
 
 import java.util.Random;
 
-import edu.miamioh.gameObjects.Block;
-import edu.miamioh.gameObjects.Tile;
-import edu.miamioh.linked.LinkedList;
-import edu.miamioh.util.Constants;
+import edu.miamioh.GameObjects.Block;
+import edu.miamioh.GameObjects.Tile;
+import edu.miamioh.Linked.LinkedList;
 
 public class Level {
 	
-	LinkedList<Block> blockList;
+	edu.miamioh.Linked.LinkedList<Block> blockList;
 	LinkedList<Tile> tileList;
 	
 	public Level() {
@@ -129,7 +128,8 @@ public class Level {
 	
 	public int generateBlockID(Block block) {
 
-		int maxNum = Constants.MAX_ID;
+		//int maxNum = Constants.MAX_ID;
+		int maxNum = 10000000;
 		
 		Random rand = new Random();
 		

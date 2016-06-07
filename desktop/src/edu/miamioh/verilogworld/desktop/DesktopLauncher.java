@@ -11,7 +11,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import edu.miamioh.util.Constants;
-import edu.miamioh.verilogworld.VerilogWorldMain;
+import edu.miamioh.verilogWorld.VerilogWorldMain;
 
 public class DesktopLauncher {
 
