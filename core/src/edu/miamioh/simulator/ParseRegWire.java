@@ -128,7 +128,7 @@ public class ParseRegWire
 		return this.value[idx];
 	}
 
-	public void setValue(int idx, int value)
+	public void setValue(int idx, int value, boolean is_sequential)
 	{
 		int mask = (1 << this.busSize) - 1;
 		
@@ -147,15 +147,15 @@ public class ParseRegWire
 			}
 	
 			this.value[idx] = value & mask;
-			
-			// Update information for sequential portion of the simulator.
-			// Sequential wires should only update twice and no more.
-			if (!hasUpdatedOnce) {hasUpdatedOnce = true;}
-			else if (!hasUpdatedTwice) {hasUpdatedTwice = true;}
 		}
+		
+		// Update information for sequential portion of the simulator.
+		// Sequential wires should only update twice and no more.
+		if (!hasUpdatedOnce && is_sequential) {hasUpdatedOnce = true;}
+		else if (!hasUpdatedTwice && is_sequential) {hasUpdatedTwice = true;}
 	}
 
-	public void setBitValue(int idx, int bitIdx, int bit_value)
+	public void setBitValue(int idx, int bitIdx, int bit_value, boolean is_sequential)
 	{
 		int mask = (1 << this.busSize) - 1; // mask for the full number
 		int bitMask = (bit_value << bitIdx); // 0 or 1 in the bit spot

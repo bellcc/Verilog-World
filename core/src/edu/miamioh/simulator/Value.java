@@ -78,15 +78,15 @@ public class Value
 		return null;
 	}
 
-	public void setVar(int idx, int value)
+	public void setVar(int idx, int value, boolean is_sequential)
 	{
 		if (this.v_type == ValueType.REG_WIRE_T)
 		{
 			if (this.idx >= 0) {
-				regWire.setBitValue(idx, this.idx, value);
+				regWire.setBitValue(idx, this.idx, value, is_sequential);
 			}
 			else {
-				regWire.setValue(idx, value);
+				regWire.setValue(idx, value, is_sequential);
 			}
 		}
 	}

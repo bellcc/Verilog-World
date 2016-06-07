@@ -124,7 +124,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		// Update root module clock
 		ParseRegWire wire = module.getHash_vars().get("clk");
 		if (wire != null) {
-			wire.setValue(new_val_idx, clockValue);
+			wire.setValue(new_val_idx, clockValue, is_sequential);
 		}
 		
 		// Update clock in all other modules
@@ -132,7 +132,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 			wire = sub.getHash_vars().get("clk");
 			
 			if (wire != null) {
-				wire.setValue(new_val_idx, clockValue);
+				wire.setValue(new_val_idx, clockValue, is_sequential);
 			}
 		}
 	}
@@ -302,7 +302,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		Value right = visit(ctx.expression());
 
 		/* Update the data structure with the right value */
-		left.setVar(new_val_idx, right.asInt());
+		left.setVar(new_val_idx, right.asInt(), is_sequential);
 
 		// System.out.println("AssignBlocking:"+left.getVarName()+" Value = "+right.asInt());
 
@@ -327,7 +327,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 
 		/* Update the data structure with the right value */
 		if (this.is_sequential_sim_cycle) {
-			left.setVar(new_val_idx, right.asInt());
+			left.setVar(new_val_idx, right.asInt(), is_sequential);
 		}
 
 		return null;
@@ -343,7 +343,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		Value right = visit(ctx.expression());
 
 		/* Update the data structure with the right value */
-		left.setVar(new_val_idx, right.asInt());
+		left.setVar(new_val_idx, right.asInt(), is_sequential);
 
 		// System.out.println("Continuous assign:"+left.getVarName()+" Value = "+right.asInt());
 
@@ -357,7 +357,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		Value right = visit(ctx.expression());
 
 		/* Update the data structure with the right value */
-		left.setVar(new_val_idx, right.asInt());
+		left.setVar(new_val_idx, right.asInt(), is_sequential);
 		
 		return null; 
 	}
@@ -741,7 +741,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 			ParseRegWire inWire = module.getHash_vars().get(identifier);
 			
 			// Set their values equal to eachother
-			targetWire.setValue(new_val_idx, inWire.getValue(old_val_idx));
+			targetWire.setValue(new_val_idx, inWire.getValue(old_val_idx), is_sequential);
 		}
 		
 		// Simulate new module
@@ -765,7 +765,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 			ParseRegWire targetWire = module.getHash_vars().get(identifier);
 			
 			// Set their values equal to eachother
-			targetWire.setValue(new_val_idx, outWire.getValue(old_val_idx));
+			targetWire.setValue(new_val_idx, outWire.getValue(old_val_idx), is_sequential);
 		}
 		
 		// Propagate state changes in sub modules to the super module
