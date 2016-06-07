@@ -1,6 +1,5 @@
-package edu.miamioh.SchematicRenderer;
+package edu.miamioh.schematicRenderer;
 
-import edu.miamioh.simulator.*;
 import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
 
 /**
@@ -9,6 +8,17 @@ import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
  * Created by shaffebd.
  */
 public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001BaseVisitor<T> {
+
+    SchematicRenderer schematic;
+
+    public SchematicVisitor(SchematicRenderer schematic) {this.schematic = schematic;}
+
+    public void getGates(){
+
+//        this.
+
+    }
+
     /**
      * {@inheritDoc}
      * <p>

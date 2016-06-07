@@ -22,7 +22,7 @@ public class DesktopLauncher {
 		config.title = "Verilog World";
 		config.width = Constants.WINDOW_WIDTH;
 		config.height = Constants.WINDOW_HEIGHT;
-		
+
 		new LwjglApplication(new VerilogWorldMain(), config);
 	
 	}

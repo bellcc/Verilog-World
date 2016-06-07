@@ -7,9 +7,12 @@
 
 package edu.miamioh.worldEditor;
 
+import java.util.Random;
+
 import edu.miamioh.gameObjects.Block;
 import edu.miamioh.gameObjects.Tile;
 import edu.miamioh.linked.LinkedList;
+import edu.miamioh.util.Constants;
 
 public class Level {
 	
@@ -62,11 +65,11 @@ public class Level {
 	
 	private int findTileIndex(Tile tile) {
 		
-		int tileID = tile.getID();
+		int tileID = tile.getId();
 		
 		for(int i=1;i<=tileList.getLength();i++) {
 			
-			int tempID = tileList.getEntry(i).getID();
+			int tempID = tileList.getEntry(i).getId();
 			
 			if(tileID == tempID) {
 				return i;
@@ -79,11 +82,11 @@ public class Level {
 	
 	private int findBlockIndex(Block block) {
 		
-		int blockID = block.getID();
+		int blockID = block.getId();
 		
 		for(int i=1;i<=blockList.getLength();i++) {
 			
-			int tempID = blockList.getEntry(i).getID();
+			int tempID = blockList.getEntry(i).getId();
 			
 			if(blockID == tempID) {		
 				return i;
@@ -91,6 +94,64 @@ public class Level {
 		}
 		
 		return -1;
+	}
+	
+	public boolean isBlock(int row, int column) {
+		
+		for(int i=1;i<=blockList.getLength();i++) {
+			
+			int tempRow = blockList.getEntry(i).getRow();
+			int tempColumn = blockList.getEntry(i).getColumn();
+			
+			if(row == tempRow && column == tempColumn) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean isTile(int row, int column) {
+		
+		for(int i=1;i<=tileList.getLength();i++) {
+			
+			int tempRow = tileList.getEntry(i).getRow();
+			int tempColumn = tileList.getEntry(i).getColumn();
+			
+			if(row == tempRow && column == tempColumn) {
+				return true;
+			}
+		}
+		
+		return false;
+		
+	}
+	
+	public int generateBlockID(Block block) {
+
+		int maxNum = Constants.MAX_ID;
+		
+		Random rand = new Random();
+		
+		while(true) {
+
+			int randNum = rand.nextInt(maxNum);
+			boolean flag = false;
+			
+			for(int i=1;i<=blockList.getLength();i++) {
+			
+				if(blockList.getEntry(i).getId() == randNum) {
+					flag = true;
+				}
+				
+				if(blockList.getEntry(i).getId() != randNum && i == blockList.getLength() && flag == false) {
+					return randNum;
+				}
+				
+			}
+			
+		}
+		
 	}
 
 }

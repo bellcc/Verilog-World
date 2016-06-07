@@ -23,21 +23,23 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import edu.miamioh.schematicRenderer.SchematicRendererMain;
+import edu.miamioh.simulator.Parse;
+import edu.miamioh.util.Constants;
 
 import javax.swing.*;
-import javax.swing.text.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.text.*;
 import javax.swing.undo.CannotUndoException;
-
-import edu.miamioh.simulator.Parse;
-
-import java.text.*;
-import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.net.*;
 import java.io.*;
+import java.net.URL;
+import java.text.ParseException;
+import java.util.Locale;
 
 public class VerilogEditor extends JFrame implements ActionListener {
 
@@ -529,6 +531,16 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		});
 		toolBar.add(resetButton);
 		
+		JButton schematicRenderButton = makeToolBarButton("schemEdit", "Schematic Renderer", "Schematic Renderer");
+		schematicRenderButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				schemEditButtonFunction();
+			}
+		});
+		toolBar.add(schematicRenderButton);
+		
+		/*
 		toolBar.add(new JLabel("Internal Sensors: "));
 		MaskFormatter formatterInternal = null;
 		try {
@@ -552,6 +564,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			}
 		});
 		toolBar.add(simulateInput);
+		*/
+		
 		/*
 		toolBar.add(new JLabel("General Sensors(6~0): "));
 		MaskFormatter formatterGeneral = null;
@@ -795,6 +809,21 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		} catch (Exception e1) {
 			System.out.println(e1);
 		}
+	}
+
+	LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+	LwjglApplication schematicRender;
+
+	public void schemEditButtonFunction() {
+
+		config.title = "Schematic Render of " + this.fileName;
+		config.width = Constants.WINDOW_WIDTH;
+		config.height = Constants.WINDOW_HEIGHT;
+		config.forceExit = false;
+
+		verifyButtonFunction();
+
+		schematicRender = new LwjglApplication(new SchematicRendererMain(Compiler), config);
 	}
 	/*
 	public void comboHeaderButtonFunction() {
