@@ -51,8 +51,6 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 	private int								new_val_idx;
 	private int								old_val_idx;
 	
-	private Integer							clock_cycle;
-	
 	private int 							state;
 	public final static int 				STEADY = 0;
 	public final static int					NOT_STEADY = 1;
@@ -78,9 +76,6 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		this.ports_list = module.getPorts_list();
 		this.vars_list = module.getVars_list();
 		this.hash_vars = module.getHash_vars();
-		
-		/* initialize a clock tracker */
-		this.clock_cycle = 0;
 		
 		this.state = SimVisitor.STEADY;
 	}
@@ -129,8 +124,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		// Update root module clock
 		ParseRegWire wire = module.getHash_vars().get("clk");
 		if (wire != null) {
-			wire.setValue(new_val_idx, clockValue, 1);
-			wire.setValue(old_val_idx, clockValue, 1);
+			wire.setValue(new_val_idx, clockValue);
 		}
 		
 		// Update clock in all other modules
@@ -138,12 +132,13 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 			wire = sub.getHash_vars().get("clk");
 			
 			if (wire != null) {
-				wire.setValue(new_val_idx, clockValue, 1);
-				wire.setValue(old_val_idx, clockValue, 1);
+				wire.setValue(new_val_idx, clockValue);
 			}
 		}
 	}
 	
+	// The update flag tells the simulator if the given
+	// wire has already been updated for a sequential clock cycle.
 	public void resetSequUpdateFlag() {
 		
 		// Reset wires in root module
@@ -307,7 +302,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		Value right = visit(ctx.expression());
 
 		/* Update the data structure with the right value */
-		left.setVar(new_val_idx, right.asInt(), cycle_time);
+		left.setVar(new_val_idx, right.asInt());
 
 		// System.out.println("AssignBlocking:"+left.getVarName()+" Value = "+right.asInt());
 
@@ -332,7 +327,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 
 		/* Update the data structure with the right value */
 		if (this.is_sequential_sim_cycle) {
-			left.setVar(new_val_idx, right.asInt(), cycle_time);
+			left.setVar(new_val_idx, right.asInt());
 		}
 
 		return null;
@@ -348,7 +343,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		Value right = visit(ctx.expression());
 
 		/* Update the data structure with the right value */
-		left.setVar(new_val_idx, right.asInt(), cycle_time);
+		left.setVar(new_val_idx, right.asInt());
 
 		// System.out.println("Continuous assign:"+left.getVarName()+" Value = "+right.asInt());
 
@@ -362,7 +357,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		Value right = visit(ctx.expression());
 
 		/* Update the data structure with the right value */
-		left.setVar(new_val_idx, right.asInt(), cycle_time);
+		left.setVar(new_val_idx, right.asInt());
 		
 		return null; 
 	}
@@ -746,7 +741,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 			ParseRegWire inWire = module.getHash_vars().get(identifier);
 			
 			// Set their values equal to eachother
-			targetWire.setValue(new_val_idx, inWire.getValue(old_val_idx), cycle_time);
+			targetWire.setValue(new_val_idx, inWire.getValue(old_val_idx));
 		}
 		
 		// Simulate new module
@@ -770,7 +765,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 			ParseRegWire targetWire = module.getHash_vars().get(identifier);
 			
 			// Set their values equal to eachother
-			targetWire.setValue(new_val_idx, outWire.getValue(old_val_idx), cycle_time);
+			targetWire.setValue(new_val_idx, outWire.getValue(old_val_idx));
 		}
 		
 		// Propagate state changes in sub modules to the super module

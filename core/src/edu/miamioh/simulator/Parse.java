@@ -67,9 +67,9 @@ public class Parse {
 		parser.addErrorListener(new VerboseListenerE());
 		root_tree = parser.module_declaration();
 		
-		root_module = new ModuleInstance(parser, this, root_tree);
+		root_module = new ModuleInstance(parser, this, root_tree, "root_module");
 		
-		DebugUtils.printParseTree(root_tree, parser);
+		//DebugUtils.printParseTree(root_tree, parser);
 
 		if (is_no_parse_errors)
 		{
@@ -106,7 +106,13 @@ public class Parse {
 		SimVisitor visitor = root_module.getVisitor();
 		
 		do {
+			System.out.println("*********** Comb Cycle ************");
+			System.out.println(">>> Top Module");
 			DebugUtils.printModuleVars(visitor, this.root_module);
+			for(ModuleInstance sub : this.subModules_list) {
+				System.out.println(">>> " + sub.getName());
+				DebugUtils.printModuleVars(sub.getVisitor(), sub);
+			}
 			// Assume the circuit is steady at the start. 
 			// Simulate it and let it change it's own steady or not steady state.
 			visitor.setState(SimVisitor.STEADY);
@@ -123,6 +129,9 @@ public class Parse {
 	
 	public void simSequ(int mode) {
 		// Toggle sequ clock and simulate
+		System.out.print("************************\n" +
+						 "*        Clock!        *\n" +
+						 "************************\n");
 		root_module.getVisitor().toggleSequClock();
 		simComb(mode);
 

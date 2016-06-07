@@ -78,15 +78,15 @@ public class Value
 		return null;
 	}
 
-	public void setVar(int idx, int value, int cycle_time)
+	public void setVar(int idx, int value)
 	{
 		if (this.v_type == ValueType.REG_WIRE_T)
 		{
 			if (this.idx >= 0) {
-				regWire.setBitValue(idx, this.idx, value, cycle_time);
+				regWire.setBitValue(idx, this.idx, value);
 			}
 			else {
-				regWire.setValue(idx, value, cycle_time);
+				regWire.setValue(idx, value);
 			}
 		}
 	}
