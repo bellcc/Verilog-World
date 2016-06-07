@@ -104,7 +104,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 
 	public void clean_sim_cycle()
 	{
-		if (!is_sequential_sim_cycle)
+		if (is_sequential_sim_cycle)
 		{
 			/* Makes sure the sequential registers keep value and catches
 			 * inferred latches */
@@ -113,6 +113,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 				vars_list.get(i).seqUpdate(cycle_time, new_val_idx, old_val_idx);
 			}
 		}
+		this.is_sequential_sim_cycle = false;
 	}
 	
 	// Only called for root module
@@ -330,7 +331,9 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		Value right = visit(ctx.expression());
 
 		/* Update the data structure with the right value */
-		left.setVar(new_val_idx, right.asInt(), cycle_time);
+		if (this.is_sequential_sim_cycle) {
+			left.setVar(new_val_idx, right.asInt(), cycle_time);
+		}
 
 		return null;
 	}

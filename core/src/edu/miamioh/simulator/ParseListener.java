@@ -203,8 +203,6 @@ public class ParseListener extends Verilog2001BaseListener
 			/* create the var */
 			new_var = new ParseRegWire(visitor);
 			new_var.addReg(name, MSB_range - LSB_range + 1);
-			if (isInSequAlways) {new_var.setSequential();}
-			else {new_var.setCombinational();}
 
 			/* add to the hash and list */
 			vars_list.add(new_var);
@@ -489,56 +487,20 @@ public class ParseListener extends Verilog2001BaseListener
 	public void exitBlocking_assignment(
 			Verilog2001Parser.Blocking_assignmentContext ctx)
 	{
-		/*
-		 * Must be updated for VerilogWorld. (We removed ports for now)
-		 */
-//		String name = var_stack.pop();
-//		ParsePort port = hash_ports.get(name);
-//		ParseRegWire var = hash_vars.get(name);
-//
-//		if (port == null)
-//		{
-//			var.setCombinational();
-//		}
-//		else
-//		{
-//			port.updateReg(RegWireType.COMBINATIONAL);
-//
-//			if (var != null)
-//			{
-//				/* remove the output register from the var list */
-//				hash_vars.remove(name);
-//				vars_list.remove(var);
-//			}
-//		}
+		String name = var_stack.pop();
+		ParseRegWire var = hash_vars.get(name);
+
+		var.setCombinational();
 	}
 
 	@Override
 	public void exitNonblocking_assignment(
 			Verilog2001Parser.Nonblocking_assignmentContext ctx)
 	{
-		/*
-		 * Must be updated for VerilogWorld. (We removed ports for now)
-		 */
-//		String name = var_stack.pop();
-//		ParsePort port = hash_ports.get(name);
-//		ParseRegWire var = hash_vars.get(name);
-//
-//		if (port == null)
-//		{
-//			var.setSequential();
-//		}
-//		else
-//		{
-//			port.updateReg(RegWireType.SEQUENTIAL);
-//
-//			if (var != null)
-//			{
-//				/* remove the output register from the var list */
-//				hash_vars.remove(name);
-//				vars_list.remove(var);
-//			}
-//		}
+		String name = var_stack.pop();
+		ParseRegWire var = hash_vars.get(name);
+
+		var.setSequential();
 	}
 
 	@Override
