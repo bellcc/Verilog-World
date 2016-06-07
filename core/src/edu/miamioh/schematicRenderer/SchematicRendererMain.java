@@ -2,7 +2,6 @@ package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.*;
-import edu.miamioh.simulator.ModuleInstance;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.ParseRegWire;
 import edu.miamioh.simulator.WireRoleType;
@@ -16,14 +15,15 @@ import java.util.ArrayList;
 public class SchematicRendererMain implements ApplicationListener {
 
     private SchematicRenderer schematic;
-    private Parse parse;
+    private Parse compiler;
 
     /**
      * Constructor for SchematicRendererMain. Requires a Parse to have already been created.
-     * @param parse Contains information on the design to be rendered.
+     * @param compiler Contains information on the design to be rendered.
      */
-    public SchematicRendererMain(Parse parse){
-        this.parse = parse;
+    public SchematicRendererMain(Parse compiler){
+
+        this.compiler = compiler;
     }
 
     /**
@@ -31,17 +31,11 @@ public class SchematicRendererMain implements ApplicationListener {
      */
     @Override
     public void create() {
-
-        Gdx.app.setLogLevel(Application.LOG_DEBUG);
         schematic = new SchematicRenderer();
-        if(this.parse.is_compiled_yet())
-            getData(this.parse);
-        else
-            this.parse.reportParseError("You must verify the file before attempting to render the schematic design.");
-
+        getData();
     }
 
-    private void getData(Parse compiler){
+    private void getData(){
 
         ArrayList<ParseRegWire> vars_list = compiler.getRootModule().getVars_list();
 
@@ -53,12 +47,12 @@ public class SchematicRendererMain implements ApplicationListener {
 
             if(temp.getRole() == WireRoleType.INPUT) {
                 schematic.addInput(temp.getName());
-                break;
             }
+
+            SchematicVisitor visitor = new SchematicVisitor<Gate>(schematic);
 
             if(temp.getRole() == WireRoleType.OUTPUT) {
                 schematic.addOutput(temp.getName());
-                break;
             }
 
         }
@@ -113,9 +107,10 @@ public class SchematicRendererMain implements ApplicationListener {
 
     }
 
-    public SchematicRendererMain() {
-        super();
-    }
+    /**
+     * Default constructor.
+     */
+    public SchematicRendererMain() {}
 
     /**
      * Releases all resources of this object.

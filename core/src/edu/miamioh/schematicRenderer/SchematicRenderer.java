@@ -9,6 +9,9 @@ import edu.miamioh.util.Constants;
 
 import java.util.ArrayList;
 
+import static edu.miamioh.schematicRenderer.GateType.INPUT;
+import static edu.miamioh.schematicRenderer.GateType.OUTPUT;
+
 /**
  * Created by shaffebd.
  */
@@ -36,7 +39,7 @@ public class SchematicRenderer implements Disposable {
      * @param id     The unique name of the port.
      * @param level  The distance of the gate from the inputs.
      */
-    public void addGate(String type, int inputs, String id, int level) {
+    public void addGate(GateType type, int inputs, String id, int level) {
 
         if (level > maxLevel)
             maxLevel = level;
@@ -52,7 +55,7 @@ public class SchematicRenderer implements Disposable {
      */
     public void addInput(String id) {
 
-        Port temp = new Port("INPUT", id, 0);
+        Port temp = new Port(INPUT, id, 0);
         ports.add(temp);
 
     }
@@ -64,7 +67,7 @@ public class SchematicRenderer implements Disposable {
      */
     public void addOutput(String id) {
 
-        Port temp = new Port("OUTPUT", id, maxLevel + 1);
+        Port temp = new Port(OUTPUT, id, maxLevel + 1);
         ports.add(temp);
 
     }
@@ -103,9 +106,6 @@ public class SchematicRenderer implements Disposable {
         int cyAxis = constants.WINDOW_WIDTH / 2; /* Axis of the window where
         x = total width / 2 */
 
-        int scaleFactor = constants.scaleFactor; //Should be changed later; int or float?;
-        //Resizes the schematics to fill more of the window.
-
 //        constants.frame = true;
 
         this.renderer.begin(ShapeRenderer.ShapeType.Line);
@@ -131,8 +131,7 @@ public class SchematicRenderer implements Disposable {
 
         //Render Gates and Ports
         {
-            GateRenderer grenderer = new GateRenderer();
-            int scaleFactor = constants.scaleFactor;
+            GateRenderer grenderer = new GateRenderer(renderer, constants);
 
             int totalOuts = 0;
             int totalIns = 0;
@@ -144,11 +143,11 @@ public class SchematicRenderer implements Disposable {
             for (int i = 0; i < ports.size(); i++) {
 
                 tempP = ports.get(i);
-                if (tempP.getType().equals("INPUT")) {
+                if (tempP.getType().equals(INPUT)) {
 
                     tempP.setCX(getXCenter(0));
                     tempP.setCY(getYCenter(i - totalOuts));
-                    grenderer.render(renderer, tempP.getType(), tempP.getCX(), tempP.getCY(), scaleFactor);
+                    grenderer.render(tempP.getType(), tempP.getCX(), tempP.getCY());
 
                 } else
                     totalOuts++;
@@ -162,7 +161,7 @@ public class SchematicRenderer implements Disposable {
 
                         tempG.setCX(getXCenter(p));
                         tempG.setCY(getYCenter(j - skips));
-                        grenderer.render(renderer, tempG.getType(), tempG.getCX(), tempG.getCY(), scaleFactor);
+                        grenderer.render(tempG.getType(), tempG.getCX(), tempG.getCY());
 
                     } else
                         skips++;
@@ -173,11 +172,11 @@ public class SchematicRenderer implements Disposable {
             for (int k = 0; k < ports.size(); k++) {
 
                 tempP = ports.get(k);
-                if (tempP.getType().equals("OUTPUT")) {
+                if (tempP.getType().equals(OUTPUT)) {
 
                     tempP.setCX(getXCenter(maxLevel + 1));
                     tempP.setCY(getYCenter(k - totalIns));
-                    grenderer.render(renderer, tempP.getType(), tempP.getCX(), tempP.getCY(), scaleFactor);
+                    grenderer.render(tempP.getType(), tempP.getCX(), tempP.getCY());
                 } else
                     totalIns++;
             }
@@ -187,10 +186,10 @@ public class SchematicRenderer implements Disposable {
         {
 
             String portName;
-            String portDetails[] = new String[2];
+            String portDetails[];
 
-            Gate tempG = null;
-            Port tempP = null;
+            Gate tempG;
+            Port tempP;
 
             int x1, y1, x2, y2, j;
             x1 = y1 = x2 = y2 = 0;
