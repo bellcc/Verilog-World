@@ -5,7 +5,7 @@
  * @info   
  */
 
-package edu.miamioh.gameObjects;
+package edu.miamioh.GameObjects;
 
 public class Block extends AbstractGameObect{
 

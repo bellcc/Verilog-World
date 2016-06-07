@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Disposable;
 
-import edu.miamioh.gameObjects.Block;
+import edu.miamioh.GameObjects.Block;
 import edu.miamioh.linked.LinkedList;
 import edu.miamioh.util.Constants;
 import edu.miamioh.worldEditor.actors.BlocksActor;

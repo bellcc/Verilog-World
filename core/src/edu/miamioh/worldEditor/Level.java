@@ -9,8 +9,8 @@ package edu.miamioh.worldEditor;
 
 import java.util.Random;
 
-import edu.miamioh.gameObjects.Block;
-import edu.miamioh.gameObjects.Tile;
+import edu.miamioh.GameObjects.Block;
+import edu.miamioh.GameObjects.Tile;
 import edu.miamioh.linked.LinkedList;
 import edu.miamioh.util.Constants;
 

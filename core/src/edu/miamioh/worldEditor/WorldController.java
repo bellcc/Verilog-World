@@ -13,8 +13,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import edu.miamioh.gameObjects.Block;
-import edu.miamioh.gameObjects.Tile;
+import edu.miamioh.GameObjects.Block;
+import edu.miamioh.GameObjects.Tile;
 import edu.miamioh.worldEditor.types.Point;
 
 public class WorldController {
