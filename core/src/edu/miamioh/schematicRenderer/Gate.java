@@ -95,6 +95,11 @@ class Gate {
                 this.level = level;
                 break;
 
+//            case MODULE:
+//                this.type = type;
+//                this.setNumOfInputs(numOfInputs);
+//                this.setNumOfOutputs(numOfOutputs);
+
             default:
                 this.type = BLANK;
                 this.setNumOfInputs(0);

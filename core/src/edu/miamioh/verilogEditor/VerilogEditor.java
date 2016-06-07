@@ -30,15 +30,12 @@ import edu.miamioh.simulator.Parse;
 import edu.miamioh.util.Constants;
 
 import javax.swing.*;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
 import javax.swing.text.*;
 import javax.swing.undo.CannotUndoException;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.URL;
-import java.text.ParseException;
 import java.util.Locale;
 
 public class VerilogEditor extends JFrame implements ActionListener {
@@ -535,7 +532,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		schematicRenderButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				schemEditButtonFunction();
+				schematicButtonFunction();
 			}
 		});
 		toolBar.add(schematicRenderButton);
@@ -815,16 +812,20 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 	LwjglApplication schematicRender;
 
-	public void schemEditButtonFunction() {
+	public void schematicButtonFunction() {
 
 		config.title = "Schematic Render of " + this.fileName;
 		config.width = Constants.WINDOW_WIDTH;
 		config.height = Constants.WINDOW_HEIGHT;
 		config.forceExit = false;
 
-		verifyButtonFunction();
-
-		schematicRender = new LwjglApplication(new SchematicRendererMain(Compiler), config);
+		if(Compiler.is_compiled_yet()){
+			schematicRender = new LwjglApplication(new SchematicRendererMain(Compiler), config);
+		} else {
+			errorText.setText("The Verilog code has not been successfully " +
+					"compiled yet.  Please click the check mark above and/or " +
+					"fix Verilog errors.");
+		}
 	}
 	/*
 	public void comboHeaderButtonFunction() {
