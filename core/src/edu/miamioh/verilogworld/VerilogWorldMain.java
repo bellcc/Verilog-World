@@ -5,18 +5,19 @@
  * @info   VerilogWorldMain is the starter class of the game.
  */
 
-package edu.miamioh.verilogworld;
+package edu.miamioh.verilogWorld;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
-import edu.miamioh.worldEditor.WorldController;
-import edu.miamioh.worldEditor.WorldRenderer;
+
+import edu.miamioh.worldEditor.WorldEditorController;
+import edu.miamioh.worldEditor.WorldEditorRenderer;
 
 public class VerilogWorldMain implements ApplicationListener {
 	
-	private WorldController worldController;
-	private WorldRenderer worldRenderer;
+	private VerilogWorldController verilogWorldController;
+	
+	private WorldEditorController worldEditorController;
+	private WorldEditorRenderer worldRenderer;
 	
 	private boolean paused;
 	
@@ -26,10 +27,16 @@ public class VerilogWorldMain implements ApplicationListener {
 	@Override
 	public void create () {
 
-		Gdx.app.setLogLevel(Application.LOG_DEBUG);
-		worldController = new WorldController();
-		worldRenderer = new WorldRenderer(worldController);
-
+		//The variable is instantiated and initialized and will act 
+		//as the central hub for data during execution of the application.
+		verilogWorldController = new VerilogWorldController();
+		verilogWorldController.init();
+				
+		worldEditorController = new WorldEditorController();
+		worldRenderer = new WorldEditorRenderer(worldEditorController);
+		
+		worldEditorController.initMultiplexer();
+		
 		paused = false;
 		
 	}
@@ -39,6 +46,8 @@ public class VerilogWorldMain implements ApplicationListener {
 	 */
 	@Override
 	public void dispose() {
+		
+		//Dispose of all instantiated renderers here.
 		
 		worldRenderer.dispose();
 		
@@ -60,9 +69,11 @@ public class VerilogWorldMain implements ApplicationListener {
 	 */
 	@Override
 	public void render () {
-
+		
+		//Call the appropriate renderer here.
+		
 		if(!paused) {
-			worldController.update();
+			worldEditorController.update();
 		}
 		
 		worldRenderer.render();
@@ -76,6 +87,8 @@ public class VerilogWorldMain implements ApplicationListener {
 	 */
 	@Override
 	public void resize(int width, int height) {
+		
+		//resize the necessary renderer.
 		
 		worldRenderer.resize(width, height);
 		

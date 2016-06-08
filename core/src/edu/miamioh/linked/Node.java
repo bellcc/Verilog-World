@@ -3,7 +3,7 @@
  * @author Chris Bell
  */
 
-package edu.miamioh.linked;
+package edu.miamioh.Linked;
 
 public class Node<T> {
 
