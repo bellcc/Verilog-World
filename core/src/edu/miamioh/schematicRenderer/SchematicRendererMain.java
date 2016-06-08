@@ -2,9 +2,11 @@ package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.*;
+import edu.miamioh.simulator.ModuleInstance;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.ParseRegWire;
 import edu.miamioh.simulator.WireRoleType;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
 
@@ -16,6 +18,8 @@ public class SchematicRendererMain implements ApplicationListener {
 
     private SchematicRenderer schematic;
     private Parse compiler;
+    private ModuleInstance root_module;
+    private ParseTree root_tree;
 
     /**
      * Constructor for SchematicRendererMain. Requires a Parse to have already been created.
@@ -24,6 +28,9 @@ public class SchematicRendererMain implements ApplicationListener {
     public SchematicRendererMain(Parse compiler){
 
         this.compiler = compiler;
+        this.root_module = compiler.getRootModule();
+        this.root_tree = compiler.getRootTree();
+
     }
 
     /**
@@ -37,24 +44,27 @@ public class SchematicRendererMain implements ApplicationListener {
 
     private void getData(){
 
-        ArrayList<ParseRegWire> vars_list = compiler.getRootModule().getVars_list();
+        ArrayList<ParseRegWire> vars_list = root_module.getVars_list();
 
         ParseRegWire temp;
 
-        for(int i = 0; i < vars_list.size(); i++){
+        if(compiler.is_compiled_yet()) {
 
-            temp = vars_list.get(i);
+            for (int i = 0; i < vars_list.size(); i++) {
 
-            if(temp.getRole() == WireRoleType.INPUT) {
-                schematic.addInput(temp.getName());
+                temp = vars_list.get(i);
+
+                if (temp.getRole() == WireRoleType.INPUT) {
+                    schematic.addInput(temp.getName());
+                }
+
+                SchematicVisitor visitor = new SchematicVisitor<Gate>(schematic);
+                visitor.visit(root_tree);
+
+                if (temp.getRole() == WireRoleType.OUTPUT) {
+                    schematic.addOutput(temp.getName());
+                }
             }
-
-            SchematicVisitor visitor = new SchematicVisitor<Gate>(schematic);
-
-            if(temp.getRole() == WireRoleType.OUTPUT) {
-                schematic.addOutput(temp.getName());
-            }
-
         }
 
 //        //Test stuff

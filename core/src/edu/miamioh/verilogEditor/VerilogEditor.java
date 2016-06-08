@@ -30,15 +30,12 @@ import edu.miamioh.simulator.Parse;
 import edu.miamioh.util.Constants;
 
 import javax.swing.*;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
 import javax.swing.text.*;
 import javax.swing.undo.CannotUndoException;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.URL;
-import java.text.ParseException;
 import java.util.Locale;
 
 public class VerilogEditor extends JFrame implements ActionListener {
@@ -73,6 +70,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 
 	private long startTime;
 	private long totalFocusTime;
+	private boolean isFirstSimCycle;
 
 	/**
 	 * @param args
@@ -93,7 +91,6 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		// Create the window
 		super("Verilog Text Editor: " + filePath);
 
-		this.setSize(WIDTH, HEIGHT);
 		this.setMinimumSize(new Dimension(MINWIDTH, MINHEIGHT));
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
@@ -107,13 +104,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		checkDir(filePath);
 
 		// set the location the window will appear on the screen
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screenSize = kit.getScreenSize();
-		int width = screenSize.width;
-		int height = screenSize.height;
-		int x = (width - WIDTH) / 2;
-		int y = (height - HEIGHT) / 2;
-		this.setLocation(x, y);
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 
 		JPanel contentPane = new JPanel();
 		contentPane.setLayout(new GridBagLayout());
@@ -541,7 +532,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		schematicRenderButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				schemEditButtonFunction();
+				schematicButtonFunction();
 			}
 		});
 		toolBar.add(schematicRenderButton);
@@ -656,6 +647,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 
 	// verify
 	public void verifyButtonFunction() {
+		
+		this.isFirstSimCycle = true;
 		try {
 			FileWriter out = new FileWriter(verilogFiles);
 			out.write(codeText.getText());
@@ -771,7 +764,16 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	
 			
 	public void simulateButtonFunction() {
-
+		
+		// For first sim cycle, display starting state
+		if (this.isFirstSimCycle) {
+			Compiler.simComb();
+			Compiler.displayResults();
+			this.isFirstSimCycle = false;
+			return;
+		}
+		
+		// For all other cycles after that, actually simulate the circuit
 		if (Compiler.is_compiled_yet()) {
 			Compiler.sim_cycle(Compiler.RUN);
 		} else {
@@ -810,16 +812,20 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 	LwjglApplication schematicRender;
 
-	public void schemEditButtonFunction() {
+	public void schematicButtonFunction() {
 
 		config.title = "Schematic Render of " + this.fileName;
 		config.width = Constants.WINDOW_WIDTH;
 		config.height = Constants.WINDOW_HEIGHT;
 		config.forceExit = false;
 
-		verifyButtonFunction();
-
-		schematicRender = new LwjglApplication(new SchematicRendererMain(Compiler), config);
+		if(Compiler.is_compiled_yet()){
+			schematicRender = new LwjglApplication(new SchematicRendererMain(Compiler), config);
+		} else {
+			errorText.setText("The Verilog code has not been successfully " +
+					"compiled yet.  Please click the check mark above and/or " +
+					"fix Verilog errors.");
+		}
 	}
 	/*
 	public void comboHeaderButtonFunction() {
