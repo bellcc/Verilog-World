@@ -7,7 +7,7 @@
 
 package edu.miamioh.GameObjects;
 
-public abstract class AbstractGameObect {
+public abstract class AbstractGameObject {
 
 	private int id;
 	
