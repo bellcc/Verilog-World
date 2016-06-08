@@ -32,8 +32,8 @@ public class ParseRegWire
 	private RegWireType	type;
 	private WireRoleType role; // Is it a normal wire, an input or an output?
 	private int[]		value;
-	private int			cycle_update_time;
-	private boolean		hasUpdated; // Used for sequential wires. Must only be updated once
+	private boolean		hasUpdatedOnce; // Used for sequential wires
+	private boolean		hasUpdatedTwice;
 	
 	
 	private SimVisitor visitor;
@@ -48,9 +48,9 @@ public class ParseRegWire
 		this.value = new int[2];
 		this.value[0] = 0;
 		this.value[1] = 0;
-		this.cycle_update_time = -1;
 		this.visitor = visitor;
-		this.hasUpdated = false;
+		this.hasUpdatedOnce = false;
+		this.hasUpdatedTwice = false;
 	}
 	
 	public ParseRegWire(SimVisitor visitor, String name, int busSize, WireRoleType role) {
@@ -61,9 +61,9 @@ public class ParseRegWire
 		this.value = new int[2];
 		this.value[0] = 0;
 		this.value[1] = 0;
-		this.cycle_update_time = -1;
 		this.visitor = visitor;
-		this.hasUpdated = false;
+		this.hasUpdatedOnce = false;
+		this.hasUpdatedTwice = false;
 	}
 	
 	public SimVisitor getSimVisitor() {return this.visitor;}
@@ -102,7 +102,10 @@ public class ParseRegWire
 	}
 	
 	public RegWireType getType() {return this.type;}
-	public void resetUpdateFlag() {this.hasUpdated = false;}
+	public void resetUpdateFlag() {
+		this.hasUpdatedOnce = false;
+		this.hasUpdatedTwice = false;
+	}
 	
 	public void setRole(WireRoleType role) {
 		this.role = role;
@@ -125,13 +128,17 @@ public class ParseRegWire
 		return this.value[idx];
 	}
 
-	public void setValue(int idx, int value, int cycle_time)
+	public void setValue(int idx, int value, boolean is_sequential)
 	{
 		int mask = (1 << this.busSize) - 1;
 		
-		// Only update if it's sequential and we haven't already updated or
-		// if it is not a sequential wire
-		if ((this.type == RegWireType.SEQUENTIAL && !this.hasUpdated) 
+		// Update in the following cases:
+		// - It is a sequential update:
+		// 		 - We haven't updated
+		// 		 - We have but we must update the other index value as well
+		// - It is not a sequential update
+		if ((this.type == RegWireType.SEQUENTIAL && !this.hasUpdatedOnce)
+		 || (this.type == RegWireType.SEQUENTIAL && !this.hasUpdatedTwice)
 		 || (this.type != RegWireType.SEQUENTIAL)) {
 			
 			// Notify simulator that a state has changed
@@ -140,14 +147,15 @@ public class ParseRegWire
 			}
 	
 			this.value[idx] = value & mask;
-	
-			this.cycle_update_time = cycle_time;
-			
-			this.hasUpdated = true;
 		}
+		
+		// Update information for sequential portion of the simulator.
+		// Sequential wires should only update twice and no more.
+		if (!hasUpdatedOnce && is_sequential) {hasUpdatedOnce = true;}
+		else if (!hasUpdatedTwice && is_sequential) {hasUpdatedTwice = true;}
 	}
 
-	public void setBitValue(int idx, int bitIdx, int bit_value, int cycle_time)
+	public void setBitValue(int idx, int bitIdx, int bit_value, boolean is_sequential)
 	{
 		int mask = (1 << this.busSize) - 1; // mask for the full number
 		int bitMask = (bit_value << bitIdx); // 0 or 1 in the bit spot
@@ -156,10 +164,9 @@ public class ParseRegWire
 															// spot
 		// Only update if it's sequential and we haven't already updated or
 		// if it is not a sequential wire
-		if ((this.type == RegWireType.SEQUENTIAL && !this.hasUpdated) 
+		if ((this.type == RegWireType.SEQUENTIAL && !this.hasUpdatedOnce)
+		 ||	(this.type == RegWireType.SEQUENTIAL && !this.hasUpdatedTwice)
 		 || (this.type == RegWireType.COMBINATIONAL)) {
-			
-			this.cycle_update_time = cycle_time;
 			
 			int newValue = ((this.value[idx] & demask) | bitMask) & mask;
 			// Notify simulator that a state has changed
@@ -169,7 +176,10 @@ public class ParseRegWire
 	
 			this.value[idx] = newValue;
 			
-			this.hasUpdated = true;
+			// Update information for sequential portion of the simulator.
+			// Sequential wires should only update twice and no more.
+			if (!hasUpdatedOnce) {hasUpdatedOnce = true;}
+			else if (!hasUpdatedTwice) {hasUpdatedTwice = true;}
 		}
 	}
 
@@ -182,7 +192,7 @@ public class ParseRegWire
 
 	public void seqUpdate(int cycle_time, int new_val_idx, int old_val_idx)
 	{
-		if (cycle_time != this.cycle_update_time || true)
+		//if (cycle_time != this.cycle_update_time || true)
 		{
 			/* IF there has been no update for this value */
 			if (type == RegWireType.COMBINATIONAL)

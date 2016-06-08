@@ -1,27 +1,20 @@
 module Adder_8(a, b, cin, sum, cout);
 
 	input cin;
-	input [1:0]a;
-	input [1:0]b;
-	output [1:0]sum;
+	input [3:0]a;
+	input [3:0]b;
+	output [3:0]sum;
 	output cout;
 
-	wire c0, c1, c2, c3, c4, c5, c6;
+	wire c0, c1, c2;
 
-	wire num10, num11;
-	wire num20, num21;
-	wire result0, result1;
-
-	assign num10 = a[0];
-	assign num11 = a[1];
-
-	assign num20 = b[0];
-	assign num21 = b[1];
-
-	FullAdder adder0(num10, num20, result0, cin, c0);
-	FullAdder adder7(num11, num21, result1, c0, cout);
-
-	assign sum[0] = result0;
-	assign sum[1] = result1;
+	assign sum[0] = (a[0] ^ b[0]) ^ cin;
+	assign c0 = (a[0] & b[0]) | (a[0] & cin) | (b[0] & cin);
+	assign sum[1] = (a[1] ^ b[1]) ^ c0;
+	assign c1 = (a[1] & b[1]) | (a[1] & c0) | (b[1] & c0);
+	assign sum[2] = (a[2] ^ b[2]) ^ c1;
+	assign c2 = (a[2] & b[2]) | (a[2] & c1) | (b[2] & c1);
+	assign sum[3] = (a[3] ^ b[3]) ^ c2;
+	assign cout = (a[3] & b[3]) | (a[3] & c2) | (b[3] & c2);
 
 endmodule

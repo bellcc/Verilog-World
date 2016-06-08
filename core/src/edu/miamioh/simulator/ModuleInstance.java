@@ -11,6 +11,7 @@ import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
 public class ModuleInstance {
 	
 	private SimVisitor visitor;
+	private String name;
 	private ParseTree tree;
 	private boolean is_sequ;
 	
@@ -18,12 +19,13 @@ public class ModuleInstance {
 	private Hashtable<String, ParseRegWire> hash_vars;
 	private ArrayList<String> ports_list;
 	
-	public ModuleInstance(Verilog2001Parser parser, Parse Compiler, ParseTree tree) {
+	public ModuleInstance(Verilog2001Parser parser, Parse Compiler, ParseTree tree, String name) {
 		
 		this.tree = tree;
 		this.vars_list = new ArrayList<>();
 		this.hash_vars = new Hashtable<>();
 		this.ports_list = new ArrayList<>();
+		this.name = name;
 		
 		visitor = new SimVisitor(this, 
 								 Compiler.getSubModulesHash(), 
@@ -49,4 +51,5 @@ public class ModuleInstance {
 	public SimVisitor getVisitor() 							{return visitor;}
 	public ParseTree getParseTree()							{return tree;}
 	public boolean isSequ() 								{return this.is_sequ;}
+	public String getName()									{return this.name;}
 }
