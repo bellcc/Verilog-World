@@ -7,6 +7,6 @@
 
 package edu.miamioh.GameObjects;
 
-public class Tile extends AbstractGameObect{
+public class Tile extends AbstractGameObject{
 
 }
