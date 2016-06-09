@@ -10,6 +10,8 @@
 package edu.miamioh.worldEditor;
 
 import edu.miamioh.AbstractEditor.AbstractInputProcessor;
+import edu.miamioh.GameObjects.Block;
+import edu.miamioh.Linked.LinkedList;
 
 public class WorldEditorInputProcessor extends AbstractInputProcessor{
 
@@ -89,20 +91,58 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 	}
 	
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		
+
 		int row = WorldEditorRenderer.getWorldRenderer().detectRow();
 		int column = WorldEditorRenderer.getWorldRenderer().detectColumn();
 		
 		int worldWidth = WorldEditorController.getCurrentWorldController().getWorldWidth();
 		int worldHeight= WorldEditorController.getCurrentWorldController().getWorldHeight();
 
+		//Modify the tap count variable.
+		if(row > 0 && row < (worldHeight - 1) && column > 0 && column < (worldWidth - 1)) {
+			WorldEditorRenderer.getWorldRenderer().incrementTapCounter(row, column);
+		}
+
+		//TODO Detect if blockOptionsMenu is high and then close the menu if touched elsewhere.
+		
+		//Detect if there is a block in that row/column.
+		LinkedList<Block> blockList = WorldEditorController.getCurrentWorldController().getCurrentLevel().blockList;		
+		
+		for(int i=1;i<=blockList.getLength();i++) {
+						
+			int tempRow = blockList.getEntry(i).getRow();
+			int tempColumn = blockList.getEntry(i).getColumn();
+			
+			if(row == tempRow && column == tempColumn) {
+							
+				//Show the block options menu.
+				int[][] tapCount = WorldEditorRenderer.getWorldRenderer().getTapCount();
+				int taps = tapCount[row][column];
+				
+				System.out.println(taps);
+				
+				if(taps == 2) {
+					
+					//Bring up world editor
+					System.out.println("Double clicked");
+					WorldEditorRenderer.getWorldRenderer().resetTapCount();
+					return true;
+				}
+				
+			}else {
+				
+				WorldEditorRenderer.getWorldRenderer().resetTapCount();
+			}
+		}
+		
+		//Detect if the row/column is valid.
 		if(row >= 0 && row <= (worldHeight -1) && column >= 0 && column <= (worldWidth - 1)) {
 			
 			WorldEditorController.getCurrentWorldController().gridPressed(row, column);
 			return true;
 			
 		}
-		
+
 		return false;
 		
 	}
@@ -142,7 +182,8 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 		int bufferWidth = WorldEditorController.getCurrentWorldController().getBufferWidth();
 		
 		int toolBarWidth = WorldEditorRenderer.getWorldRenderer().getToolBarWidth();
-		int subToolBarWidth = WorldEditorRenderer.getWorldRenderer().getSubToolBarWidth();
+		//int subToolBarWidth = WorldEditorRenderer.getWorldRenderer().getSubToolBarWidth();
+		int subToolBarWidth = WorldEditorRenderer.getWorldRenderer().getToolBarOptionsWidth();
 		
 		if(posX < (worldSize - windowWidth) + (2 * bufferWidth) + toolBarWidth + subToolBarWidth) {
 			return true;

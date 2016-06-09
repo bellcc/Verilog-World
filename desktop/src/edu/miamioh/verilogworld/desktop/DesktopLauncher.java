@@ -22,6 +22,9 @@ public class DesktopLauncher {
 		config.title = "Verilog World";
 		config.width = Constants.WINDOW_WIDTH;
 		config.height = Constants.WINDOW_HEIGHT;
+		
+		config.resizable = false;
+		config.backgroundFPS = 30;
 
 		new LwjglApplication(new VerilogWorldMain(), config);
 	
