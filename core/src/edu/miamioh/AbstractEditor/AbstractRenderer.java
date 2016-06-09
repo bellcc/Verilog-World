@@ -51,7 +51,7 @@ public abstract class AbstractRenderer implements Disposable{
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, w, h);
 	}
-	
+
 	public OrthographicCamera getCamera() {
 		return camera;
 	}

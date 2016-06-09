@@ -10,8 +10,15 @@ package edu.miamioh.worldEditor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
 import edu.miamioh.AbstractEditor.AbstractRenderer;
 import edu.miamioh.GameObjects.Block;
@@ -40,9 +47,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	private boolean blankBlockState;
 
 	private boolean blankTileState;
-	
-	private int[][] tapCount;
-	
+		
 	public WorldEditorRenderer() {
 		
 		init();
@@ -61,31 +66,10 @@ public class WorldEditorRenderer extends AbstractRenderer{
 						
 		blankBlockState = false;
 		blankTileState = false;
-
-		tapCount = new int[worldEditorController.getWorldWidth()][worldEditorController.getWorldHeight()];
 		
 		resetStates();
 		
 		initToolBarStages();
-	}
-
-	public void resetTapCount() {
-		
-		int worldWidth = WorldEditorController.getCurrentWorldController().getWorldWidth();
-		int worldHeight = WorldEditorController.getCurrentWorldController().getWorldHeight();
-		
-		for(int i=0;i<worldWidth;i++) {
-			
-			for(int j=0;j<worldHeight;j++) {
-				
-				tapCount[i][j] = 0;
-			}
-		}
-	}
-	
-	public void incrementTapCounter(int x, int y) {
-		
-		tapCount[x][y] += 1;
 	}
 
 	/**
@@ -113,7 +97,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		HomeStage tempHomeStage = new HomeStage();
 		tempHomeStage.init();
 		homeStage = tempHomeStage.getStage();
-		
+				
 	}
 
 	/**
@@ -133,8 +117,31 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		renderBackground();
 		renderSelector();
 		
-		renderLevelBlocks();
+		//renderLevelBlocks();
+		renderBlocks();
 		renderToolBar();
+	}
+	
+	Stage blocks;
+	public Stage getBlocks() {return blocks;}
+	
+	public void renderBlocks() {
+		
+		blocks = new Stage();
+		//LinkedList<Block> blockList = WorldEditorController.getCurrentWorldController().getCurrentLevel().blockList;
+
+		Block button = new Block();
+		Actor temp = button.getBlock();
+		temp.setPosition(100, 100);
+		temp.setSize(100, 100);
+		
+		Gdx.input.setInputProcessor(blocks);
+		
+		blocks.addActor(temp);
+		
+		blocks.act(Gdx.graphics.getDeltaTime());
+		blocks.draw();
+		
 	}
 	
 	/**
@@ -227,11 +234,26 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		
 		renderer.end();
 		
+		translateCamera();
+
+	}
+
+	public void translateCamera() {
+		
 		int bufferWidth = worldEditorController.getBufferWidth();
 		int bufferHeight = worldEditorController.getBufferHeight();
 		
 		int windowWidth = worldEditorController.getWindowWidth();
 		int windowHeight = worldEditorController.getWindowHeight();
+		
+		int gridWidth = worldEditorController.getGridWidth();
+		int gridHeight = worldEditorController.getGridHeight();
+		
+		int worldWidth = worldEditorController.getWorldWidth();
+		int worldHeight = worldEditorController.getWorldHeight();
+		
+		int width = gridWidth * worldWidth;
+		int height = gridHeight * worldHeight;
 		
 		int translateX = worldX - bufferWidth;
 		int translateY = worldY - bufferHeight;
@@ -239,17 +261,13 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		//This sets the translate width to the amount of 
 		//buffer area that is needed on the left of the window.
 		if(worldX <	 bufferWidth) {
-			
 			translateX = (-1) * (bufferWidth - worldX);
-			
 		}
 		
 		//This sets the translate height to the amount of
 		//buffer area that is needed on the bottom of the window.
 		if(worldY < bufferHeight) {
-			
 			translateY = (-1) * (bufferHeight - worldY);
-			
 		}
 		
 		translateX -= (getToolBarWidth() + getToolBarOptionsWidth());
@@ -259,17 +277,13 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		int windowWidthRange = windowWidth - (getToolBarWidth() + getToolBarOptionsWidth());
 		
 		if(width < windowWidthRange) {
-
 			translateX = (getToolBarWidth() + getToolBarOptionsWidth()) + ((windowWidthRange / 2) - (width / 2));
-			translateX *= (-1);
-			
+			translateX *= (-1);			
 		}
 		
 		if(height < windowHeight) {
-			
 			translateY = ((windowHeight / 2) - (height / 2));
 			translateY *= (-1);
-			
 		}
 
 		
@@ -278,6 +292,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		
 		camera.setToOrtho(false, w, h);
 		camera.translate(translateX, translateY);
+		
 	}
 	
 	/**
@@ -292,9 +307,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 
 		column = detectColumn();
 		row = detectRow();
-		
-		System.out.println(column + ", " + row);
-		
+				
 		int gridWidth = worldEditorController.getGridWidth();
 		int gridHeight = worldEditorController.getGridHeight();
 				
@@ -346,7 +359,6 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		
 		int column = -1;
 		
-		
 		int worldWidth = worldEditorController.getWorldWidth();
 		int gridWidth = worldEditorController.getGridWidth();
 		int bufferWidth = worldEditorController.getBufferWidth();
@@ -356,13 +368,8 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		if(hasIrregularWidth()) {
 			
 			int currentX = getMousePoint().getX();
-						
-			//int displayLeftX = (windowWidth / 2) - (width / 2);
-			//int displayRightX = displayLeftX + worldWidth;
-			
 			int windowWidthRange = windowWidth - getToolBarWidth() - getToolBarOptionsWidth();
 			
-			//int displayLeftX = (getToolBarWidth() + getToolBarOptionsWidth()) + ((windowWidthRange / 2) - (width / 2));
 			int displayLeftX = (windowWidthRange / 2) - (width / 2);
 			int displayRightX = displayLeftX + width;
 			
@@ -525,17 +532,14 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	}
 
 	public void resetTileStates() {
-		
 		blankTileState = false;
 	}
 	
 	public void resetBlockStates() {
-		
 		blankBlockState = false;		
 	}
 	
 	public static WorldEditorRenderer getWorldRenderer() {
-		
 		return worldRenderer;
 	}
 	
@@ -560,12 +564,10 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	}
 	
 	public Stage getBlockStage() {
-		
 		return blockStage;
 	}
 	
 	public Stage getTileStage() {
-		
 		return tileStage;
 	}
 
@@ -611,11 +613,6 @@ public class WorldEditorRenderer extends AbstractRenderer{
 
 	public Stage getHomeStage() {
 		return homeStage;
-	}
-	
-	public int[][] getTapCount() {
-		
-		return tapCount;
 	}
 
 }
