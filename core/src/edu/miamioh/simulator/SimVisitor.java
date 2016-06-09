@@ -26,27 +26,29 @@ THE SOFTWARE.
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-
-import org.antlr.v4.runtime.misc.NotNull;
-import org.antlr.v4.runtime.tree.ParseTree;
-
 import edu.miamioh.simulator.AntlrGen.Verilog2001BaseVisitor;
 import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
 
 public class SimVisitor extends Verilog2001BaseVisitor<Value>
 {
 	private boolean							is_sequential_sim_cycle;
+	private boolean							resetLineHigh;
 	private int								cycle_time;
 
+											/*
+											 * These two things are used to tell
+											 * what kind of always block we are in.
+											 * Wires in sequential always blocks
+											 * should only update a maximum of two times.
+											 */
 	private boolean							is_combinational;
-	private boolean							is_sequential;
+	private boolean							is_sequential; 
 
 	private ModuleInstance					module;
 	private Hashtable<String, ModuleInstance> subModules_hash;
 	private ArrayList<ModuleInstance> 		subModules_list;
 	private Hashtable<String, ParseRegWire>	hash_vars;
 	private ArrayList<ParseRegWire>			vars_list;
-	private ArrayList<String>				ports_list;
 
 	private int								new_val_idx;
 	private int								old_val_idx;
@@ -62,7 +64,8 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 					  ArrayList<ModuleInstance> subModules_list)
 	{
 		this.is_combinational = false;
-		this.is_sequential = module.isSequ();
+		this.is_sequential = false;
+		this.resetLineHigh = true; // Active-low reset line
 
 		this.is_sequential_sim_cycle = false;
 		this.cycle_time = 0;
@@ -73,7 +76,6 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		this.subModules_hash = subModules_hash;
 		this.subModules_list = subModules_list;
 		this.module = module;
-		this.ports_list = module.getPorts_list();
 		this.vars_list = module.getVars_list();
 		this.hash_vars = module.getHash_vars();
 		
@@ -111,6 +113,32 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		this.is_sequential_sim_cycle = false;
 	}
 	
+	public void toggleResetLine() {
+		
+		resetLineHigh = resetLineHigh ? false : true;
+		
+		int resetValue = 0;
+		if(resetLineHigh) resetValue = 1;
+		
+		
+		// Update root module clock
+		ParseRegWire wire = module.getHash_vars().get("rst");
+		if (wire != null) {
+			wire.setValue(new_val_idx, resetValue, is_sequential || !resetLineHigh);
+			wire.setValue(old_val_idx, resetValue, is_sequential || !resetLineHigh);
+		}
+		
+		// Update clock in all other modules
+		for (ModuleInstance sub : this.subModules_list) {
+			wire = sub.getHash_vars().get("rst");
+			
+			if (wire != null) {
+				wire.setValue(new_val_idx, resetValue, is_sequential || !resetLineHigh);
+				wire.setValue(old_val_idx, resetValue, is_sequential || !resetLineHigh);
+			}
+		}
+	}
+	
 	// Only called for root module
 	public void toggleSequClock() {
 		
@@ -125,7 +153,8 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		// Update root module clock
 		ParseRegWire wire = module.getHash_vars().get("clk");
 		if (wire != null) {
-			wire.setValue(new_val_idx, clockValue, is_sequential);
+			wire.setValue(new_val_idx, clockValue, is_sequential || !resetLineHigh);
+			wire.setValue(old_val_idx, clockValue, is_sequential || !resetLineHigh);
 		}
 		
 		// Update clock in all other modules
@@ -133,7 +162,8 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 			wire = sub.getHash_vars().get("clk");
 			
 			if (wire != null) {
-				wire.setValue(new_val_idx, clockValue, is_sequential);
+				wire.setValue(new_val_idx, clockValue, is_sequential || !resetLineHigh);
+				wire.setValue(old_val_idx, clockValue, is_sequential || !resetLineHigh);
 			}
 		}
 	}
@@ -163,6 +193,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		this.is_sequential_sim_cycle = visitor.is_sequential_sim_cycle;
 	}
 	
+	public int getNewIndex() {return this.new_val_idx;}
 	public int getOldIndex() {return this.old_val_idx;}
 	public void setState(int state) {this.state = state;}
 	public int getState() {return this.state;}
@@ -321,6 +352,9 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 	public Value visitNonblocking_assignment(
 			Verilog2001Parser.Nonblocking_assignmentContext ctx)
 	{
+		Value left = visit(ctx.variable_lvalue());
+		Value right = visit(ctx.expression());
+		
 		/* Only store on simulate cycles */
 		if (!is_sequential)
 		{
@@ -328,13 +362,8 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 			return new Value(false);
 		}
 
-		// System.out.println("Visit:"+ctx.getText());
-
-		Value left = visit(ctx.variable_lvalue());
-		Value right = visit(ctx.expression());
-
 		/* Update the data structure with the right value */
-		if (this.is_sequential_sim_cycle) {
+		if (this.is_sequential_sim_cycle || !this.resetLineHigh) {
 			left.setVar(new_val_idx, right.asInt(), is_sequential);
 		}
 
@@ -749,7 +778,9 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 			ParseRegWire inWire = module.getHash_vars().get(identifier);
 			
 			// Set their values equal to eachother
-			targetWire.setValue(new_val_idx, inWire.getValue(old_val_idx), is_sequential);
+			targetWire.setValue(new_val_idx, 
+								inWire.getValue(old_val_idx), 
+								is_sequential || !resetLineHigh);
 		}
 		
 		// Simulate new module
@@ -773,7 +804,9 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 			ParseRegWire targetWire = module.getHash_vars().get(identifier);
 			
 			// Set their values equal to eachother
-			targetWire.setValue(new_val_idx, outWire.getValue(old_val_idx), is_sequential);
+			targetWire.setValue(new_val_idx, 
+								outWire.getValue(old_val_idx), 
+								is_sequential || !resetLineHigh);
 		}
 		
 		// Propagate state changes in sub modules to the super module

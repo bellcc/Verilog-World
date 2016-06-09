@@ -523,7 +523,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		resetButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// resetButtonFunction();
+				resetButtonFunction();
 			}
 		});
 		toolBar.add(resetButton);
@@ -623,8 +623,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			salButtonFunction();
 		} else if (str.equals("Simulate")) {
 			simulateButtonFunction();
-		//} else if (str.equals("Reset Simulation")) {
-		//	resetButtonFunction();
+		} else if (str.equals("Reset Simulation")) {
+			resetButtonFunction();
 		//} else if (str.equals("Combinational")) {
 		//	comboHeaderButtonFunction();
 		//} else if (str.equals("Sequential")) {
@@ -660,20 +660,10 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			// parse the base file 
 			Compiler.compileFileForEditor(fileName);
 			
-			/*
-			if (Compiler.is_compiled_yet()) {
-				// Reset the system - takes a double simulation 
-				Compiler.sim_cycle("0", "00000000", "000000000000000000000000000000");
-				Compiler.sim_cycle("1", "00000000", "000000000000000000000000000000");
-				errorText.setText(errorText.getText() + "\nCompiling done!");
-				animationPanel.setSimulationResults("00000");
-				animationPanel.drawAnimation(animationPanel.getGraphics());
-			}
-			*/
-			
-			// Let user know we are done
+			// Reset sim and let user know we are done
 			if (Compiler.is_compiled_yet()) {
 				errorText.setText(errorText.getText() + "\nCompiling done!");
+				errorText.setText(errorText.getText() + "\n");
 			}
 		} catch (Exception e1) {
 			System.out.println(e1);
@@ -767,7 +757,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		
 		// For first sim cycle, display starting state
 		if (this.isFirstSimCycle) {
-			Compiler.simComb();
+			Compiler.resetSimulation();
 			Compiler.displayResults();
 			this.isFirstSimCycle = false;
 			return;
@@ -784,28 +774,16 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	
 
 	public void resetButtonFunction() {
-		// put the reset simualtion code at here
-		try {
-			FileWriter out = new FileWriter(verilogFiles);
-			out.write(codeText.getText());
-			out.close();
+		
+		// print out to text pane
+		errorText.setText("Reseting simulation...");
+		this.isFirstSimCycle = true;
 
-			// print out what we're compiling 
-			errorText.setText("Compiling " + filePath);
-
-			// parse the base file 
-			Compiler.compileFileForEditor(filePath);
-
-			if (Compiler.is_compiled_yet()) {
-				// Reset the system - takes a double simulation 
-				Compiler.sim_cycle(Compiler.RESET);
-				Compiler.sim_cycle(Compiler.RESET);
-				errorText.setText(errorText.getText() + "\nCompiling done!");
-//				animationPanel.setSimulationResults("00000");
-//				animationPanel.drawAnimation(animationPanel.getGraphics());
-			}
-		} catch (Exception e1) {
-			System.out.println(e1);
+		if (Compiler.is_compiled_yet()) {
+			Compiler.resetSimulation();
+		}
+		else {
+			errorText.setText(errorText.getText() + "File not compiled. Compile first to simulate");
 		}
 	}
 

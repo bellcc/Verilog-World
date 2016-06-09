@@ -1,7 +1,6 @@
 module MemTest(clk);
 	input clk;
 
-	wire [7:0]one;
 	wire [7:0]cin;
 	reg [7:0]sumOne;
 	reg [7:0]sumTwo;
@@ -9,7 +8,6 @@ module MemTest(clk);
 	wire [7:0]tempSum;
 	reg choose;
 
-	assign one = 7'd1;
 	assign cin = 7'd0;
 
 	Adder_8 gate0(sumOne, sumTwo, cin, tempSum, cout);
