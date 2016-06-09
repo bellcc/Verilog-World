@@ -1,20 +1,31 @@
 module MemTest(clk);
 	input clk;
 
-	wire [3:0]one;
-	wire [3:0]cin;
-	reg [3:0]sum;
+	wire [7:0]one;
+	wire [7:0]cin;
+	reg [7:0]sumOne;
+	reg [7:0]sumTwo;
 	wire cout;
-	wire [3:0]tempSum;
+	wire [7:0]tempSum;
+	reg choose;
 
-	assign sum = 4'd1;
-	assign one = 4'd1;
-	assign cin = 4'd0;
+	assign one = 7'd1;
+	assign cin = 7'd0;
 
-	Adder_2 gate0(sum, sum, cin, tempSum, cout);
+	Adder_8 gate0(sumOne, sumTwo, cin, tempSum, cout);
 
 	always @(posedge clk or negedge clk)
 	begin
-		sum <= tempSum;
+		if(choose == 0)
+		begin
+			sumOne <= 1;
+			sumTwo <= 1;
+			choose <= 1;
+		end
+		else 
+		begin
+			sumOne <= sumTwo;
+			sumTwo <= tempSum;
+		end
 	end
-endmodule
+endmodule}

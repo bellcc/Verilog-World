@@ -499,8 +499,13 @@ public class ParseListener extends Verilog2001BaseListener
 	{
 		String name = var_stack.pop();
 		ParseRegWire var = hash_vars.get(name);
-
-		var.setSequential();
+		
+		if (var == null) {
+			this.Compiler.reportParseError("Assignment to undeclared variable '" + name + "'.");
+		}
+		else {
+			var.setSequential();
+		}
 	}
 
 	@Override

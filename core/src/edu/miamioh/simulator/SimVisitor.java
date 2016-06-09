@@ -116,6 +116,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		
 		/* toggle between sequential sims and combinational sims */
 		is_sequential_sim_cycle = (is_sequential_sim_cycle) ? false : true;
+		processed = false;
 		
 		// Pass the clock signal
 		int clockValue = 0;
@@ -175,25 +176,32 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 	 * ------
 	 * --------------------------------------------------------------------
 	 * ------------ */
+	Verilog2001Parser.StatementContext test;
+	private boolean processed = false;
 	@Override
 	public Value visitConditional_statement(
 			Verilog2001Parser.Conditional_statementContext ctx)
 	{
-		for (int i = 0; i < ctx.statement().size(); i++)
-		{
-			Verilog2001Parser.ExpressionContext expr = ctx.expression(i);
-			int test = ctx.statement().size();
-			if (ctx.expression(i) == null && i == ctx.statement().size() - 1)
+		if ((this.is_sequential_sim_cycle && !processed) || !this.is_sequential_sim_cycle) {
+			test = null;
+			for (int i = 0; i < ctx.statement().size(); i++)
 			{
-				/* ELSE statment */
-				visit(ctx.statement(i));
-				break;
-			}
-			else if (visit(ctx.expression(i)).asBoolean())
-			{
-				/* IF - this if condition is true, then evaluate statement */
-				visit(ctx.statement(i));
-				break;
+				if (ctx.expression(i) == null && i == ctx.statement().size() - 1)
+				{
+					/* ELSE statment */
+					test = ctx.statement(i);
+					processed = true;
+					visit(ctx.statement(i));
+					break;
+				}
+				else if (visit(ctx.expression(i)).asBoolean())
+				{
+					/* IF - this if condition is true, then evaluate statement */
+					test = ctx.statement(i);
+					processed = true;
+					visit(ctx.statement(i));
+					break;
+				}
 			}
 		}
 
