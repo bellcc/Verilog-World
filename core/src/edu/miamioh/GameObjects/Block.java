@@ -7,6 +7,6 @@
 
 package edu.miamioh.GameObjects;
 
-public class Block extends AbstractGameObject {
+public class Block extends AbstractGameObject{
 
 }

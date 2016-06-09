@@ -44,41 +44,8 @@ public class SchematicRendererMain implements ApplicationListener {
 
     private void getData(){
 
-        ArrayList<ParseRegWire> vars_list = root_module.getVars_list();
-
-        ParseRegWire temp;
-
-        if(compiler.is_compiled_yet()) {
-
-            for (int i = 0; i < vars_list.size(); i++) {
-
-                temp = vars_list.get(i);
-
-                if (temp.getRole() == WireRoleType.INPUT) {
-                    schematic.addInput(temp.getName());
-                }
-
-                SchematicVisitor visitor = new SchematicVisitor<Gate>(schematic);
-                visitor.visit(root_tree);
-
-                if (temp.getRole() == WireRoleType.OUTPUT) {
-                    schematic.addOutput(temp.getName());
-                }
-            }
-        }
-
-//        //Test stuff
-//        schematic.addInput("A");
-//        schematic.addInput("B");
-//        schematic.addGate("AND", 2, "AND0", 1);
-//        schematic.addInput("C");
-//        schematic.addGate("OR", 2, "OR0", 2);
-//        schematic.connectPorts("A", "OUT", 0, "AND0", "IN", 0);
-//        schematic.connectPorts("B", "OUT", 0, "AND0", "IN", 1);
-//        schematic.connectPorts("AND0", "OUT", 0, "OR0", "IN", 0);
-//        schematic.connectPorts("C", "OUT", 0, "OR0", "IN", 1);
-//        schematic.addOutput("O");
-//        schematic.connectPorts("OR0", "OUT", 0, "O", "IN", 0);
+        SchematicVisitor visitor = new SchematicVisitor<Gate>(schematic);
+        visitor.visit(root_tree);
 
     }
 
