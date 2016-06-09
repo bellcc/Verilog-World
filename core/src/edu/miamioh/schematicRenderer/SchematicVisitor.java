@@ -2,6 +2,8 @@ package edu.miamioh.schematicRenderer;
 
 import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
 
+import java.util.ArrayList;
+
 /**
  * Visits nodes on the parse tree to build the schematic.
  *
@@ -18,9 +20,9 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
-     *
-     * @param ctx
-     */
+            *
+            * @param ctx
+    */
     @Override
     public T visitInstance_identifier(Verilog2001Parser.Instance_identifierContext ctx) {
         return super.visitInstance_identifier(ctx);
@@ -62,8 +64,30 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      */
     @Override
     public T visitContinuous_assign(Verilog2001Parser.Continuous_assignContext ctx) {
-//        String rValue = ctx.getChild(3). ? "IN" : "OUT";
+
+        String lValue, rValue;
+
+        //Get rValue -> variable getting assigned
+        rValue = (ctx.getChild(1) instanceof Verilog2001Parser
+                .Variable_lvalueContext) ? ctx.getChild(1).getText() : "";
+
+        //Get lValue -> expression being assigned
+        if(ctx.getChild(3) instanceof Verilog2001Parser.Variable_lvalueContext){
+            lValue = ctx.getChild(1).getText();
+        } else if(ctx.getChild(3) instanceof Verilog2001Parser.BLOGICContext){
+//            lValue = getBLOGIC_inputs(ctx.getChild(3));
+        } else {
+            lValue = "";
+        }
+
         return super.visitContinuous_assign(ctx);
+    }
+
+    private String getBLOGIC_inputs(Verilog2001Parser.BLOGICContext ctx) {
+
+//        String lValue, rValue;
+        return "";
+
     }
 
     /**
@@ -128,6 +152,18 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      */
     @Override
     public T visitInput_declaration(Verilog2001Parser.Input_declarationContext ctx) {
+        String id;
+
+        Verilog2001Parser.List_of_identifiersContext inputIdentifiers = ctx
+                .list_of_identifiers();
+        int numOfInputs = inputIdentifiers.getChildCount();
+
+        for(int i = 0; i < numOfInputs; i++){
+            if(inputIdentifiers.getChild(i) instanceof Verilog2001Parser.IdentifierContext) {
+                id = inputIdentifiers.getChild(i).getChild(0).getText();
+                schematic.addInput(id);
+            }
+        }
         return super.visitInput_declaration(ctx);
     }
 
@@ -167,7 +203,7 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      */
     @Override
     public T visitUNOT(Verilog2001Parser.UNOTContext ctx) {
-        schematic.addGate(GateType.NOT, 1, "NOT0", 1);
+//        schematic.addGate(GateType.NOT, 1, "NOT0", 1);
         return super.visitUNOT(ctx);
     }
 
@@ -558,6 +594,18 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      */
     @Override
     public T visitBLOGIC(Verilog2001Parser.BLOGICContext ctx) {
+
+//        GateType type;
+//        switch(ctx.op.getType()){
+//
+//            default:
+//                type = GateType.BLANK;
+//                break;
+//
+//        }
+//
+//        schematic.addGate(type, ctx.getChildCount(), ctx.getText
+//                (), 1);
         return super.visitBLOGIC(ctx);
     }
 
@@ -662,6 +710,20 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      */
     @Override
     public T visitOUTPUT_DECLARATION_NO_REG(Verilog2001Parser.OUTPUT_DECLARATION_NO_REGContext ctx) {
+        String id;
+
+        Verilog2001Parser.List_of_identifiersContext outputIdentifiers = ctx
+                .list_of_identifiers();
+        int numOfInputs = outputIdentifiers.getChildCount();
+
+        for(int i = 0; i < numOfInputs; i++){
+            if(outputIdentifiers.getChild(i) instanceof Verilog2001Parser
+                    .IdentifierContext) {
+                id = outputIdentifiers.getChild(i).getChild(0).getText();
+                schematic.addOutput(id);
+            }
+        }
+
         return super.visitOUTPUT_DECLARATION_NO_REG(ctx);
     }
 
@@ -766,7 +828,7 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      */
     @Override
     public T visitNet_declaration(Verilog2001Parser.Net_declarationContext ctx) {
-        schematic.addGate(GateType.WIRE, 1, ctx.getText(), 1);
+//        schematic.addGate(GateType.WIRE, 1, ctx.getText(), 1);
         return super.visitNet_declaration(ctx);
     }
 
