@@ -776,7 +776,6 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		
 		// print out to text pane
 		errorText.setText("Reseting simulation...");
-		this.isFirstSimCycle = true;
 
 		if (Compiler.is_compiled_yet()) {
 			Compiler.resetSimulation();
