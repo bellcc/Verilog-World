@@ -14,7 +14,6 @@ import java.util.ArrayList;
 public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001BaseVisitor<T> {
 
     SchematicRenderer schematic;
-    ArrayList<Gate> gates = new ArrayList<>();
 
     public SchematicVisitor(SchematicRenderer schematic) {this.schematic = schematic;}
 
@@ -124,7 +123,6 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
         int level = getNewLogicLevel(exp);
 
         schematic.addGate(type, rValue, level);
-
         schematic.connect(lValue, rValue);
 
         lValue = getValue(exp.getChild(2));
@@ -143,14 +141,20 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
         } else if (exp instanceof TerminalNode) {
             //Return ID of a logic gate
             String id = "";
+
+            //Gate number is based on the number of gates of the same type
+            // already existing.
             if(exp.getText().equals("&")){
-                id = "AND" + getNumOfAnds(); //Gate number is based on the
-                // number of gates of the same type already existing.
+                id = "AND" + getNumOfAnds();
             } else
                 id = "NULL";
             return id;
         } else if (exp instanceof Verilog2001Parser.IDENTContext) {
             return getIDctx(exp).getText();
+        } else if (exp instanceof Verilog2001Parser.BRACKETSContext) {
+            return getValue(exp.getChild(1));
+        } else if (exp instanceof Verilog2001Parser.BLOGICContext) {
+            return newBLogic(exp);
         } else
             return "";
 
@@ -173,24 +177,6 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
         return IDctx;
     }
 
-    private ParseTree getBLOGICctx(ParseTree ctx){
-
-        ParseTree IDctx = null;
-
-        if(!(ctx instanceof Verilog2001Parser.IdentifierContext)) {
-            for (int i = 0; i < ctx.getChildCount(); i++) {
-                IDctx = getIDctx(ctx.getChild(i));
-                if(IDctx != null)
-                    i = ctx.getChildCount();
-            }
-        } else {
-            IDctx = ctx;
-        }
-
-        return IDctx;
-
-    }
-
     private GateType getNewLogicType(ParseTree ctx) {
 
         switch(ctx.getChild(1).getText()){
@@ -204,47 +190,12 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
         }
     }
 
-    private String getNewLogicName(ParseTree ctx){
-
-        switch (ctx.getChild(1).getText()){
-
-            case ("~"):
-                return "NOT" + getNumOfNots();
-            case ("&"):
-                return "AND" + getNumOfAnds();
-
-            default:
-                return "";
-        }
-    }
-
     private int getNumOfAnds(){
-
-        int total = 0;
-
-        for(int i = 0; i < gates.size(); i++){
-
-            if(gates.get(i).getType().equals(GateType.AND))
-                total++;
-
-        }
-
-        return total;
-
+        return schematic.getGateCount(GateType.AND);
     }
 
     private int getNumOfNots(){
-
-        int total = 0;
-
-        for(int i = 0; i < gates.size(); i++){
-
-            if(gates.get(i).getType().equals(GateType.NOT))
-                total++;
-        }
-
-        return total;
-
+        return schematic.getGateCount(GateType.NOT);
     }
 
     private int getNewLogicLevel(ParseTree ctx) {
@@ -262,8 +213,6 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
 
         return level;
     }
-
-
 
     /**
      * {@inheritDoc}
@@ -769,18 +718,6 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      */
     @Override
     public T visitBLOGIC(Verilog2001Parser.BLOGICContext ctx) {
-
-//        GateType type;
-//        switch(ctx.op.getType()){
-//
-//            default:
-//                type = GateType.BLANK;
-//                break;
-//
-//        }
-//
-//        schematic.addGate(type, ctx.getChildCount(), ctx.getText
-//                (), 1);
         return super.visitBLOGIC(ctx);
     }
 

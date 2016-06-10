@@ -47,6 +47,18 @@ public class SchematicRenderer implements Disposable {
 
     }
 
+    public int getGateCount(GateType type) {
+
+        int total = 0;
+
+        for(Gate gate : gates){
+            if(gate.getType().equals(type))
+                total++;
+        }
+        return total;
+
+    }
+
     /**
      * Adds a new Input to the schematic.
      *
