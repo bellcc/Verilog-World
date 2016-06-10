@@ -16,9 +16,9 @@ class Gate {
 
     private GateType type;
     private String id = "";
+    private ArrayList<String> inputs = new ArrayList<>();
     private int level = 0;
     private int cx = 0, cy = 0;
-    private int inputs = 0;
     private ArrayList<Integer> inputYCoords = new ArrayList<>();
     private ArrayList<Integer> inputXCoords = new ArrayList<>();
     private int scaledGS = constants.gateSize * constants.scaleFactor;
@@ -27,83 +27,71 @@ class Gate {
      * Gate default constructor. WILL ERROR OUT IF ATTEMPTED TO RENDER.
      */
     public Gate() {
-        this(null, 0, null, 0);
+        this(null, null, 0);
     }
 
     /**
      * Gate constructor. Requires a GateType (enumerated class), a number of
-     * inputs, a unique ID, and a level (distance
-     * from the inputs).
+     * numOfInputs, a unique ID, and a level (distance
+     * from the numOfInputs).
      *
      * @param type        The type of gate to be created. Types can be found
      *                    in {@link GateType}.
-     * @param numOfInputs The number of Inputs the gate should have. May be
-     *                    changed later.
      * @param id
      * @param level
      */
-    public Gate(GateType type, int numOfInputs, String id, int level) {
+    public Gate(GateType type, String id, int level) {
 
         switch (type) {
 
             case AND:
                 this.type = AND;
-                this.setNumOfInputs(numOfInputs);
                 this.id = id;
                 this.level = level;
                 break;
 
             case OR:
                 this.type = OR;
-                this.setNumOfInputs(numOfInputs);
                 this.id = id;
                 this.level = level;
                 break;
 
             case XOR:
                 this.type = XOR;
-                this.setNumOfInputs(numOfInputs);
                 this.id = id;
                 this.level = level;
                 break;
 
             case NOT:
                 this.type = NOT;
-                this.setNumOfInputs(1);
                 this.id = id;
                 this.level = level;
                 break;
 
             case WIRE:
                 this.type = WIRE;
-                this.setNumOfInputs(1);
                 this.id = id;
                 this.level = level;
                 break;
 
             case REG:
                 this.type = REG;
-                this.setNumOfInputs(1);
                 this.id = id;
                 this.level = level;
                 break;
 
             case BLANK:
                 this.type = BLANK;
-                this.setNumOfInputs(1);
                 this.id = id;
                 this.level = level;
                 break;
 
 //            case MODULE:
 //                this.type = type;
-//                this.setNumOfInputs(numOfInputs);
 //                this.setNumOfOutputs(numOfOutputs);
 
             default:
                 this.type = BLANK;
-                this.setNumOfInputs(0);
-                this.id = "INVALID_ENTRY";
                 this.level = 0;
                 break;
 
@@ -241,24 +229,13 @@ class Gate {
     }
 
     /**
-     * Get the number of inputs contained in this Gate instance.
+     * Get the number of numOfInputs contained in this Gate instance.
      *
-     * @return The number of inputs containd in this Gate instance.
+     * @return The number of numOfInputs containd in this Gate instance.
      */
     public int getNumOfInputs() {
 
-        return this.inputs;
-
-    }
-
-    /**
-     * Sets the number of inputs this Gate instance has.
-     *
-     * @param numOfInputs An integer number of inputs this gate should contain.
-     */
-    public void setNumOfInputs(int numOfInputs) {
-
-        this.inputs = numOfInputs;
+        return this.inputs.size();
 
     }
 
@@ -348,6 +325,18 @@ class Gate {
     public int getLevel() {
 
         return this.level;
+
+    }
+
+    public void addInput(String id){
+
+        inputs.add(id);
+
+    }
+
+    public ArrayList<String> getInputs(){
+
+        return this.inputs;
 
     }
 
