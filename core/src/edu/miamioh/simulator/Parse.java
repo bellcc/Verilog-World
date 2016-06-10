@@ -113,10 +113,6 @@ public class Parse {
 		SimVisitor visitor = root_module.getVisitor();
 		
 		do {
-			// Run one simulation cycle for combinational circuit
-			visitor.next_sim_cycle();
-			visitor.visit(root_tree);
-			
 			System.out.println("*********** Comb Cycle ************");
 			System.out.println(">>> Top Module");
 			DebugUtils.printModuleVars(visitor, this.root_module);
@@ -130,6 +126,11 @@ public class Parse {
 			for(ModuleInstance module : this.subModules_list) {
 				module.getVisitor().setState(SimVisitor.STEADY);
 			}
+			
+			// Run one simulation cycle for combinational circuit
+			visitor.next_sim_cycle();
+			visitor.visit(root_tree);
+			updateSequWires();
 
 		} while(visitor.getState() == SimVisitor.NOT_STEADY);
 	}
@@ -147,11 +148,35 @@ public class Parse {
 		root_module.getVisitor().resetSequUpdateFlag();
 	}
 	
+	public void updateSequWires() {
+		
+		SimVisitor visitor = root_module.getVisitor();
+		
+		for(ParseRegWire wire : root_module.getVars_list()) {
+			if (wire.getType() == RegWireType.SEQUENTIAL) {
+				wire.setValue(visitor.getOldIndex(), 
+							  wire.getValue(visitor.getNewIndex()), 
+							  false);
+			}
+		}
+		
+		for(ModuleInstance module : this.subModules_list) {
+			for(ParseRegWire wire : module.getVars_list()) {
+				if (wire.getType() == RegWireType.SEQUENTIAL) {
+					wire.setValue(visitor.getOldIndex(), 
+							  wire.getValue(visitor.getNewIndex()), 
+							  false);
+				}
+			} 
+		}
+	}
+	
 	// Bring reset line high and simulate circuit until steady
 	public void resetSimulation() {
 		
 		root_module.getVisitor().toggleResetLine(); // Turn on
 		simComb(); // Simulate until steady
+		root_module.getVisitor().resetSequUpdateFlag();
 		root_module.getVisitor().toggleResetLine(); // Turn off
 		this.displayResults();
 	}

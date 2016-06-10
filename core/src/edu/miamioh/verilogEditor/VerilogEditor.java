@@ -758,7 +758,6 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		// For first sim cycle, display starting state
 		if (this.isFirstSimCycle) {
 			Compiler.resetSimulation();
-			Compiler.displayResults();
 			this.isFirstSimCycle = false;
 			return;
 		}
