@@ -40,6 +40,9 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	private Stage blockStage;
 	private Stage tileStage;
 	
+	private Stage worldBlockStage;
+	private Stage worldTileStage;
+	
 	private static boolean homeActor;
 	private static boolean blocksActor;
 	private static boolean tilesActor;
@@ -70,13 +73,20 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		resetStates();
 		
 		initToolBarStages();
+		initWorldActorStages();
+	}
+	
+	private void initWorldActorStages() {
+		
+		worldBlockStage = new Stage();
+		worldTileStage = new Stage();
 	}
 
 	/**
 	 * This method initializes the default tool bar 
 	 * that sits on the left hand side of the window.
 	 */
-	public void initToolBarStages() {
+	private void initToolBarStages() {
 		
 		toolBarStage = new Stage();
 		blockStage = new Stage();		
@@ -122,36 +132,10 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		renderToolBar();
 	}
 	
-	Stage blocks;
-	public Stage getBlocks() {return blocks;}
-	
-	public void renderBlocks() {
-		
-		blocks = new Stage();
-		//LinkedList<Block> blockList = WorldEditorController.getCurrentWorldController().getCurrentLevel().blockList;
-
-		for(int i=0;i<10;i++) {
-			
-			Block button = new Block();
-			Actor temp = button.getBlock();
-			temp.setName("chris");
-			temp.setPosition(i * 50, 0);
-			temp.setSize(50, 50);
-			temp.setName(String.valueOf(i));
-			
-			blocks.addActor(temp);
-			
-		}
-
-		blocks.act(Gdx.graphics.getDeltaTime());
-		blocks.draw();
-		
-	}
-	
 	/**
 	 * This method renders the blocks that are defined in the level.
 	 */
-	public void renderLevelBlocks() {
+	public void renderBlocks() {
 		
 		LinkedList<Block> blockList = worldEditorController.getCurrentLevel().blockList;
 		
@@ -166,15 +150,19 @@ public class WorldEditorRenderer extends AbstractRenderer{
 			Color blockColor = blockList.getEntry(i).getColor();
 			blockList.getEntry(i).setColor(Color.GOLD);
 			blockColor = blockList.getEntry(i).getColor();
-			
+
+			//This causes the blocks to be within the bounds 
+			//of the grid's cells so that the blocks do not 
+			//overlap with the grid.
+			int blockWidth = gridWidth - 1;
+			int blockHeight = gridHeight - 1;
+			y += 1;
+
 			renderer.begin(ShapeType.Filled);
 			renderer.setColor(blockColor);
-			renderer.rect(x, y, gridWidth, gridHeight);
-
-			renderer.end();			
-			
+			renderer.rect(x, y, blockWidth, blockHeight);
+			renderer.end();
 		}
-		
 	}
 	
 	/**
@@ -323,9 +311,15 @@ public class WorldEditorRenderer extends AbstractRenderer{
 
 		if((column >= 0 && column <= (worldWidth - 1)) && (row >= 0 && row <= (worldHeight - 1))) {
 			
+			int selectorWidth = gridWidth - 1;
+			int selectorHeight = gridHeight - 1;
+			
+			y += 1;
+			
 			renderer.begin(ShapeType.Filled);
 			renderer.setColor(Color.DARK_GRAY);
-			renderer.rect(x, y, gridWidth, gridHeight);
+			renderer.rect(x, y, selectorWidth, selectorHeight);
+			//renderer.rect(x, y, gridWidth, gridHeight);
 
 			renderer.end();
 			
@@ -617,6 +611,14 @@ public class WorldEditorRenderer extends AbstractRenderer{
 
 	public Stage getHomeStage() {
 		return homeStage;
+	}
+	
+	public Stage getWorldBlockStage() {
+		return worldBlockStage;
+	}
+	
+	public Stage getWorldTileStage() {
+		return worldTileStage;
 	}
 
 }

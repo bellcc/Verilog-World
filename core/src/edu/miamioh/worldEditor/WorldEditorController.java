@@ -11,6 +11,7 @@ package edu.miamioh.worldEditor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
 
 import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.AbstractEditor.AbstractController;
@@ -96,6 +97,11 @@ public class WorldEditorController extends AbstractController{
 		
 	}
 	
+	/**
+	 * This method discerns which action should be taken after a user touches down in the world. 
+	 * @param row
+	 * @param column
+	 */
 	public void gridPressed(int row, int column) {
 				
 		boolean isBlock = currentLevel.isBlock(row, column);
@@ -113,19 +119,21 @@ public class WorldEditorController extends AbstractController{
 		boolean blocksActor = WorldEditorRenderer.getWorldRenderer().getBlocksActor();
 		boolean tileActor = WorldEditorRenderer.getWorldRenderer().getTilesActor();
 		
-		if(blocksActor && WorldEditorRenderer.getWorldRenderer().getBlankBlockState()) {
-					
-			Block block = new Block();
-			block.setRow(row);
-			block.setColumn(column);
-			//block.setId(currentLevel.generateBlockID(block));
+		boolean blankBlockState = WorldEditorRenderer.getWorldRenderer().getBlankBlockState();
+		
+		if(blocksActor && blankBlockState) {
+			
+			Block block = new Block(Color.BLACK, row, column);
+			System.out.println(block.getRow());
 			
 			currentLevel.addBlock(block);
 			WorldEditorRenderer.getWorldRenderer().resetBlockStates();
 			
-		}else if(tileActor) {
-			
-			
+		}
+		
+		//Procedures for all other block states go here in the form of else if statements.
+		
+		if(tileActor) {
 			
 		}
 		

@@ -65,7 +65,7 @@ public class WorldEditorInputMultiplexer {
 		Stage blockStage = WorldEditorRenderer.getWorldRenderer().getBlockStage();
 		Stage tileStage = WorldEditorRenderer.getWorldRenderer().getTileStage();
 
-		Stage worldBlockStage = WorldEditorRenderer.getWorldRenderer().getBlocks();
+		Stage worldBlockStage = WorldEditorRenderer.getWorldRenderer().getWorldBlockStage();
 		
 		//Remove every input processor from the multiplexer.
 		multiplexer.removeProcessor(toolBarStage);
@@ -82,7 +82,7 @@ public class WorldEditorInputMultiplexer {
 		multiplexer.addProcessor(worldBlockStage);
 		
 		//TODO Remove
-		multiplexer.addProcessor(WorldEditorRenderer.getWorldRenderer().getBlocks());
+		multiplexer.addProcessor(WorldEditorRenderer.getWorldRenderer().getWorldBlockStage());
 		
 		if(blockActor) {
 			

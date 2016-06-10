@@ -91,6 +91,12 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 	}
 	
 	public boolean touchDown(int x, int y, int pointer, int button) {
+		
+		int row = WorldEditorRenderer.getWorldRenderer().detectRow();
+		int column = WorldEditorRenderer.getWorldRenderer().detectColumn();
+		
+		WorldEditorController.getCurrentWorldController().gridPressed(row, column);
+		
 		return false;
 	}
 	

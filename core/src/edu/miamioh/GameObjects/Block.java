@@ -17,59 +17,27 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
 public class Block extends AbstractGameObject {
-	
-	private Color color;
-	private Button block;
-	
-	private String blockName;
-	
+
 	private static final int DEFAULT_ROW = 0;
 	private static final int DEFAULT_COLUMN = 0;
+	private static final Color DEFAULT_COLOR = Color.BLACK;
 	
-	private static BlockChangeListener changeListener;
+	private Color color;
+	private int row;
+	private int column;
 
 	public Block() {
-		color = new Color(Color.BLACK);
-		
-		changeListener = new BlockChangeListener();
-		createButton();
-		initActor(DEFAULT_ROW, DEFAULT_COLUMN);
-	}
-	
-	private void initActor(int row, int column) {
-		
-	}
-		
-	private void createButton() {
-		
-		Skin skin = new Skin();
-		BitmapFont bfont = new BitmapFont();
-		TextButtonStyle style = new TextButtonStyle();		
-		Pixmap pixmap = new Pixmap(80, 80, Format.RGBA8888);
-		
-		pixmap.setColor(color);
-		pixmap.fill();
-			
-		skin.add("white", new Texture(pixmap));
-		skin.add("default", bfont);
 
-		style.up = skin.newDrawable("white", Color.WHITE);
-		style.down = skin.newDrawable("white", Color.WHITE);
-		style.checked = skin.newDrawable("white", Color.LIGHT_GRAY);
-		style.over = skin.newDrawable("white", Color.LIGHT_GRAY);
-		style.font = skin.getFont("default");
-					
-		skin.add("default", style);
-		
-		block = new Button(style);
-		
-		block.addListener(changeListener);
+		this(DEFAULT_COLOR, DEFAULT_ROW, DEFAULT_COLUMN);
 	}
 	
-	public Block(Color color) {
-		this.color = color;
+	public Block(Color color, int row, int column) {
+
+		setColor(color);
+		setRow(row);
+		setColumn(column);
 	}
-	
+
 	public void setColor(Color color) {
 		this.color = color;
 	}
@@ -78,7 +46,20 @@ public class Block extends AbstractGameObject {
 		return this.color;
 	}
 	
-	public Button getBlock() {
-		return this.block;
+	public void setRow(int row) {
+		this.row = row;
 	}
+	
+	public int getRow() {
+		return row;
+	}
+	
+	public void setColumn(int column) {
+		this.column = column;
+	}
+	
+	public int getColumn() {
+		return column;
+	}
+
 }
