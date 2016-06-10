@@ -2,6 +2,8 @@ package edu.miamioh.schematicRenderer;
 
 import edu.miamioh.util.Constants;
 
+import java.util.ArrayList;
+
 import static edu.miamioh.schematicRenderer.GateType.BLANK;
 
 /**
@@ -10,6 +12,7 @@ import static edu.miamioh.schematicRenderer.GateType.BLANK;
 class Port {
 
     private GateType type;
+    private ArrayList<String> inputs = new ArrayList<>();
     private String id = "";
     private int level = 0;
     private int cx = 0, cy = 0;
@@ -156,6 +159,24 @@ class Port {
     public int getPortY() {
 
         return this.getCY();
+
+    }
+
+    public void addInput(String id) {
+
+        inputs.add(id);
+
+    }
+
+    public ArrayList<String> getInputs(){
+
+        return this.inputs;
+
+    }
+
+    public int getNumOfInputs(){
+
+        return this.inputs.size();
 
     }
 }

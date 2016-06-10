@@ -1,6 +1,8 @@
 package edu.miamioh.schematicRenderer;
 
 import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.ArrayList;
 
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001BaseVisitor<T> {
 
     SchematicRenderer schematic;
+    ArrayList<Gate> gates = new ArrayList<>();
 
     public SchematicVisitor(SchematicRenderer schematic) {this.schematic = schematic;}
 
@@ -65,30 +68,202 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
     @Override
     public T visitContinuous_assign(Verilog2001Parser.Continuous_assignContext ctx) {
 
-        String lValue, rValue;
+        String lValue = "", rValue;
 
         //Get rValue -> variable getting assigned
-        rValue = (ctx.getChild(1) instanceof Verilog2001Parser
-                .Variable_lvalueContext) ? ctx.getChild(1).getText() : "";
+        rValue = getValue(ctx.getChild(1));
 
         //Get lValue -> expression being assigned
-        if(ctx.getChild(3) instanceof Verilog2001Parser.Variable_lvalueContext){
-            lValue = ctx.getChild(1).getText();
-        } else if(ctx.getChild(3) instanceof Verilog2001Parser.BLOGICContext){
-//            lValue = getBLOGIC_inputs(ctx.getChild(3));
-        } else {
-            lValue = "";
+        ParseTree expression = ctx.getChild(3);
+        if(expression instanceof Verilog2001Parser.BLOGICContext){
+            lValue = newBLogic(expression);
         }
+//        for(int i = 0; i < expression.getChildCount(); i++){
+//            if(expression.getChild(i) instanceof Verilog2001Parser.INUMBERContext){
+//
+//            } else if(expression.getChild(i) instanceof Verilog2001Parser
+//                    .IDENTContext){
+//                lValue = expression.getChild(i).getText();
+//            } else if(expression.getChild(i) instanceof Verilog2001Parser.UNOTContext){
+//                type = GateType.NOT;
+//                lValue = getNewLogicName(expression.getChild(i));
+//                level = getNewLogicLevel(expression.getChild(i));
+//                schematic.addGate(type, lValue, level);
+//            } else if(expression.getChild(i) instanceof Verilog2001Parser.UMINUSContext){
+//
+//            } else if(expression.getChild(i) instanceof Verilog2001Parser.BLOGICContext){
+//                newBLogic(expression.getChild(i));
+//            }
+//        }
+//        if(ctx.getChild(3) instanceof Verilog2001Parser.IDENTContext){
+//        } else if(ctx.getChild(3) instanceof Verilog2001Parser.BLOGICContext){
+//            type = getNewLogicType(ctx.getChild(3));
+//            lValue = getNewLogicName(ctx.getChild(3));
+//            level = getNewLogicLevel(ctx.getChild(3));
+//            schematic.addGate(type, lValue, level);
+//        } else {
+//            lValue = "";
+//        }
+//
+//        schematic.connect(lValue, rValue);
+
+        schematic.connect(lValue, rValue);
 
         return super.visitContinuous_assign(ctx);
     }
 
-    private String getBLOGIC_inputs(Verilog2001Parser.BLOGICContext ctx) {
+    private String newBLogic(ParseTree exp){
 
-//        String lValue, rValue;
-        return "";
+        String lValue, rValue;
+
+        lValue = getValue(exp.getChild(0));
+        rValue = getValue(exp.getChild(1));
+
+        GateType type = getNewLogicType(exp);
+        //id = rValue
+        int level = getNewLogicLevel(exp);
+
+        schematic.addGate(type, rValue, level);
+
+        schematic.connect(lValue, rValue);
+
+        lValue = getValue(exp.getChild(2));
+
+        schematic.connect(lValue, rValue);
+
+        return rValue;
 
     }
+
+    private String getValue(ParseTree exp) {
+
+        if (exp instanceof Verilog2001Parser.Variable_lvalueContext) {
+            //Return ID of a variable *(left hand arg)
+            return getIDctx(exp).getText();
+        } else if (exp instanceof TerminalNode) {
+            //Return ID of a logic gate
+            String id = "";
+            if(exp.getText().equals("&")){
+                id = "AND" + getNumOfAnds(); //Gate number is based on the
+                // number of gates of the same type already existing.
+            } else
+                id = "NULL";
+            return id;
+        } else if (exp instanceof Verilog2001Parser.IDENTContext) {
+            return getIDctx(exp).getText();
+        } else
+            return "";
+
+    }
+
+    private ParseTree getIDctx(ParseTree ctx){
+
+        ParseTree IDctx = null;
+
+        if(!(ctx instanceof Verilog2001Parser.IdentifierContext)) {
+            for (int i = 0; i < ctx.getChildCount(); i++) {
+                IDctx = getIDctx(ctx.getChild(i));
+                if(IDctx != null)
+                    i = ctx.getChildCount();
+            }
+        } else {
+            IDctx = ctx;
+        }
+
+        return IDctx;
+    }
+
+    private ParseTree getBLOGICctx(ParseTree ctx){
+
+        ParseTree IDctx = null;
+
+        if(!(ctx instanceof Verilog2001Parser.IdentifierContext)) {
+            for (int i = 0; i < ctx.getChildCount(); i++) {
+                IDctx = getIDctx(ctx.getChild(i));
+                if(IDctx != null)
+                    i = ctx.getChildCount();
+            }
+        } else {
+            IDctx = ctx;
+        }
+
+        return IDctx;
+
+    }
+
+    private GateType getNewLogicType(ParseTree ctx) {
+
+        switch(ctx.getChild(1).getText()){
+
+            case("&"):
+                return GateType.AND;
+
+            default:
+                return GateType.BLANK;
+
+        }
+    }
+
+    private String getNewLogicName(ParseTree ctx){
+
+        switch (ctx.getChild(1).getText()){
+
+            case ("~"):
+                return "NOT" + getNumOfNots();
+            case ("&"):
+                return "AND" + getNumOfAnds();
+
+            default:
+                return "";
+        }
+    }
+
+    private int getNumOfAnds(){
+
+        int total = 0;
+
+        for(int i = 0; i < gates.size(); i++){
+
+            if(gates.get(i).getType().equals(GateType.AND))
+                total++;
+
+        }
+
+        return total;
+
+    }
+
+    private int getNumOfNots(){
+
+        int total = 0;
+
+        for(int i = 0; i < gates.size(); i++){
+
+            if(gates.get(i).getType().equals(GateType.NOT))
+                total++;
+        }
+
+        return total;
+
+    }
+
+    private int getNewLogicLevel(ParseTree ctx) {
+
+        int level = 1;
+
+        for(int i = 0; i < ctx.getChildCount(); i++){
+
+            if(!(ctx.getChild(i) instanceof Verilog2001Parser.IDENTContext)) {
+                if(!(ctx.getChild(i) instanceof TerminalNode)) {
+                    level += getNewLogicLevel(ctx.getChild(i).getChild(1));
+                }
+            }
+        }
+
+        return level;
+    }
+
+
 
     /**
      * {@inheritDoc}
@@ -714,9 +889,9 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
 
         Verilog2001Parser.List_of_identifiersContext outputIdentifiers = ctx
                 .list_of_identifiers();
-        int numOfInputs = outputIdentifiers.getChildCount();
+        int numOfOutputs = outputIdentifiers.getChildCount();
 
-        for(int i = 0; i < numOfInputs; i++){
+        for(int i = 0; i < numOfOutputs; i++){
             if(outputIdentifiers.getChild(i) instanceof Verilog2001Parser
                     .IdentifierContext) {
                 id = outputIdentifiers.getChild(i).getChild(0).getText();
@@ -828,7 +1003,18 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      */
     @Override
     public T visitNet_declaration(Verilog2001Parser.Net_declarationContext ctx) {
-//        schematic.addGate(GateType.WIRE, 1, ctx.getText(), 1);
+        String id;
+        for(int i = 0; i < ctx.getChildCount(); i++) {
+            if (ctx.getChild(i) instanceof Verilog2001Parser.List_of_identifiersContext) {
+                ParseTree ids = ctx.getChild(i);
+                for(int j = 0; j < ids.getChildCount(); j++){
+                    if(ids.getChild(j) instanceof Verilog2001Parser.IdentifierContext){
+                        id = ids.getChild(j).getText();
+                        schematic.addGate(GateType.WIRE, id, 1);
+                    }
+                }
+            }
+        }
         return super.visitNet_declaration(ctx);
     }
 

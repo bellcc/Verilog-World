@@ -35,15 +35,14 @@ public class SchematicRenderer implements Disposable {
      * Adds a new Gate to the schematic.
      *
      * @param type   The type of gate, e.g. AND, OR, NOT, etc.
-     * @param inputs The number of inputs the gate has. All NOT gates have one input, so this doesn't affect them.
      * @param id     The unique name of the port.
      * @param level  The distance of the gate from the inputs.
      */
-    public void addGate(GateType type, int inputs, String id, int level) {
+    public void addGate(GateType type, String id, int level) {
 
         if (level > maxLevel)
             maxLevel = level;
-        Gate temp = new Gate(type, inputs, id, level);
+        Gate temp = new Gate(type, id, level);
         gates.add(temp);
 
     }
@@ -90,6 +89,39 @@ public class SchematicRenderer implements Disposable {
         conPorts.add(portA);
         conPorts.add(portB);
 
+    }
+
+    /**
+     * Connects two Gates/Ports by adding one to the other's inputs list.
+     *
+     * @param lValue
+     * @param rValue
+     */
+    public void connect(String lValue, String rValue){
+
+        Gate tempGl = null, tempGr = null;
+        Port tempPl = null, tempPr = null;
+
+        //Get the left-hand object
+        if(gateLookup(lValue) != null)
+            tempGl = gateLookup(lValue);
+        if(portLookup(lValue) != null)
+            tempPl = portLookup(lValue);
+
+        //Get the right-hand object
+        if(gateLookup(rValue) != null)
+            tempGr = gateLookup(rValue);
+        if(portLookup(rValue) != null)
+            tempPr = portLookup(rValue);
+
+        if(tempGl != null && tempGr != null)
+            tempGr.addInput(tempGl.getID());
+        if(tempGl != null && tempPr != null)
+            tempPr.addInput(tempGl.getID());
+        if(tempPl != null && tempGr != null)
+            tempGr.addInput(tempPl.getID());
+        if(tempPl != null && tempPr != null)
+            tempPr.addInput(tempPl.getID());
     }
 
     /**
@@ -184,83 +216,172 @@ public class SchematicRenderer implements Disposable {
 
         //Render Gate port connections
         {
+            Port tempPl = null, tempPr = null;
+            Gate tempGl = null, tempGr = null;
+            int x1 = 0, x2 = 0, xm = 0, y1 = 0, y2 = 0;
+            String gatePort = "";
 
-            String portName;
-            String portDetails[];
+            //Connect all OUTPUT Ports to their inputs.
+            for(Port port : ports){
+                tempPr = port;
+                for(String id : tempPr.getInputs()){
+                    x2 = tempPr.getPortX();
+                    y2 = tempPr.getPortY();
 
-            Gate tempG;
-            Port tempP;
+                    //Check if the left-hand ID is a gate; if a gate, get
+                    // its output port coordinates.
+                    if(gateLookup(id) != null){
+                        tempGl = gateLookup(id);
+                        gatePort = "OUT~0";
+                        x1 = tempGl.getPortX(gatePort);
+                        y1 = tempGl.getPortY(gatePort);
+                        drawSquareLine(x1, y1, x2, y2);
 
-            int x1, y1, x2, y2, j;
-            x1 = y1 = x2 = y2 = 0;
-
-            for (int i = 0; i < conPorts.size(); i++) {
-
-                portName = conPorts.get(i);
-                portDetails = portName.split("/"); //0 : ID ; 1 : gatePort
-
-                tempP = null;
-                tempG = null;
-
-                for (j = 0; j < ports.size(); j++) {
-                    if (ports.get(j).getID().equals(portDetails[0])) {
-                        tempP = ports.get(j);
-                        x1 = tempP.getPortX();
-                        y1 = tempP.getPortY();
-                        j = ports.size();
+                        //Check if the left-hand ID is a port; if a port,
+                        // get its output coordinates.
+                    } else if(portLookup(id) != null){
+                        tempPl = portLookup(id);
+                        x1 = tempPl.getPortX();
+                        y1 = tempPl.getPortY();
+                        drawSquareLine(x1, y1, x2, y2);
                     }
                 }
+            }
 
-                if (tempP == null) {
-                    for (j = 0; j < gates.size(); j++) {
-                        if (gates.get(j).getID().equals(portDetails[0])) {
-                            tempG = gates.get(j);
-                            x1 = tempG.getPortX(portDetails[1]);
-                            y1 = tempG.getPortY(portDetails[1]);
-                            j = gates.size();
-                        }
+            //Connect all Gates to their inputs.
+            for(Gate gate : gates){
+                tempGr = gate;
+                String id;
+                for(int i = 0; i < tempGr.getNumOfInputs(); i++){
+                    gatePort = "IN~" + i;
+                    id = tempGr.getInputs().get(i);
+                    x2 = tempGr.getPortX(gatePort);
+                    y2 = tempGr.getPortY(gatePort);
+
+                    //Check if the left-hand ID is a gate; if a gate, get its
+                    // output port coordinates
+                    if(gateLookup(id) != null){
+                        tempGl = gateLookup(id);
+                        gatePort = "OUT~0";
+                        x1 = tempGl.getPortX(gatePort);
+                        y1 = tempGl.getPortY(gatePort);
+                        drawSquareLine(x1, y1, x2, y2);
+
+                        //Check if the left-hand ID is a port; if a port, get
+                        // its output coordinates.
+                    } else if(portLookup(id) != null){
+                        tempPl = portLookup(id);
+                        x1 = tempPl.getPortX();
+                        y1 = tempPl.getPortY();
+                        drawSquareLine(x1, y1, x2, y2);
                     }
-                }
-
-                i++;
-
-                portName = conPorts.get(i);
-                portDetails = portName.split("/"); //0 : ID ; 1 : gatePort
-
-                tempP = null;
-                tempG = null;
-
-                for (j = 0; j < ports.size(); j++) {
-                    if (ports.get(j).getID().equals(portDetails[0])) {
-                        tempP = ports.get(j);
-                        x2 = tempP.getPortX();
-                        y2 = tempP.getPortY();
-                        j = ports.size();
-                    }
-                }
-
-                if (tempP == null) {
-                    for (j = 0; j < gates.size(); j++) {
-                        if (gates.get(j).getID().equals(portDetails[0])) {
-                            tempG = gates.get(j);
-                            x2 = tempG.getPortX(portDetails[1]);
-                            y2 = tempG.getPortY(portDetails[1]);
-                            j = gates.size();
-                        }
-                    }
-                }
-
-                if (x1 != 0 & y1 != 0 & x2 != 0 & y2 != 0) {
-
-                    int xm = (x2 + x1) / 2;
-
-                    renderer.line(x1, y1, xm, y1);
-                    renderer.line(xm, y1, xm, y2);
-                    renderer.line(xm, y2, x2, y2);
-
                 }
             }
         }
+//        {
+//
+//            String portName;
+//            String portDetails[];
+//
+//            Gate tempG;
+//            Port tempP;
+//
+//            int x1, y1, x2, y2, j;
+//            x1 = y1 = x2 = y2 = 0;
+//
+//            for (int i = 0; i < conPorts.size(); i++) {
+//
+//                portName = conPorts.get(i);
+//                portDetails = portName.split("/"); //0 : ID ; 1 : gatePort
+//
+//                tempP = null;
+//                tempG = null;
+//
+//                for (j = 0; j < ports.size(); j++) {
+//                    if (ports.get(j).getID().equals(portDetails[0])) {
+//                        tempP = ports.get(j);
+//                        x1 = tempP.getPortX();
+//                        y1 = tempP.getPortY();
+//                        j = ports.size();
+//                    }
+//                }
+//
+//                if (tempP == null) {
+//                    for (j = 0; j < gates.size(); j++) {
+//                        if (gates.get(j).getID().equals(portDetails[0])) {
+//                            tempG = gates.get(j);
+//                            x1 = tempG.getPortX(portDetails[1]);
+//                            y1 = tempG.getPortY(portDetails[1]);
+//                            j = gates.size();
+//                        }
+//                    }
+//                }
+//
+//                i++;
+//
+//                portName = conPorts.get(i);
+//                portDetails = portName.split("/"); //0 : ID ; 1 : gatePort
+//
+//                tempP = null;
+//                tempG = null;
+//
+//                for (j = 0; j < ports.size(); j++) {
+//                    if (ports.get(j).getID().equals(portDetails[0])) {
+//                        tempP = ports.get(j);
+//                        x2 = tempP.getPortX();
+//                        y2 = tempP.getPortY();
+//                        j = ports.size();
+//                    }
+//                }
+//
+//                if (tempP == null) {
+//                    for (j = 0; j < gates.size(); j++) {
+//                        if (gates.get(j).getID().equals(portDetails[0])) {
+//                            tempG = gates.get(j);
+//                            x2 = tempG.getPortX(portDetails[1]);
+//                            y2 = tempG.getPortY(portDetails[1]);
+//                            j = gates.size();
+//                        }
+//                    }
+//                }
+//            }
+//        }
+    }
+
+    private void drawSquareLine(int x1, int y1, int x2, int y2){
+
+        int xm = (x1 + x2) / 2;
+
+        renderer.line(x1, y1, xm, y1);
+        renderer.line(xm, y1, xm, y2);
+        renderer.line(xm, y2, x2, y2);
+
+    }
+
+    private Gate gateLookup(String id){
+
+        for(Gate gate : gates){
+
+            if(gate.getID().equals(id))
+                return gate;
+
+        }
+
+        return null;
+
+    }
+
+    private Port portLookup(String id){
+
+        for(Port port : ports){
+
+            if(port.getID().equals(id))
+                return port;
+
+        }
+
+        return null;
+
     }
 
     private int getXCenter(int level) {
