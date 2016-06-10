@@ -130,15 +130,19 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		blocks = new Stage();
 		//LinkedList<Block> blockList = WorldEditorController.getCurrentWorldController().getCurrentLevel().blockList;
 
-		Block button = new Block();
-		Actor temp = button.getBlock();
-		temp.setPosition(100, 100);
-		temp.setSize(100, 100);
-		
-		Gdx.input.setInputProcessor(blocks);
-		
-		blocks.addActor(temp);
-		
+		for(int i=0;i<10;i++) {
+			
+			Block button = new Block();
+			Actor temp = button.getBlock();
+			temp.setName("chris");
+			temp.setPosition(i * 50, 0);
+			temp.setSize(50, 50);
+			temp.setName(String.valueOf(i));
+			
+			blocks.addActor(temp);
+			
+		}
+
 		blocks.act(Gdx.graphics.getDeltaTime());
 		blocks.draw();
 		

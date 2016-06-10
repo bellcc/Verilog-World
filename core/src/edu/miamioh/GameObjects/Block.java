@@ -16,16 +16,30 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
-public class Block extends AbstractGameObject{
-
+public class Block extends AbstractGameObject {
+	
 	private Color color;
 	private Button block;
 	
+	private String blockName;
+	
+	private static final int DEFAULT_ROW = 0;
+	private static final int DEFAULT_COLUMN = 0;
+	
+	private static BlockChangeListener changeListener;
+
 	public Block() {
 		color = new Color(Color.BLACK);
+		
+		changeListener = new BlockChangeListener();
 		createButton();
+		initActor(DEFAULT_ROW, DEFAULT_COLUMN);
 	}
 	
+	private void initActor(int row, int column) {
+		
+	}
+		
 	private void createButton() {
 		
 		Skin skin = new Skin();
@@ -49,8 +63,7 @@ public class Block extends AbstractGameObject{
 		
 		block = new Button(style);
 		
-		block.addListener(new BlockChangeListener());
-		
+		block.addListener(changeListener);
 	}
 	
 	public Block(Color color) {
