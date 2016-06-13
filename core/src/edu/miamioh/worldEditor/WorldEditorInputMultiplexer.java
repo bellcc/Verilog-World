@@ -64,8 +64,8 @@ public class WorldEditorInputMultiplexer {
 		Stage toolBarStage = WorldEditorRenderer.getWorldRenderer().getStage();
 		Stage blockStage = WorldEditorRenderer.getWorldRenderer().getBlockStage();
 		Stage tileStage = WorldEditorRenderer.getWorldRenderer().getTileStage();
-
-		Stage worldBlockStage = WorldEditorRenderer.getWorldRenderer().getWorldBlockStage();
+		
+		Stage blockOptionStage = WorldEditorRenderer.getWorldRenderer().getBlockOptionStage();
 		
 		//Remove every input processor from the multiplexer.
 		multiplexer.removeProcessor(toolBarStage);
@@ -77,13 +77,11 @@ public class WorldEditorInputMultiplexer {
 		boolean blockActor = WorldEditorRenderer.getWorldRenderer().getBlocksActor();
 		boolean tileActor = WorldEditorRenderer.getWorldRenderer().getTilesActor();
 		
+		boolean blockOption = WorldEditorRenderer.getWorldRenderer().getBlockOption();
+		
 		//Add all of the appropriate input processors based on the user's input.
 		multiplexer.addProcessor(toolBarStage);
-		multiplexer.addProcessor(worldBlockStage);
-		
-		//TODO Remove
-		multiplexer.addProcessor(WorldEditorRenderer.getWorldRenderer().getWorldBlockStage());
-		
+				
 		if(blockActor) {
 			
 			multiplexer.addProcessor(blockStage);
@@ -92,6 +90,12 @@ public class WorldEditorInputMultiplexer {
 		
 			multiplexer.addProcessor(tileStage);
 			
+		}
+				
+		if(blockOption) {
+			
+			System.out.println("Block Options........");
+			multiplexer.addProcessor(blockOptionStage);
 		}
 		
 		multiplexer.addProcessor(inputProcess);

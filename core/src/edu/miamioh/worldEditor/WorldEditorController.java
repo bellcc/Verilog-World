@@ -103,15 +103,23 @@ public class WorldEditorController extends AbstractController{
 	 * @param column
 	 */
 	public void gridPressed(int row, int column) {
-				
+		
+		System.out.println(row + ", " + column);
+		
 		boolean isBlock = currentLevel.isBlock(row, column);
 		boolean isTile = currentLevel.isTile(row, column);
 		
 		if(isBlock || isTile) {
 		
-			//TODO Show an options menu to the user that 
-			//give the option for the verilog editor, 
-			//schematic editor, and delete actor buttons.
+			boolean blockOption = WorldEditorRenderer.getWorldRenderer().getBlockOption();
+			
+			if(blockOption) {
+				WorldEditorRenderer.getWorldRenderer().setBlockOption(false);
+			}else {
+				WorldEditorRenderer.getWorldRenderer().setBlockOption(true);
+			}
+			
+			WorldEditorController.getCurrentWorldController().getMultiplexer().updateMultiplexer();
 			
 			return;
 		}

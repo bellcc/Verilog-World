@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import edu.miamioh.AbstractEditor.AbstractRenderer;
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.Linked.LinkedList;
+import edu.miamioh.worldEditor.BlockOption.BlockOptionStage;
 import edu.miamioh.worldEditor.ToolBar.Stages.BlockStage;
 import edu.miamioh.worldEditor.ToolBar.Stages.HomeStage;
 import edu.miamioh.worldEditor.ToolBar.Stages.TileStage;
@@ -32,9 +33,8 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	private Stage homeStage;
 	private Stage blockStage;
 	private Stage tileStage;
-	
-	private Stage worldBlockStage;
-	private Stage worldTileStage;
+
+	private Stage blockOptionStage;
 	
 	private static boolean homeActor;
 	private static boolean blocksActor;
@@ -45,7 +45,9 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	private boolean resetBlockState;
 	
 	private boolean blankTileState;
-		
+
+	private boolean blockOption;
+	
 	public WorldEditorRenderer() {
 		
 		init();
@@ -65,16 +67,39 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		blankBlockState = false;
 		blankTileState = false;
 		
+		blockOption = false;
+		
 		resetStates();
 		
 		initToolBarStages();
-		initWorldActorStages();
+		initBlockOptionStage();
 	}
 	
-	private void initWorldActorStages() {
+	private void initBlockOptionStage() {
 		
-		worldBlockStage = new Stage();
-		worldTileStage = new Stage();
+		BlockOptionStage tempStage = new BlockOptionStage();
+		blockOptionStage = new Stage();
+
+		int x = WorldEditorController.getCurrentWorldController().getWindowWidth() - 75;
+		tempStage.getVerilogEditorButton().setPosition(x, 25);
+		tempStage.getVerilogEditorButton().setSize(50, 50);
+
+		x -= 75;
+		tempStage.getRemoveButton().setPosition(x, 25);
+		tempStage.getRemoveButton().setSize(50, 50);
+		
+		blockOptionStage.addActor(tempStage.getVerilogEditorButton());
+		blockOptionStage.addActor(tempStage.getRemoveButton());
+
+	}
+
+	public void updateBlockOptionsStage(int row, int column) {
+
+		int optionWidth = 175;
+		int optionHeight = 100;
+
+		//TODO Change this so the options bar is near the selected cell in the world.
+		
 	}
 
 	/**
@@ -122,9 +147,9 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		renderBackground();
 		renderSelector();
 		
-		//renderLevelBlocks();
 		renderBlocks();
 		renderToolBar();
+		
 	}
 	
 	/**
@@ -163,7 +188,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	 * tool bar that appears on the left hand side.
 	 */
 	public void renderToolBar() {
-		
+
 		toolBarStage.act(Gdx.graphics.getDeltaTime());
 		toolBarStage.draw();
 		
@@ -182,6 +207,13 @@ public class WorldEditorRenderer extends AbstractRenderer{
 			tileStage.act(Gdx.graphics.getDeltaTime());
 			tileStage.draw();
 			
+		}
+		
+		if(blockOption) {
+
+			blockOptionStage.act(Gdx.graphics.getDeltaTime());
+			blockOptionStage.draw();
+		
 		}
 		
 	}
@@ -626,13 +658,17 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	public Stage getHomeStage() {
 		return homeStage;
 	}
-	
-	public Stage getWorldBlockStage() {
-		return worldBlockStage;
+
+	public boolean getBlockOption() {
+		return blockOption;
+	}
+
+	public void setBlockOption(boolean blockOption) {
+		this.blockOption = blockOption;
 	}
 	
-	public Stage getWorldTileStage() {
-		return worldTileStage;
+	public Stage getBlockOptionStage() {
+		return blockOptionStage;
 	}
 
 }
