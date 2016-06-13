@@ -11,7 +11,10 @@ public class DebugUtils {
 	
 	public static void printModuleVars(SimVisitor visitor, ModuleInstance module) {
 		for(ParseRegWire var : module.getVars_list()) {
-			System.out.println(var.getName() + ": " + var.getValue(visitor.getOldIndex()));
+			int oldIndex = visitor.getOldIndex();
+			int newIndex = visitor.getNewIndex();
+			System.out.println(var.getName() + ": " + var.getValue(newIndex) +
+					", " + var.getValue(oldIndex));
 		}
 	}
 	
