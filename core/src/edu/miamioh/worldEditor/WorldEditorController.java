@@ -120,11 +120,26 @@ public class WorldEditorController extends AbstractController{
 		boolean tileActor = WorldEditorRenderer.getWorldRenderer().getTilesActor();
 		
 		boolean blankBlockState = WorldEditorRenderer.getWorldRenderer().getBlankBlockState();
+		boolean clockBlockState = WorldEditorRenderer.getWorldRenderer().getClockBlockState();
+		boolean resetBlockState = WorldEditorRenderer.getWorldRenderer().getResetBlockState();
 		
 		if(blocksActor && blankBlockState) {
 			
 			Block block = new Block(Color.BLACK, row, column);
-			System.out.println(block.getRow());
+			
+			currentLevel.addBlock(block);
+			WorldEditorRenderer.getWorldRenderer().resetBlockStates();
+			
+		}else if(blocksActor && clockBlockState) {
+			
+			Block block = new Block(Color.PINK, row, column);
+			
+			currentLevel.addBlock(block);
+			WorldEditorRenderer.getWorldRenderer().resetBlockStates();
+			
+		}else if(blocksActor && resetBlockState) {
+			
+			Block block = new Block(Color.PURPLE, row, column);
 			
 			currentLevel.addBlock(block);
 			WorldEditorRenderer.getWorldRenderer().resetBlockStates();

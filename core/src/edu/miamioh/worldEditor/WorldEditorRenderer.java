@@ -10,15 +10,8 @@ package edu.miamioh.worldEditor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
 import edu.miamioh.AbstractEditor.AbstractRenderer;
 import edu.miamioh.GameObjects.Block;
@@ -48,7 +41,9 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	private static boolean tilesActor;
 	
 	private boolean blankBlockState;
-
+	private boolean clockBlockState;
+	private boolean resetBlockState;
+	
 	private boolean blankTileState;
 		
 	public WorldEditorRenderer() {
@@ -148,7 +143,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 			int x = blockList.getEntry(i).getColumn() * gridHeight;
 			
 			Color blockColor = blockList.getEntry(i).getColor();
-			blockList.getEntry(i).setColor(Color.GOLD);
+			//blockList.getEntry(i).setColor(Color.GOLD);
 			blockColor = blockList.getEntry(i).getColor();
 
 			//This causes the blocks to be within the bounds 
@@ -521,6 +516,8 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	public void resetSelectedItems() {
 		
 		blankBlockState = false;
+		clockBlockState = false;
+		resetBlockState = false;
 	}
 		
 	public void resetStates() {
@@ -534,7 +531,10 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	}
 	
 	public void resetBlockStates() {
-		blankBlockState = false;		
+		
+		blankBlockState = false;
+		clockBlockState = false;
+		resetBlockState = false;
 	}
 	
 	public static WorldEditorRenderer getWorldRenderer() {
@@ -599,6 +599,22 @@ public class WorldEditorRenderer extends AbstractRenderer{
 
 	public void setBlankBlockState(boolean blankBlock) {
 		this.blankBlockState = blankBlock;
+	}
+	
+	public boolean getClockBlockState() {
+		return clockBlockState;
+	}
+	
+	public void setClockBlockState(boolean clockBlock) {
+		this.clockBlockState = clockBlock;
+	}
+	
+	public boolean getResetBlockState() {
+		return resetBlockState;
+	}
+	
+	public void setResetBlockState(boolean resetBlock) {
+		this.resetBlockState = resetBlock;
 	}
 
 	public boolean getBlankTileState() {

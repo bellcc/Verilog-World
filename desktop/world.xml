@@ -1,7 +1,7 @@
 <world>
 
-  <world-width>10</world-width>
-  <world-height>10</world-height>
+  <world-width>100</world-width>
+  <world-height>100</world-height>
 
   <window-width>600</window-width>
   <window-height>600</window-height>
