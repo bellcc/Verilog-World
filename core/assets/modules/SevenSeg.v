@@ -11,7 +11,7 @@ output e;
 output f;
 output g;
 
-assign i = char;
+assign i[0] = char[3];
 assign i[1] = char[2];
 assign i[2] = char[1];
 assign i[3] = char[0];
