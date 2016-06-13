@@ -15,6 +15,7 @@ public class VerilogEditorChangeListener extends ChangeListener{
 		
 		VerilogWorldMain.getVerilogWorld().launchVerilogEditor("test.v");
 		
+		
 		WorldEditorRenderer.getWorldRenderer().setBlockOption(false);
 	}
 

@@ -8,13 +8,6 @@
 package edu.miamioh.GameObjects;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
 public class Block extends AbstractGameObject {
 
@@ -22,10 +15,11 @@ public class Block extends AbstractGameObject {
 	private static final int DEFAULT_COLUMN = 0;
 	private static final Color DEFAULT_COLOR = Color.BLACK;
 	
+	//Modifiable variables.
 	private Color color;
 	private int row;
 	private int column;
-
+	
 	public Block() {
 
 		this(DEFAULT_COLOR, DEFAULT_ROW, DEFAULT_COLUMN);

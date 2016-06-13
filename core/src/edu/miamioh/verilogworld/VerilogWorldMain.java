@@ -13,6 +13,8 @@ import java.net.URISyntaxException;
 
 import com.badlogic.gdx.ApplicationListener;
 
+import edu.miamioh.verilogEditor.VerilogEditor;
+import edu.miamioh.verilogEditor.RunEditor;
 import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.WorldEditorRenderer;
 
@@ -116,14 +118,17 @@ public class VerilogWorldMain implements ApplicationListener {
 	}
 	
 	public void launchVerilogEditor(String fileName){
-		String pathToJar = getRootPath() + "/VerilogEditor.jar";
+		/*String pathToJar = getRootPath() + "/VerilogEditor.jar";
 		ProcessBuilder pb = new ProcessBuilder("java", "-jar", pathToJar, getRootPath(), fileName);
 
 		try {
 			Process p = pb.start();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
+		
+		Thread thread = new Thread(new RunEditor());
+		thread.start();
 	}
 
 	public String getRootPath()

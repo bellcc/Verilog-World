@@ -6,7 +6,7 @@ public class RunEditor implements Runnable {
 
 		@Override
 		public void run() {
-			String[] args = {"C:\\Users\\Kyle\\Documents\\dev\\Github-Rep\\Verilog-World\\", "MemTest.v"};
+			String[] args = {"C:\\Users\\clark\\Documents\\Verilog-World\\", "MemTest.v"};
 			VerilogEditor.main(args);
 		}
 }
