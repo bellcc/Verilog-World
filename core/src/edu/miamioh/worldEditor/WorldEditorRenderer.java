@@ -532,6 +532,11 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		worldEditorController.setWindowWidth(width);
 		worldEditorController.setWindowHeight(height);
 		
+		//toolBarStage.clear();
+		
+		//WorldEditorController.getCurrentWorldController().getMultiplexer().updateMultiplexer();
+		//initToolBarStages();
+		
 	}
 	
 	@Override

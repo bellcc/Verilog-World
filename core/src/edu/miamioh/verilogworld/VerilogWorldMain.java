@@ -17,6 +17,9 @@ import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.WorldEditorRenderer;
 
 public class VerilogWorldMain implements ApplicationListener {
+	
+	private static VerilogWorldMain currentVerilogWorld;
+	
 	private String	VERILOG_WORLD_DEVELOPMENT	= "VERILOG_WORLD_DEVELOPMENT";
 
 	private VerilogWorldController verilogWorldController;
@@ -31,6 +34,8 @@ public class VerilogWorldMain implements ApplicationListener {
 	 */
 	@Override
 	public void create () {
+		
+		currentVerilogWorld = this;
 
 		//The variable is instantiated and initialized and will act 
 		//as the central hub for data during execution of the application.
@@ -110,9 +115,9 @@ public class VerilogWorldMain implements ApplicationListener {
 		
 	}
 	
-	public void launchVerilogEditor(String rootPath, String fileName){
-		String pathToJar = rootPath + "/VerilogEditor.jar";
-		ProcessBuilder pb = new ProcessBuilder("java", "-jar", pathToJar, rootPath, fileName);
+	public void launchVerilogEditor(String fileName){
+		String pathToJar = getRootPath() + "/VerilogEditor.jar";
+		ProcessBuilder pb = new ProcessBuilder("java", "-jar", pathToJar, getRootPath(), fileName);
 
 		try {
 			Process p = pb.start();
@@ -155,5 +160,9 @@ public class VerilogWorldMain implements ApplicationListener {
 	{
 		String env = System.getenv(VERILOG_WORLD_DEVELOPMENT);
 		return env != null && !env.equals("0");
+	}
+	
+	public static VerilogWorldMain getVerilogWorld() {
+		return currentVerilogWorld;
 	}
 }

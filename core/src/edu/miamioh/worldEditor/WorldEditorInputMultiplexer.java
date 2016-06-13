@@ -94,7 +94,6 @@ public class WorldEditorInputMultiplexer {
 				
 		if(blockOption) {
 			
-			System.out.println("Block Options........");
 			multiplexer.addProcessor(blockOptionStage);
 		}
 		

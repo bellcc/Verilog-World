@@ -10,7 +10,6 @@ package edu.miamioh.verilogworld.desktop;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
-import edu.miamioh.util.Constants;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
 
 public class DesktopLauncher {
@@ -20,8 +19,8 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		
 		config.title = "Verilog World";
-		config.width = Constants.WINDOW_WIDTH;
-		config.height = Constants.WINDOW_HEIGHT;
+		config.width = 600;
+		config.height = 600;
 		
 		config.resizable = false;
 		config.backgroundFPS = 30;
