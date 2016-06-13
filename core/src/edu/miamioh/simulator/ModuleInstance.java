@@ -13,7 +13,6 @@ public class ModuleInstance {
 	private SimVisitor visitor;
 	private String name;
 	private ParseTree tree;
-	private boolean is_sequ;
 	
 	private ArrayList<ParseRegWire> vars_list;
 	private Hashtable<String, ParseRegWire> hash_vars;
@@ -35,14 +34,6 @@ public class ModuleInstance {
 		ParseTreeWalker walker = new ParseTreeWalker();
 		ParseListener listener = new ParseListener(visitor, parser, Compiler, this);
 		walker.walk(listener, this.tree);
-		
-		// Find out if we use the clock or not
-		if (this.hash_vars.containsKey("clk")) {
-			this.is_sequ = true;
-		}
-		else {
-			this.is_sequ = false;
-		}
 	}
 
 	public ArrayList<ParseRegWire> getVars_list() 			{return vars_list;}
@@ -50,6 +41,5 @@ public class ModuleInstance {
 	public ArrayList<String> getPorts_list() 				{return ports_list;}
 	public SimVisitor getVisitor() 							{return visitor;}
 	public ParseTree getParseTree()							{return tree;}
-	public boolean isSequ() 								{return this.is_sequ;}
 	public String getName()									{return this.name;}
 }

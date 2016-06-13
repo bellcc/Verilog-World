@@ -1,20 +1,29 @@
-module MemTest(clk);
-	input clk;
+module MemTest(clk, rst, out);
+	input clk, rst;
+	output [15:0]out;
 
-	wire [3:0]one;
-	wire [3:0]cin;
-	reg [3:0]sum;
+	wire [15:0]cin;
+	reg [15:0]sumOne;
+	reg [15:0]sumTwo;
 	wire cout;
-	wire [3:0]tempSum;
+	wire [15:0]tempSum;
 
-	assign sum = 4'd1;
-	assign one = 4'd1;
-	assign cin = 4'd0;
+	assign cin = 1'd0;
+	assign out = sumOne;
 
-	Adder_2 gate0(sum, sum, cin, tempSum, cout);
+	Adder_16 gate0(sumOne, sumTwo, cin, tempSum, cout);
 
-	always @(posedge clk or negedge clk)
+	always @(posedge clk or negedge rst)
 	begin
-		sum <= tempSum;
+		if(rst == 0)
+		begin
+			sumOne <= 1;
+			sumTwo <= 1;
+		end
+		else 
+		begin
+			sumOne <= sumTwo;
+			sumTwo <= tempSum;
+		end
 	end
-endmodule
+endmodule}
