@@ -143,8 +143,6 @@ public class WorldEditorRenderer extends AbstractRenderer{
 			int x = blockList.getEntry(i).getColumn() * gridHeight;
 			
 			Color blockColor = blockList.getEntry(i).getColor();
-			//blockList.getEntry(i).setColor(Color.GOLD);
-			blockColor = blockList.getEntry(i).getColor();
 
 			//This causes the blocks to be within the bounds 
 			//of the grid's cells so that the blocks do not 
