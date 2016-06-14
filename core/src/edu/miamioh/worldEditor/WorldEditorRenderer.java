@@ -544,6 +544,8 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	@Override
 	public void dispose() {
 		
+		renderer.dispose();
+		
 		toolBarStage.dispose();
 		homeStage.dispose();
 		blockStage.dispose();
