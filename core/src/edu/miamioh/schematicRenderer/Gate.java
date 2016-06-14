@@ -19,6 +19,7 @@ class Gate {
     private ArrayList<String> inputs = new ArrayList<>();
     private int level = 0;
     private int cx = 0, cy = 0;
+    private float r, g, b, a;
     private ArrayList<Integer> inputYCoords = new ArrayList<>();
     private ArrayList<Integer> inputXCoords = new ArrayList<>();
     private int scaledGS = constants.gateSize * constants.scaleFactor;
@@ -42,48 +43,78 @@ class Gate {
      */
     public Gate(GateType type, String id, int level) {
 
+        float r, g, b, a = 255;
+
         switch (type) {
 
             case AND:
                 this.type = AND;
                 this.id = id;
                 this.level = level;
+                r = 255;
+                g = 0;
+                b = 0;
+                setColor(r, g, b, a);
                 break;
 
             case OR:
                 this.type = OR;
                 this.id = id;
                 this.level = level;
+                r = 0;
+                g = 255;
+                b = 0;
+                setColor(r, g, b, a);
                 break;
 
             case XOR:
                 this.type = XOR;
                 this.id = id;
                 this.level = level;
+                r = 0;
+                g = 0;
+                b = 255;
+                setColor(r, g, b, a);
                 break;
 
             case NOT:
                 this.type = NOT;
                 this.id = id;
                 this.level = level;
+                r = 255;
+                g = 255;
+                b = 0;
+                setColor(r, g, b, a);
                 break;
 
             case WIRE:
                 this.type = WIRE;
                 this.id = id;
                 this.level = level;
+                r = 255;
+                g = 0;
+                b = 255;
+                setColor(r, g, b, a);
                 break;
 
             case REG:
                 this.type = REG;
                 this.id = id;
                 this.level = level;
+                r = 0;
+                g = 255;
+                b = 255;
+                setColor(r, g, b, a);
                 break;
 
             case BLANK:
                 this.type = BLANK;
                 this.id = id;
                 this.level = level;
+                r = 0;
+                g = 0;
+                b = 0;
+                setColor(r, g, b, a);
                 break;
 
 //            case MODULE:
@@ -93,6 +124,9 @@ class Gate {
             default:
                 this.type = BLANK;
                 this.level = 0;
+                r = 0;
+                g = 0;
+                b = 0;
                 break;
 
         }
@@ -123,6 +157,10 @@ class Gate {
 
             case WIRE:
             case REG:
+                inputXCoords.add(this.cx - scaledGS / 2);
+                break;
+
+            default:
                 inputXCoords.add(this.cx - scaledGS / 2);
                 break;
 
@@ -164,8 +202,35 @@ class Gate {
                 inputYCoords.add(this.cy);
                 break;
 
+            default:
+                inputYCoords.add(this.cy);
+                break;
+
         }
 
+    }
+
+    private void setColor(float r, float g, float b, float a){
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
+    }
+
+    public float getR(){
+        return this.r;
+    }
+
+    public float getG(){
+        return this.g;
+    }
+
+    public float getB(){
+        return this.b;
+    }
+
+    public float getA(){
+        return this.a;
     }
 
     /**
@@ -291,7 +356,10 @@ class Gate {
                     return this.getCX() + scaledGS / 2;
 
             default:
-                return 0;
+                if(name[0].equals("IN"))
+                    return inputXCoords.get(0);
+                else
+                    return this.getCX() + scaledGS / 2;
 
         }
 
@@ -331,7 +399,7 @@ class Gate {
                 return this.getCY();
 
             default:
-                return 0;
+                return this.getCY();
 
         }
 
