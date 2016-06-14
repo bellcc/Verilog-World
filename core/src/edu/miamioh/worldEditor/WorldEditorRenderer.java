@@ -532,10 +532,12 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		worldEditorController.setWindowWidth(width);
 		worldEditorController.setWindowHeight(height);
 		
-		//toolBarStage.clear();
+		toolBarStage.getViewport().update(width, height);
+		homeStage.getViewport().update(width, height);
+		blockStage.getViewport().update(width, height);
+		tileStage.getViewport().update(width, height);
 		
-		//WorldEditorController.getCurrentWorldController().getMultiplexer().updateMultiplexer();
-		//initToolBarStages();
+		blockOptionStage.getViewport().update(width, height);
 		
 	}
 	
