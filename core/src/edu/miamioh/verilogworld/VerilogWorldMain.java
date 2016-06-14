@@ -127,7 +127,7 @@ public class VerilogWorldMain implements ApplicationListener {
 			e.printStackTrace();
 		}*/
 		
-		Thread thread = new Thread(new RunEditor());
+		Thread thread = new Thread(new RunEditor(fileName));
 		thread.start();
 	}
 

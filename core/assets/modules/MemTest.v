@@ -26,4 +26,4 @@ module MemTest(clk, rst, out);
 			sumTwo <= tempSum;
 		end
 	end
-endmodule}
+endmodule

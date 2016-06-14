@@ -78,8 +78,9 @@ public class ParseListener extends Verilog2001BaseListener
 		this.vars_list = module.getVars_list();
 		this.hash_vars = module.getHash_vars();
 
-		this.subTrees = Compiler.getSubTrees();
-		this.subTreesHash = Compiler.getSubTreesHash();
+		
+		this.subTrees = Compiler.getRootModuleInstance().getSubTrees();
+		this.subTreesHash = Compiler.getRootModuleInstance().getSubTreesHash();
 
 		this.var_stack = new Stack<String>();
 		this.parameter_value_stack = new Stack<Integer>();
@@ -628,8 +629,8 @@ public class ParseListener extends Verilog2001BaseListener
 		// Create the new module instance
 		if (newTree != null) {
 			ModuleInstance newModule = new ModuleInstance(parser, Compiler, newTree, moduleName);
-			Compiler.getSubModulesHash().put(instanceName, newModule);
-			Compiler.getSubModulesList().add(newModule);
+			Compiler.getRootModuleInstance().getSubModulesHash().put(instanceName, newModule);
+			Compiler.getRootModuleInstance().getSubModulesList().add(newModule);
 		}
 	}
 	
