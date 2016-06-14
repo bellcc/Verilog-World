@@ -1,12 +1,17 @@
 package edu.miamioh.verilogEditor;
 
 public class RunEditor implements Runnable {
+	
+		private String fileName;
 
-		public RunEditor() {}
+		public RunEditor(String fileName) {
+			this.fileName = fileName;
+		}
 
 		@Override
 		public void run() {
-			String[] args = {"C:\\Users\\clark\\Documents\\Verilog-World\\", "MemTest.v"};
+			String workingDir = System.getProperty("user.dir");
+			String[] args = {workingDir + "\\..\\", fileName};
 			VerilogEditor.main(args);
 		}
 }

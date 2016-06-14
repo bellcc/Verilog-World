@@ -13,8 +13,7 @@ public class VerilogEditorChangeListener extends ChangeListener{
 
 		System.out.println("Verilog Editor Change Listener");
 		
-		VerilogWorldMain.getVerilogWorld().launchVerilogEditor("test.v");
-		
+		VerilogWorldMain.getVerilogWorld().launchVerilogEditor("MemTest.v");
 		
 		WorldEditorRenderer.getWorldRenderer().setBlockOption(false);
 	}

@@ -10,13 +10,13 @@ import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
 
 public class ModuleInstance {
 	
-	private SimVisitor visitor;
-	private String name;
-	private ParseTree tree;
+	protected SimVisitor visitor;
+	protected String name;
+	protected ParseTree tree;
 	
-	private ArrayList<ParseRegWire> vars_list;
-	private Hashtable<String, ParseRegWire> hash_vars;
-	private ArrayList<String> ports_list;
+	protected ArrayList<ParseRegWire> vars_list;
+	protected Hashtable<String, ParseRegWire> hash_vars;
+	protected ArrayList<String> ports_list;
 	
 	public ModuleInstance(Verilog2001Parser parser, Parse Compiler, ParseTree tree, String name) {
 		
@@ -26,14 +26,18 @@ public class ModuleInstance {
 		this.ports_list = new ArrayList<>();
 		this.name = name;
 		
-		visitor = new SimVisitor(this, 
-								 Compiler.getSubModulesHash(), 
-								 Compiler.getSubModulesList());
-		
-		// Generate symbol table and check syntax
-		ParseTreeWalker walker = new ParseTreeWalker();
-		ParseListener listener = new ParseListener(visitor, parser, Compiler, this);
-		walker.walk(listener, this.tree);
+		// Is null in the case that this is called by RootModuleInstance constructor. 
+		// That constructor does it's own walking code
+		if (Compiler != null) {
+			visitor = new SimVisitor(this, 
+									 Compiler.getRootModuleInstance().getSubModulesHash(), 
+									 Compiler.getRootModuleInstance().getSubModulesList());
+			
+			// Generate symbol table and check syntax
+			ParseTreeWalker walker = new ParseTreeWalker();
+			ParseListener listener = new ParseListener(visitor, parser, Compiler, this);
+			walker.walk(listener, this.tree);
+		}
 	}
 
 	public ArrayList<ParseRegWire> getVars_list() 			{return vars_list;}
