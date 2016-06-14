@@ -28,6 +28,8 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import edu.miamioh.schematicRenderer.SchematicRendererMain;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.util.Constants;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.Display;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -785,10 +787,9 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		}
 	}
 
-	LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-	LwjglApplication schematicRender;
-
 	public void schematicButtonFunction() {
+
+		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
 		config.title = "Schematic Render of " + this.fileName;
 		config.width = Constants.WINDOW_WIDTH;
@@ -796,13 +797,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		config.forceExit = false;
 		config.resizable = false;
 
-		if(Compiler.is_compiled_yet()){
-			schematicRender = new LwjglApplication(new SchematicRendererMain(Compiler), config);
-		} else {
-			errorText.setText("The Verilog code has not been successfully " +
-					"compiled yet.  Please click the check mark above and/or " +
-					"fix Verilog errors.");
-		}
+		LwjglApplication schematicRender = new LwjglApplication(new SchematicRendererMain(Compiler), config);
+
 	}
 	/*
 	public void comboHeaderButtonFunction() {
