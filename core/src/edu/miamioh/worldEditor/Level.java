@@ -125,32 +125,21 @@ public class Level {
 		return false;
 		
 	}
-	
-	public int generateBlockID(Block block) {
 
-		//int maxNum = Constants.MAX_ID;
-		int maxNum = 10000000;
+	public Block getBlock(int row, int column) {
 		
-		Random rand = new Random();
-		
-		while(true) {
-
-			int randNum = rand.nextInt(maxNum);
-			boolean flag = false;
+		for(int i=1;i<=blockList.getLength();i++) {
 			
-			for(int i=1;i<=blockList.getLength();i++) {
+			int blockRow = blockList.getEntry(i).getRow();
+			int blockColumn = blockList.getEntry(i).getColumn();
 			
-				if(blockList.getEntry(i).getId() == randNum) {
-					flag = true;
-				}
+			if(row == blockRow && column == blockColumn) {
 				
-				if(blockList.getEntry(i).getId() != randNum && i == blockList.getLength() && flag == false) {
-					return randNum;
-				}
-				
+				return blockList.getEntry(i);
 			}
-			
 		}
+		
+		return null;
 		
 	}
 

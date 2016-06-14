@@ -48,6 +48,8 @@ public class WorldEditorRenderer extends AbstractRenderer{
 
 	private boolean blockOption;
 	
+	private Block selectedBlock;
+	
 	public WorldEditorRenderer() {
 		
 		init();
@@ -91,15 +93,6 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		blockOptionStage.addActor(tempStage.getVerilogEditorButton());
 		blockOptionStage.addActor(tempStage.getRemoveButton());
 
-	}
-
-	public void updateBlockOptionsStage(int row, int column) {
-
-		int optionWidth = 175;
-		int optionHeight = 100;
-
-		//TODO Change this so the options bar is near the selected cell in the world.
-		
 	}
 
 	/**
@@ -678,6 +671,14 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	
 	public Stage getBlockOptionStage() {
 		return blockOptionStage;
+	}
+
+	public Block getSelectedBlock() {
+		return selectedBlock;
+	}
+
+	public void setSelectedBlock(Block selectedBlock) {
+		this.selectedBlock = selectedBlock;
 	}
 
 }

@@ -64,4 +64,9 @@ public class Block extends AbstractGameObject {
 		return column;
 	}
 
+	@Override
+	public String toString() {
+		return "Block [color=" + color + ", row=" + row + ", column=" + column + "]";
+	}
+
 }

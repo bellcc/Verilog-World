@@ -103,9 +103,7 @@ public class WorldEditorController extends AbstractController{
 	 * @param column
 	 */
 	public void gridPressed(int row, int column) {
-		
-		System.out.println(row + ", " + column);
-		
+				
 		boolean isBlock = currentLevel.isBlock(row, column);
 		boolean isTile = currentLevel.isTile(row, column);
 		
@@ -120,6 +118,9 @@ public class WorldEditorController extends AbstractController{
 			}
 			
 			WorldEditorController.getCurrentWorldController().getMultiplexer().updateMultiplexer();
+			
+			Block selectedBlock = currentLevel.getBlock(row, column);
+			WorldEditorRenderer.getWorldRenderer().setSelectedBlock(selectedBlock);
 			
 			return;
 		}
