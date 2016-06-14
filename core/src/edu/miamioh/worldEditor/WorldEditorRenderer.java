@@ -10,14 +10,13 @@ package edu.miamioh.worldEditor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import edu.miamioh.AbstractEditor.AbstractRenderer;
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.Linked.LinkedList;
+import edu.miamioh.worldEditor.BlockOption.BlockOptionStage;
 import edu.miamioh.worldEditor.ToolBar.Stages.BlockStage;
 import edu.miamioh.worldEditor.ToolBar.Stages.HomeStage;
 import edu.miamioh.worldEditor.ToolBar.Stages.TileStage;
@@ -28,31 +27,26 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	
 	private WorldEditorController worldEditorController;
 	private static WorldEditorRenderer worldRenderer;
-	
-	private OrthographicCamera camera;
-	private ShapeRenderer renderer;
 
-	private Color gridLineColor = Color.LIGHT_GRAY;
-	
-	private int worldX;
-	private int worldY;
-	
-	private int toolBarWidth = 50;
-	private int subToolBarWidth = 100;
-	
 	private Stage toolBarStage;
 	
 	private Stage homeStage;
 	private Stage blockStage;
 	private Stage tileStage;
+
+	private Stage blockOptionStage;
 	
 	private static boolean homeActor;
 	private static boolean blocksActor;
 	private static boolean tilesActor;
 	
 	private boolean blankBlockState;
-
+	private boolean clockBlockState;
+	private boolean resetBlockState;
+	
 	private boolean blankTileState;
+
+	private boolean blockOption;
 	
 	public WorldEditorRenderer() {
 		
@@ -69,28 +63,50 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	public void init() {
 
 		worldRenderer = this;
-		
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
-		
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, w, h);
-
-		renderer = new ShapeRenderer();
-				
+						
 		blankBlockState = false;
 		blankTileState = false;
-
+		
+		blockOption = false;
+		
 		resetStates();
 		
 		initToolBarStages();
+		initBlockOptionStage();
+	}
+	
+	private void initBlockOptionStage() {
+		
+		BlockOptionStage tempStage = new BlockOptionStage();
+		blockOptionStage = new Stage();
+
+		int x = WorldEditorController.getCurrentWorldController().getWindowWidth() - 75;
+		tempStage.getVerilogEditorButton().setPosition(x, 25);
+		tempStage.getVerilogEditorButton().setSize(50, 50);
+
+		x -= 75;
+		tempStage.getRemoveButton().setPosition(x, 25);
+		tempStage.getRemoveButton().setSize(50, 50);
+		
+		blockOptionStage.addActor(tempStage.getVerilogEditorButton());
+		blockOptionStage.addActor(tempStage.getRemoveButton());
+
+	}
+
+	public void updateBlockOptionsStage(int row, int column) {
+
+		int optionWidth = 175;
+		int optionHeight = 100;
+
+		//TODO Change this so the options bar is near the selected cell in the world.
+		
 	}
 
 	/**
 	 * This method initializes the default tool bar 
 	 * that sits on the left hand side of the window.
 	 */
-	public void initToolBarStages() {
+	private void initToolBarStages() {
 		
 		toolBarStage = new Stage();
 		blockStage = new Stage();		
@@ -111,7 +127,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		HomeStage tempHomeStage = new HomeStage();
 		tempHomeStage.init();
 		homeStage = tempHomeStage.getStage();
-		
+				
 	}
 
 	/**
@@ -131,7 +147,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		renderBackground();
 		renderSelector();
 		
-		renderLevelBlocks();
+		renderBlocks();
 		renderToolBar();
 		
 	}
@@ -139,7 +155,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	/**
 	 * This method renders the blocks that are defined in the level.
 	 */
-	public void renderLevelBlocks() {
+	public void renderBlocks() {
 		
 		LinkedList<Block> blockList = worldEditorController.getCurrentLevel().blockList;
 		
@@ -151,14 +167,20 @@ public class WorldEditorRenderer extends AbstractRenderer{
 			int y = blockList.getEntry(i).getRow() * gridWidth;
 			int x = blockList.getEntry(i).getColumn() * gridHeight;
 			
-			renderer.begin(ShapeType.Filled);
-			renderer.setColor(Color.PINK);
-			renderer.rect(x, y, gridWidth, gridHeight);
+			Color blockColor = blockList.getEntry(i).getColor();
 
-			renderer.end();			
-			
+			//This causes the blocks to be within the bounds 
+			//of the grid's cells so that the blocks do not 
+			//overlap with the grid.
+			int blockWidth = gridWidth - 1;
+			int blockHeight = gridHeight - 1;
+			y += 1;
+
+			renderer.begin(ShapeType.Filled);
+			renderer.setColor(blockColor);
+			renderer.rect(x, y, blockWidth, blockHeight);
+			renderer.end();
 		}
-		
 	}
 	
 	/**
@@ -166,7 +188,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	 * tool bar that appears on the left hand side.
 	 */
 	public void renderToolBar() {
-		
+
 		toolBarStage.act(Gdx.graphics.getDeltaTime());
 		toolBarStage.draw();
 		
@@ -185,6 +207,13 @@ public class WorldEditorRenderer extends AbstractRenderer{
 			tileStage.act(Gdx.graphics.getDeltaTime());
 			tileStage.draw();
 			
+		}
+		
+		if(blockOption) {
+
+			blockOptionStage.act(Gdx.graphics.getDeltaTime());
+			blockOptionStage.draw();
+		
 		}
 		
 	}
@@ -222,46 +251,64 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		
 		renderer.end();
 		
+		translateCamera();
+
+	}
+
+	public void translateCamera() {
+		
 		int bufferWidth = worldEditorController.getBufferWidth();
 		int bufferHeight = worldEditorController.getBufferHeight();
-		
-		int translateX = worldX - bufferWidth;
-		int translateY = worldY - bufferHeight;
-		
-		if(worldX <	 bufferWidth) {
-			
-			translateX = (-1) * (bufferWidth - worldX);
-			
-		}
-		
-		if(worldY < bufferHeight) {
-			
-			translateY = (-1) * (bufferHeight - worldY);
-			
-		}
 		
 		int windowWidth = worldEditorController.getWindowWidth();
 		int windowHeight = worldEditorController.getWindowHeight();
 		
-		if(width < windowWidth) {
-			
-			translateX = (-1) * ((windowWidth / 2) - (width / 2));
-			
+		int gridWidth = worldEditorController.getGridWidth();
+		int gridHeight = worldEditorController.getGridHeight();
+		
+		int worldWidth = worldEditorController.getWorldWidth();
+		int worldHeight = worldEditorController.getWorldHeight();
+		
+		int width = gridWidth * worldWidth;
+		int height = gridHeight * worldHeight;
+		
+		int translateX = worldX - bufferWidth;
+		int translateY = worldY - bufferHeight;
+		
+		//This sets the translate width to the amount of 
+		//buffer area that is needed on the left of the window.
+		if(worldX <	 bufferWidth) {
+			translateX = (-1) * (bufferWidth - worldX);
+		}
+		
+		//This sets the translate height to the amount of
+		//buffer area that is needed on the bottom of the window.
+		if(worldY < bufferHeight) {
+			translateY = (-1) * (bufferHeight - worldY);
+		}
+		
+		translateX -= (getToolBarWidth() + getToolBarOptionsWidth());
+		
+		//Irregular world sizes
+		
+		int windowWidthRange = windowWidth - (getToolBarWidth() + getToolBarOptionsWidth());
+		
+		if(width < windowWidthRange) {
+			translateX = (getToolBarWidth() + getToolBarOptionsWidth()) + ((windowWidthRange / 2) - (width / 2));
+			translateX *= (-1);			
 		}
 		
 		if(height < windowHeight) {
-			
-			translateY = (-1) * ((windowHeight / 2) - (height / 2));
-			
+			translateY = ((windowHeight / 2) - (height / 2));
+			translateY *= (-1);
 		}
+
 		
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		
 		camera.setToOrtho(false, w, h);
-		//camera.translate(translateX, translateY);
-		//camera.translate(translateX - 50, translateY);	
-		camera.translate(translateX - toolBarWidth - subToolBarWidth, translateY);
+		camera.translate(translateX, translateY);
 		
 	}
 	
@@ -277,7 +324,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 
 		column = detectColumn();
 		row = detectRow();
-		
+				
 		int gridWidth = worldEditorController.getGridWidth();
 		int gridHeight = worldEditorController.getGridHeight();
 				
@@ -289,9 +336,15 @@ public class WorldEditorRenderer extends AbstractRenderer{
 
 		if((column >= 0 && column <= (worldWidth - 1)) && (row >= 0 && row <= (worldHeight - 1))) {
 			
+			int selectorWidth = gridWidth - 1;
+			int selectorHeight = gridHeight - 1;
+			
+			y += 1;
+			
 			renderer.begin(ShapeType.Filled);
 			renderer.setColor(Color.DARK_GRAY);
-			renderer.rect(x, y, gridWidth, gridHeight);
+			renderer.rect(x, y, selectorWidth, selectorHeight);
+			//renderer.rect(x, y, gridWidth, gridHeight);
 
 			renderer.end();
 			
@@ -328,7 +381,6 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	public int detectColumn() {
 		
 		int column = -1;
-		int currentX = getMousePoint().getX() - toolBarWidth - subToolBarWidth;
 		
 		int worldWidth = worldEditorController.getWorldWidth();
 		int gridWidth = worldEditorController.getGridWidth();
@@ -337,9 +389,12 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		int width = worldWidth * gridWidth;
 		
 		if(hasIrregularWidth()) {
-
-			int displayLeftX = (windowWidth / 2) - (width / 2);
-			int displayRightX = displayLeftX + worldWidth;
+			
+			int currentX = getMousePoint().getX();
+			int windowWidthRange = windowWidth - getToolBarWidth() - getToolBarOptionsWidth();
+			
+			int displayLeftX = (windowWidthRange / 2) - (width / 2);
+			int displayRightX = displayLeftX + width;
 			
 			if(displayLeftX <= (windowWidth - currentX) && displayRightX >= (windowWidth - currentX)) {
 				
@@ -348,6 +403,8 @@ public class WorldEditorRenderer extends AbstractRenderer{
 			}
 			
 		}else {
+			
+			int currentX = getMousePoint().getX() - getToolBarWidth() - getToolBarOptionsWidth();
 
 			column = ((worldX + currentX) - bufferWidth) / gridWidth;
 
@@ -475,6 +532,13 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		worldEditorController.setWindowWidth(width);
 		worldEditorController.setWindowHeight(height);
 		
+		toolBarStage.getViewport().update(width, height);
+		homeStage.getViewport().update(width, height);
+		blockStage.getViewport().update(width, height);
+		tileStage.getViewport().update(width, height);
+		
+		blockOptionStage.getViewport().update(width, height);
+		
 	}
 	
 	@Override
@@ -489,6 +553,8 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	public void resetSelectedItems() {
 		
 		blankBlockState = false;
+		clockBlockState = false;
+		resetBlockState = false;
 	}
 		
 	public void resetStates() {
@@ -498,17 +564,17 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	}
 
 	public void resetTileStates() {
-		
 		blankTileState = false;
 	}
 	
 	public void resetBlockStates() {
 		
-		blankBlockState = false;		
+		blankBlockState = false;
+		clockBlockState = false;
+		resetBlockState = false;
 	}
 	
 	public static WorldEditorRenderer getWorldRenderer() {
-		
 		return worldRenderer;
 	}
 	
@@ -533,12 +599,10 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	}
 	
 	public Stage getBlockStage() {
-		
 		return blockStage;
 	}
 	
 	public Stage getTileStage() {
-		
 		return tileStage;
 	}
 
@@ -573,6 +637,22 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	public void setBlankBlockState(boolean blankBlock) {
 		this.blankBlockState = blankBlock;
 	}
+	
+	public boolean getClockBlockState() {
+		return clockBlockState;
+	}
+	
+	public void setClockBlockState(boolean clockBlock) {
+		this.clockBlockState = clockBlock;
+	}
+	
+	public boolean getResetBlockState() {
+		return resetBlockState;
+	}
+	
+	public void setResetBlockState(boolean resetBlock) {
+		this.resetBlockState = resetBlock;
+	}
 
 	public boolean getBlankTileState() {
 		return blankTileState;
@@ -585,15 +665,17 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	public Stage getHomeStage() {
 		return homeStage;
 	}
-	
-	public int getToolBarWidth() {
-		
-		return toolBarWidth;
+
+	public boolean getBlockOption() {
+		return blockOption;
+	}
+
+	public void setBlockOption(boolean blockOption) {
+		this.blockOption = blockOption;
 	}
 	
-	public int getSubToolBarWidth() {
-		
-		return subToolBarWidth;
+	public Stage getBlockOptionStage() {
+		return blockOptionStage;
 	}
 
 }

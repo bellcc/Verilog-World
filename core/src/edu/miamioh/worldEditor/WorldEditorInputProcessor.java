@@ -10,6 +10,8 @@
 package edu.miamioh.worldEditor;
 
 import edu.miamioh.AbstractEditor.AbstractInputProcessor;
+import edu.miamioh.GameObjects.Block;
+import edu.miamioh.Linked.LinkedList;
 
 public class WorldEditorInputProcessor extends AbstractInputProcessor{
 
@@ -93,18 +95,9 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 		int row = WorldEditorRenderer.getWorldRenderer().detectRow();
 		int column = WorldEditorRenderer.getWorldRenderer().detectColumn();
 		
-		int worldWidth = WorldEditorController.getCurrentWorldController().getWorldWidth();
-		int worldHeight= WorldEditorController.getCurrentWorldController().getWorldHeight();
-
-		if(row >= 0 && row <= (worldHeight -1) && column >= 0 && column <= (worldWidth - 1)) {
-			
-			WorldEditorController.getCurrentWorldController().gridPressed(row, column);
-			return true;
-			
-		}
+		WorldEditorController.getCurrentWorldController().gridPressed(row, column);
 		
 		return false;
-		
 	}
 	
 	public boolean touchUp(int x, int y, int pointer, int button) {
@@ -142,7 +135,8 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 		int bufferWidth = WorldEditorController.getCurrentWorldController().getBufferWidth();
 		
 		int toolBarWidth = WorldEditorRenderer.getWorldRenderer().getToolBarWidth();
-		int subToolBarWidth = WorldEditorRenderer.getWorldRenderer().getSubToolBarWidth();
+		//int subToolBarWidth = WorldEditorRenderer.getWorldRenderer().getSubToolBarWidth();
+		int subToolBarWidth = WorldEditorRenderer.getWorldRenderer().getToolBarOptionsWidth();
 		
 		if(posX < (worldSize - windowWidth) + (2 * bufferWidth) + toolBarWidth + subToolBarWidth) {
 			return true;

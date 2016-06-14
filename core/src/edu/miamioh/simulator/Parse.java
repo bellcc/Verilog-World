@@ -19,23 +19,17 @@ import org.antlr.v4.runtime.*;
 
 public class Parse {
 	
-	private String							rootPath;
+	private String				rootPath;
+	private ParseTree 			root_tree;
+	private RootModuleInstance 	root_module;
 	
-	private ParseTree 						root_tree;
-	private ArrayList<ModuleInstance> 		subModules_list;
-	private Hashtable<String, ModuleInstance> subModules_hash;
-	private ArrayList<ParseTree> 			subTrees;
-	private Hashtable<String, ParseTree> 	subTreesHash;
+	private boolean 	is_compiled;
+	private boolean 	is_no_parse_errors;
 	
-	private boolean is_compiled;
-	private boolean is_no_parse_errors;
-	
-	private JTextPane errorText;
+	private JTextPane 	errorText;
 	
 	public int RESET = 0;
 	public int RUN = 1;
-	
-	private ModuleInstance root_module;
 	
 	public Parse() throws Exception {
 		this(null, null);
@@ -48,28 +42,48 @@ public class Parse {
 	
 	public ModuleInstance getRootModule() {return this.root_module;}
 	
-	public void compileFileForEditor(String fileName) throws IOException {
+	public void compileFileForGame(String fileName) throws IOException {
 		
-		errorText.setText("Compiling " + fileName + "...");
+		//errorText.setText("Compiling " + fileName + "...");
 
-		subTrees = new ArrayList<>();
-		subTreesHash = new Hashtable<>();
-		subModules_hash = new Hashtable<>();
-		subModules_list = new ArrayList<>();
 		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(rootPath + "core/assets/modules/" + fileName));
 		Verilog2001Lexer lexer = new Verilog2001Lexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		Verilog2001Parser parser = new Verilog2001Parser(tokens);
+		parser.removeErrorListeners();
+		parser.addErrorListener(new VerboseListenerE());
 
 		is_no_parse_errors = true;
 
+		root_tree = parser.module_declaration();
+		root_module = new RootModuleInstance(parser, this, root_tree, "root_module");
+
+		if (is_no_parse_errors)
+		{
+			is_compiled = true;
+		}
+		else
+		{
+			is_compiled = false;
+		}
+	}
+	
+	public void compileFileForEditor(String fileName) throws IOException {
+		
+		errorText.setText("Compiling " + fileName + "...");
+
+		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(rootPath + "core/assets/modules/" + fileName));
+		Verilog2001Lexer lexer = new Verilog2001Lexer(input);
+		CommonTokenStream tokens = new CommonTokenStream(lexer);
+		Verilog2001Parser parser = new Verilog2001Parser(tokens);
 		parser.removeErrorListeners();
 		parser.addErrorListener(new VerboseListenerE());
+
+		is_no_parse_errors = true;
+
+		
 		root_tree = parser.module_declaration();
-		
-		root_module = new ModuleInstance(parser, this, root_tree, "root_module");
-		
-		//DebugUtils.printParseTree(root_tree, parser);
+		root_module = new RootModuleInstance(parser, this, root_tree, "root_module");
 
 		if (is_no_parse_errors)
 		{
@@ -113,17 +127,22 @@ public class Parse {
 		SimVisitor visitor = root_module.getVisitor();
 		
 		do {
-			System.out.println("*********** Comb Cycle ************");
-			System.out.println(">>> Top Module");
-			DebugUtils.printModuleVars(visitor, this.root_module);
-			for(ModuleInstance sub : this.subModules_list) {
-				System.out.println(">>> " + sub.getName());
-				DebugUtils.printModuleVars(sub.getVisitor(), sub);
-			}
+			
+			/*
+			 * For debugging
+			 */
+//			System.out.println("*********** Comb Cycle ************");
+//			System.out.println(">>> Top Module");
+//			DebugUtils.printModuleVars(visitor, this.root_module);
+//			for(ModuleInstance sub : root_module.getSubModulesList()) {
+//				System.out.println(">>> " + sub.getName());
+//				DebugUtils.printModuleVars(sub.getVisitor(), sub);
+//			}
+			
 			// Assume the circuit is steady at the start. 
 			// Simulate it and let it change it's own steady or not steady state.
 			visitor.setState(SimVisitor.STEADY);
-			for(ModuleInstance module : this.subModules_list) {
+			for(ModuleInstance module : root_module.getSubModulesList()) {
 				module.getVisitor().setState(SimVisitor.STEADY);
 			}
 			
@@ -136,10 +155,14 @@ public class Parse {
 	}
 	
 	public void simSequ() {
+		/*
+		 * For debugging
+		 */
+//		System.out.print("************************\n" +
+//						 "*        Clock!        *\n" +
+//						 "************************\n");
+		
 		// Toggle sequ clock and simulate
-		System.out.print("************************\n" +
-						 "*        Clock!        *\n" +
-						 "************************\n");
 		root_module.getVisitor().toggleSequClock();
 		simComb();
 		root_module.getVisitor().toggleSequClock();
@@ -160,7 +183,7 @@ public class Parse {
 			}
 		}
 		
-		for(ModuleInstance module : this.subModules_list) {
+		for(ModuleInstance module : root_module.getSubModulesList()) {
 			for(ParseRegWire wire : module.getVars_list()) {
 				if (wire.getType() == RegWireType.SEQUENTIAL) {
 					wire.setValue(visitor.getOldIndex(), 
@@ -223,20 +246,22 @@ public class Parse {
 		parser.addErrorListener(new VerboseListenerE());
 		ParseTree result_tree = parser.module_declaration();
 		
-		DebugUtils.printParseTree(result_tree, parser);
+		/*
+		 * For debugging
+		 */
+		//DebugUtils.printParseTree(result_tree, parser);
 		
 		return result_tree;
 	}
 	
-	public JTextPane getErrorText() { return this.errorText;}
-	public void setIs_no_parse_errors(Boolean value) {this.is_no_parse_errors = value;}
-	public Boolean is_compiled_yet() { return is_compiled;}
+	public void updateRootModule(RootModuleInstance module) {this.root_module = module;}
 	
-	public ParseTree getRootTree() {return this.root_tree;}
-	public ArrayList<ParseTree> getSubTrees() 				{return this.subTrees;}
-	public Hashtable<String, ParseTree> getSubTreesHash() 	{return this.subTreesHash;}
-	public Hashtable<String, ModuleInstance> getSubModulesHash() {return this.subModules_hash;}
-	public ArrayList<ModuleInstance> getSubModulesList() {return this.subModules_list;}
+	public JTextPane getErrorText() 					{ return this.errorText;}
+	public void setIs_no_parse_errors(Boolean value) 	{this.is_no_parse_errors = value;}
+	public Boolean is_compiled_yet() 					{ return is_compiled;}
+	
+	public ParseTree getRootTree() 									{return this.root_tree;}
+	public RootModuleInstance getRootModuleInstance() 				{return this.root_module;}
 	
 	public class VerboseListenerE extends BaseErrorListener
 	{ 

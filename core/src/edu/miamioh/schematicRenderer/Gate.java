@@ -121,6 +121,11 @@ class Gate {
                 }
                 break;
 
+            case WIRE:
+            case REG:
+                inputXCoords.add(this.cx - scaledGS / 2);
+                break;
+
         }
 
     }
@@ -152,6 +157,11 @@ class Gate {
                     inputYCoords.add(y);
 
                 }
+                break;
+
+            case WIRE:
+            case REG:
+                inputYCoords.add(this.cy);
                 break;
 
         }
@@ -273,6 +283,13 @@ class Gate {
                 else
                     return this.getCX() + scaledGS / 2;
 
+            case WIRE:
+            case REG:
+                if(name[0].equals("IN"))
+                    return inputXCoords.get(0);
+                else
+                    return this.getCX() + scaledGS / 2;
+
             default:
                 return 0;
 
@@ -309,6 +326,10 @@ class Gate {
             case NOT:
                 return this.getCY();
 
+            case WIRE:
+            case REG:
+                return this.getCY();
+
             default:
                 return 0;
 
@@ -323,9 +344,11 @@ class Gate {
      * @return The level of the Gate.
      */
     public int getLevel() {
-
         return this.level;
+    }
 
+    public void setLevel(int newLevel){
+        this.level = newLevel;
     }
 
     public void addInput(String id){

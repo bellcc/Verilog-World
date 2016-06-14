@@ -1,11 +1,11 @@
 
 /**
  * @author Chris Bell
- * @date   6-6-2016
+ * @date   6-13-2016
  * @info   
  */
 
-package edu.miamioh.worldEditor.ToolBar.AbstractActors;
+package edu.miamioh.worldEditor.BlockOption;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -16,19 +16,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
-public abstract class AbstractToolBarActor {
+public class BlockOptionStage{
 
-	public TextButton button;
-	public String buttonText;
-	public Color color;
+	private TextButton verilogEditorButton;
+	private TextButton removeButton;
 	
-	public abstract void addChangeListener();
+	public BlockOptionStage() {
 
-	/**
-	 * This method creates the actor that represents the home button. 
-	 * All of the styling details are also defined in this method.
-	 */
-	public void create() {
+		verilogEditorButton = createButton(Color.GREEN, "Verilog\nEditor");
+		verilogEditorButton.addListener(new VerilogEditorChangeListener());
+
+		removeButton = createButton(Color.RED, "Remove");
+		removeButton.addListener(new VerilogEditorChangeListener());
+		
+	}
+	
+	private TextButton createButton(Color color, String text) {
 		
 		// A skin stores resources for UI widgets to use (fonts, 
 		// colors, etc). Resource are named and can be looked 
@@ -61,16 +64,18 @@ public abstract class AbstractToolBarActor {
 		
 		skin.add("default", buttonStyle);
 	
-		button = new TextButton(buttonText, buttonStyle);
-	}
+		TextButton button = new TextButton(text, buttonStyle);
 		
-	/**
-	 * This method returns the button that represents the home actor.
-	 * @return The button that controls the home actor operations.
-	 */
-	public TextButton getButtonActor() {
-			
 		return button;
+		
 	}
 	
+	public TextButton getVerilogEditorButton() {
+		return verilogEditorButton;
+	}
+	
+	public TextButton getRemoveButton() {
+		return removeButton;
+	}
+
 }

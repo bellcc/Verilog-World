@@ -15,7 +15,7 @@ import edu.miamioh.Linked.LinkedList;
 
 public class Level {
 	
-	edu.miamioh.Linked.LinkedList<Block> blockList;
+	LinkedList<Block> blockList;
 	LinkedList<Tile> tileList;
 	
 	public Level() {

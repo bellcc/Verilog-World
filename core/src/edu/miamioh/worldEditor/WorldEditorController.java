@@ -11,6 +11,7 @@ package edu.miamioh.worldEditor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
 
 import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.AbstractEditor.AbstractController;
@@ -96,16 +97,29 @@ public class WorldEditorController extends AbstractController{
 		
 	}
 	
+	/**
+	 * This method discerns which action should be taken after a user touches down in the world. 
+	 * @param row
+	 * @param column
+	 */
 	public void gridPressed(int row, int column) {
-				
+		
+		System.out.println(row + ", " + column);
+		
 		boolean isBlock = currentLevel.isBlock(row, column);
 		boolean isTile = currentLevel.isTile(row, column);
 		
 		if(isBlock || isTile) {
 		
-			//TODO Show an options menu to the user that 
-			//give the option for the verilog editor, 
-			//schematic editor, and delete actor buttons.
+			boolean blockOption = WorldEditorRenderer.getWorldRenderer().getBlockOption();
+			
+			if(blockOption) {
+				WorldEditorRenderer.getWorldRenderer().setBlockOption(false);
+			}else {
+				WorldEditorRenderer.getWorldRenderer().setBlockOption(true);
+			}
+			
+			WorldEditorController.getCurrentWorldController().getMultiplexer().updateMultiplexer();
 			
 			return;
 		}
@@ -113,19 +127,36 @@ public class WorldEditorController extends AbstractController{
 		boolean blocksActor = WorldEditorRenderer.getWorldRenderer().getBlocksActor();
 		boolean tileActor = WorldEditorRenderer.getWorldRenderer().getTilesActor();
 		
-		if(blocksActor && WorldEditorRenderer.getWorldRenderer().getBlankBlockState()) {
-					
-			Block block = new Block();
-			block.setRow(row);
-			block.setColumn(column);
-			//block.setId(currentLevel.generateBlockID(block));
+		boolean blankBlockState = WorldEditorRenderer.getWorldRenderer().getBlankBlockState();
+		boolean clockBlockState = WorldEditorRenderer.getWorldRenderer().getClockBlockState();
+		boolean resetBlockState = WorldEditorRenderer.getWorldRenderer().getResetBlockState();
+		
+		if(blocksActor && blankBlockState) {
+			
+			Block block = new Block(Color.BLACK, row, column);
 			
 			currentLevel.addBlock(block);
 			WorldEditorRenderer.getWorldRenderer().resetBlockStates();
 			
-		}else if(tileActor) {
+		}else if(blocksActor && clockBlockState) {
 			
+			Block block = new Block(Color.PINK, row, column);
 			
+			currentLevel.addBlock(block);
+			WorldEditorRenderer.getWorldRenderer().resetBlockStates();
+			
+		}else if(blocksActor && resetBlockState) {
+			
+			Block block = new Block(Color.PURPLE, row, column);
+			
+			currentLevel.addBlock(block);
+			WorldEditorRenderer.getWorldRenderer().resetBlockStates();
+			
+		}
+		
+		//Procedures for all other block states go here in the form of else if statements.
+		
+		if(tileActor) {
 			
 		}
 		

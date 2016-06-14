@@ -7,7 +7,9 @@
 
 package edu.miamioh.GameObjects;
 
-public abstract class AbstractGameObject {
+import com.badlogic.gdx.scenes.scene2d.Actor;
+
+public abstract class AbstractGameObject extends Actor{
 
 	private int id;
 	
