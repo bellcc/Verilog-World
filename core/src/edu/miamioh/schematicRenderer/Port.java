@@ -16,6 +16,7 @@ class Port {
     private String id = "";
     private int level = 0;
     private int cx = 0, cy = 0;
+    private float r, g, b, a;
 
     /**
      * Port constructor. Takes a Port Type, Port ID, and Port Level and
@@ -28,26 +29,62 @@ class Port {
      */
     public Port(GateType type, String id, int level) {
 
+        float r, g, b, a = 255;
+
         switch (type) {
 
             case INPUT:
                 this.type = type;
                 this.id = id;
+                r = 0;
+                g = 0;
+                b = 0;
+                setColor(r, g, b, a);
                 break;
 
             case OUTPUT:
                 this.type = type;
                 this.id = id;
                 this.level = level;
+                r = 0;
+                g = 0;
+                b = 0;
+                setColor(r, g, b, a);
                 break;
 
             default:
                 this.type = BLANK;
                 this.id = "INVALID_ASSIGNMENT";
+                r = 255;
+                g = 255;
+                b = 255;
                 break;
 
         }
 
+    }
+
+    private void setColor(float r, float g, float b, float a){
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
+    }
+
+    public float getR(){
+        return this.r;
+    }
+
+    public float getG(){
+        return this.g;
+    }
+
+    public float getB(){
+        return this.b;
+    }
+
+    public float getA(){
+        return this.a;
     }
 
     /**

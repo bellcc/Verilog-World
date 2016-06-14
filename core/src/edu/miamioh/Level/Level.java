@@ -5,7 +5,7 @@
  * @info   
  */
 
-package edu.miamioh.worldEditor;
+package edu.miamioh.Level;
 
 import java.util.Random;
 
@@ -141,6 +141,10 @@ public class Level {
 		
 		return null;
 		
+	}
+	
+	public LinkedList<Block> getBlockList() {
+		return blockList;
 	}
 
 }

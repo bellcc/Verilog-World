@@ -150,7 +150,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	 */
 	public void renderBlocks() {
 		
-		LinkedList<Block> blockList = worldEditorController.getCurrentLevel().blockList;
+		LinkedList<Block> blockList = worldEditorController.getCurrentLevel().getBlockList();
 		
 		for(int i=1;i<=blockList.getLength();i++) {
 			

@@ -91,8 +91,8 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
         String lValue, rValue, gateValue;
 
         lValue = getValue(exp.getChild(0));
-        gateValue = getValue(exp.getChild(1));
         rValue = getValue(exp.getChild(2));
+        gateValue = getValue(exp.getChild(1));
 
         GateType type = getNewLogicType_GateType(exp.getChild(1));
         //id = rValue
@@ -113,21 +113,19 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
 
     private String newUNot(ParseTree exp){
 
-        String lValue, rValue;
-
-        rValue = getValue(exp.getChild(0));
+        String lValue, gateValue;
 
         lValue = getValue(exp.getChild(1));
+        gateValue = getValue(exp.getChild(0));
 
         GateType type = getNewLogicType_GateType(exp.getChild(0));
-        //id = rValue
+        //id = gateValue
         int level = schematic.getLevel(lValue) + 1;
 
-        schematic.addGate(type, rValue, level);
+        schematic.addGate(type, gateValue, level);
+        schematic.connect(lValue, gateValue);
 
-        schematic.connect(lValue, rValue);
-
-        return rValue;
+        return gateValue;
 
     }
 
@@ -155,23 +153,6 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
 
     }
 
-    private ParseTree getIDctx(ParseTree ctx){
-
-        ParseTree IDctx = null;
-
-        if(!(ctx instanceof Verilog2001Parser.IdentifierContext)) {
-            for (int i = 0; i < ctx.getChildCount(); i++) {
-                IDctx = getIDctx(ctx.getChild(i));
-                if(IDctx != null)
-                    i = ctx.getChildCount();
-            }
-        } else {
-            IDctx = ctx;
-        }
-
-        return IDctx;
-    }
-
     private GateType getNewLogicType_GateType(ParseTree ctx) {
 
         switch(ctx.getText()){
@@ -181,6 +162,18 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
 
             case("|"):
                 return GateType.OR;
+
+            case("^"):
+                return GateType.XOR;
+
+            case("~^"):
+                return GateType.XNOR;
+
+            case("~&"):
+                return GateType.NAND;
+
+            case("~|"):
+                return GateType.NOR;
 
             case("~"):
                 return GateType.NOT;
@@ -201,6 +194,18 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
             case("|"):
                 return "OR";
 
+            case("^"):
+                return "XOR";
+
+            case("~^"):
+                return "XNOR";
+
+            case("~&"):
+                return "NAND";
+
+            case("~|"):
+                return "NOR";
+
             case("~"):
                 return "NOT";
 
@@ -212,11 +217,6 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
 
     private int getNumOfGates(GateType type){
         return schematic.getGateCount(type);
-    }
-
-    private int getNewLogicLevel(ParseTree ctx) {
-
-        return 1;
     }
 
     /**

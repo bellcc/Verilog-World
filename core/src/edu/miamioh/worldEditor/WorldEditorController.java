@@ -17,6 +17,7 @@ import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.AbstractEditor.AbstractController;
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.GameObjects.Tile;
+import edu.miamioh.Level.Level;
 import edu.miamioh.verilogWorld.VerilogWorldController;
 
 public class WorldEditorController extends AbstractController{
