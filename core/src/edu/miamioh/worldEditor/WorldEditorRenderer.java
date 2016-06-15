@@ -328,7 +328,6 @@ public class WorldEditorRenderer extends AbstractRenderer{
 			renderer.begin(ShapeType.Filled);
 			renderer.setColor(Color.DARK_GRAY);
 			renderer.rect(x, y, selectorWidth, selectorHeight);
-			//renderer.rect(x, y, gridWidth, gridHeight);
 
 			renderer.end();
 			
