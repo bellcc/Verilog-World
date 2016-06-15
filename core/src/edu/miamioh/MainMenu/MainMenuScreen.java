@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -41,6 +42,9 @@ import edu.miamioh.verilogWorld.VerilogWorldMain;
  
 public class MainMenuScreen implements Screen {
 	private SpriteBatch batch;
+	private SpriteBatch batch2;
+	private Sprite sprite;
+
     protected Stage stage;
     private Viewport viewport;
     private OrthographicCamera camera;
@@ -103,7 +107,12 @@ public class MainMenuScreen implements Screen {
 
 	    camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
-
+        
+        batch2 = new SpriteBatch();
+        Texture backTex = new Texture(Gdx.files.internal("World.png"));
+        sprite = new Sprite(backTex);
+        sprite.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        
         stage = new Stage(viewport, batch);
 	        //Stage should controll input:
         Gdx.input.setInputProcessor(stage);
@@ -154,6 +163,11 @@ public class MainMenuScreen implements Screen {
 	        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 	        stage.act();
+	        
+	        batch2.begin();
+	        sprite.draw(batch2);
+	        batch2.end();
+	        
 	        stage.draw();
 	    }
 
