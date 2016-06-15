@@ -113,16 +113,8 @@ public class WorldEditorController extends AbstractController{
 		
 		if(isBlock || isTile) {
 		
-			/*
-			 * Not used
-			 */
-//			boolean blockOption = WorldEditorRenderer.getWorldRenderer().getBlockOption();
-//			
-//			if(blockOption) {
-//				WorldEditorRenderer.getWorldRenderer().setBlockOption(false);
-//			}else {
-//				WorldEditorRenderer.getWorldRenderer().setBlockOption(true);
-//			}
+			// 
+			WorldEditorRenderer.getWorldRenderer().toggleBlockOption();
 			
 			WorldEditorController.getCurrentWorldController().getMultiplexer().updateMultiplexer();
 			
