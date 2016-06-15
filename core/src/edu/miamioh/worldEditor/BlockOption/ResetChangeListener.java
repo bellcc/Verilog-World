@@ -12,7 +12,10 @@ public class ResetChangeListener extends ChangeListener{
 
 		System.out.println("Reset Change Listener");
 		
-		WorldEditorRenderer.getWorldRenderer().setBlockOption(false);
+		/*
+		 * Not used
+		 */
+		//WorldEditorRenderer.getWorldRenderer().setBlockOption(false);
 	}
 
 }

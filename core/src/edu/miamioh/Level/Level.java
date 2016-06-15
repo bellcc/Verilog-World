@@ -22,7 +22,6 @@ public class Level {
 		
 		blockList = new LinkedList<Block>();
 		tileList = new LinkedList<Tile>();
-		
 	}
 	
 	public Level(LinkedList<Block> blockList, LinkedList<Tile> tileList) {
@@ -146,5 +145,4 @@ public class Level {
 	public LinkedList<Block> getBlockList() {
 		return blockList;
 	}
-
 }

@@ -40,11 +40,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	private static boolean blocksActor;
 	private static boolean tilesActor;
 	
-	private boolean blankBlockState;
-	private boolean clockBlockState;
-	private boolean resetBlockState;
-	
-	private boolean blankTileState;
+	private SelectionType selectionType;
 
 	private boolean blockOption;
 	
@@ -65,13 +61,8 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	public void init() {
 
 		worldRenderer = this;
-						
-		blankBlockState = false;
-		blankTileState = false;
 		
 		blockOption = false;
-		
-		resetStates();
 		
 		initToolBarStages();
 		initBlockOptionStage();
@@ -543,33 +534,17 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		blockStage.dispose();
 		tileStage.dispose();
 	}
-
-	public void resetSelectedItems() {
-		
-		blankBlockState = false;
-		clockBlockState = false;
-		resetBlockState = false;
-	}
-		
-	public void resetStates() {
-		
-		resetTileStates();
-		resetBlockStates();
-	}
-
-	public void resetTileStates() {
-		blankTileState = false;
-	}
-	
-	public void resetBlockStates() {
-		
-		blankBlockState = false;
-		clockBlockState = false;
-		resetBlockState = false;
-	}
 	
 	public static WorldEditorRenderer getWorldRenderer() {
 		return worldRenderer;
+	}
+	
+	public SelectionType getSelectionType() {
+		return this.selectionType;
+	}
+	
+	public void setSelectionType(SelectionType type) {
+		this.selectionType = type;
 	}
 	
 	public void setWorldX(int x) {
@@ -622,38 +597,6 @@ public class WorldEditorRenderer extends AbstractRenderer{
 
 	public void setTilesActor(boolean tilesActor) {
 		WorldEditorRenderer.tilesActor = tilesActor;
-	}
-
-	public boolean getBlankBlockState() {
-		return blankBlockState;
-	}
-
-	public void setBlankBlockState(boolean blankBlock) {
-		this.blankBlockState = blankBlock;
-	}
-	
-	public boolean getClockBlockState() {
-		return clockBlockState;
-	}
-	
-	public void setClockBlockState(boolean clockBlock) {
-		this.clockBlockState = clockBlock;
-	}
-	
-	public boolean getResetBlockState() {
-		return resetBlockState;
-	}
-	
-	public void setResetBlockState(boolean resetBlock) {
-		this.resetBlockState = resetBlock;
-	}
-
-	public boolean getBlankTileState() {
-		return blankTileState;
-	}
-
-	public void setBlankTileState(boolean blankTile) {
-		this.blankTileState = blankTile;
 	}
 
 	public Stage getHomeStage() {

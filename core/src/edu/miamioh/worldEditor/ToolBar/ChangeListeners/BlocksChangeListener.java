@@ -29,12 +29,6 @@ public class BlocksChangeListener extends AbstractChangeListener{
 		//the blocks sub menu stage, and the input process processors 
 		//are attached to the input multiplexer.
 		WorldEditorController.getCurrentWorldController().getMultiplexer().updateMultiplexer();
-	
-		//TODO Figure out what this does.
-		WorldEditorRenderer.getWorldRenderer().resetSelectedItems();
-		//Set the states of the tiles to false so that they are no longer selected.
-		//WorldEditorRenderer.getWorldRenderer().resetStates();
-
 	}
 	
 }

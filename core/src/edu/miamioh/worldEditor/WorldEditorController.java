@@ -15,6 +15,10 @@ import com.badlogic.gdx.graphics.Color;
 import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.AbstractEditor.AbstractController;
 import edu.miamioh.GameObjects.Block;
+import edu.miamioh.GameObjects.NormalBlock;
+import edu.miamioh.GameObjects.NormalBlockType;
+import edu.miamioh.GameObjects.SpecialBlock;
+import edu.miamioh.GameObjects.SpecialBlockType;
 import edu.miamioh.GameObjects.Tile;
 import edu.miamioh.Level.Level;
 import edu.miamioh.verilogWorld.VerilogWorldController;
@@ -41,11 +45,13 @@ public class WorldEditorController extends AbstractController{
 	private int stepWidth;
 	private int stepHeight;
 	
+	private int blockID;
+	
 	public WorldEditorController() {
 		
 		currentWorldController = this;
 		init();
-	
+
 	}
 
 	/**
@@ -55,7 +61,7 @@ public class WorldEditorController extends AbstractController{
 			
 		initWorld();
 		initPlayer();
-		
+		blockID = 0;
 	}
 
 	public void initWorld() {
@@ -107,13 +113,16 @@ public class WorldEditorController extends AbstractController{
 		
 		if(isBlock || isTile) {
 		
-			boolean blockOption = WorldEditorRenderer.getWorldRenderer().getBlockOption();
-			
-			if(blockOption) {
-				WorldEditorRenderer.getWorldRenderer().setBlockOption(false);
-			}else {
-				WorldEditorRenderer.getWorldRenderer().setBlockOption(true);
-			}
+			/*
+			 * Not used
+			 */
+//			boolean blockOption = WorldEditorRenderer.getWorldRenderer().getBlockOption();
+//			
+//			if(blockOption) {
+//				WorldEditorRenderer.getWorldRenderer().setBlockOption(false);
+//			}else {
+//				WorldEditorRenderer.getWorldRenderer().setBlockOption(true);
+//			}
 			
 			WorldEditorController.getCurrentWorldController().getMultiplexer().updateMultiplexer();
 			
@@ -126,31 +135,23 @@ public class WorldEditorController extends AbstractController{
 		boolean blocksActor = WorldEditorRenderer.getWorldRenderer().getBlocksActor();
 		boolean tileActor = WorldEditorRenderer.getWorldRenderer().getTilesActor();
 		
-		boolean blankBlockState = WorldEditorRenderer.getWorldRenderer().getBlankBlockState();
-		boolean clockBlockState = WorldEditorRenderer.getWorldRenderer().getClockBlockState();
-		boolean resetBlockState = WorldEditorRenderer.getWorldRenderer().getResetBlockState();
+		SelectionType type = WorldEditorRenderer.getWorldRenderer().getSelectionType();
 		
-		if(blocksActor && blankBlockState) {
-			
-			Block block = new Block(Color.BLACK, row, column);
-			
-			currentLevel.addBlock(block);
-			WorldEditorRenderer.getWorldRenderer().resetBlockStates();
-			
-		}else if(blocksActor && clockBlockState) {
-			
-			Block block = new Block(Color.PINK, row, column);
-			
-			currentLevel.addBlock(block);
-			WorldEditorRenderer.getWorldRenderer().resetBlockStates();
-			
-		}else if(blocksActor && resetBlockState) {
-			
-			Block block = new Block(Color.PURPLE, row, column);
-			
-			currentLevel.addBlock(block);
-			WorldEditorRenderer.getWorldRenderer().resetBlockStates();
-			
+		if (blocksActor) {
+			switch(type) {
+			case Block_Blank:
+				currentLevel.addBlock(new NormalBlock(NormalBlockType.Blank, row, column));
+				break;
+			case Block_Clock:
+				currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Clock, row, column));
+				break;
+			case Block_Reset:
+				currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Reset, row, column));
+				break;
+			case Block_Wall:
+				currentLevel.addBlock(new NormalBlock(NormalBlockType.Wall, row, column));
+				break;
+			}
 		}
 		
 		//Procedures for all other block states go here in the form of else if statements.
@@ -163,6 +164,7 @@ public class WorldEditorController extends AbstractController{
 	
 	public void addNewBlock(Block aBlock) {
 		
+		++blockID;
 		currentLevel.addBlock(aBlock);
 	}
 	
@@ -264,4 +266,7 @@ public class WorldEditorController extends AbstractController{
 		return worldEditorMultiplexer;
 	}
 	
+	public int getUniqueBlockID() {
+		return this.blockID;
+	}
 }
