@@ -11,6 +11,7 @@ import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
+import edu.miamioh.MainMenu.ScreenSwitch;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
 
 public class DesktopLauncher {
@@ -29,8 +30,7 @@ public class DesktopLauncher {
 		
 		//config.resizable = false;
 		config.backgroundFPS = 30;
-
-		new LwjglApplication(new VerilogWorldMain(), config);
+		new LwjglApplication(new ScreenSwitch(), config);
 	
 	}
 
