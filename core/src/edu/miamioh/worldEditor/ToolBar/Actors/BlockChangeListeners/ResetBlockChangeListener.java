@@ -9,6 +9,7 @@ package edu.miamioh.worldEditor.ToolBar.Actors.BlockChangeListeners;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+import edu.miamioh.worldEditor.SelectionType;
 import edu.miamioh.worldEditor.WorldEditorRenderer;
 import edu.miamioh.worldEditor.ToolBar.AbstractActors.AbstractChangeListener;
 
@@ -19,15 +20,6 @@ public class ResetBlockChangeListener  extends AbstractChangeListener{
 		
 		System.out.println("Reset Block Change Listener");
 		
-		boolean resetBlockState = WorldEditorRenderer.getWorldRenderer().getResetBlockState();
-		
-		if(resetBlockState) {
-			
-			WorldEditorRenderer.getWorldRenderer().setResetBlockState(false);
-			return;
-		}
-		
-		WorldEditorRenderer.getWorldRenderer().setResetBlockState(true);
-		
+		WorldEditorRenderer.getWorldRenderer().setSelectionType(SelectionType.Block_Reset);
 	}
 }

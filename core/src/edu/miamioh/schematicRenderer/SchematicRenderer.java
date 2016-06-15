@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Disposable;
 import edu.miamioh.util.Constants;
-import org.lwjgl.opengl.Display;
 
 import java.util.ArrayList;
 
@@ -408,7 +407,6 @@ public class SchematicRenderer implements Disposable {
      */
     @Override
     public void dispose() {
-        Display.destroy();
     }
 
     public void resize(int width, int height) {

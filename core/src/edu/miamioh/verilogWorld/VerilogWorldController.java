@@ -22,6 +22,7 @@ import edu.miamioh.AbstractEditor.AbstractController;
 public class VerilogWorldController extends AbstractController{
 
 	private static VerilogWorldController controller;
+	private static String rootPath;
 
 	public VerilogWorldController() {
 		
@@ -86,4 +87,7 @@ public class VerilogWorldController extends AbstractController{
 		return this.defaultConfig;
 	}
 	
+	public static String getRootPath() {
+		return System.getProperty("user.dir");
+	}
 }
