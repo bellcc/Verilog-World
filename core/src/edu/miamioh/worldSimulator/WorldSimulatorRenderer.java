@@ -17,6 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Disposable;
 
+import edu.miamioh.GameObjects.Block;
+import edu.miamioh.Linked.LinkedList;
 import edu.miamioh.worldSimulator.OptionStage.Actors.ResetActor;
 import edu.miamioh.worldSimulator.OptionStage.Actors.SimulateActor;
 import edu.miamioh.worldSimulator.OptionStage.Actors.VerifyActor;
@@ -99,6 +101,7 @@ public class WorldSimulatorRenderer implements Disposable{
 		
 		renderBackground();
 		renderOptionStage();
+		//renderBlocks();
 	}
 	
 	public void renderBackground() {
@@ -139,6 +142,34 @@ public class WorldSimulatorRenderer implements Disposable{
 		
 		optionStage.act(Gdx.graphics.getDeltaTime());
 		optionStage.draw();
+	}
+	
+	public void renderBlocks() {
+		
+		LinkedList<Block> blockList = controller.getCurrentLevel().getBlockList();
+		
+		for(int i=1;i<=blockList.getLength();i++) {
+			
+			int gridWidth = controller.getGridWidth();
+			int gridHeight = controller.getGridHeight();
+			
+			int y = blockList.getEntry(i).getRow() * gridWidth;
+			int x = blockList.getEntry(i).getColumn() * gridHeight;
+			
+			Color blockColor = blockList.getEntry(i).getColor();
+
+			//This causes the blocks to be within the bounds 
+			//of the grid's cells so that the blocks do not 
+			//overlap with the grid.
+			int blockWidth = gridWidth - 1;
+			int blockHeight = gridHeight - 1;
+			y += 1;
+
+			renderer.begin(ShapeType.Filled);
+			renderer.setColor(blockColor);
+			renderer.rect(x, y, blockWidth, blockHeight);
+			renderer.end();
+		}
 	}
 	
 	private void translateCamera() {

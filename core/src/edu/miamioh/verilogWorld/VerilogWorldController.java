@@ -60,6 +60,7 @@ public class VerilogWorldController extends AbstractController{
 		controller = this;
 		//TODO This needs to be set to the main menu controller.
 		state = VerilogWorld.WORLD_SIMULATOR;
+		//state = VerilogWorld.WORLD_EDITOR;
 		
 		//The default configurations only need to be set once which 
 		//is why there is not a public setter for this field.
@@ -81,13 +82,20 @@ public class VerilogWorldController extends AbstractController{
 	
 	public void updateInputMultiplexer() {
 		
+		multiplexer = new InputMultiplexer();
+		
 		switch(state) {
 		
 			case WORLD_EDITOR:
 				multiplexer = WorldEditorController.getCurrentWorldController().getMultiplexer().getMultiplexer();
-				
+				System.out.println(state);
+				return;				
+			
 			case WORLD_SIMULATOR:
 				multiplexer = WorldSimulatorController.getMultiplexer().getMultiplexer();
+				System.out.println(state);
+				return;
+
 			
 		}
 		

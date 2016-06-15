@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
 
 import edu.miamioh.verilogEditor.VerilogEditor;
 import edu.miamioh.verilogEditor.RunEditor;
@@ -53,13 +54,16 @@ public class VerilogWorldMain implements ApplicationListener {
 		worldRenderer = new WorldEditorRenderer(worldEditorController);
 		
 		worldEditorController.initMultiplexer();
-		
+
 		simulatorController = new WorldSimulatorController();
 		simulatorRenderer = new WorldSimulatorRenderer(simulatorController);
 		
 		simulatorController.initMultiplexer();
 		
-		VerilogWorldController.getController().updateInputMultiplexer();
+		//VerilogWorldController.getController().updateInputMultiplexer();
+		
+		Gdx.input.setInputProcessor(worldEditorController.getCurrentWorldController().getMultiplexer().getMultiplexer());
+		//Gdx.input.setInputProcessor(simulatorController.getController().getMultiplexer().getMultiplexer());
 		
 		paused = false;
 		
@@ -74,7 +78,7 @@ public class VerilogWorldMain implements ApplicationListener {
 		//Dispose of all instantiated renderers here.
 		
 		worldRenderer.dispose();
-		
+		simulatorRenderer.dispose();
 	}
 	
 	/**
@@ -100,8 +104,8 @@ public class VerilogWorldMain implements ApplicationListener {
 			worldEditorController.update();
 		}
 		
-		//worldRenderer.render();
-		simulatorRenderer.render();
+		worldRenderer.render();
+		//simulatorRenderer.render();
 		
 	}
 	
