@@ -17,12 +17,20 @@
 package edu.miamioh.verilogWorld;
 
 import edu.miamioh.Configuration.Configuration;
+import edu.miamioh.worldEditor.WorldEditorController;
+import edu.miamioh.worldSimulator.WorldSimulatorController;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+
 import edu.miamioh.AbstractEditor.AbstractController;
 
 public class VerilogWorldController extends AbstractController{
 
 	private static VerilogWorldController controller;
-
+	private static InputMultiplexer multiplexer;
+	private static VerilogWorld state;
+	
 	public VerilogWorldController() {
 		
 		init();
@@ -47,6 +55,8 @@ public class VerilogWorldController extends AbstractController{
 	public void init() {
 
 		controller = this;
+		//TODO This needs to be set to the main menu controller.
+		state = VerilogWorld.WORLD_SIMULATOR;
 		
 		//The default configurations only need to be set once which 
 		//is why there is not a public setter for this field.
@@ -63,6 +73,22 @@ public class VerilogWorldController extends AbstractController{
 	 */
 	@Override
 	public void update() {
+		
+	}
+	
+	public void updateInputMultiplexer() {
+		
+		switch(state) {
+		
+			case WORLD_EDITOR:
+				multiplexer = WorldEditorController.getCurrentWorldController().getMultiplexer().getMultiplexer();
+				
+			case WORLD_SIMULATOR:
+				multiplexer = WorldSimulatorController.getMultiplexer().getMultiplexer();
+			
+		}
+		
+		Gdx.input.setInputProcessor(multiplexer);
 		
 	}
 	

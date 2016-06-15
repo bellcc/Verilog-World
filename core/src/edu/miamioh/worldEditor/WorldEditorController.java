@@ -9,7 +9,6 @@
 
 package edu.miamioh.worldEditor;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 
@@ -24,7 +23,7 @@ public class WorldEditorController extends AbstractController{
 	
 	private static WorldEditorController currentWorldController;
 	private static WorldEditorInputMultiplexer worldEditorMultiplexer;
-	
+		
 	private static Level currentLevel;
 
 	private int worldWidth;
@@ -89,9 +88,7 @@ public class WorldEditorController extends AbstractController{
 	public void initMultiplexer() {
 	
 		worldEditorMultiplexer = new WorldEditorInputMultiplexer();
-		
-		InputMultiplexer multiplexer = worldEditorMultiplexer.getMultiplexer();
-		Gdx.input.setInputProcessor(multiplexer);
+
 	}
 	
 	public void update() {
