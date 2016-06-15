@@ -8,8 +8,9 @@ package edu.miamioh.MainMenu;
 
 import com.badlogic.gdx.Game;
 
-public class ScreenSwitch extends Game{
+public class StartScreen extends Game{
 	private MainMenuScreen mainMenuScreen;
+	
 	@Override
 	public void create () {
 		mainMenuScreen = new MainMenuScreen(this);		
