@@ -17,6 +17,8 @@ import edu.miamioh.verilogEditor.VerilogEditor;
 import edu.miamioh.verilogEditor.RunEditor;
 import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.WorldEditorRenderer;
+import edu.miamioh.worldSimulator.WorldSimulatorController;
+import edu.miamioh.worldSimulator.WorldSimulatorRenderer;
 
 public class VerilogWorldMain implements ApplicationListener {
 	
@@ -28,6 +30,9 @@ public class VerilogWorldMain implements ApplicationListener {
 	
 	private WorldEditorController worldEditorController;
 	private WorldEditorRenderer worldRenderer;
+	
+	private WorldSimulatorController simulatorController;
+	private WorldSimulatorRenderer simulatorRenderer;
 	
 	private boolean paused;
 	
@@ -48,6 +53,13 @@ public class VerilogWorldMain implements ApplicationListener {
 		worldRenderer = new WorldEditorRenderer(worldEditorController);
 		
 		worldEditorController.initMultiplexer();
+		
+		simulatorController = new WorldSimulatorController();
+		simulatorRenderer = new WorldSimulatorRenderer(simulatorController);
+		
+		simulatorController.initMultiplexer();
+		
+		VerilogWorldController.getController().updateInputMultiplexer();
 		
 		paused = false;
 		
@@ -88,7 +100,8 @@ public class VerilogWorldMain implements ApplicationListener {
 			worldEditorController.update();
 		}
 		
-		worldRenderer.render();
+		//worldRenderer.render();
+		simulatorRenderer.render();
 		
 	}
 	

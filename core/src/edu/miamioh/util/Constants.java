@@ -13,8 +13,8 @@ public final class Constants {
 	public static final int WORLD_WIDTH = 10;
 	public static final int WORLD_HEIGHT = 10;
 	
-	public static final int WINDOW_WIDTH = 1000;
-	public static final int WINDOW_HEIGHT = 1000;
+	public static final int WINDOW_WIDTH = 1920;
+	public static final int WINDOW_HEIGHT = 1080;
 	
 	public static final int BUFFER_WIDTH = 35;
 	public static final int BUFFER_HEIGHT = 35;

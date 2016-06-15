@@ -785,10 +785,9 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		}
 	}
 
-	LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-	LwjglApplication schematicRender;
-
 	public void schematicButtonFunction() {
+
+		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
 		config.title = "Schematic Render of " + this.fileName;
 		config.width = Constants.WINDOW_WIDTH;
@@ -796,13 +795,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		config.forceExit = false;
 		config.resizable = false;
 
-		if(Compiler.is_compiled_yet()){
-			schematicRender = new LwjglApplication(new SchematicRendererMain(Compiler), config);
-		} else {
-			errorText.setText("The Verilog code has not been successfully " +
-					"compiled yet.  Please click the check mark above and/or " +
-					"fix Verilog errors.");
-		}
+		LwjglApplication schematicRender = new LwjglApplication(new SchematicRendererMain(Compiler), config);
+
 	}
 	/*
 	public void comboHeaderButtonFunction() {

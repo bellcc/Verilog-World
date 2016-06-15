@@ -42,7 +42,7 @@ public class Parse {
 	
 	public ModuleInstance getRootModule() {return this.root_module;}
 	
-	public void compileFileForGame(String fileName) throws IOException {
+	public RootModuleInstance compileFileForGame(String fileName) throws IOException {
 		
 		//errorText.setText("Compiling " + fileName + "...");
 
@@ -66,6 +66,8 @@ public class Parse {
 		{
 			is_compiled = false;
 		}
+		
+		return root_module;
 	}
 	
 	public void compileFileForEditor(String fileName) throws IOException {

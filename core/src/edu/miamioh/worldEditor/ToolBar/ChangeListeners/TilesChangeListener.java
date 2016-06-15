@@ -29,11 +29,6 @@ public class TilesChangeListener extends ChangeListener{
 		//the tiles sub menu stage, and the input process processors 
 		//are attached to the input multiplexer.
 		WorldEditorController.getCurrentWorldController().getMultiplexer().updateMultiplexer();
-		
-		//TODO Figure out what this does.
-		WorldEditorRenderer.getWorldRenderer().resetSelectedItems();
-		//WorldEditorRenderer.getWorldRenderer().resetStates();
-
 	}
 	
 }

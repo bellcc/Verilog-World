@@ -40,13 +40,11 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	private static boolean blocksActor;
 	private static boolean tilesActor;
 	
-	private boolean blankBlockState;
-	private boolean clockBlockState;
-	private boolean resetBlockState;
-	
-	private boolean blankTileState;
+	private SelectionType selectionType;
 
 	private boolean blockOption;
+	
+	private Block selectedBlock;
 	
 	public WorldEditorRenderer() {
 		
@@ -63,13 +61,8 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	public void init() {
 
 		worldRenderer = this;
-						
-		blankBlockState = false;
-		blankTileState = false;
 		
 		blockOption = false;
-		
-		resetStates();
 		
 		initToolBarStages();
 		initBlockOptionStage();
@@ -91,15 +84,6 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		blockOptionStage.addActor(tempStage.getVerilogEditorButton());
 		blockOptionStage.addActor(tempStage.getRemoveButton());
 
-	}
-
-	public void updateBlockOptionsStage(int row, int column) {
-
-		int optionWidth = 175;
-		int optionHeight = 100;
-
-		//TODO Change this so the options bar is near the selected cell in the world.
-		
 	}
 
 	/**
@@ -157,7 +141,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	 */
 	public void renderBlocks() {
 		
-		LinkedList<Block> blockList = worldEditorController.getCurrentLevel().blockList;
+		LinkedList<Block> blockList = worldEditorController.getCurrentLevel().getBlockList();
 		
 		for(int i=1;i<=blockList.getLength();i++) {
 			
@@ -344,7 +328,6 @@ public class WorldEditorRenderer extends AbstractRenderer{
 			renderer.begin(ShapeType.Filled);
 			renderer.setColor(Color.DARK_GRAY);
 			renderer.rect(x, y, selectorWidth, selectorHeight);
-			//renderer.rect(x, y, gridWidth, gridHeight);
 
 			renderer.end();
 			
@@ -544,38 +527,24 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	@Override
 	public void dispose() {
 		
+		renderer.dispose();
+		
 		toolBarStage.dispose();
 		homeStage.dispose();
 		blockStage.dispose();
 		tileStage.dispose();
 	}
-
-	public void resetSelectedItems() {
-		
-		blankBlockState = false;
-		clockBlockState = false;
-		resetBlockState = false;
-	}
-		
-	public void resetStates() {
-		
-		resetTileStates();
-		resetBlockStates();
-	}
-
-	public void resetTileStates() {
-		blankTileState = false;
-	}
-	
-	public void resetBlockStates() {
-		
-		blankBlockState = false;
-		clockBlockState = false;
-		resetBlockState = false;
-	}
 	
 	public static WorldEditorRenderer getWorldRenderer() {
 		return worldRenderer;
+	}
+	
+	public SelectionType getSelectionType() {
+		return this.selectionType;
+	}
+	
+	public void setSelectionType(SelectionType type) {
+		this.selectionType = type;
 	}
 	
 	public void setWorldX(int x) {
@@ -630,38 +599,6 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		WorldEditorRenderer.tilesActor = tilesActor;
 	}
 
-	public boolean getBlankBlockState() {
-		return blankBlockState;
-	}
-
-	public void setBlankBlockState(boolean blankBlock) {
-		this.blankBlockState = blankBlock;
-	}
-	
-	public boolean getClockBlockState() {
-		return clockBlockState;
-	}
-	
-	public void setClockBlockState(boolean clockBlock) {
-		this.clockBlockState = clockBlock;
-	}
-	
-	public boolean getResetBlockState() {
-		return resetBlockState;
-	}
-	
-	public void setResetBlockState(boolean resetBlock) {
-		this.resetBlockState = resetBlock;
-	}
-
-	public boolean getBlankTileState() {
-		return blankTileState;
-	}
-
-	public void setBlankTileState(boolean blankTile) {
-		this.blankTileState = blankTile;
-	}
-
 	public Stage getHomeStage() {
 		return homeStage;
 	}
@@ -676,6 +613,14 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	
 	public Stage getBlockOptionStage() {
 		return blockOptionStage;
+	}
+
+	public Block getSelectedBlock() {
+		return selectedBlock;
+	}
+
+	public void setSelectedBlock(Block selectedBlock) {
+		this.selectedBlock = selectedBlock;
 	}
 
 }

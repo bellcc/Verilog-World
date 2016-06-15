@@ -24,11 +24,11 @@ public class RootModuleInstance extends ModuleInstance {
 		subTrees = new ArrayList<>();
 		subTreesHash = new Hashtable<>();
 		
-		this.tree = tree;
 		this.vars_list = new ArrayList<>();
 		this.hash_vars = new Hashtable<>();
 		this.ports_list = new ArrayList<>();
 		this.name = name;
+		this.tree = tree;
 		
 		Compiler.updateRootModule(this);
 		
