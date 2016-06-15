@@ -12,7 +12,6 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import edu.miamioh.MainMenu.ScreenSwitch;
-import edu.miamioh.verilogWorld.VerilogWorldMain;
 
 public class DesktopLauncher {
 

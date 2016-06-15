@@ -69,9 +69,9 @@ public class VerilogWorldMain implements Screen {
 		
 		simulatorController.initMultiplexer();
 		
-		//VerilogWorldController.getController().updateInputMultiplexer();
+		VerilogWorldController.getController().updateInputMultiplexer();
 		
-		Gdx.input.setInputProcessor(worldEditorController.getCurrentWorldController().getMultiplexer().getMultiplexer());
+		//Gdx.input.setInputProcessor(worldEditorController.getCurrentWorldController().getMultiplexer().getMultiplexer());
 		//Gdx.input.setInputProcessor(simulatorController.getController().getMultiplexer().getMultiplexer());
 		
 		paused = false;
@@ -115,6 +115,19 @@ public class VerilogWorldMain implements Screen {
 		
 		worldRenderer.render();
 		//simulatorRenderer.render();
+		
+		VerilogWorld state = VerilogWorldController.getController().getState();
+		
+		switch(state) {
+		
+			case WORLD_EDITOR:
+				worldRenderer.render();
+				return;
+				
+			case WORLD_SIMULATOR:
+				simulatorRenderer.render();
+				return;
+		}
 		
 	}
 	
@@ -202,4 +215,5 @@ public class VerilogWorldMain implements Screen {
 		// TODO Auto-generated method stub
 		
 	}
+
 }

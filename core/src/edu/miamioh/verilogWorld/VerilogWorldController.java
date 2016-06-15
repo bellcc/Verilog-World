@@ -59,8 +59,8 @@ public class VerilogWorldController extends AbstractController{
 
 		controller = this;
 		//TODO This needs to be set to the main menu controller.
-		state = VerilogWorld.WORLD_SIMULATOR;
-		//state = VerilogWorld.WORLD_EDITOR;
+		//state = VerilogWorld.WORLD_SIMULATOR;
+		state = VerilogWorld.WORLD_EDITOR;
 		
 		//The default configurations only need to be set once which 
 		//is why there is not a public setter for this field.
@@ -87,20 +87,15 @@ public class VerilogWorldController extends AbstractController{
 		switch(state) {
 		
 			case WORLD_EDITOR:
-				multiplexer = WorldEditorController.getCurrentWorldController().getMultiplexer().getMultiplexer();
-				System.out.println(state);
+				Gdx.input.setInputProcessor(WorldEditorController.getCurrentWorldController().getMultiplexer().getMultiplexer());
 				return;				
 			
 			case WORLD_SIMULATOR:
-				multiplexer = WorldSimulatorController.getMultiplexer().getMultiplexer();
-				System.out.println(state);
+				Gdx.input.setInputProcessor(WorldSimulatorController.getMultiplexer().getMultiplexer());
 				return;
-
 			
 		}
-		
-		Gdx.input.setInputProcessor(multiplexer);
-		
+				
 	}
 	
 	/**
@@ -126,4 +121,13 @@ public class VerilogWorldController extends AbstractController{
 	public static String getRootPath() {
 		return System.getProperty("user.dir");
 	}
+	
+	public void setState(VerilogWorld newState) {
+		state = newState;
+	}
+	
+	public VerilogWorld getState() {
+		return state;
+	}
+	
 }
