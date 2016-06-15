@@ -88,14 +88,11 @@ public class VerilogWorldController extends AbstractController{
 		
 			case WORLD_EDITOR:
 				Gdx.input.setInputProcessor(WorldEditorController.getCurrentWorldController().getMultiplexer().getMultiplexer());
-				System.out.println(state);
 				return;				
 			
 			case WORLD_SIMULATOR:
 				Gdx.input.setInputProcessor(WorldSimulatorController.getMultiplexer().getMultiplexer());
-				System.out.println(state);
 				return;
-
 			
 		}
 				
