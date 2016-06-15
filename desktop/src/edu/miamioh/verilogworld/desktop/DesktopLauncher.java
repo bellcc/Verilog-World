@@ -27,7 +27,7 @@ public class DesktopLauncher {
 		config.width = 600;
 		config.height = 600;
 		
-		//config.resizable = false;
+		config.resizable = false;
 		config.backgroundFPS = 30;
 		new LwjglApplication(new ScreenSwitch(), config);
 	

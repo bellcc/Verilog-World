@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.Linked.LinkedList;
+import edu.miamioh.worldSimulator.OptionStage.Actors.BackActor;
 import edu.miamioh.worldSimulator.OptionStage.Actors.ResetActor;
 import edu.miamioh.worldSimulator.OptionStage.Actors.SimulateActor;
 import edu.miamioh.worldSimulator.OptionStage.Actors.VerifyActor;
@@ -86,9 +87,14 @@ public class WorldSimulatorRenderer implements Disposable{
 		verifyButton.setPosition(0, windowHeight - 150);
 		verifyButton.setSize(50, 50);
 		
+		Actor backButton = new BackActor().getButtonActor();
+		backButton.setPosition(0, windowHeight - 200);
+		backButton.setSize(50, 50);
+		
 		optionStage.addActor(resetButton);
 		optionStage.addActor(simulateButton);
 		optionStage.addActor(verifyButton);
+		optionStage.addActor(backButton);
 	}
 	
 	public void render() {
@@ -101,7 +107,7 @@ public class WorldSimulatorRenderer implements Disposable{
 		
 		renderBackground();
 		renderOptionStage();
-		//renderBlocks();
+		renderBlocks();
 	}
 	
 	public void renderBackground() {
