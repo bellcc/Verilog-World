@@ -13,6 +13,8 @@ import java.net.URISyntaxException;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Screen;
 
 import edu.miamioh.verilogEditor.VerilogEditor;
 import edu.miamioh.verilogEditor.RunEditor;
@@ -21,7 +23,9 @@ import edu.miamioh.worldEditor.WorldEditorRenderer;
 import edu.miamioh.worldSimulator.WorldSimulatorController;
 import edu.miamioh.worldSimulator.WorldSimulatorRenderer;
 
-public class VerilogWorldMain implements ApplicationListener {
+public class VerilogWorldMain implements Screen {
+	
+	private Game g;
 	
 	private static VerilogWorldMain currentVerilogWorld;
 	
@@ -40,8 +44,13 @@ public class VerilogWorldMain implements ApplicationListener {
 	/**
 	 * Called when the Application is first created.
 	 */
+	
+	public VerilogWorldMain(Game g){
+		this.g = g;
+	}
+	
 	@Override
-	public void create () {
+	public void show () {
 		
 		currentVerilogWorld = this;
 
@@ -96,7 +105,7 @@ public class VerilogWorldMain implements ApplicationListener {
 	 * Called when the Application should render itself.
 	 */
 	@Override
-	public void render () {
+	public void render (float delta) {
 		
 		//Call the appropriate renderer here.
 		
@@ -186,5 +195,11 @@ public class VerilogWorldMain implements ApplicationListener {
 	
 	public static VerilogWorldMain getVerilogWorld() {
 		return currentVerilogWorld;
+	}
+
+	@Override
+	public void hide() {
+		// TODO Auto-generated method stub
+		
 	}
 }
