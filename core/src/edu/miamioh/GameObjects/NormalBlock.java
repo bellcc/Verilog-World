@@ -34,6 +34,8 @@ public class NormalBlock extends Block {
 		default:
 			setColor(Color.BLACK);
 		}
+		
+		makeUniqueFile();
 	}
 	
 	public void compile() {
@@ -42,7 +44,7 @@ public class NormalBlock extends Block {
 	
 	public void makeUniqueFile() {
 		
-		String modulePath = VerilogWorldController.getRootPath() + "core/assets/modules/";
+		String modulePath = VerilogWorldController.getRootPath() + "/core/assets/modules/";
 		
 		String template = type.toString() + ".v";
 		String pathToTemplate = modulePath + "templates/" + template;
