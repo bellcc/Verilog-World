@@ -84,6 +84,16 @@ public class SchematicRenderer implements Disposable {
 
     }
 
+    public void setLevel(String id, int level){
+        Gate tempG = gateLookup(id);
+        Port tempP = portLookup(id);
+
+        if(tempG != null)
+            tempG.setLevel(level);
+        else if (tempP != null)
+            tempP.setLevel(level);
+    }
+
     /**
      * Adds a new Input to the schematic.
      *
@@ -210,11 +220,7 @@ public class SchematicRenderer implements Disposable {
                     if (tempG.getLevel() == p) {
 
                         tempG.setCX(getXCenter(p));
-//                        rowY = getYCenter(j - skips); //Set CY based
-//                        //on the number of gates already in that level
-//                        avgY = getYCenter(tempG.getInputs());
-//                        tempG.setCY((rowY > avgY)? rowY : avgY);
-                        tempG.setCY(getYCenter(j - skips));
+                        tempG.setCY(getYCenter(tempG.getInputs(), j - skips));
                         //Set CY
                         // based on the average height of all its inputs
                         if(tempG.getInputs().size() > 0)
@@ -231,7 +237,7 @@ public class SchematicRenderer implements Disposable {
                 tempP = ports.get(k);
                 if (tempP.getType().equals(OUTPUT)) {
                     tempP.setCX(getXCenter(maxLevel + 1));
-                    tempP.setCY(getYCenter(tempP.getInputs()));
+                    tempP.setCY(getYCenter(tempP.getInputs(), k - totalIns));
                     grenderer.render(tempP.getType(), tempP.getCX(), tempP.getCY());
 
                 } else
@@ -382,23 +388,38 @@ public class SchematicRenderer implements Disposable {
 
     }
 
-    private int getYCenter(ArrayList<String> inputs){
+    private int getYCenter(ArrayList<String> inputs, int row){
 
-        int y = 0, i = 0;
+        int avgY = 0, numOfInputs = inputs.size();
 
         for(String id : inputs){
 
             if(gateLookup(id) != null)
-                y += gateLookup(id).getCY();
+                avgY += gateLookup(id).getCY();
             if(portLookup(id) != null)
-                y += portLookup(id).getCY();
-            i++;
+                avgY += portLookup(id).getCY();
         }
 
-        if(i != 0)
-            y /= i;
+        if(numOfInputs != 0)
+            avgY /= numOfInputs;
 
-        return y;
+//        int gsFactor = constants.gateSize + constants.scaleFactor;
+//        Gate gate;
+//        boolean moved;
+//        do{
+//            moved = false;
+//            for(int i = 0; i < gates.size(); i++) {
+//                gate = gates.get(i);
+//                if()
+//                if (gate.getCY() < avgY + gsFactor & gate.getCY() > avgY - gsFactor) {
+//                    avgY += gsFactor;
+//                    moved = true;
+//                }
+//
+//            }
+//        }while(moved);
+
+        return avgY;
 
     }
 
