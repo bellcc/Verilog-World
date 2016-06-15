@@ -28,8 +28,6 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import edu.miamioh.schematicRenderer.SchematicRendererMain;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.util.Constants;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.Display;
 
 import javax.swing.*;
 import javax.swing.text.*;
