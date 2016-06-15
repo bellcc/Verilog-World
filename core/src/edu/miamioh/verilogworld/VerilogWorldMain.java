@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 
@@ -62,13 +63,16 @@ public class VerilogWorldMain implements Screen {
 		worldRenderer = new WorldEditorRenderer(worldEditorController);
 		
 		worldEditorController.initMultiplexer();
-		
+
 		simulatorController = new WorldSimulatorController();
 		simulatorRenderer = new WorldSimulatorRenderer(simulatorController);
 		
 		simulatorController.initMultiplexer();
 		
-		VerilogWorldController.getController().updateInputMultiplexer();
+		//VerilogWorldController.getController().updateInputMultiplexer();
+		
+		Gdx.input.setInputProcessor(worldEditorController.getCurrentWorldController().getMultiplexer().getMultiplexer());
+		//Gdx.input.setInputProcessor(simulatorController.getController().getMultiplexer().getMultiplexer());
 		
 		paused = false;
 		
@@ -83,7 +87,7 @@ public class VerilogWorldMain implements Screen {
 		//Dispose of all instantiated renderers here.
 		
 		worldRenderer.dispose();
-		
+		simulatorRenderer.dispose();
 	}
 	
 	/**
@@ -109,8 +113,8 @@ public class VerilogWorldMain implements Screen {
 			worldEditorController.update();
 		}
 		
-		//worldRenderer.render();
-		simulatorRenderer.render();
+		worldRenderer.render();
+		//simulatorRenderer.render();
 		
 	}
 	

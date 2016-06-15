@@ -62,6 +62,7 @@ public class WorldEditorInputMultiplexer {
 		//and the basic input processor will always be added to 
 		//this input multiplexer.
 		Stage toolBarStage = WorldEditorRenderer.getWorldRenderer().getStage();
+		Stage homeStage = WorldEditorRenderer.getWorldRenderer().getHomeStage();
 		Stage blockStage = WorldEditorRenderer.getWorldRenderer().getBlockStage();
 		Stage tileStage = WorldEditorRenderer.getWorldRenderer().getTileStage();
 		
@@ -74,6 +75,7 @@ public class WorldEditorInputMultiplexer {
 		multiplexer.removeProcessor(inputProcess);
 		
 		//Determine which actor of the tool bar stage has been selected.
+		boolean homeActor = WorldEditorRenderer.getWorldRenderer().getHomeActor();
 		boolean blockActor = WorldEditorRenderer.getWorldRenderer().getBlocksActor();
 		boolean tileActor = WorldEditorRenderer.getWorldRenderer().getTilesActor();
 		
@@ -81,8 +83,11 @@ public class WorldEditorInputMultiplexer {
 		
 		//Add all of the appropriate input processors based on the user's input.
 		multiplexer.addProcessor(toolBarStage);
-				
-		if(blockActor) {
+		if(homeActor) {		
+		
+			multiplexer.addProcessor(homeStage);
+		
+		}else if(blockActor) {
 			
 			multiplexer.addProcessor(blockStage);
 		
