@@ -11,7 +11,7 @@ import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
-import edu.miamioh.MainMenu.ScreenSwitch;
+import edu.miamioh.MainMenu.StartScreen;
 
 public class DesktopLauncher {
 
@@ -27,9 +27,9 @@ public class DesktopLauncher {
 		config.width = 600;
 		config.height = 600;
 		
-		//config.resizable = false;
+		config.resizable = false;
 		config.backgroundFPS = 30;
-		new LwjglApplication(new ScreenSwitch(), config);
+		new LwjglApplication(new StartScreen(), config);
 	
 	}
 
