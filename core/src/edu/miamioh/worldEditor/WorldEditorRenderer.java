@@ -61,7 +61,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	public void init() {
 
 		worldRenderer = this;
-		
+		selectionType = SelectionType.Block_Blank;
 		blockOption = false;
 		
 		initToolBarStages();
@@ -200,6 +200,10 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		
 		}
 		
+	}
+	
+	public void toggleBlockOption() {
+		blockOption = blockOption ? false : true;
 	}
 
 	/**
