@@ -44,29 +44,57 @@ public class MainMenuScreen implements Screen {
     protected Stage stage;
     private Viewport viewport;
     private OrthographicCamera camera;
-    protected Skin skin;
+    protected Skin skinPg;
+    protected Skin skinO;
+    protected Skin skinE;
+
     private Game g;
     
     public MainMenuScreen(Game g)
     {
     	this.g = g;
     	BitmapFont font = new BitmapFont();
-    	skin = new Skin();
-    	skin.add("default", font);
+    	skinPg = new Skin();
+    	skinO = new Skin();
+    	skinE = new Skin();
+
+    	skinPg.add("default", font);
+    	skinO.add("default", font);
+    	skinE.add("default", font);
+
     	
-		Pixmap pixmap = new Pixmap((int)Gdx.graphics.getWidth()/4,(int)Gdx.graphics.getHeight()/10, Pixmap.Format.RGB888);
-		pixmap.setColor(Color.WHITE);
-		pixmap.fill();
+		//Pixmap pixmap = new Pixmap((int)Gdx.graphics.getWidth()/4,(int)Gdx.graphics.getHeight()/10, Pixmap.Format.RGB888);
+		//pixmap.setColor(Color.WHITE);
+		//pixmap.fill();
 			
-		skin.add("background", new Texture(pixmap));
+		skinPg.add("textColor", new Texture(Gdx.files.internal("play game.png")));
+		skinO.add("textColor", new Texture(Gdx.files.internal("options.png")));
+		skinE.add("textColor", new Texture(Gdx.files.internal("exit.png")));
+
 		
-		TextButtonStyle buttonStyle = new TextButtonStyle();
-		buttonStyle.up = skin.newDrawable("background", Color.ORANGE);
-		buttonStyle.down = skin.newDrawable("background", Color.DARK_GRAY);
-		buttonStyle.checked = skin.newDrawable("background", Color.ORANGE);
-		buttonStyle.over = skin.newDrawable("background", Color.LIGHT_GRAY);
-		buttonStyle.font = skin.getFont("default");
-		skin.add("default", buttonStyle);
+		TextButtonStyle buttonStylePg = new TextButtonStyle();
+		buttonStylePg.up = skinPg.newDrawable("textColor", Color.WHITE);
+		buttonStylePg.down = skinPg.newDrawable("textColor", Color.DARK_GRAY);
+		buttonStylePg.checked = skinPg.newDrawable("textColor", Color.ORANGE);
+		buttonStylePg.over = skinPg.newDrawable("textColor", Color.LIGHT_GRAY);
+		buttonStylePg.font = skinPg.getFont("default");
+		skinPg.add("default", buttonStylePg);
+		
+		TextButtonStyle buttonStyleO = new TextButtonStyle();
+		buttonStyleO.up = skinO.newDrawable("textColor", Color.WHITE);
+		buttonStyleO.down = skinO.newDrawable("textColor", Color.DARK_GRAY);
+		buttonStyleO.checked = skinO.newDrawable("textColor", Color.ORANGE);
+		buttonStyleO.over = skinO.newDrawable("textColor", Color.LIGHT_GRAY);
+		buttonStyleO.font = skinO.getFont("default");
+		skinO.add("default", buttonStyleO);
+		
+		TextButtonStyle buttonStyleE = new TextButtonStyle();
+		buttonStyleE.up = skinE.newDrawable("textColor", Color.WHITE);
+		buttonStyleE.down = skinE.newDrawable("textColor", Color.DARK_GRAY);
+		buttonStyleE.checked = skinE.newDrawable("textColor", Color.ORANGE);
+		buttonStyleE.over = skinE.newDrawable("textColor", Color.LIGHT_GRAY);
+		buttonStyleE.font = skinE.getFont("default");
+		skinE.add("default", buttonStyleE);
 		
 	    batch = new SpriteBatch();
 	    camera = new OrthographicCamera();
@@ -92,9 +120,9 @@ public class MainMenuScreen implements Screen {
 	        mainTable.center();
 
 	        //Create buttons
-	        TextButton playButton = new TextButton("Play", skin);
-	        TextButton optionsButton = new TextButton("Options", skin);
-	        TextButton exitButton = new TextButton("Exit", skin);
+	        TextButton playButton = new TextButton("", skinPg);
+	        TextButton optionsButton = new TextButton("", skinO);
+	        TextButton exitButton = new TextButton("", skinE);
 
 	        //Add listeners to buttons
 	        playButton.addListener(new ClickListener(){
@@ -122,7 +150,7 @@ public class MainMenuScreen implements Screen {
 
 	    @Override
 	    public void render(float delta) {
-	        Gdx.gl.glClearColor(.40f, .40f, .40f, 1);
+	        Gdx.gl.glClearColor((float)255/255, (float)102/255, (float)102/255, 1);
 	        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 	        stage.act();
@@ -153,7 +181,9 @@ public class MainMenuScreen implements Screen {
 
 	    @Override
 	    public void dispose() {
-	        skin.dispose();
+	        skinPg.dispose();
+	        skinO.dispose();
+	        skinE.dispose();
 	        stage.dispose();
 	    }
 }
