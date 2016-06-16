@@ -297,12 +297,16 @@ public class SchematicRenderer implements Disposable {
                 tempGr = gate;
 
                 //Sort inputs of tempGr
-                {
-                    Stack<String> sortedInputs = new Stack<>();
-                    ArrayList<String> copyInputs = new ArrayList<String>(tempGr.getInputs());
-                    int highestY = 0;
-                    Gate tempG;
-                    Port tempP;
+                Stack<String> sortedInputs = new Stack<>();
+                ArrayList<String> copyInputs = new ArrayList<String>(tempGr.getInputs());
+                int totalInputs = copyInputs.size();
+                int highestY;
+                Gate tempG;
+                Port tempP;
+
+                for(int s = 0; s < totalInputs; s++){
+
+                    highestY = 0;
 
                     //For each input, check if it's the highest. If so, save the y.
                     for (String input : copyInputs) {
@@ -319,21 +323,23 @@ public class SchematicRenderer implements Disposable {
 
                     //Find the gate/port with the highest y value and move it
                     // to the sorted Stack.
-                    for (String i : copyInputs) {
+                    int j;
+                    String i;
+                    for (j = 0; j < copyInputs.size(); j++) {
+                        i = copyInputs.get(j);
                         if (gateLookup(i) != null) {
                             tempG = gateLookup(i);
                             if (tempG.getCY() == highestY) {
                                 sortedInputs.push(i);
-                                copyInputs.remove(copyInputs.indexOf(i));
                             }
                         } else if (portLookup(i) != null) {
                             tempP = portLookup(i);
                             if (tempP.getCY() == highestY) {
                                 sortedInputs.push(i);
-                                copyInputs.remove(copyInputs.indexOf(i));
                             }
                         }
                     }
+                    copyInputs.remove(sortedInputs.peek());
                 }
 
                 String id;
@@ -342,7 +348,7 @@ public class SchematicRenderer implements Disposable {
                 for(int i = 0; i < tempGr.getNumOfInputs(); i++){
 
                     gatePort = "IN~" + i;
-                    id = tempGr.getInputs().get(i);
+                    id = sortedInputs.pop();
                     x2 = tempGr.getPortX(gatePort);
                     y2 = tempGr.getPortY(gatePort);
 
