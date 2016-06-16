@@ -30,6 +30,7 @@ public class RootModuleInstance extends ModuleInstance {
 		this.name = name;
 		this.tree = tree;
 		
+		// Notify the compiler of this root module
 		Compiler.updateRootModule(this);
 		
 		visitor = new SimVisitor(this, this.subModules_hash, this.subModules_list);

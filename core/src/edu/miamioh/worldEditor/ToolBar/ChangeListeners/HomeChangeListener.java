@@ -23,7 +23,6 @@ public class HomeChangeListener extends ChangeListener{
 		//Set the current selection option to view the home sub menu.
 		WorldEditorRenderer.getWorldRenderer().setHomeActor(true);
 		WorldEditorRenderer.getWorldRenderer().setBlocksActor(false);
-		WorldEditorRenderer.getWorldRenderer().setTilesActor(false);
 		
 		//Update the input multiplexer so that only the tool bar stage, 
 		//the home sub menu stage, and the input process processors 

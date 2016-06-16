@@ -4,15 +4,15 @@ import java.io.File;
 
 import com.badlogic.gdx.graphics.Color;
 
-import edu.miamioh.simulator.RootModuleInstance;
 import edu.miamioh.util.FileTools;
 import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.worldEditor.WorldEditorController;
+import edu.miamioh.worldSimulator.ModuleWrapper;
 
 public class NormalBlock extends Block {
 	
 	private String sourceFile;
-	private RootModuleInstance module;
+	private ModuleWrapper module;
 	private NormalBlockType type;
 	
 	public NormalBlock(NormalBlockType type, int row, int column) {
@@ -59,11 +59,7 @@ public class NormalBlock extends Block {
 		this.sourceFile = uniqueName;
 	}
 	
-	public void setType(NormalBlockType type) {
-		this.type = type;
-	}
-	
-	public String getSourceFile() {
-		return this.sourceFile;
-	}
+	public void setType(NormalBlockType type) 	{this.type = type;}
+	public String getSourceFile() 				{return this.sourceFile;}
+	public ModuleWrapper getModuleWrapper() 	{return this.module;}
 }

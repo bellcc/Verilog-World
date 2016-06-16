@@ -9,9 +9,6 @@
 
 package edu.miamioh.worldEditor;
 
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Color;
-
 import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.AbstractEditor.AbstractController;
 import edu.miamioh.GameObjects.Block;
@@ -19,7 +16,6 @@ import edu.miamioh.GameObjects.NormalBlock;
 import edu.miamioh.GameObjects.NormalBlockType;
 import edu.miamioh.GameObjects.SpecialBlock;
 import edu.miamioh.GameObjects.SpecialBlockType;
-import edu.miamioh.GameObjects.Tile;
 import edu.miamioh.Level.Level;
 import edu.miamioh.verilogWorld.VerilogWorldController;
 
@@ -66,7 +62,7 @@ public class WorldEditorController extends AbstractController{
 
 	public void initWorld() {
 		
-		currentLevel = new Level();
+		currentLevel = VerilogWorldController.getController().getLevel();
 
 		Configuration config = VerilogWorldController.getController().getDefaultConfig();
 		
@@ -109,60 +105,43 @@ public class WorldEditorController extends AbstractController{
 	public void gridPressed(int row, int column) {
 				
 		boolean isBlock = currentLevel.isBlock(row, column);
-		boolean isTile = currentLevel.isTile(row, column);
 		
-		if(isBlock || isTile) {
+		if(isBlock) {
 		
-			// 
+			// Notifies the world renderer to renderer block options (such as remove, and edit).
 			WorldEditorRenderer.getWorldRenderer().toggleBlockOption();
 			
 			WorldEditorController.getCurrentWorldController().getMultiplexer().updateMultiplexer();
 			
 			Block selectedBlock = currentLevel.getBlock(row, column);
 			WorldEditorRenderer.getWorldRenderer().setSelectedBlock(selectedBlock);
-			
-			return;
 		}
-		
-		boolean blocksActor = WorldEditorRenderer.getWorldRenderer().getBlocksActor();
-		boolean tileActor = WorldEditorRenderer.getWorldRenderer().getTilesActor();
-		
-		SelectionType type = WorldEditorRenderer.getWorldRenderer().getSelectionType();
-		
-		if (blocksActor) {
-			switch(type) {
-			case Block_Blank:
-				currentLevel.addBlock(new NormalBlock(NormalBlockType.Blank, row, column));
-				break;
-			case Block_Clock:
-				currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Clock, row, column));
-				break;
-			case Block_Reset:
-				currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Reset, row, column));
-				break;
-			case Block_Wall:
-				currentLevel.addBlock(new NormalBlock(NormalBlockType.Wall, row, column));
-				break;
+		else {
+			boolean blocksActor = WorldEditorRenderer.getWorldRenderer().getBlocksActor();
+			
+			SelectionType type = WorldEditorRenderer.getWorldRenderer().getSelectionType();
+			
+			if (blocksActor) {
+				switch(type) {
+				case Block_Blank:
+					currentLevel.addBlock(new NormalBlock(NormalBlockType.Blank, row, column));
+					break;
+				case Block_Clock:
+					currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Clock, row, column));
+					break;
+				case Block_Reset:
+					currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Reset, row, column));
+					break;
+				case Block_Wall:
+					currentLevel.addBlock(new NormalBlock(NormalBlockType.Wall, row, column));
+					break;
+				}
+				
+				++blockID;
 			}
 		}
 		
 		//Procedures for all other block states go here in the form of else if statements.
-		
-		if(tileActor) {
-			
-		}
-		
-	}
-	
-	public void addNewBlock(Block aBlock) {
-		
-		++blockID;
-		currentLevel.addBlock(aBlock);
-	}
-	
-	public void addNewTile(Tile tile) {
-		
-		currentLevel.addTile(tile);
 	}
 	
 	public static WorldEditorController getCurrentWorldController() {

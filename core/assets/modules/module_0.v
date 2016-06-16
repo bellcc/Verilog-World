@@ -1,3 +1,3 @@
-module None();
+module Blank();
 
 endmodule

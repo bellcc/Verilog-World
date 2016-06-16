@@ -7,38 +7,35 @@
 
 package edu.miamioh.Level;
 
-import java.util.Random;
-
 import edu.miamioh.GameObjects.Block;
-import edu.miamioh.GameObjects.Tile;
+import edu.miamioh.GameObjects.NormalBlock;
 import edu.miamioh.Linked.LinkedList;
+import edu.miamioh.verilogWorld.VerilogWorldController;
 
 public class Level {
 	
-	LinkedList<Block> blockList;
-	LinkedList<Tile> tileList;
+	private VerilogWorldController worldController;
 	
-	public Level() {
+	private LinkedList<Block> blockList;
+	
+	public Level(VerilogWorldController worldController) {
 		
+		this.worldController = worldController;
 		blockList = new LinkedList<Block>();
-		tileList = new LinkedList<Tile>();
 	}
 	
-	public Level(LinkedList<Block> blockList, LinkedList<Tile> tileList) {
+	public Level(LinkedList<Block> blockList) {
 		
 		this.blockList = blockList;
-		this.tileList = tileList;
-		
 	}
 	
 	public void addBlock(Block block) {
 		
 		blockList.add(block);
-	}
-	
-	public void addTile(Tile tile) {
 		
-		tileList.add(tile);
+		if (block instanceof NormalBlock) {
+			worldController.getSim().addModule(((NormalBlock)block).getModuleWrapper());
+		}
 	}
 	
 	public void removeBlock(Block block) {
@@ -49,33 +46,9 @@ public class Level {
 			blockList.remove(index);
 		}
 		
-	}
-	
-	public void removeTile(Tile tile) {
-		
-		int index = findTileIndex(tile);
-		
-		if(index != -1) {
-			tileList.remove(index);
+		if (block instanceof NormalBlock) {
+			worldController.getSim().removeModule(((NormalBlock)block).getModuleWrapper());
 		}
-		
-	}
-	
-	private int findTileIndex(Tile tile) {
-		
-		int tileID = tile.getId();
-		
-		for(int i=1;i<=tileList.getLength();i++) {
-			
-			int tempID = tileList.getEntry(i).getId();
-			
-			if(tileID == tempID) {
-				return i;
-			}
-		}
-		
-		return -1;
-		
 	}
 	
 	private int findBlockIndex(Block block) {
@@ -107,22 +80,6 @@ public class Level {
 		}
 		
 		return false;
-	}
-	
-	public boolean isTile(int row, int column) {
-		
-		for(int i=1;i<=tileList.getLength();i++) {
-			
-			int tempRow = tileList.getEntry(i).getRow();
-			int tempColumn = tileList.getEntry(i).getColumn();
-			
-			if(row == tempRow && column == tempColumn) {
-				return true;
-			}
-		}
-		
-		return false;
-		
 	}
 
 	public Block getBlock(int row, int column) {

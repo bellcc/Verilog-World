@@ -16,6 +16,7 @@ public class WorldSimulatorController {
 	private static WorldSimulatorController currentController;
 	private static WorldSimulatorMultiplexer multiplexer;
 	
+	private WorldSimulator sim;
 	private Level currentLevel;
 	
 	private int worldWidth;
@@ -62,6 +63,7 @@ public class WorldSimulatorController {
 		setStepWidth(config.getStepWidth());
 		setStepHeight(config.getStepHeight());
 		
+		this.sim = new WorldSimulator();
 	}
 	
 	public void initMultiplexer() {

@@ -19,7 +19,6 @@ import edu.miamioh.Linked.LinkedList;
 import edu.miamioh.worldEditor.BlockOption.BlockOptionStage;
 import edu.miamioh.worldEditor.ToolBar.Stages.BlockStage;
 import edu.miamioh.worldEditor.ToolBar.Stages.HomeStage;
-import edu.miamioh.worldEditor.ToolBar.Stages.TileStage;
 import edu.miamioh.worldEditor.ToolBar.Stages.ToolBarStage;
 import edu.miamioh.worldEditor.types.Point;
 
@@ -38,7 +37,6 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	
 	private static boolean homeActor;
 	private static boolean blocksActor;
-	private static boolean tilesActor;
 	
 	private SelectionType selectionType;
 
@@ -103,10 +101,6 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		BlockStage tempBlockStage = new BlockStage();
 		tempBlockStage.init();
 		blockStage = tempBlockStage.getStage();
-		
-		TileStage tempTileStage = new TileStage();
-		tempTileStage.init();
-		tileStage = tempTileStage.getStage();
 		
 		HomeStage tempHomeStage = new HomeStage();
 		tempHomeStage.init();
@@ -185,11 +179,6 @@ public class WorldEditorRenderer extends AbstractRenderer{
 						
 			blockStage.act(Gdx.graphics.getDeltaTime());
 			blockStage.draw();
-			
-		}else if(tilesActor) {
-			
-			tileStage.act(Gdx.graphics.getDeltaTime());
-			tileStage.draw();
 			
 		}
 		
@@ -593,14 +582,6 @@ public class WorldEditorRenderer extends AbstractRenderer{
 
 	public void setBlocksActor(boolean blocksActor) {
 		WorldEditorRenderer.blocksActor = blocksActor;
-	}
-
-	public boolean getTilesActor() {
-		return tilesActor;
-	}
-
-	public void setTilesActor(boolean tilesActor) {
-		WorldEditorRenderer.tilesActor = tilesActor;
 	}
 
 	public Stage getHomeStage() {

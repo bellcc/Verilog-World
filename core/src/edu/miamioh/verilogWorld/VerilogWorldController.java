@@ -17,7 +17,9 @@
 package edu.miamioh.verilogWorld;
 
 import edu.miamioh.Configuration.Configuration;
+import edu.miamioh.Level.Level;
 import edu.miamioh.worldEditor.WorldEditorController;
+import edu.miamioh.worldSimulator.WorldSimulator;
 import edu.miamioh.worldSimulator.WorldSimulatorController;
 
 import com.badlogic.gdx.Gdx;
@@ -25,14 +27,14 @@ import com.badlogic.gdx.InputMultiplexer;
 
 import edu.miamioh.AbstractEditor.AbstractController;
 
-public class VerilogWorldController extends AbstractController{
+public class VerilogWorldController extends AbstractController {
 
 	private static VerilogWorldController controller;
 
-	private static InputMultiplexer multiplexer;
-	private static VerilogWorld state;
+	private static VerilogWorldType state;
 	
-	private static String rootPath;
+	private Level currentLevel;
+	private WorldSimulator sim;
 
 	public VerilogWorldController() {
 		
@@ -58,9 +60,11 @@ public class VerilogWorldController extends AbstractController{
 	public void init() {
 
 		controller = this;
+		currentLevel = new Level(this);
+		sim = new WorldSimulator();
 		//TODO This needs to be set to the main menu controller.
 		//state = VerilogWorld.WORLD_SIMULATOR;
-		state = VerilogWorld.WORLD_EDITOR;
+		state = VerilogWorldType.WORLD_EDITOR;
 		
 		//The default configurations only need to be set once which 
 		//is why there is not a public setter for this field.
@@ -81,8 +85,6 @@ public class VerilogWorldController extends AbstractController{
 	}
 	
 	public void updateInputMultiplexer() {
-		
-		multiplexer = new InputMultiplexer();
 		
 		switch(state) {
 		
@@ -122,12 +124,14 @@ public class VerilogWorldController extends AbstractController{
 		return System.getProperty("user.dir");
 	}
 	
-	public void setState(VerilogWorld newState) {
+	public void setState(VerilogWorldType newState) {
 		state = newState;
 	}
 	
-	public VerilogWorld getState() {
+	public VerilogWorldType getState() {
 		return state;
 	}
 	
+	public Level getLevel() 		{return this.currentLevel;}
+	public WorldSimulator getSim() 	{return this.sim;}
 }

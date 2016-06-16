@@ -116,7 +116,7 @@ public class VerilogWorldMain implements Screen {
 		worldRenderer.render();
 		//simulatorRenderer.render();
 		
-		VerilogWorld state = VerilogWorldController.getController().getState();
+		VerilogWorldType state = VerilogWorldController.getController().getState();
 		
 		switch(state) {
 		
