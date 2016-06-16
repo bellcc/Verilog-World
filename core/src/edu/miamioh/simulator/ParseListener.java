@@ -64,8 +64,13 @@ public class ParseListener extends Verilog2001BaseListener
 	private Hashtable<String, ParseTree>	subTreesHash;
 	private Parse							Compiler;
 	private SimVisitor						visitor;
+	private RootModuleSimulator 			sim;
 
-	public ParseListener(SimVisitor visitor, Verilog2001Parser parser, Parse Compiler, ModuleInstance module)
+	public ParseListener(SimVisitor visitor, 
+						 Verilog2001Parser parser, 
+						 RootModuleSimulator sim, 
+						 Parse Compiler, 
+						 ModuleInstance module)
 	{
 		this.is_var_identifier = false;
 		this.is_number = false;
@@ -78,13 +83,13 @@ public class ParseListener extends Verilog2001BaseListener
 		this.vars_list = module.getVars_list();
 		this.hash_vars = module.getHash_vars();
 
-		
-		this.subTrees = Compiler.getRootModuleInstance().getSubTrees();
-		this.subTreesHash = Compiler.getRootModuleInstance().getSubTreesHash();
+		this.subTrees = sim.getRootModuleInstance().getSubTrees();
+		this.subTreesHash = sim.getRootModuleInstance().getSubTreesHash();
 
 		this.var_stack = new Stack<String>();
 		this.parameter_value_stack = new Stack<Integer>();
 		
+		this.sim = sim;
 		this.Compiler = Compiler;
 		this.visitor = visitor;
 	}
@@ -628,9 +633,9 @@ public class ParseListener extends Verilog2001BaseListener
 		
 		// Create the new module instance
 		if (newTree != null) {
-			ModuleInstance newModule = new ModuleInstance(parser, Compiler, newTree, moduleName);
-			Compiler.getRootModuleInstance().getSubModulesHash().put(instanceName, newModule);
-			Compiler.getRootModuleInstance().getSubModulesList().add(newModule);
+			ModuleInstance newModule = new ModuleInstance(parser, Compiler, sim, newTree, moduleName);
+			sim.getRootModuleInstance().getSubModulesHash().put(instanceName, newModule);
+			sim.getRootModuleInstance().getSubModulesList().add(newModule);
 		}
 	}
 	

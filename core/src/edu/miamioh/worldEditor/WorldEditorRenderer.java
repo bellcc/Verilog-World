@@ -138,7 +138,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		
 		ArrayList<Block> blockList = worldEditorController.getCurrentLevel().getBlockList();
 		
-		for(int i=1;i<=blockList.size();i++) {
+		for(int i=0; i < blockList.size();i++) {
 			
 			int gridWidth = worldEditorController.getGridWidth();
 			int gridHeight = worldEditorController.getGridHeight();

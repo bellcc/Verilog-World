@@ -1,3 +1,3 @@
-module Blank();
+module Blank(in, out);
 
 endmodule

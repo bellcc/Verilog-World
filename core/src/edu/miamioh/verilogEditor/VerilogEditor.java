@@ -25,13 +25,16 @@ THE SOFTWARE.
  */
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+
 import edu.miamioh.schematicRenderer.SchematicRendererMain;
 import edu.miamioh.simulator.Parse;
+import edu.miamioh.simulator.RootModuleSimulator;
 import edu.miamioh.util.Constants;
 
 import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.undo.CannotUndoException;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -53,10 +56,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	private MyTextPane errorText = null;
 	private MyUndo1 myUndoManager1 = null;
 	private IntegerRangeDocumentFilter filterOne;
-	// static String name;
-	private static String filePath; // Path to the verilog file
-	private static String rootPath; // Path to verilog world top folder
-	private static String fileName; // Verilog file
+	private String fileName; // Verilog file
 	
 	// static String level_number;
 	public File verilogFiles;
@@ -66,7 +66,9 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	JFormattedTextField simulateInput, generalSensorInput1, generalSensorInput2, generalSensorInput3,
 		generalSensorInput4, generalSensorInput5, generalSensorInput6, generalSensorInput0;
 	private String newLine;
-	private Parse Compiler;
+	
+	private Parse 				Compiler;
+	private RootModuleSimulator sim;
 
 	private long startTime;
 	private long totalFocusTime;
@@ -78,16 +80,12 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	 *            opened, the exact top-level path of the game files, and the
 	 *            Level Number (eg. Lv0).
 	 */
-	public static void main(String[] args) {
-		// name = "Traffic_signal_set_1";
-		rootPath = args[0];
-		fileName = args[1];
-		filePath = rootPath + "core/assets/modules/" + fileName;
-		// level_number = "1";
-		new VerilogEditor();
-	}
+//	public static void main(String[] args) {
+//		// name = "Traffic_signal_set_1";
+//		
+//	}
 
-	public VerilogEditor() {
+	public VerilogEditor(RootModuleSimulator sim, Parse compiler, String rootPath, String filePath) {
 		// Create the window
 		super("Verilog Text Editor: " + filePath);
 
@@ -327,7 +325,10 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		//headerMenu.add(seqHeaderMenuItem);
 
 		/* Initialize the Parser */
-		Compiler = new Parse(errorText, rootPath);
+		//Compiler = new Parse(errorText, rootPath);
+		
+		this.Compiler = compiler;
+		this.sim = sim;
 
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -661,7 +662,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			Compiler.compileFileForEditor(fileName);
 			
 			// Reset sim and let user know we are done
-			if (Compiler.is_compiled_yet()) {
+			if (Compiler.isCompiled()) {
 				errorText.setText(errorText.getText() + "\nCompiling done!");
 				errorText.setText(errorText.getText() + "\n");
 			}
@@ -757,14 +758,14 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		
 		// For first sim cycle, display starting state
 		if (this.isFirstSimCycle) {
-			Compiler.resetSimulation();
+			sim.resetSimulation();
 			this.isFirstSimCycle = false;
 			return;
 		}
 		
 		// For all other cycles after that, actually simulate the circuit
-		if (Compiler.is_compiled_yet()) {
-			Compiler.sim_cycle(Compiler.RUN);
+		if (Compiler.isCompiled()) {
+			sim.sim_cycle(Compiler.RUN);
 		} else {
 			errorText.setText(
 					"The Verilog code has not been successfully compiled yet.  Please click the check mark above and/or fix Verilog errors.");
@@ -777,8 +778,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		// print out to text pane
 		errorText.setText("Reseting simulation...");
 
-		if (Compiler.is_compiled_yet()) {
-			Compiler.resetSimulation();
+		if (Compiler.isCompiled()) {
+			sim.resetSimulation();
 		}
 		else {
 			errorText.setText(errorText.getText() + "File not compiled. Compile first to simulate");

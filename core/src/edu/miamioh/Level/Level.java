@@ -44,7 +44,7 @@ public class Level {
 		
 		int blockID = block.getId();
 		
-		for(int i=1;i<=blockList.size();i++) {
+		for(int i=0;i < blockList.size();i++) {
 			
 			int tempID = blockList.get(i).getId();
 			
@@ -58,7 +58,7 @@ public class Level {
 	
 	public boolean isBlock(int row, int column) {
 		
-		for(int i=1;i<=blockList.size();i++) {
+		for(int i=0; i < blockList.size();i++) {
 			
 			int tempRow = blockList.get(i).getRow();
 			int tempColumn = blockList.get(i).getColumn();
@@ -73,7 +73,7 @@ public class Level {
 
 	public Block getBlock(int row, int column) {
 		
-		for(int i=1;i<=blockList.size();i++) {
+		for(int i=0; i < blockList.size();i++) {
 			
 			int blockRow = blockList.get(i).getRow();
 			int blockColumn = blockList.get(i).getColumn();

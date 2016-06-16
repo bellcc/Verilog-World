@@ -18,7 +18,10 @@ public class ModuleInstance {
 	protected Hashtable<String, ParseRegWire> hash_vars;
 	protected ArrayList<String> ports_list;
 	
-	public ModuleInstance(Verilog2001Parser parser, Parse Compiler, ParseTree tree, String name) {
+	public ModuleInstance(Verilog2001Parser parser, 
+						  Parse compiler, 
+						  RootModuleSimulator sim, 
+						  ParseTree tree, String name) {
 		
 		this.tree = tree;
 		this.vars_list = new ArrayList<>();
@@ -28,14 +31,14 @@ public class ModuleInstance {
 		
 		// Is null in the case that this is called by RootModuleInstance constructor. 
 		// That constructor does it's own walking code
-		if (Compiler != null) {
+		if (compiler != null) {
 			visitor = new SimVisitor(this, 
-									 Compiler.getRootModuleInstance().getSubModulesHash(), 
-									 Compiler.getRootModuleInstance().getSubModulesList());
+									 ((RootModuleInstance)this).getSubModulesHash(), 
+									 ((RootModuleInstance)this).getSubModulesList());
 			
 			// Generate symbol table and check syntax
 			ParseTreeWalker walker = new ParseTreeWalker();
-			ParseListener listener = new ParseListener(visitor, parser, Compiler, this);
+			ParseListener listener = new ParseListener(visitor, parser, sim, compiler, this);
 			walker.walk(listener, this.tree);
 		}
 	}

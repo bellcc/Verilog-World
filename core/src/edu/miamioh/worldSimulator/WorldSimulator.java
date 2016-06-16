@@ -2,12 +2,20 @@ package edu.miamioh.worldSimulator;
 
 import java.util.ArrayList;
 
+import edu.miamioh.simulator.Parse;
+import edu.miamioh.simulator.RootModuleSimulator;
+import edu.miamioh.verilogWorld.VerilogWorldController;
+
 public class WorldSimulator {
 	
-	ArrayList<ModuleWrapper> modules;
+	private Parse compiler;
+	private RootModuleSimulator sim;
+	private ArrayList<ModuleWrapper> modules;
 	
-	public WorldSimulator() {
-		
+	public WorldSimulator(RootModuleSimulator sim) {
+		modules = new ArrayList<>();
+		compiler = VerilogWorldController.getController().getCompiler();
+		this.sim = sim;
 	}
 	
 	public void addModule(ModuleWrapper module) {
@@ -17,4 +25,7 @@ public class WorldSimulator {
 	public void removeModule(ModuleWrapper module) {
 		modules.remove(module);
 	}
+	
+	public Parse getCompiler() {return this.compiler;}
+	public RootModuleSimulator getRootModuleSimulator () {return this.sim;}
 }

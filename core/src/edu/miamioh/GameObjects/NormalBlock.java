@@ -4,12 +4,16 @@ import java.io.File;
 
 import com.badlogic.gdx.graphics.Color;
 
+import edu.miamioh.simulator.Parse;
+import edu.miamioh.simulator.RootModuleInstance;
 import edu.miamioh.util.FileTools;
 import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldSimulator.ModuleWrapper;
 
 public class NormalBlock extends Block {
+	
+	private static Parse compiler = VerilogWorldController.getController().getSim().getCompiler();
 	
 	private String sourceFile;
 	private ModuleWrapper module;
@@ -38,13 +42,22 @@ public class NormalBlock extends Block {
 		makeUniqueFile();
 	}
 	
-	public void compile() {
-		System.out.println(sourceFile);
+	public ModuleWrapper compile() {
+		
+		RootModuleInstance newModule = null;
+		
+		try {
+			newModule = compiler.compileFileForGame(sourceFile);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ModuleWrapper(newModule);
 	}
 	
 	public void makeUniqueFile() {
 		
-		String modulePath = VerilogWorldController.getRootPath() + "/../core/assets/modules/";
+		String modulePath = VerilogWorldController.getController().getRootPath() + "core/assets/modules/";
 		
 		String template = type.toString() + ".v";
 		String pathToTemplate = modulePath + "templates/" + template;

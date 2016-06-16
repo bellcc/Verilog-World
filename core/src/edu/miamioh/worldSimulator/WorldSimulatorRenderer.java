@@ -155,7 +155,7 @@ public class WorldSimulatorRenderer implements Disposable{
 		
 		ArrayList<Block> blockList = controller.getCurrentLevel().getBlockList();
 		
-		for(int i=1;i<=blockList.size();i++) {
+		for(int i=0;i < blockList.size();i++) {
 			
 			int gridWidth = controller.getGridWidth();
 			int gridHeight = controller.getGridHeight();

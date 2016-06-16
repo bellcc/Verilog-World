@@ -8,6 +8,7 @@ import edu.miamioh.GameObjects.NormalBlock;
 import edu.miamioh.Level.Level;
 import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.worldEditor.WorldEditorController;
+import edu.miamioh.worldSimulator.ModuleWrapper;
 
 public class VerifyChangeListener extends ChangeListener{
 	
@@ -26,8 +27,8 @@ public class VerifyChangeListener extends ChangeListener{
 			if (block instanceof NormalBlock) {
 				NormalBlock normBlock = (NormalBlock)block;
 				
-				normBlock.compile();
-				worldController.getSim().addModule(((NormalBlock)block).getModuleWrapper());
+				ModuleWrapper module = normBlock.compile();
+				worldController.getSim().addModule(module);
 			}
 		}
 	}
