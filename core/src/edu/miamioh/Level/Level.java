@@ -7,24 +7,21 @@
 
 package edu.miamioh.Level;
 
+import java.util.ArrayList;
+
 import edu.miamioh.GameObjects.Block;
-import edu.miamioh.GameObjects.NormalBlock;
-import edu.miamioh.Linked.LinkedList;
 import edu.miamioh.verilogWorld.VerilogWorldController;
 
 public class Level {
 	
-	private VerilogWorldController worldController;
-	
-	private LinkedList<Block> blockList;
+	private ArrayList<Block> blockList;
 	
 	public Level(VerilogWorldController worldController) {
 		
-		this.worldController = worldController;
-		blockList = new LinkedList<Block>();
+		blockList = new ArrayList<Block>();
 	}
 	
-	public Level(LinkedList<Block> blockList) {
+	public Level(ArrayList<Block> blockList) {
 		
 		this.blockList = blockList;
 	}
@@ -32,10 +29,6 @@ public class Level {
 	public void addBlock(Block block) {
 		
 		blockList.add(block);
-		
-		if (block instanceof NormalBlock) {
-			worldController.getSim().addModule(((NormalBlock)block).getModuleWrapper());
-		}
 	}
 	
 	public void removeBlock(Block block) {
@@ -45,19 +38,15 @@ public class Level {
 		if(index != -1) {
 			blockList.remove(index);
 		}
-		
-		if (block instanceof NormalBlock) {
-			worldController.getSim().removeModule(((NormalBlock)block).getModuleWrapper());
-		}
 	}
 	
 	private int findBlockIndex(Block block) {
 		
 		int blockID = block.getId();
 		
-		for(int i=1;i<=blockList.getLength();i++) {
+		for(int i=1;i<=blockList.size();i++) {
 			
-			int tempID = blockList.getEntry(i).getId();
+			int tempID = blockList.get(i).getId();
 			
 			if(blockID == tempID) {		
 				return i;
@@ -69,10 +58,10 @@ public class Level {
 	
 	public boolean isBlock(int row, int column) {
 		
-		for(int i=1;i<=blockList.getLength();i++) {
+		for(int i=1;i<=blockList.size();i++) {
 			
-			int tempRow = blockList.getEntry(i).getRow();
-			int tempColumn = blockList.getEntry(i).getColumn();
+			int tempRow = blockList.get(i).getRow();
+			int tempColumn = blockList.get(i).getColumn();
 			
 			if(row == tempRow && column == tempColumn) {
 				return true;
@@ -84,14 +73,14 @@ public class Level {
 
 	public Block getBlock(int row, int column) {
 		
-		for(int i=1;i<=blockList.getLength();i++) {
+		for(int i=1;i<=blockList.size();i++) {
 			
-			int blockRow = blockList.getEntry(i).getRow();
-			int blockColumn = blockList.getEntry(i).getColumn();
+			int blockRow = blockList.get(i).getRow();
+			int blockColumn = blockList.get(i).getColumn();
 			
 			if(row == blockRow && column == blockColumn) {
 				
-				return blockList.getEntry(i);
+				return blockList.get(i);
 			}
 		}
 		
@@ -99,7 +88,7 @@ public class Level {
 		
 	}
 	
-	public LinkedList<Block> getBlockList() {
+	public ArrayList<Block> getBlockList() {
 		return blockList;
 	}
 }

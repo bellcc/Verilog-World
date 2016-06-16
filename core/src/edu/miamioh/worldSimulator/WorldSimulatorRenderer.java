@@ -7,6 +7,8 @@
 
 package edu.miamioh.worldSimulator;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -18,7 +20,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Disposable;
 
 import edu.miamioh.GameObjects.Block;
-import edu.miamioh.Linked.LinkedList;
 import edu.miamioh.worldSimulator.OptionStage.Actors.BackActor;
 import edu.miamioh.worldSimulator.OptionStage.Actors.ResetActor;
 import edu.miamioh.worldSimulator.OptionStage.Actors.SimulateActor;
@@ -152,17 +153,17 @@ public class WorldSimulatorRenderer implements Disposable{
 	
 	public void renderBlocks() {
 		
-		LinkedList<Block> blockList = controller.getCurrentLevel().getBlockList();
+		ArrayList<Block> blockList = controller.getCurrentLevel().getBlockList();
 		
-		for(int i=1;i<=blockList.getLength();i++) {
+		for(int i=1;i<=blockList.size();i++) {
 			
 			int gridWidth = controller.getGridWidth();
 			int gridHeight = controller.getGridHeight();
 			
-			int y = blockList.getEntry(i).getRow() * gridWidth;
-			int x = blockList.getEntry(i).getColumn() * gridHeight;
+			int y = blockList.get(i).getRow() * gridWidth;
+			int x = blockList.get(i).getColumn() * gridHeight;
 			
-			Color blockColor = blockList.getEntry(i).getColor();
+			Color blockColor = blockList.get(i).getColor();
 
 			//This causes the blocks to be within the bounds 
 			//of the grid's cells so that the blocks do not 

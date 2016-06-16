@@ -7,6 +7,8 @@
 
 package edu.miamioh.worldEditor;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import edu.miamioh.AbstractEditor.AbstractRenderer;
 import edu.miamioh.GameObjects.Block;
-import edu.miamioh.Linked.LinkedList;
 import edu.miamioh.worldEditor.BlockOption.BlockOptionStage;
 import edu.miamioh.worldEditor.ToolBar.Stages.BlockStage;
 import edu.miamioh.worldEditor.ToolBar.Stages.HomeStage;
@@ -135,17 +136,17 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	 */
 	public void renderBlocks() {
 		
-		LinkedList<Block> blockList = worldEditorController.getCurrentLevel().getBlockList();
+		ArrayList<Block> blockList = worldEditorController.getCurrentLevel().getBlockList();
 		
-		for(int i=1;i<=blockList.getLength();i++) {
+		for(int i=1;i<=blockList.size();i++) {
 			
 			int gridWidth = worldEditorController.getGridWidth();
 			int gridHeight = worldEditorController.getGridHeight();
 			
-			int y = blockList.getEntry(i).getRow() * gridWidth;
-			int x = blockList.getEntry(i).getColumn() * gridHeight;
+			int y = blockList.get(i).getRow() * gridWidth;
+			int x = blockList.get(i).getColumn() * gridHeight;
 			
-			Color blockColor = blockList.getEntry(i).getColor();
+			Color blockColor = blockList.get(i).getColor();
 
 			//This causes the blocks to be within the bounds 
 			//of the grid's cells so that the blocks do not 
