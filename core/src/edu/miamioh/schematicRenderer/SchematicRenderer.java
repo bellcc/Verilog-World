@@ -9,9 +9,11 @@ import com.badlogic.gdx.utils.Disposable;
 import edu.miamioh.util.Constants;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import static edu.miamioh.schematicRenderer.GateType.INPUT;
 import static edu.miamioh.schematicRenderer.GateType.OUTPUT;
+import static edu.miamioh.schematicRenderer.GateType.REG;
 
 /**
  * Created by shaffebd.
@@ -293,8 +295,50 @@ public class SchematicRenderer implements Disposable {
             //Connect all Gates to their inputs.
             for(Gate gate : gates){
                 tempGr = gate;
+
+                //Sort inputs of tempGr
+                {
+                    Stack<String> sortedInputs = new Stack<>();
+                    ArrayList<String> copyInputs = new ArrayList<String>(tempGr.getInputs());
+                    int highestY = 0;
+                    Gate tempG;
+                    Port tempP;
+
+                    //For each input, check if it's the highest. If so, save the y.
+                    for (String input : copyInputs) {
+                        if (gateLookup(input) != null) {
+                            tempG = gateLookup(input);
+                            if (tempG.getCY() > highestY)
+                                highestY = tempG.getCY();
+                        } else if (portLookup(input) != null) {
+                            tempP = portLookup(input);
+                            if (tempP.getCY() > highestY)
+                                highestY = tempP.getCY();
+                        }
+                    }
+
+                    //Find the gate/port with the highest y value and move it
+                    // to the sorted Stack.
+                    for (String i : copyInputs) {
+                        if (gateLookup(i) != null) {
+                            tempG = gateLookup(i);
+                            if (tempG.getCY() == highestY) {
+                                sortedInputs.push(i);
+                                copyInputs.remove(copyInputs.indexOf(i));
+                            }
+                        } else if (portLookup(i) != null) {
+                            tempP = portLookup(i);
+                            if (tempP.getCY() == highestY) {
+                                sortedInputs.push(i);
+                                copyInputs.remove(copyInputs.indexOf(i));
+                            }
+                        }
+                    }
+                }
+
                 String id;
                 float r, g, b, a;
+
                 for(int i = 0; i < tempGr.getNumOfInputs(); i++){
 
                     gatePort = "IN~" + i;
@@ -330,6 +374,19 @@ public class SchematicRenderer implements Disposable {
                 }
             }
         }
+
+        //Render wires from the clk to all Reg blocks
+        {
+            for(Port port : ports) {
+                if (port.getID().equalsIgnoreCase("clk")) {
+                    for (Gate gate : gates) {
+                        if (gate.getType().equals(REG)) {
+                            drawClkLine(gate.getCX(), gate.getCY());
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void drawSquareLine(int x1, int y1, int x2, int y2, float r,
@@ -344,6 +401,18 @@ public class SchematicRenderer implements Disposable {
         renderer.line(xm, y2, x2, y2);
         this.renderer.end();
 
+    }
+
+    private void drawClkLine(int cx, int cy){
+
+        Port clk = portLookup("clk");
+        int clkx = clk.getPortX();
+        int clky = clk.getPortY();
+
+        int dx = cx;
+        int dy = cy - constants.gateSize * constants.scaleFactor / 2;
+
+        drawSquareLine(clkx, clky, dx, dy, 0, 0, 255, 255);
     }
 
     private Gate gateLookup(String id){

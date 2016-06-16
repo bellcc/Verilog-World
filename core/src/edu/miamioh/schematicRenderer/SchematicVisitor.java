@@ -89,24 +89,6 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
         return t;
     }
 
-//    private String newUNot(ParseTree exp){
-//
-//        String lValue, gateValue;
-//
-//        lValue = getValue(exp.getChild(1));
-//        gateValue = getValue(exp.getChild(0));
-//
-//        GateType type = getNewLogicType_GateType(exp.getChild(0));
-//        //id = gateValue
-//        int level = schematic.getLevel(lValue) + 1;
-//
-//        schematic.addGate(type, gateValue, level);
-//        schematic.connect(lValue, gateValue);
-//
-//        return gateValue;
-//
-//    }
-
     private String getValue(ParseTree exp) {
 
         if (exp instanceof Verilog2001Parser.Variable_lvalueContext) {
@@ -122,8 +104,6 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
             return exp.getText();
         } else if (exp instanceof Verilog2001Parser.BRACKETSContext) {
             return getValue(exp.getChild(1));
-//        } else if (exp instanceof Verilog2001Parser.UNOTContext) {
-//            return newUNot(exp);
         } else
             return "";
 
@@ -360,11 +340,30 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
-     * @param ctx
+     * <p>This visitor creates a new Not gate with one input. Inputs can be
+     * gates, ports or wires.</p>
+     *
+     * @param exp
      */
     @Override
-    public T visitUNOT(Verilog2001Parser.UNOTContext ctx) {
-        return super.visitUNOT(ctx);
+    public T visitUNOT(Verilog2001Parser.UNOTContext exp) {
+
+        T t = super.visitUNOT(exp);
+
+        lValue = gateInputs.pop();
+        gateValue = getValue(exp.getChild(0));
+
+        GateType type = getNewLogicType_GateType(exp.getChild(0));
+        //id = gateValue
+        int lLevel = schematic.getLevel(lValue);
+        int level = lLevel + 1;
+        schematic.addGate(type, gateValue, level);
+
+        schematic.connect(lValue, gateValue);
+
+        gateInputs.push(gateValue);
+
+        return t;
     }
 
     /**
