@@ -34,8 +34,8 @@ public class ModuleInstance {
 		// That constructor does it's own walking code
 		if (compiler != null) {
 			visitor = new SimVisitor(this, 
-									 this.getSubModulesHash(), 
-									 this.getSubModulesList());
+									 sim.getRootModuleInstance().getSubModulesHash(), 
+									 sim.getRootModuleInstance().getSubModulesList());
 			
 			// Generate symbol table and check syntax
 			ParseTreeWalker walker = new ParseTreeWalker();
