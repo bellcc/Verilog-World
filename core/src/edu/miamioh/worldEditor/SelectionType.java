@@ -5,5 +5,5 @@ public enum SelectionType {
 	Block_Blank,
 	Block_Clock,
 	Block_Reset,
-	Block_Wall;
+	Block_Wall
 }

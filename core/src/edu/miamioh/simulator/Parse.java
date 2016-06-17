@@ -57,14 +57,7 @@ public class Parse {
 		String name = fileName.substring(0, fileName.length() - 2); // Removes .v file ending
 		RootModuleInstance root_module = new RootModuleInstance(parser, this, sim, root_tree, name);
 
-		if (is_no_parse_errors)
-		{
-			is_compiled = true;
-		}
-		else
-		{
-			is_compiled = false;
-		}
+		is_compiled = is_no_parse_errors;
 		
 		return root_module;
 	}
@@ -87,14 +80,7 @@ public class Parse {
 		String name = fileName.substring(0, fileName.length() - 2); // Removes .v file ending
 		RootModuleInstance root_module = new RootModuleInstance(parser, this, sim, root_tree, name);
 
-		if (is_no_parse_errors)
-		{
-			is_compiled = true;
-		}
-		else
-		{
-			is_compiled = false;
-		}
+		is_compiled = is_no_parse_errors;
 		
 		return root_module;
 	}

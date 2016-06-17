@@ -19,9 +19,9 @@ public class DesktopLauncher {
 		
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		
-//		config.addIcon("game-256.png", FileType.Internal);
-//		config.addIcon("game-128.png", FileType.Internal);
-//		config.addIcon("game-32.png", FileType.Internal);
+		config.addIcon("game-256.png", FileType.Internal);
+		config.addIcon("game-128.png", FileType.Internal);
+		config.addIcon("game-32.png", FileType.Internal);
 		
 		config.title = "Verilog World";
 		config.width = 600;

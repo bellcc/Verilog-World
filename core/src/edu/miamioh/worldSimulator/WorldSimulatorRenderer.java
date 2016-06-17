@@ -116,8 +116,8 @@ public class WorldSimulatorRenderer implements Disposable{
 		int gridWidth = controller.getGridWidth();
 		int gridHeight = controller.getGridHeight();
 		
-		int worldWidth = controller.getWorldWidth();;
-		int worldHeight = controller.getWorldHeight();;
+		int worldWidth = controller.getWorldWidth();
+		int worldHeight = controller.getWorldHeight();
 
 		int width = worldWidth * gridWidth;
 		int height = worldHeight * gridHeight;

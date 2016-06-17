@@ -193,7 +193,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	}
 	
 	public void toggleBlockOption() {
-		blockOption = blockOption ? false : true;
+		blockOption = !blockOption;
 	}
 
 	/**
@@ -204,8 +204,8 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		int gridWidth = worldEditorController.getGridWidth();
 		int gridHeight = worldEditorController.getGridHeight();
 		
-		int worldWidth = worldEditorController.getWorldWidth();;
-		int worldHeight = worldEditorController.getWorldHeight();;
+		int worldWidth = worldEditorController.getWorldWidth();
+		int worldHeight = worldEditorController.getWorldHeight();
 
 		int width = worldWidth * gridWidth;
 		int height = worldHeight * gridHeight;
@@ -375,7 +375,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 			
 			if(displayLeftX <= (windowWidth - currentX) && displayRightX >= (windowWidth - currentX)) {
 				
-				column = (int) (windowWidth - currentX - displayLeftX) / gridWidth;
+				column = (windowWidth - currentX - displayLeftX) / gridWidth;
 				column = (worldWidth - 1) - column;
 			}
 			
@@ -429,7 +429,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 
 			if(displayLowerY <= (windowHeight - currentY) && displayUpperY >= (windowHeight - currentY)) {
 				
-				row = (int) (windowHeight - currentY - displayLowerY) / gridHeight;
+				row = (windowHeight - currentY - displayLowerY) / gridHeight;
 				
 			}
 
@@ -468,12 +468,9 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		int gridHeight = worldEditorController.getGridHeight();
 		int windowHeight = worldEditorController.getWindowHeight();
 		int height = worldHeight * gridHeight;
-		
-		if(height < windowHeight) {
-			return true;
-		}
-		
-		return false;
+
+		return height < windowHeight;
+
 	}
 	
 	/**
@@ -490,12 +487,9 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		int gridWidth = worldEditorController.getGridWidth();
 		int windowWidth = worldEditorController.getWindowWidth();
 		int width = worldWidth * gridWidth;
-		
-		if(width < windowWidth) {
-			return true;
-		}
-		
-		return false;
+
+		return width < windowWidth;
+
 	}
 	
 	/**

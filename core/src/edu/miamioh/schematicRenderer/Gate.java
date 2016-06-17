@@ -22,7 +22,7 @@ class Gate {
     private float r, g, b, a;
     private ArrayList<Integer> inputYCoords = new ArrayList<>();
     private ArrayList<Integer> inputXCoords = new ArrayList<>();
-    private int scaledGS = constants.gateSize * constants.scaleFactor;
+    private int scaledGS = Constants.gateSize * Constants.scaleFactor;
 
     /**
      * Gate default constructor. WILL ERROR OUT IF ATTEMPTED TO RENDER.

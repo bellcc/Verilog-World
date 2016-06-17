@@ -30,7 +30,7 @@ end
 
 output out;
 
-assign out = ~((a&b)|(c&d));
+assign out = (a&b)|(c&d);
 //assign out = -in[0];
 
 endmodule

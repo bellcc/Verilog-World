@@ -73,12 +73,12 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	private long totalFocusTime;
 	private boolean isFirstSimCycle;
 
-	/**
-	 * @param args
-	 *            {Name Root_Path Level_Number} The exact name of the file to be
-	 *            opened, the exact top-level path of the game files, and the
-	 *            Level Number (eg. Lv0).
-	 */
+//	/**
+//	 * @param args
+//	 *            {Name Root_Path Level_Number} The exact name of the file to be
+//	 *            opened, the exact top-level path of the game files, and the
+//	 *            Level Number (eg. Lv0).
+//	 */
 //	public static void main(String[] args) {
 //		// name = "Traffic_signal_set_1";
 //		
@@ -796,8 +796,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		config.forceExit = false;
 		config.resizable = false;
 
-		if(Compiler.is_compiled_yet()) {
-			LwjglApplication schematicRender = new LwjglApplication(new SchematicRendererMain(Compiler), config);
+		if(Compiler.isCompiled()) {
+			LwjglApplication schematicRender = new LwjglApplication(new SchematicRendererMain(sim), config);
 		} else {
 			errorText.setText(
 					"The Verilog code has not been successfully compiled yet.  Please click the check mark above and/or fix Verilog errors.");

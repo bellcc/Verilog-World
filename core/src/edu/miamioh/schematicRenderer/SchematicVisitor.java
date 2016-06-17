@@ -74,7 +74,7 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
      * @param ctx
      */
     @Override
-    public T visitContinuous_assign(Verilog2001Parser.Continuous_assignContext ctx) {
+    public T visitContinuous_assign(Verilog2001Parser.Continuous_assignContext ctx)     {
 
         T t = super.visitContinuous_assign(ctx);
 
@@ -112,8 +112,8 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
     /**
      * Translates the text of the BLOGIC node into its GateType.
      *
-     * @param ctx
-     * @return
+     * @param ctx ParseTree with root_module of this BLOGIC.
+     * @return The GateType of this BLOGIC.
      */
     private GateType getNewLogicType_GateType(ParseTree ctx) {
 
@@ -150,8 +150,8 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
      * Translates the text from the BLOGIC node to its String conversion of
      * GateType.
      *
-     * @param ctx
-     * @return
+     * @param ctx ParseTree with root_module of this BLOGIC.
+     * @return The String of this BLOGIC.
      */
     private String getNewLogicType_String(ParseTree ctx) {
 
@@ -188,7 +188,7 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
      * Gets the number of Gates of the same type.
      *
      * @param type The type of Gate being counted.
-     * @return
+     * @return The number of Gates of type Type.
      */
     private int getNumOfGates(GateType type){
         return schematic.getGateCount(type);
@@ -871,8 +871,6 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
     @Override
     public T visitCase_statement(Verilog2001Parser.Case_statementContext ctx) {
         T t = super.visitCase_statement(ctx);
-
-
 
         return t;
     }
