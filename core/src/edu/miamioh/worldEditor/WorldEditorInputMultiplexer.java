@@ -75,28 +75,37 @@ public class WorldEditorInputMultiplexer {
 		multiplexer.removeProcessor(inputProcess);
 		
 		//Determine which actor of the tool bar stage has been selected.
-		boolean homeActor = WorldEditorRenderer.getWorldRenderer().getHomeActor();
-		boolean blockActor = WorldEditorRenderer.getWorldRenderer().getBlocksActor();
-		boolean tileActor = WorldEditorRenderer.getWorldRenderer().getTilesActor();
+		//boolean homeActor = WorldEditorRenderer.getWorldRenderer().getHomeActor();
+		//boolean blockActor = WorldEditorRenderer.getWorldRenderer().getBlocksActor();
+		//boolean tileActor = WorldEditorRenderer.getWorldRenderer().getTilesActor();
 		
 		boolean blockOption = WorldEditorRenderer.getWorldRenderer().getBlockOption();
+	
+		//TODO This is the likely cause of the problem.
 		
 		//Add all of the appropriate input processors based on the user's input.
 		multiplexer.addProcessor(toolBarStage);
-		if(homeActor) {		
 		
-			multiplexer.addProcessor(homeStage);
+		ToolBarSelection selection = WorldEditorController.getCurrentWorldController().getToolBarSelection();
 		
-		}else if(blockActor) {
-			
-			multiplexer.addProcessor(blockStage);
+		switch(selection) {
 		
-		}else if(tileActor) {
-		
-			multiplexer.addProcessor(tileStage);
-			
-		}
+			case HOME:
+				multiplexer.addProcessor(homeStage);
+				break;
 				
+			case BLOCK:
+				multiplexer.addProcessor(blockStage);
+				break;
+				
+			case TILE:
+				multiplexer.addProcessor(tileStage);
+		
+			default:
+				break;
+		
+		}
+		
 		if(blockOption) {
 			
 			multiplexer.addProcessor(blockOptionStage);

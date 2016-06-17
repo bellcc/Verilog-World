@@ -25,7 +25,7 @@ import edu.miamioh.worldSimulator.WorldSimulatorRenderer;
 
 public class VerilogWorldMain implements Screen {
 	
-	private Game g;
+	private Game game;
 	
 	private static VerilogWorldMain currentVerilogWorld;
 	
@@ -45,14 +45,22 @@ public class VerilogWorldMain implements Screen {
 	 * Called when the Application is first created.
 	 */
 	
-	public VerilogWorldMain(Game g){
-		this.g = g;
+	public VerilogWorldMain(Game game){
+		this.game = game;
+	}
+	
+	public void init() {
+		
+		currentVerilogWorld = this;
+		
+		//verilogWorldController = new VerilogWorldController();
+		
 	}
 	
 	@Override
 	public void show () {
 		
-		currentVerilogWorld = this;
+		//currentVerilogWorld = this;
 
 		//The variable is instantiated and initialized and will act 
 		//as the central hub for data during execution of the application.
@@ -70,10 +78,7 @@ public class VerilogWorldMain implements Screen {
 		simulatorController.initMultiplexer();
 		
 		VerilogWorldController.getController().updateInputMultiplexer();
-		
-		//Gdx.input.setInputProcessor(worldEditorController.getCurrentWorldController().getMultiplexer().getMultiplexer());
-		//Gdx.input.setInputProcessor(simulatorController.getController().getMultiplexer().getMultiplexer());
-		
+
 		paused = false;
 		
 	}
@@ -83,9 +88,7 @@ public class VerilogWorldMain implements Screen {
 	 */
 	@Override
 	public void dispose() {
-		
-		//Dispose of all instantiated renderers here.
-		
+
 		worldRenderer.dispose();
 		simulatorRenderer.dispose();
 	}
@@ -107,15 +110,12 @@ public class VerilogWorldMain implements Screen {
 	@Override
 	public void render (float delta) {
 		
-		//Call the appropriate renderer here.
-		
+		/**
 		if(!paused) {
 			worldEditorController.update();
 		}
-		
-		worldRenderer.render();
-		//simulatorRenderer.render();
-		
+		*/
+
 		VerilogWorld state = VerilogWorldController.getController().getState();
 		
 		switch(state) {

@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import edu.miamioh.Level.Level;
 import edu.miamioh.verilogWorld.VerilogWorld;
 import edu.miamioh.verilogWorld.VerilogWorldController;
+import edu.miamioh.worldEditor.ToolBarSelection;
 import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldSimulator.WorldSimulatorController;
 
@@ -21,7 +22,12 @@ public class SimulatorChangeListener extends ChangeListener{
 		
 		Level currentLevel = WorldEditorController.getCurrentWorldController().getCurrentLevel();
 		WorldSimulatorController.getController().setCurrentLevel(currentLevel);
-	
+
+		//Reset selection variable to default.
+		ToolBarSelection selection = WorldEditorController.getCurrentWorldController().getToolBarSelection();
+		selection = ToolBarSelection.NONE;
+		WorldEditorController.getCurrentWorldController().setToolBarSelection(selection);
+		
 	}
 
 }

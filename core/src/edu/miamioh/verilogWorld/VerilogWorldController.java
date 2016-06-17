@@ -47,6 +47,7 @@ public class VerilogWorldController extends AbstractController{
 	public VerilogWorldController(Configuration config) {
 		
 		defaultConfig = config;
+		//init();
 	}
 	
 	/**
@@ -60,12 +61,14 @@ public class VerilogWorldController extends AbstractController{
 		controller = this;
 		//TODO This needs to be set to the main menu controller.
 		//state = VerilogWorld.WORLD_SIMULATOR;
-		state = VerilogWorld.WORLD_EDITOR;
+		//state = VerilogWorld.WORLD_EDITOR;
 		
 		//The default configurations only need to be set once which 
 		//is why there is not a public setter for this field.
 		this.defaultConfig = new Configuration();
 		this.defaultConfig.init();
+		
+		
 		
 	}
 	
@@ -104,7 +107,6 @@ public class VerilogWorldController extends AbstractController{
 	 * @return The static reference to this class.
 	 */
 	public static VerilogWorldController getController() {
-		
 		return controller;
 	}
 	
@@ -113,8 +115,7 @@ public class VerilogWorldController extends AbstractController{
 	 * retrieve the default configurations of the application.
 	 * @return The default configurations as defined by "world.xml"
 	 */
-	public Configuration getDefaultConfig() {
-		
+	public Configuration getDefaultConfig() {	
 		return this.defaultConfig;
 	}
 	

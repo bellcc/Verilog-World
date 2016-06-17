@@ -9,9 +9,6 @@
 
 package edu.miamioh.worldEditor;
 
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Color;
-
 import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.AbstractEditor.AbstractController;
 import edu.miamioh.GameObjects.Block;
@@ -29,6 +26,8 @@ public class WorldEditorController extends AbstractController{
 	private static WorldEditorInputMultiplexer worldEditorMultiplexer;
 		
 	private static Level currentLevel;
+	
+	private ToolBarSelection selection;
 
 	private int worldWidth;
 	private int worldHeight;
@@ -47,9 +46,12 @@ public class WorldEditorController extends AbstractController{
 	
 	private int blockID;
 	
+	private boolean paused;
+	
 	public WorldEditorController() {
 		
 		currentWorldController = this;
+		paused = false;
 		init();
 
 	}
@@ -58,6 +60,8 @@ public class WorldEditorController extends AbstractController{
 	 * This method is used to initialize any of the 
 	 */
 	public void init() {
+		
+		selection = ToolBarSelection.NONE;
 			
 		initWorld();
 		initPlayer();
@@ -131,32 +135,32 @@ public class WorldEditorController extends AbstractController{
 			
 			return;
 		}
-		
-		boolean blocksActor = WorldEditorRenderer.getWorldRenderer().getBlocksActor();
-		boolean tileActor = WorldEditorRenderer.getWorldRenderer().getTilesActor();
-		
+
 		SelectionType type = WorldEditorRenderer.getWorldRenderer().getSelectionType();
 		
-		if (blocksActor) {
+		if (selection == ToolBarSelection.BLOCK) {
+			
 			switch(type) {
-			case Block_Blank:
-				currentLevel.addBlock(new NormalBlock(NormalBlockType.Blank, row, column));
-				break;
-			case Block_Clock:
-				currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Clock, row, column));
-				break;
-			case Block_Reset:
-				currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Reset, row, column));
-				break;
-			case Block_Wall:
-				currentLevel.addBlock(new NormalBlock(NormalBlockType.Wall, row, column));
-				break;
+			
+				case Block_Blank:
+					currentLevel.addBlock(new NormalBlock(NormalBlockType.Blank, row, column));
+					break;
+				case Block_Clock:
+					currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Clock, row, column));
+					break;
+				case Block_Reset:
+					currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Reset, row, column));
+					break;
+				case Block_Wall:
+					currentLevel.addBlock(new NormalBlock(NormalBlockType.Wall, row, column));
+					break;
+				default:
+					break;
 			}
+		
 		}
-		
-		//Procedures for all other block states go here in the form of else if statements.
-		
-		if(tileActor) {
+
+		if(selection == ToolBarSelection.TILE) {
 			
 		}
 		
@@ -262,11 +266,27 @@ public class WorldEditorController extends AbstractController{
 	}
 	
 	public WorldEditorInputMultiplexer getMultiplexer() {
-		
 		return worldEditorMultiplexer;
 	}
 	
 	public int getUniqueBlockID() {
 		return this.blockID;
 	}
+	
+	public ToolBarSelection getToolBarSelection() {
+		return selection;
+	}
+	
+	public void setToolBarSelection(ToolBarSelection selection) {
+		this.selection = selection;
+	}
+	
+	public boolean getPaused() {
+		return paused;
+	}
+	
+	public void setPaused(boolean paused) {
+		this.paused = paused;
+	}
+
 }

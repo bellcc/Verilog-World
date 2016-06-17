@@ -40,9 +40,9 @@ public class ToolBarStage {
 		
 		int windowHeight = WorldEditorController.getCurrentWorldController().getWindowHeight();
 
-		WorldEditorRenderer.getWorldRenderer().setHomeActor(false);
-		WorldEditorRenderer.getWorldRenderer().setBlocksActor(false);
-		WorldEditorRenderer.getWorldRenderer().setTilesActor(false);
+		//WorldEditorRenderer.getWorldRenderer().setHomeActor(false);
+		//WorldEditorRenderer.getWorldRenderer().setBlocksActor(false);
+		//WorldEditorRenderer.getWorldRenderer().setTilesActor(false);
 				
 		Actor homeActor = new HomeActor().getButtonActor();
 		homeActor.setPosition(0, windowHeight - toolHeight);

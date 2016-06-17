@@ -8,12 +8,14 @@
 package edu.miamioh.worldEditor;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import edu.miamioh.AbstractEditor.AbstractRenderer;
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.Linked.LinkedList;
 import edu.miamioh.worldEditor.BlockOption.BlockOptionStage;
@@ -23,8 +25,8 @@ import edu.miamioh.worldEditor.ToolBar.Stages.TileStage;
 import edu.miamioh.worldEditor.ToolBar.Stages.ToolBarStage;
 import edu.miamioh.worldEditor.types.Point;
 
-public class WorldEditorRenderer extends AbstractRenderer{
-	
+public class WorldEditorRenderer implements Screen {	
+
 	private WorldEditorController worldEditorController;
 	private static WorldEditorRenderer worldRenderer;
 
@@ -36,15 +38,26 @@ public class WorldEditorRenderer extends AbstractRenderer{
 
 	private Stage blockOptionStage;
 	
-	private static boolean homeActor;
-	private static boolean blocksActor;
-	private static boolean tilesActor;
+	//private static boolean homeActor;
+	//private static boolean blocksActor;
+	//private static boolean tilesActor;
 	
 	private SelectionType selectionType;
 
 	private boolean blockOption;
 	
 	private Block selectedBlock;
+
+	public OrthographicCamera camera;
+	public ShapeRenderer renderer;
+	
+	public Color gridLineColor = Color.LIGHT_GRAY;
+	
+	public int worldX;
+	public int worldY;
+	
+	private int toolBarWidth;
+	private int toolBarOptionsWidth;
 	
 	public WorldEditorRenderer() {
 		
@@ -62,10 +75,28 @@ public class WorldEditorRenderer extends AbstractRenderer{
 
 		worldRenderer = this;
 		
+		initCamera();
+		renderer = new ShapeRenderer();
+		
+		worldX = 0;
+		worldY = 0;
+		
+		toolBarWidth = 50;
+		toolBarOptionsWidth = 100;
+		
 		blockOption = false;
 		
 		initToolBarStages();
 		initBlockOptionStage();
+	}
+	
+	public void initCamera() {
+		
+		float w = Gdx.graphics.getWidth();
+		float h = Gdx.graphics.getHeight();
+		
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, w, h);
 	}
 	
 	private void initBlockOptionStage() {
@@ -176,23 +207,30 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		toolBarStage.act(Gdx.graphics.getDeltaTime());
 		toolBarStage.draw();
 		
-		if(homeActor) {
-			
-			homeStage.act(Gdx.graphics.getDeltaTime());
-			homeStage.draw();
-			
-		}else if(blocksActor) {
-						
-			blockStage.act(Gdx.graphics.getDeltaTime());
-			blockStage.draw();
-			
-		}else if(tilesActor) {
-			
-			tileStage.act(Gdx.graphics.getDeltaTime());
-			tileStage.draw();
-			
-		}
+		ToolBarSelection selection = WorldEditorController.getCurrentWorldController().getToolBarSelection();
 		
+		switch(selection) {
+		
+			case HOME:
+				homeStage.act(Gdx.graphics.getDeltaTime());
+				homeStage.draw();
+				break;
+				
+			case BLOCK:
+				blockStage.act(Gdx.graphics.getDeltaTime());
+				blockStage.draw();
+				break;
+			
+			case TILE:
+				tileStage.act(Gdx.graphics.getDeltaTime());
+				tileStage.draw();
+				break;
+			
+			default:
+				break;
+		
+		}
+
 		if(blockOption) {
 
 			blockOptionStage.act(Gdx.graphics.getDeltaTime());
@@ -271,14 +309,14 @@ public class WorldEditorRenderer extends AbstractRenderer{
 			translateY = (-1) * (bufferHeight - worldY);
 		}
 		
-		translateX -= (getToolBarWidth() + getToolBarOptionsWidth());
+		translateX -= (toolBarWidth + toolBarOptionsWidth);
 		
 		//Irregular world sizes
 		
-		int windowWidthRange = windowWidth - (getToolBarWidth() + getToolBarOptionsWidth());
+		int windowWidthRange = windowWidth - (toolBarWidth + toolBarOptionsWidth);
 		
 		if(width < windowWidthRange) {
-			translateX = (getToolBarWidth() + getToolBarOptionsWidth()) + ((windowWidthRange / 2) - (width / 2));
+			translateX = (toolBarWidth + toolBarOptionsWidth) + ((windowWidthRange / 2) - (width / 2));
 			translateX *= (-1);			
 		}
 		
@@ -374,7 +412,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		if(hasIrregularWidth()) {
 			
 			int currentX = getMousePoint().getX();
-			int windowWidthRange = windowWidth - getToolBarWidth() - getToolBarOptionsWidth();
+			int windowWidthRange = windowWidth - toolBarWidth - toolBarOptionsWidth;
 			
 			int displayLeftX = (windowWidthRange / 2) - (width / 2);
 			int displayRightX = displayLeftX + width;
@@ -387,7 +425,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 			
 		}else {
 			
-			int currentX = getMousePoint().getX() - getToolBarWidth() - getToolBarOptionsWidth();
+			int currentX = getMousePoint().getX() - toolBarWidth - toolBarOptionsWidth;
 
 			column = ((worldX + currentX) - bufferWidth) / gridWidth;
 
@@ -575,30 +613,6 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		return tileStage;
 	}
 
-	public boolean getHomeActor() {
-		return homeActor;
-	}
-
-	public void setHomeActor(boolean homeActor) {
-		WorldEditorRenderer.homeActor = homeActor;
-	}
-
-	public boolean getBlocksActor() {
-		return blocksActor;
-	}
-
-	public void setBlocksActor(boolean blocksActor) {
-		WorldEditorRenderer.blocksActor = blocksActor;
-	}
-
-	public boolean getTilesActor() {
-		return tilesActor;
-	}
-
-	public void setTilesActor(boolean tilesActor) {
-		WorldEditorRenderer.tilesActor = tilesActor;
-	}
-
 	public Stage getHomeStage() {
 		return homeStage;
 	}
@@ -621,6 +635,44 @@ public class WorldEditorRenderer extends AbstractRenderer{
 
 	public void setSelectedBlock(Block selectedBlock) {
 		this.selectedBlock = selectedBlock;
+	}
+
+	@Override
+	public void hide() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void render(float delta) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void show() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public int getToolBarWidth() {
+		return 0;
+	}
+
+	public int getToolBarOptionsWidth() {
+		return 0;
 	}
 
 }
