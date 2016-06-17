@@ -9,16 +9,11 @@
 
 package edu.miamioh.worldEditor;
 
-import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.AbstractEditor.AbstractController;
 import edu.miamioh.GameObjects.Block;
-import edu.miamioh.GameObjects.NormalBlock;
-import edu.miamioh.GameObjects.NormalBlockType;
-import edu.miamioh.GameObjects.SpecialBlock;
-import edu.miamioh.GameObjects.SpecialBlockType;
+
 import edu.miamioh.GameObjects.Tile;
 import edu.miamioh.Level.Level;
-import edu.miamioh.verilogWorld.VerilogWorldController;
 
 public class WorldEditorController extends AbstractController{
 	
@@ -72,6 +67,7 @@ public class WorldEditorController extends AbstractController{
 		
 		currentLevel = new Level();
 
+		/**
 		Configuration config = VerilogWorldController.getController().getDefaultConfig();
 		
 		setWorldWidth(config.getWorldWidth());
@@ -88,6 +84,7 @@ public class WorldEditorController extends AbstractController{
 		
 		setStepWidth(config.getStepWidth());
 		setStepHeight(config.getStepHeight());
+		*/
 		
 	}
 
@@ -131,11 +128,12 @@ public class WorldEditorController extends AbstractController{
 			WorldEditorController.getCurrentWorldController().getMultiplexer().updateMultiplexer();
 			
 			Block selectedBlock = currentLevel.getBlock(row, column);
-			WorldEditorRenderer.getWorldRenderer().setSelectedBlock(selectedBlock);
+			//WorldEditorRenderer.getWorldRenderer().setSelectedBlock(selectedBlock);
 			
 			return;
 		}
 
+		/**
 		SelectionType type = WorldEditorRenderer.getWorldRenderer().getSelectionType();
 		
 		if (selection == ToolBarSelection.BLOCK) {
@@ -163,6 +161,7 @@ public class WorldEditorController extends AbstractController{
 		if(selection == ToolBarSelection.TILE) {
 			
 		}
+		*/
 		
 	}
 	

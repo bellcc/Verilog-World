@@ -17,7 +17,7 @@ public class SimulatorChangeListener extends ChangeListener{
 
 		System.out.println("Simulator Change Listener");
 
-		VerilogWorldController.getController().setState(VerilogWorld.WORLD_SIMULATOR);
+		//VerilogWorldController.getController().setState(VerilogWorld.WORLD_SIMULATOR);
 		VerilogWorldController.getController().updateInputMultiplexer();
 		
 		Level currentLevel = WorldEditorController.getCurrentWorldController().getCurrentLevel();

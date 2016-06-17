@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import edu.miamioh.worldEditor.SelectionType;
-import edu.miamioh.worldEditor.WorldEditorRenderer;
 
 public class BlankTileChangeListener extends ChangeListener{
 
@@ -20,7 +19,7 @@ public class BlankTileChangeListener extends ChangeListener{
 		
 		System.out.println("Blank Tile Change Listener");
 		
-		WorldEditorRenderer.getWorldRenderer().setSelectionType(SelectionType.Tile_Blank);
+		//WorldEditorRenderer.getWorldRenderer().setSelectionType(SelectionType.Tile_Blank);
 	}
 	
 }

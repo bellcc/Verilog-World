@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import edu.miamioh.worldEditor.WorldEditorController;
-import edu.miamioh.worldEditor.WorldEditorRenderer;
 import edu.miamioh.worldEditor.ToolBar.Actors.BlocksActor;
 import edu.miamioh.worldEditor.ToolBar.Actors.HomeActor;
 import edu.miamioh.worldEditor.ToolBar.Actors.TilesActor;

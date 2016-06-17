@@ -13,8 +13,8 @@ public class BackChangeListener extends ChangeListener{
 
 		System.out.println("Back Change Listener");
 		
-		VerilogWorld state = VerilogWorld.WORLD_EDITOR;
-		VerilogWorldController.getController().setState(state);
+		//VerilogWorld state = VerilogWorld.WORLD_EDITOR;
+		//VerilogWorldController.getController().setState(state);
 		
 		VerilogWorldController.getController().updateInputMultiplexer();
 		

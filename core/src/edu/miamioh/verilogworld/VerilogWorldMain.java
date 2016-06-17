@@ -11,161 +11,42 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Screen;
 
-import edu.miamioh.verilogEditor.VerilogEditor;
 import edu.miamioh.verilogEditor.RunEditor;
-import edu.miamioh.worldEditor.WorldEditorController;
-import edu.miamioh.worldEditor.WorldEditorRenderer;
-import edu.miamioh.worldSimulator.WorldSimulatorController;
-import edu.miamioh.worldSimulator.WorldSimulatorRenderer;
+import edu.miamioh.worldEditor.WorldEditorScreen;
+	
+public class VerilogWorldMain extends Game {
+	
+	private static VerilogWorldMain currentVerilogWorldMain;	
+	private VerilogWorldController verilogWorldController;
 
-public class VerilogWorldMain implements Screen {
-	
-	private Game game;
-	
-	private static VerilogWorldMain currentVerilogWorld;
-	
 	private String	VERILOG_WORLD_DEVELOPMENT	= "VERILOG_WORLD_DEVELOPMENT";
 
-	private VerilogWorldController verilogWorldController;
+	public VerilogWorldMain() {
 	
-	private WorldEditorController worldEditorController;
-	private WorldEditorRenderer worldRenderer;
-	
-	private WorldSimulatorController simulatorController;
-	private WorldSimulatorRenderer simulatorRenderer;
-	
-	private boolean paused;
-	
-	/**
-	 * Called when the Application is first created.
-	 */
-	
-	public VerilogWorldMain(Game game){
-		this.game = game;
+		create();
 	}
-	
-	public void init() {
-		
-		currentVerilogWorld = this;
-		
-		//verilogWorldController = new VerilogWorldController();
-		
-	}
-	
-	@Override
-	public void show () {
-		
-		//currentVerilogWorld = this;
 
-		//The variable is instantiated and initialized and will act 
-		//as the central hub for data during execution of the application.
+	/**
+	 * This method is called when an application is first started.
+	 */
+	@Override
+	public void create() {
+		
+		currentVerilogWorldMain = this;
 		verilogWorldController = new VerilogWorldController();
-		verilogWorldController.init();
-				
-		worldEditorController = new WorldEditorController();
-		worldRenderer = new WorldEditorRenderer(worldEditorController);
 		
-		worldEditorController.initMultiplexer();
-
-		simulatorController = new WorldSimulatorController();
-		simulatorRenderer = new WorldSimulatorRenderer(simulatorController);
-		
-		simulatorController.initMultiplexer();
-		
-		VerilogWorldController.getController().updateInputMultiplexer();
-
-		paused = false;
-		
+		//Set the default screen.
+		currentVerilogWorldMain.setScreen(new WorldEditorScreen(verilogWorldController.getDefaultConfig()));
 	}
 	
-	/**
-	 * Called when the Application is destroyed.
-	 */
-	@Override
-	public void dispose() {
-
-		worldRenderer.dispose();
-		simulatorRenderer.dispose();
-	}
-	
-	/**
-	 * Called when the Application is paused, usually when 
-	 * it's not active or visible on screen.
-	 */
-	@Override
-	public void pause() {
-	
-		paused = true;
-		
-	}
-
-	/**
-	 * Called when the Application should render itself.
-	 */
-	@Override
-	public void render (float delta) {
-		
-		/**
-		if(!paused) {
-			worldEditorController.update();
-		}
-		*/
-
-		VerilogWorld state = VerilogWorldController.getController().getState();
-		
-		switch(state) {
-		
-			case WORLD_EDITOR:
-				worldRenderer.render();
-				return;
-				
-			case WORLD_SIMULATOR:
-				simulatorRenderer.render();
-				return;
-		}
-		
-	}
-	
-	/**
-	 * Called when the application is resized.
-	 * @param width The width of the window.
-	 * @param height The height of the window.
-	 */
-	@Override
-	public void resize(int width, int height) {
-		
-		//resize the necessary renderer.
-		
-		worldRenderer.resize(width, height);
-		
-	}
-	
-	/**
-	 * Called when the Application is resumed from a paused state, 
-	 * usually when it regains focus.
-	 */
-	@Override
-	public void resume() {
-		
-		paused = false;
-		
+	public static VerilogWorldMain getCurrentVerilogWorldMain() {
+		return currentVerilogWorldMain;
 	}
 	
 	public void launchVerilogEditor(String fileName){
-		/*String pathToJar = getRootPath() + "/VerilogEditor.jar";
-		ProcessBuilder pb = new ProcessBuilder("java", "-jar", pathToJar, getRootPath(), fileName);
 
-		try {
-			Process p = pb.start();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
-		
 		Thread thread = new Thread(new RunEditor(fileName));
 		thread.start();
 	}
@@ -200,20 +81,11 @@ public class VerilogWorldMain implements Screen {
 
 		return path;
 	}
+	
 	public boolean isDevelopment()
 	{
 		String env = System.getenv(VERILOG_WORLD_DEVELOPMENT);
 		return env != null && !env.equals("0");
-	}
-	
-	public static VerilogWorldMain getVerilogWorld() {
-		return currentVerilogWorld;
-	}
-
-	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

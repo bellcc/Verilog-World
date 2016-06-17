@@ -47,6 +47,10 @@ public class OptionStage {
 		blockActor.setSize(ACTOR_WIDTH, actorHeight);
 		toolActor.setSize(ACTOR_WIDTH, actorHeight);
 		
+		stage.addActor(homeActor);
+		stage.addActor(blockActor);
+		stage.addActor(toolActor);
+		
 	}
 	
 	public Stage getStage() {

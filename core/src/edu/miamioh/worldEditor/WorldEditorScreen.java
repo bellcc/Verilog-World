@@ -7,8 +7,12 @@
 
 package edu.miamioh.worldEditor;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+
+import edu.miamioh.Configuration.Configuration;
+import edu.miamioh.worldEditor.Stages.OptionStage;
 
 public class WorldEditorScreen implements Screen {
 
@@ -33,37 +37,51 @@ public class WorldEditorScreen implements Screen {
 	private Stage homeStage;
 	private Stage blockStage;
 	private Stage toolStage;
+
+	public WorldEditorScreen(Configuration config) {
+
+		this.windowWidth = config.getWindowWidth();
+		this.windowHeight = config.getWindowHeight();
+		
+		this.worldWidth = config.getWorldWidth();
+		this.worldHeight = config.getWorldHeight();
+		
+		this.gridWidth = config.getGridWidth();
+		this.gridHeight = config.getGridHeight();
+		
+		this.stepWidth = config.getStepWidth();
+		this.stepHeight = config.getStepHeight();
+		
+		this.bufferWidth = config.getBufferWidth();
+		this.bufferHeight = config.getBufferHeight();
 	
-	public WorldEditorScreen() {
-	
-		this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+		//initOptionStage();
+		//initHomeStage();
+		//initBlockStage();
+		//initToolStage();
 	}
 	
-	public WorldEditorScreen(int windowWidth, int windowHeight, int worldWidth, 
-							 int worldHeight, int gridWidth, int gridHeight, 
-							 int stepWidth, int stepHeight, int bufferWidth, int bufferHeight) {
-		
-		//Initialize the variables that are used to construct the 
-		//aesthetic and non-aesthetic parameters of the world.
-		this.windowWidth = windowWidth;
-		this.windowHeight = windowHeight;
-		
-		this.worldWidth = worldWidth;
-		this.worldHeight = worldHeight;
-		
-		this.gridWidth = gridWidth;
-		this.gridHeight = gridHeight;
-		
-		this.stepWidth = stepWidth;
-		this.stepHeight = stepHeight;
-		
-		this.bufferWidth = bufferWidth;
-		this.bufferHeight = bufferHeight;
+	private void initOptionStage() {
 	
-		initOptionStage();
-		initHomeStage();
-		initBlockStage();
-		initToolStage();
+		//optionStage = new OptionStage().getStage();
+		OptionStage temp = new OptionStage();
+		optionStage = temp.getStage();
+		
+	}
+	
+	private void initHomeStage() {
+		
+		homeStage = new Stage();
+	}
+	
+	private void initBlockStage() {
+		
+		blockStage = new Stage();
+	}
+
+	private void initToolStage() {
+		
+		toolStage = new Stage();
 	}
 
 	@Override
@@ -89,6 +107,13 @@ public class WorldEditorScreen implements Screen {
 	@Override
 	public void render(float arg0) {
 		
+		renderOptionStage();
+	}
+	
+	private void renderOptionStage() {
+		
+		optionStage.act(Gdx.graphics.getDeltaTime());
+		optionStage.draw();
 	}
 
 	@Override
@@ -113,26 +138,6 @@ public class WorldEditorScreen implements Screen {
 	public void show() {
 		
 		updateWorld();
-	}
-	
-	private void initOptionStage() {
-	
-		optionStage = new Stage();
-	}
-	
-	private void initHomeStage() {
-		
-		homeStage = new Stage();
-	}
-	
-	private void initBlockStage() {
-		
-		blockStage = new Stage();
-	}
-
-	private void initToolStage() {
-		
-		toolStage = new Stage();
 	}
 	
 	/**

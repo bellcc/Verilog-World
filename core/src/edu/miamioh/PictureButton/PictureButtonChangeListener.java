@@ -3,7 +3,6 @@ package edu.miamioh.PictureButton;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import edu.miamioh.worldEditor.WorldEditorController;
-import edu.miamioh.worldEditor.WorldEditorRenderer;
 import edu.miamioh.worldEditor.ToolBar.AbstractActors.AbstractChangeListener;
 
 public class PictureButtonChangeListener extends AbstractChangeListener{

@@ -28,6 +28,7 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 	 */
 	public boolean keyUp(int keyCode) {
 
+		/**
 		int worldX = WorldEditorRenderer.getWorldRenderer().getWorldX();
 		int worldY = WorldEditorRenderer.getWorldRenderer().getWorldY();
 				
@@ -82,6 +83,7 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 				return true;
 			
 		}
+		*/
 		
 		return false;
 	}
@@ -92,10 +94,12 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 	
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		
+		/**
 		int row = WorldEditorRenderer.getWorldRenderer().detectRow();
 		int column = WorldEditorRenderer.getWorldRenderer().detectColumn();
 		
 		WorldEditorController.getCurrentWorldController().gridPressed(row, column);
+		*/
 		
 		return false;
 	}
@@ -127,6 +131,7 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 
 	private boolean canMoveRight(int posX) {
 		
+		/**
 		int worldWidth = WorldEditorController.getCurrentWorldController().getWorldWidth();
 		int gridWidth = WorldEditorController.getCurrentWorldController().getGridWidth();
 		int worldSize = worldWidth * gridWidth;
@@ -141,6 +146,7 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 		if(posX < (worldSize - windowWidth) + (2 * bufferWidth) + toolBarWidth + subToolBarWidth) {
 			return true;
 		}
+		*/
 		
 		return false;
 	}
