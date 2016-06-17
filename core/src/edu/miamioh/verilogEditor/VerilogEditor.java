@@ -796,7 +796,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		config.forceExit = false;
 		config.resizable = false;
 
-		LwjglApplication schematicRender = new LwjglApplication(new SchematicRendererMain(Compiler), config);
+		LwjglApplication schematicRender = new LwjglApplication(new SchematicRendererMain(sim), config);
 
 	}
 	/*

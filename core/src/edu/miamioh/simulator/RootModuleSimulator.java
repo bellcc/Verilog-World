@@ -130,6 +130,7 @@ public class RootModuleSimulator {
 	
 	public void setCompiler(Parse compiler)					{this.compiler = compiler;}
 	public RootModuleInstance getRootModuleInstance() 		{return this.root_module;}
+	public ParseTree getRootModuleTree()					{return this.root_tree;}
 	public void setRootModule(RootModuleInstance module) 	{this.root_module = module;}
 	public void setRootTree(ParseTree tree)					{this.root_tree = tree;}
 	public ParseTree getRootTree() 							{return this.root_tree;}

@@ -1,11 +1,13 @@
 package edu.miamioh.schematicRenderer;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.*;
+
 import edu.miamioh.simulator.ModuleInstance;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.ParseRegWire;
+import edu.miamioh.simulator.RootModuleSimulator;
 import edu.miamioh.simulator.WireRoleType;
+
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
@@ -17,7 +19,6 @@ import java.util.ArrayList;
 public class SchematicRendererMain implements ApplicationListener {
 
     private SchematicRenderer schematic;
-    private Parse compiler;
     private ModuleInstance root_module;
     private ParseTree root_tree;
 
@@ -25,11 +26,10 @@ public class SchematicRendererMain implements ApplicationListener {
      * Constructor for SchematicRendererMain. Requires a Parse to have already been created.
      * @param compiler Contains information on the design to be rendered.
      */
-    public SchematicRendererMain(Parse compiler){
+    public SchematicRendererMain(RootModuleSimulator sim){
 
-        this.compiler = compiler;
-        this.root_module = compiler.getRootModule();
-        this.root_tree = compiler.getRootTree();
+        this.root_module = sim.getRootModuleInstance();
+        this.root_tree = sim.getRootModuleTree();
 
     }
 
@@ -44,7 +44,7 @@ public class SchematicRendererMain implements ApplicationListener {
 
     private void getData(){
 
-        SchematicVisitor visitor = new SchematicVisitor<Gate>(schematic);
+        SchematicVisitor<Gate> visitor = new SchematicVisitor<Gate>(schematic);
         visitor.visit(root_tree);
 
     }
