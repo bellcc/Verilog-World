@@ -796,8 +796,12 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		config.forceExit = false;
 		config.resizable = false;
 
-		LwjglApplication schematicRender = new LwjglApplication(new SchematicRendererMain(sim), config);
-
+		if(Compiler.is_compiled_yet()) {
+			LwjglApplication schematicRender = new LwjglApplication(new SchematicRendererMain(Compiler), config);
+		} else {
+			errorText.setText(
+					"The Verilog code has not been successfully compiled yet.  Please click the check mark above and/or fix Verilog errors.");
+		}
 	}
 	/*
 	public void comboHeaderButtonFunction() {

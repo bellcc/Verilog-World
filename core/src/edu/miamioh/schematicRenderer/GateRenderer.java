@@ -267,7 +267,7 @@ class GateRenderer {
     }
 
     /**
-     * Draws a new Reg 'Net' object.
+     * Draws a new Reg object. Reg's are composed of Flip-Flops.
      *
      * @param cx Center X coordinate.
      * @param cy Center Y coordinate.
@@ -278,9 +278,13 @@ class GateRenderer {
         int by = cy - gateSize * scaleFactor / 2;
         int w = gateSize * scaleFactor;
         int h = w;
+        int clklx = cx - gateSize * scaleFactor / 4;
+        int clkrx = cx + gateSize * scaleFactor / 4;
+        int clky = cy - gateSize * scaleFactor / 4;
 
         renderer.rect(lx, by, w, h);
         renderer.line(lx, cy, rx, cy);
+        renderer.triangle(clklx, by, clkrx, by, cx, clky);
 
         if (constants.frame) frame(cx, cy);
     }

@@ -120,6 +120,10 @@ class Port {
 
     }
 
+    public void setLevel(int newLevel){
+        this.level = newLevel;
+    }
+
     /**
      * Gets the Center X coordinate of the Port.
      *

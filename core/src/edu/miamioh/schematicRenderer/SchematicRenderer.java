@@ -9,9 +9,11 @@ import com.badlogic.gdx.utils.Disposable;
 import edu.miamioh.util.Constants;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import static edu.miamioh.schematicRenderer.GateType.INPUT;
 import static edu.miamioh.schematicRenderer.GateType.OUTPUT;
+import static edu.miamioh.schematicRenderer.GateType.REG;
 
 /**
  * Created by shaffebd.
@@ -82,6 +84,16 @@ public class SchematicRenderer implements Disposable {
         } else
             return 0;
 
+    }
+
+    public void setLevel(String id, int level){
+        Gate tempG = gateLookup(id);
+        Port tempP = portLookup(id);
+
+        if(tempG != null)
+            tempG.setLevel(level);
+        else if (tempP != null)
+            tempP.setLevel(level);
     }
 
     /**
@@ -210,11 +222,7 @@ public class SchematicRenderer implements Disposable {
                     if (tempG.getLevel() == p) {
 
                         tempG.setCX(getXCenter(p));
-//                        rowY = getYCenter(j - skips); //Set CY based
-//                        //on the number of gates already in that level
-//                        avgY = getYCenter(tempG.getInputs());
-//                        tempG.setCY((rowY > avgY)? rowY : avgY);
-                        tempG.setCY(getYCenter(j - skips));
+                        tempG.setCY(getYCenter(tempG.getInputs(), j - skips));
                         //Set CY
                         // based on the average height of all its inputs
                         if(tempG.getInputs().size() > 0)
@@ -231,7 +239,7 @@ public class SchematicRenderer implements Disposable {
                 tempP = ports.get(k);
                 if (tempP.getType().equals(OUTPUT)) {
                     tempP.setCX(getXCenter(maxLevel + 1));
-                    tempP.setCY(getYCenter(tempP.getInputs()));
+                    tempP.setCY(getYCenter(tempP.getInputs(), k - totalIns));
                     grenderer.render(tempP.getType(), tempP.getCX(), tempP.getCY());
 
                 } else
@@ -287,12 +295,60 @@ public class SchematicRenderer implements Disposable {
             //Connect all Gates to their inputs.
             for(Gate gate : gates){
                 tempGr = gate;
+
+                //Sort inputs of tempGr
+                Stack<String> sortedInputs = new Stack<>();
+                ArrayList<String> copyInputs = new ArrayList<String>(tempGr.getInputs());
+                int totalInputs = copyInputs.size();
+                int highestY;
+                Gate tempG;
+                Port tempP;
+
+                for(int s = 0; s < totalInputs; s++){
+
+                    highestY = 0;
+
+                    //For each input, check if it's the highest. If so, save the y.
+                    for (String input : copyInputs) {
+                        if (gateLookup(input) != null) {
+                            tempG = gateLookup(input);
+                            if (tempG.getCY() > highestY)
+                                highestY = tempG.getCY();
+                        } else if (portLookup(input) != null) {
+                            tempP = portLookup(input);
+                            if (tempP.getCY() > highestY)
+                                highestY = tempP.getCY();
+                        }
+                    }
+
+                    //Find the gate/port with the highest y value and move it
+                    // to the sorted Stack.
+                    int j;
+                    String i;
+                    for (j = 0; j < copyInputs.size(); j++) {
+                        i = copyInputs.get(j);
+                        if (gateLookup(i) != null) {
+                            tempG = gateLookup(i);
+                            if (tempG.getCY() == highestY) {
+                                sortedInputs.push(i);
+                            }
+                        } else if (portLookup(i) != null) {
+                            tempP = portLookup(i);
+                            if (tempP.getCY() == highestY) {
+                                sortedInputs.push(i);
+                            }
+                        }
+                    }
+                    copyInputs.remove(sortedInputs.peek());
+                }
+
                 String id;
                 float r, g, b, a;
+
                 for(int i = 0; i < tempGr.getNumOfInputs(); i++){
 
                     gatePort = "IN~" + i;
-                    id = tempGr.getInputs().get(i);
+                    id = sortedInputs.pop();
                     x2 = tempGr.getPortX(gatePort);
                     y2 = tempGr.getPortY(gatePort);
 
@@ -324,6 +380,19 @@ public class SchematicRenderer implements Disposable {
                 }
             }
         }
+
+        //Render wires from the clk to all Reg blocks
+        {
+            for(Port port : ports) {
+                if (port.getID().equalsIgnoreCase("clk")) {
+                    for (Gate gate : gates) {
+                        if (gate.getType().equals(REG)) {
+                            drawClkLine(gate.getCX(), gate.getCY());
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void drawSquareLine(int x1, int y1, int x2, int y2, float r,
@@ -338,6 +407,18 @@ public class SchematicRenderer implements Disposable {
         renderer.line(xm, y2, x2, y2);
         this.renderer.end();
 
+    }
+
+    private void drawClkLine(int cx, int cy){
+
+        Port clk = portLookup("clk");
+        int clkx = clk.getPortX();
+        int clky = clk.getPortY();
+
+        int dx = cx;
+        int dy = cy - constants.gateSize * constants.scaleFactor / 2;
+
+        drawSquareLine(clkx, clky, dx, dy, 0, 0, 255, 255);
     }
 
     private Gate gateLookup(String id){
@@ -382,23 +463,38 @@ public class SchematicRenderer implements Disposable {
 
     }
 
-    private int getYCenter(ArrayList<String> inputs){
+    private int getYCenter(ArrayList<String> inputs, int row){
 
-        int y = 0, i = 0;
+        int avgY = 0, numOfInputs = inputs.size();
 
         for(String id : inputs){
 
             if(gateLookup(id) != null)
-                y += gateLookup(id).getCY();
+                avgY += gateLookup(id).getCY();
             if(portLookup(id) != null)
-                y += portLookup(id).getCY();
-            i++;
+                avgY += portLookup(id).getCY();
         }
 
-        if(i != 0)
-            y /= i;
+        if(numOfInputs != 0)
+            avgY /= numOfInputs;
 
-        return y;
+//        int gsFactor = constants.gateSize + constants.scaleFactor;
+//        Gate gate;
+//        boolean moved;
+//        do{
+//            moved = false;
+//            for(int i = 0; i < gates.size(); i++) {
+//                gate = gates.get(i);
+//                if()
+//                if (gate.getCY() < avgY + gsFactor & gate.getCY() > avgY - gsFactor) {
+//                    avgY += gsFactor;
+//                    moved = true;
+//                }
+//
+//            }
+//        }while(moved);
+
+        return avgY;
 
     }
 
