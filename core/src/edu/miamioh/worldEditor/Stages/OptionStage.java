@@ -19,6 +19,7 @@ public class OptionStage {
 	private Actor toolActor;
 	
 	private final int ACTOR_COUNT = 3;
+	private final int ACTOR_WIDTH = 50;
 	
 	public OptionStage() {
 		
@@ -38,7 +39,13 @@ public class OptionStage {
 		int x = 0;
 		int y = WorldEditorController.getCurrentWorldController().getWindowHeight();
 		
-		//homeActor.setPosition(x, );
+		homeActor.setPosition(x, y - (1 * actorHeight));
+		blockActor.setPosition(x, y - (2 * actorHeight));
+		toolActor.setPosition(x, y - (3 * actorHeight));
+		
+		homeActor.setSize(ACTOR_WIDTH, actorHeight);
+		blockActor.setSize(ACTOR_WIDTH, actorHeight);
+		toolActor.setSize(ACTOR_WIDTH, actorHeight);
 		
 	}
 	
