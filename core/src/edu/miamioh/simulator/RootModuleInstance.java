@@ -35,6 +35,7 @@ public class RootModuleInstance extends ModuleInstance {
 		this.tree = tree;
 		
 		sim.setRootModule(this);
+		sim.setRootTree(this.tree);
 		
 		visitor = new SimVisitor(this, this.subModules_hash, this.subModules_list);
 		// Generate symbol table and check syntax

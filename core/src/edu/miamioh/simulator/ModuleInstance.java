@@ -21,7 +21,8 @@ public class ModuleInstance {
 	public ModuleInstance(Verilog2001Parser parser, 
 						  Parse compiler, 
 						  RootModuleSimulator sim, 
-						  ParseTree tree, String name) {
+						  ParseTree tree, 
+						  String name) {
 		
 		this.tree = tree;
 		this.vars_list = new ArrayList<>();
@@ -33,8 +34,8 @@ public class ModuleInstance {
 		// That constructor does it's own walking code
 		if (compiler != null) {
 			visitor = new SimVisitor(this, 
-									 ((RootModuleInstance)this).getSubModulesHash(), 
-									 ((RootModuleInstance)this).getSubModulesList());
+									 this.getSubModulesHash(), 
+									 this.getSubModulesList());
 			
 			// Generate symbol table and check syntax
 			ParseTreeWalker walker = new ParseTreeWalker();

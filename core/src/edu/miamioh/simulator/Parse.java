@@ -54,7 +54,8 @@ public class Parse {
 		is_no_parse_errors = true;
 
 		ParseTree root_tree = parser.module_declaration();
-		RootModuleInstance root_module = new RootModuleInstance(parser, this, sim, root_tree, "root_module");
+		String name = fileName.substring(0, fileName.length() - 2); // Removes .v file ending
+		RootModuleInstance root_module = new RootModuleInstance(parser, this, sim, root_tree, name);
 
 		if (is_no_parse_errors)
 		{
@@ -83,7 +84,8 @@ public class Parse {
 
 		
 		ParseTree root_tree = parser.module_declaration();
-		RootModuleInstance root_module = new RootModuleInstance(parser, this, sim, root_tree, "root_module");
+		String name = fileName.substring(0, fileName.length() - 2); // Removes .v file ending
+		RootModuleInstance root_module = new RootModuleInstance(parser, this, sim, root_tree, name);
 
 		if (is_no_parse_errors)
 		{

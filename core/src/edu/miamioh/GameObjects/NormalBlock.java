@@ -52,7 +52,9 @@ public class NormalBlock extends Block {
 			e.printStackTrace();
 		}
 		
-		return new ModuleWrapper(newModule);
+		this.module = new ModuleWrapper(newModule);
+		
+		return this.module;
 	}
 	
 	public void makeUniqueFile() {

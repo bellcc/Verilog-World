@@ -56,7 +56,6 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	private MyTextPane errorText = null;
 	private MyUndo1 myUndoManager1 = null;
 	private IntegerRangeDocumentFilter filterOne;
-	private String fileName; // Verilog file
 	
 	// static String level_number;
 	public File verilogFiles;
@@ -655,6 +654,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			out.write(codeText.getText());
 			out.close();
 
+			String fileName = sim.getRootModuleInstance().getName() + ".v";
 			/* print out what we're compiling */
 			errorText.setText("Compiling " + fileName);
 
@@ -790,7 +790,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
-		config.title = "Schematic Render of " + this.fileName;
+		config.title = "Schematic Render of " + sim.getRootModuleInstance().getName() + ".v";
 		config.width = Constants.WINDOW_WIDTH;
 		config.height = Constants.WINDOW_HEIGHT;
 		config.forceExit = false;

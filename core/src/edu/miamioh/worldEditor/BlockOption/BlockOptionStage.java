@@ -16,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
+import edu.miamioh.verilogWorld.VerilogWorldController;
+
 public class BlockOptionStage{
 
 	private TextButton verilogEditorButton;
@@ -24,10 +26,10 @@ public class BlockOptionStage{
 	public BlockOptionStage() {
 
 		verilogEditorButton = createButton(Color.GREEN, "Verilog\nEditor");
-		verilogEditorButton.addListener(new VerilogEditorChangeListener());
+		verilogEditorButton.addListener(new VerilogEditorChangeListener(VerilogWorldController.getController().getSim()));
 
 		removeButton = createButton(Color.RED, "Remove");
-		removeButton.addListener(new VerilogEditorChangeListener());
+		removeButton.addListener(new VerilogEditorChangeListener(VerilogWorldController.getController().getSim()));
 		
 	}
 	

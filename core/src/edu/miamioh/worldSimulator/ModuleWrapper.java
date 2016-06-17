@@ -18,4 +18,5 @@ public class ModuleWrapper {
 	}
 	
 	public ArrayList<ModulePort> getPorts() {return this.ports;}
+	public RootModuleInstance getModule() {return this.module;}
 }

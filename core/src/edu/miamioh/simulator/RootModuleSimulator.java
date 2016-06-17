@@ -2,6 +2,8 @@ package edu.miamioh.simulator;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import edu.miamioh.GameObjects.NormalBlock;
+
 public class RootModuleSimulator {
 	
 	private Parse 				compiler;
@@ -119,6 +121,11 @@ public class RootModuleSimulator {
 		root_module.getVisitor().resetSequUpdateFlag();
 		root_module.getVisitor().toggleResetLine(); // Turn off
 		this.displayResults();
+	}
+	
+	public void updateTargetBlock(NormalBlock block) {
+		setRootModule(block.getModuleWrapper().getModule());
+		setRootTree(block.getModuleWrapper().getModule().getParseTree());
 	}
 	
 	public void setCompiler(Parse compiler)					{this.compiler = compiler;}

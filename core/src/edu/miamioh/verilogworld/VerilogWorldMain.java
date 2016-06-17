@@ -61,6 +61,7 @@ public class VerilogWorldMain implements Screen {
 		verilogWorldController = new VerilogWorldController();
 		verilogWorldController.init();
 		setCompiler(verilogWorldController.getCompiler());
+		sim = VerilogWorldController.getController().getSim().getRootModuleSimulator();
 				
 		worldEditorController = new WorldEditorController();
 		worldRenderer = new WorldEditorRenderer(worldEditorController);
