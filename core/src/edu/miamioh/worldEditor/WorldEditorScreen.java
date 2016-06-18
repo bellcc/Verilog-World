@@ -21,6 +21,7 @@ import edu.miamioh.worldEditor.Stages.BlockStage;
 import edu.miamioh.worldEditor.Stages.HomeStage;
 import edu.miamioh.worldEditor.Stages.OptionStage;
 import edu.miamioh.worldEditor.Stages.SimulatorStage;
+import edu.miamioh.worldEditor.types.Point;
 
 public class WorldEditorScreen implements Screen {
 
@@ -223,6 +224,169 @@ public class WorldEditorScreen implements Screen {
 				
 		}
 	
+	}
+	
+	/**
+	 * This method finds the location of the mouse in the window.
+	 * @return The point representation of the mouses' location.
+	 */
+	public Point getMousePoint() {
+		
+		int xPoint = -1;
+		int yPoint = -1;
+		
+		xPoint = Gdx.input.getX();
+		yPoint = Gdx.input.getY();
+		
+		Point point = new Point(xPoint, yPoint);
+		return point;
+		
+	}
+	
+	/**
+	 * This method determines which column the cursor is current hovering over.
+	 * 
+	 * @return If the cursor is not within a valid column or is 
+	 * outside of the world (the buffer zone) then this method 
+	 * returns -1. If the cursor is within the bounds of the world 
+	 * then this method returns an integer between 0 and the world width 
+	 * (inclusive).
+	 */
+	public int detectColumn() {
+		
+		int column = -1;
+		
+		int worldWidth = controller.getWorldWidth();
+		int gridWidth = controller.getGridWidth();
+		int bufferWidth = controller.getBufferWidth();
+		int windowWidth = controller.getWindowWidth();
+		int width = worldWidth * gridWidth;
+		
+		if(hasIrregularWidth()) {
+			
+			int currentX = getMousePoint().getX();
+			int windowWidthRange = windowWidth - TOOLBAR_WIDTH;
+			
+			int displayLeftX = (windowWidthRange / 2) - (width / 2);
+			int displayRightX = displayLeftX + width;
+			
+			if(displayLeftX <= (windowWidth - currentX) && displayRightX >= (windowWidth - currentX)) {
+				
+				column = (windowWidth - currentX - displayLeftX) / gridWidth;
+				column = (worldWidth - 1) - column;
+			}
+			
+		}else {
+			
+			int currentX = getMousePoint().getX() - TOOLBAR_WIDTH;
+
+			column = ((worldX + currentX) - bufferWidth) / gridWidth;
+
+			if(worldX < bufferWidth) {
+				
+				int displayLowerX = bufferWidth - worldX;
+
+				if(currentX < displayLowerX)  {
+	
+					column = -1;
+					
+				}
+				
+			}
+			
+		}
+				
+		return column;
+	}
+	
+	/**
+	 * This method determines which row the cursor is current hovering over.
+	 * 
+	 * @return If the cursor is not within a valid row or is 
+	 * outside of the world (the buffer zone) then this method 
+	 * returns -1. If the cursor is within the bounds of the world 
+	 * then this method returns an integer between 0 and the world height 
+	 * (inclusive).
+	 */
+	public int detectRow() {
+		
+		int row = -1;
+		int currentY = getMousePoint().getY();		
+		
+		int worldHeight = controller.getWorldHeight();		
+		int gridHeight = controller.getGridHeight();
+		int bufferHeight = controller.getBufferHeight();
+		int windowHeight = controller.getWindowHeight();
+		int height = worldHeight * gridHeight;
+		
+		if(hasIrregularHeight()) {
+						
+			int displayLowerY = (windowHeight / 2) - (height / 2);
+			int displayUpperY = displayLowerY + height;
+
+			if(displayLowerY <= (windowHeight - currentY) && displayUpperY >= (windowHeight - currentY)) {
+				
+				row = (windowHeight - currentY - displayLowerY) / gridHeight;
+				
+			}
+
+		}else {
+			
+			row = ((worldY + (windowHeight - currentY)) - bufferHeight) / gridHeight;
+			
+			if(worldY < bufferHeight) {
+
+				int displayLowerY = bufferHeight - worldY;
+
+				if((windowHeight - currentY < displayLowerY))  {
+	
+					row = -1;
+					
+				}
+				
+			}
+			
+		}
+				
+		return row;
+	}
+	
+	/**
+	 * This method determines if the world has a smaller height
+	 * than the height of the window. This causes the world to
+	 * need to be centered in the window along the vertical.
+	 * 
+	 * @return If the world has an irregular height then this
+	 * method returns true and false otherwise.
+	 */
+	private boolean hasIrregularHeight() {
+		
+		int worldHeight = controller.getWorldHeight();		
+		int gridHeight = controller.getGridHeight();
+		int windowHeight = controller.getWindowHeight();
+		int height = worldHeight * gridHeight;
+
+		return height < windowHeight;
+
+	}
+	
+	/**
+	 * This method determines if the world has a smaller width 
+	 * than the width of the window. This causes the world to 
+	 * need to be centered in the window along the horizontal.
+	 * 
+	 * @return If the world has an irregular width then 
+	 * this method returns true and false otherwise.
+	 */
+	private boolean hasIrregularWidth() {
+		
+		int worldWidth = controller.getWorldWidth();		
+		int gridWidth = controller.getGridWidth();
+		int windowWidth = controller.getWindowWidth();
+		int width = worldWidth * gridWidth;
+
+		return width < windowWidth;
+
 	}
 
 	@Override

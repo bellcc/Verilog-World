@@ -2,6 +2,7 @@ package edu.miamioh.verilogWorld;
 
 import com.badlogic.gdx.Game;
 
+import edu.miamioh.Level.Level;
 import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.WorldEditorScreen;
 
@@ -18,7 +19,8 @@ public class VerilogWorldMain extends Game {
 		verilogWorldMain = this;
 
 		verilogWorldController = new VerilogWorldController();
-		worldEditorController = new WorldEditorController(verilogWorldController.getDefaultConfig());
+		Level newLevel = new Level();
+		worldEditorController = new WorldEditorController(verilogWorldController.getDefaultConfig(), newLevel);
 		
 		worldEditorScreen = new WorldEditorScreen(worldEditorController);
 	}

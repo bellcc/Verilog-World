@@ -27,9 +27,10 @@ public class WorldEditorController extends AbstractController{
 	private WorldEditorInputProcessor inputProcessor;
 	private InputMultiplexer multiplexer;	
 	
-	private static Level currentLevel;
+	private Level currentLevel;
 	
 	private ToolBarSelection selection;
+	private BlockSelectionType blockSelection;
 
 	private int worldWidth;
 	private int worldHeight;
@@ -59,10 +60,11 @@ public class WorldEditorController extends AbstractController{
 		multiplexer = new InputMultiplexer();
 		
 		selection = ToolBarSelection.NONE;
+		blockSelection = BlockSelectionType.NONE;
 		blockID = 0;
 	}
 	
-	public WorldEditorController(Configuration config) {
+	public WorldEditorController(Configuration config, Level currentLevel) {
 
 		this();
 		
@@ -80,6 +82,8 @@ public class WorldEditorController extends AbstractController{
 		
 		bufferWidth = config.getBufferWidth();
 		bufferHeight= config.getBufferHeight();
+		
+		this.currentLevel = currentLevel;
 	}
 	
 	public void updateInputMultiplexer() {		
@@ -184,36 +188,28 @@ public class WorldEditorController extends AbstractController{
 			
 			return;
 		}
-
-		/**
-		SelectionType type = WorldEditorRenderer.getWorldRenderer().getSelectionType();
 		
 		if (selection == ToolBarSelection.BLOCK) {
 			
-			switch(type) {
+			switch(blockSelection) {
 			
 				case Block_Blank:
-					currentLevel.addBlock(new NormalBlock(NormalBlockType.Blank, row, column));
+					//currentLevel.addBlock(new NormalBlock(NormalBlockType.Blank, row, column));
 					break;
 				case Block_Clock:
-					currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Clock, row, column));
+					//currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Clock, row, column));
 					break;
 				case Block_Reset:
-					currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Reset, row, column));
+					//currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Reset, row, column));
 					break;
 				case Block_Wall:
-					currentLevel.addBlock(new NormalBlock(NormalBlockType.Wall, row, column));
+					//currentLevel.addBlock(new NormalBlock(NormalBlockType.Wall, row, column));
 					break;
 				default:
 					break;
 			}
 		
 		}
-
-		if(selection == ToolBarSelection.TILE) {
-			
-		}
-		*/
 		
 	}
 	
