@@ -10,6 +10,7 @@ import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.ChangeListeners.BlankBlockChangeListener;
 import edu.miamioh.worldEditor.ChangeListeners.ClockBlockChangeListener;
 import edu.miamioh.worldEditor.ChangeListeners.ResetBlockChangeListener;
+import edu.miamioh.worldEditor.ChangeListeners.WallBlockChangeListener;
 
 public class BlockStage {
 
@@ -18,6 +19,7 @@ public class BlockStage {
 	private Actor blankActor;
 	private Actor clockActor;
 	private Actor resetActor;
+	private Actor wallActor;
 	
 	public BlockStage() {
 		
@@ -29,12 +31,14 @@ public class BlockStage {
 		blankActor = new TextButtonActor().createTextButton(Color.RED, "BLANK\nBLOCK");
 		clockActor = new TextButtonActor().createTextButton(Color.PINK, "CLOCK\nBLOCK");
 		resetActor = new TextButtonActor().createTextButton(Color.YELLOW, "RESET\nBLOCK");
+		wallActor = new TextButtonActor().createTextButton(Color.ORANGE, "WALL\nBLOCK");
 		
 		// Add the appropriate change listener to the actor which 
 		// is located at edu.miamioh.worldEditor.ChangeListeners.
 		blankActor.addListener(new BlankBlockChangeListener());
 		clockActor.addListener(new ClockBlockChangeListener());
 		resetActor.addListener(new ResetBlockChangeListener());
+		wallActor.addListener(new WallBlockChangeListener());
 		
 		int windowHeight = WorldEditorController.getCurrentController().getWindowHeight();
 		
@@ -55,6 +59,8 @@ public class BlockStage {
 		table.add(clockActor).width(actorWidth).height(actorHeight);
 		table.row();
 		table.add(resetActor).width(actorWidth).height(actorHeight);
+		table.row();
+		table.add(wallActor).width(actorWidth).height(actorHeight);
 		
 		stage.addActor(table);
 		

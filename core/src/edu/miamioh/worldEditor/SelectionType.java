@@ -7,5 +7,4 @@ public enum SelectionType {
 	Block_Reset,
 	Block_Wall,
 	
-	Tile_Blank;
 }

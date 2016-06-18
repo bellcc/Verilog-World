@@ -37,9 +37,6 @@ public class WorldEditorScreen implements Screen {
 	private int gridWidth;
 	private int gridHeight;
 	
-	private int stepWidth;
-	private int stepHeight;
-	
 	private int bufferWidth;
 	private int bufferHeight;
 	
@@ -101,10 +98,7 @@ public class WorldEditorScreen implements Screen {
 		
 		gridWidth = controller.getGridWidth();
 		gridHeight = controller.getGridHeight();
-		
-		stepWidth = controller.getStepWidth();
-		stepHeight = controller.getStepHeight();
-		
+
 		bufferWidth = controller.getBufferWidth();
 		bufferHeight = controller.getBufferHeight();
 		
@@ -252,19 +246,16 @@ public class WorldEditorScreen implements Screen {
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
 		
 	}
 
