@@ -9,6 +9,10 @@
 
 package edu.miamioh.worldEditor;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+
 import edu.miamioh.AbstractEditor.AbstractController;
 import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.GameObjects.Block;
@@ -19,8 +23,9 @@ import edu.miamioh.Level.Level;
 public class WorldEditorController extends AbstractController{
 	
 	private static WorldEditorController currentController;
-	private static WorldEditorInputMultiplexer worldEditorMultiplexer;
-		
+	//private static WorldEditorInputMultiplexer worldEditorMultiplexer;
+	private InputMultiplexer multiplexer;	
+	
 	private static Level currentLevel;
 	
 	private ToolBarSelection selection;
@@ -48,8 +53,9 @@ public class WorldEditorController extends AbstractController{
 		
 		currentController = this;
 		paused = false;
-		//init();
 
+		multiplexer = new InputMultiplexer();
+		
 		selection = ToolBarSelection.NONE;
 		blockID = 0;
 	}
@@ -73,6 +79,45 @@ public class WorldEditorController extends AbstractController{
 		bufferWidth = config.getBufferWidth();
 		bufferHeight= config.getBufferHeight();
 	}
+	
+	public void updateInputMultiplexer() {		
+		
+		Stage optionStage = WorldEditorScreen.getScreen().getOptionStage();
+		Stage homeStage = WorldEditorScreen.getScreen().getHomeStage();
+		Stage blockStage = WorldEditorScreen.getScreen().getBlockStage();
+		//Stage toolStage = WorldEditorScreen.getScreen().getToolStage();
+		Stage simulatorStage = WorldEditorScreen.getScreen().getSimulatorStage();
+		
+		multiplexer.removeProcessor(optionStage);
+		multiplexer.removeProcessor(homeStage);
+		multiplexer.removeProcessor(blockStage);
+		//multiplexer.removeProcessor(toolStage);
+		multiplexer.removeProcessor(simulatorStage);
+		
+		multiplexer.addProcessor(optionStage);
+				
+		switch (selection) {
+		
+			case HOME:
+				multiplexer.addProcessor(homeStage);
+				break;
+				
+			case BLOCK:
+				multiplexer.addProcessor(blockStage);
+				break;
+				
+			case SIMULATOR:
+				multiplexer.addProcessor(simulatorStage);
+				break;
+				
+			default:
+				break;
+			
+		}
+		
+		Gdx.input.setInputProcessor(multiplexer);
+		
+	}
 
 	/**
 	 * This method is used to initialize any of the 
@@ -84,7 +129,7 @@ public class WorldEditorController extends AbstractController{
 
 	public void initMultiplexer() {
 	
-		worldEditorMultiplexer = new WorldEditorInputMultiplexer();
+		//worldEditorMultiplexer = new WorldEditorInputMultiplexer();
 
 	}
 	
@@ -253,11 +298,7 @@ public class WorldEditorController extends AbstractController{
 	public void setStepHeight(int stepHeight) {
 		this.stepHeight = stepHeight;
 	}
-	
-	public WorldEditorInputMultiplexer getMultiplexer() {
-		return worldEditorMultiplexer;
-	}
-	
+
 	public int getUniqueBlockID() {
 		return this.blockID;
 	}

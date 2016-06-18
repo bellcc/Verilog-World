@@ -97,10 +97,7 @@ public class WorldEditorInputMultiplexer {
 			case BLOCK:
 				//multiplexer.addProcessor(blockStage);
 				break;
-				
-			case TILE:
-				//multiplexer.addProcessor(tileStage);
-		
+
 			default:
 				break;
 		

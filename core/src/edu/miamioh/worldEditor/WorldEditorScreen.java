@@ -20,6 +20,8 @@ import edu.miamioh.worldEditor.Stages.SimulatorStage;
 
 public class WorldEditorScreen implements Screen {
 
+	private static WorldEditorScreen screen;
+	
 	private WorldEditorController controller;
 	
 	private int windowWidth;
@@ -45,7 +47,12 @@ public class WorldEditorScreen implements Screen {
 	private Stage toolStage;
 	private Stage simulatorStage;
 	
+	public WorldEditorScreen() {
+		screen = this;
+	}
+	
 	public WorldEditorScreen(WorldEditorController controller) {
+		this();
 		this.controller = controller;
 	}
 	
@@ -79,21 +86,36 @@ public class WorldEditorScreen implements Screen {
 		
 		optionStage.act(Gdx.graphics.getDeltaTime());
 		optionStage.draw();
-
-		//homeStage.act(Gdx.graphics.getDeltaTime());
-		//homeStage.draw();
 		
-		//blockStage.act(Gdx.graphics.getDeltaTime());
-		//blockStage.draw();
-	
-		simulatorStage.act(Gdx.graphics.getDeltaTime());
-		simulatorStage.draw();
+		ToolBarSelection selection = controller.getToolBarSelection();
+		
+		switch (selection) {
+		
+			case HOME:
+				homeStage.act(Gdx.graphics.getDeltaTime());
+				homeStage.draw();
+				break;
+				
+			case BLOCK:
+				blockStage.act(Gdx.graphics.getDeltaTime());
+				blockStage.draw();
+				break;
+				
+			case SIMULATOR:
+				simulatorStage.act(Gdx.graphics.getDeltaTime());
+				simulatorStage.draw();
+				break;
+				
+			default:
+				break;
+				
+		}
 	
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		
+
 		controller.setWindowWidth(width);
 		controller.setWindowHeight(height);
 		
@@ -102,11 +124,8 @@ public class WorldEditorScreen implements Screen {
 		blockStage = new BlockStage().getStage();
 		//toolStage = new ToolStage().getStage();
 		simulatorStage = new SimulatorStage().getStage();
-		
-		Gdx.input.setInputProcessor(optionStage);
-		//Gdx.input.setInputProcessor(homeStage);
-		//Gdx.input.setInputProcessor(blockStage);
-		Gdx.input.setInputProcessor(simulatorStage);
+
+		controller.updateInputMultiplexer();
 	}
 
 	@Override
@@ -131,6 +150,30 @@ public class WorldEditorScreen implements Screen {
 	public void dispose() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public static WorldEditorScreen getScreen() {
+		return screen;
+	}
+	
+	public Stage getOptionStage() {
+		return optionStage;
+	}
+	
+	public Stage getHomeStage() {
+		return homeStage;
+	}
+	
+	public Stage getBlockStage() {
+		return blockStage;
+	}
+	
+	public Stage getToolStage() {
+		return toolStage;
+	}
+	
+	public Stage getSimulatorStage() {
+		return simulatorStage;
 	}
 	
 }
