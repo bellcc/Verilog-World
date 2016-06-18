@@ -13,14 +13,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import edu.miamioh.AbstractEditor.AbstractController;
 import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.GameObjects.Block;
-
-import edu.miamioh.GameObjects.Tile;
+import edu.miamioh.GameObjects.NormalBlock;
+import edu.miamioh.GameObjects.NormalBlockType;
+import edu.miamioh.GameObjects.SpecialBlock;
+import edu.miamioh.GameObjects.SpecialBlockType;
 import edu.miamioh.Level.Level;
 
-public class WorldEditorController extends AbstractController{
+public class WorldEditorController {
 	
 	private static WorldEditorController currentController;
 	
@@ -147,16 +148,6 @@ public class WorldEditorController extends AbstractController{
 		multiplexer.removeProcessor(simulatorStage);
 		
 	}
-	
-	@Override
-	public void init() {
-		
-	}
-
-	@Override
-	public void update() {
-		
-	}
 
 	/**
 	 * This method discerns which action should be taken after a user touches down in the world. 
@@ -164,11 +155,12 @@ public class WorldEditorController extends AbstractController{
 	 * @param column
 	 */
 	public void gridPressed(int row, int column) {
-				
-		boolean isBlock = currentLevel.isBlock(row, column);
-		boolean isTile = currentLevel.isTile(row, column);
 		
-		if(isBlock || isTile) {
+		System.out.println(row + ", " + column);
+		
+		boolean isBlock = currentLevel.isBlock(row, column);
+		
+		if(isBlock) {
 		
 			/*
 			 * Not used
@@ -194,23 +186,23 @@ public class WorldEditorController extends AbstractController{
 			switch(blockSelection) {
 			
 				case Block_Blank:
-					//currentLevel.addBlock(new NormalBlock(NormalBlockType.Blank, row, column));
+					currentLevel.addBlock(new NormalBlock(NormalBlockType.Blank, row, column));
 					break;
 				case Block_Clock:
-					//currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Clock, row, column));
+					currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Clock, row, column));
 					break;
 				case Block_Reset:
-					//currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Reset, row, column));
+					currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Reset, row, column));
 					break;
 				case Block_Wall:
-					//currentLevel.addBlock(new NormalBlock(NormalBlockType.Wall, row, column));
+					currentLevel.addBlock(new NormalBlock(NormalBlockType.Wall, row, column));
 					break;
 				default:
 					break;
 			}
 		
 		}
-		
+				
 	}
 	
 	public void addNewBlock(Block aBlock) {
@@ -218,12 +210,7 @@ public class WorldEditorController extends AbstractController{
 		++blockID;
 		currentLevel.addBlock(aBlock);
 	}
-	
-	public void addNewTile(Tile tile) {
-		
-		currentLevel.addTile(tile);
-	}
-	
+
 	public static WorldEditorController getCurrentController() {
 		return currentController;
 	}

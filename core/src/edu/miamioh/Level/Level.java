@@ -10,24 +10,20 @@ package edu.miamioh.Level;
 import java.util.Random;
 
 import edu.miamioh.GameObjects.Block;
-import edu.miamioh.GameObjects.Tile;
 import edu.miamioh.Linked.LinkedList;
 
 public class Level {
 	
 	LinkedList<Block> blockList;
-	LinkedList<Tile> tileList;
 	
 	public Level() {
 		
 		blockList = new LinkedList<Block>();
-		tileList = new LinkedList<Tile>();
 	}
 	
-	public Level(LinkedList<Block> blockList, LinkedList<Tile> tileList) {
+	public Level(LinkedList<Block> blockList) {
 		
 		this.blockList = blockList;
-		this.tileList = tileList;
 		
 	}
 	
@@ -35,12 +31,7 @@ public class Level {
 		
 		blockList.add(block);
 	}
-	
-	public void addTile(Tile tile) {
-		
-		tileList.add(tile);
-	}
-	
+
 	public void removeBlock(Block block) {
 		
 		int index = findBlockIndex(block);
@@ -48,33 +39,6 @@ public class Level {
 		if(index != -1) {
 			blockList.remove(index);
 		}
-		
-	}
-	
-	public void removeTile(Tile tile) {
-		
-		int index = findTileIndex(tile);
-		
-		if(index != -1) {
-			tileList.remove(index);
-		}
-		
-	}
-	
-	private int findTileIndex(Tile tile) {
-		
-		int tileID = tile.getId();
-		
-		for(int i=1;i<=tileList.getLength();i++) {
-			
-			int tempID = tileList.getEntry(i).getId();
-			
-			if(tileID == tempID) {
-				return i;
-			}
-		}
-		
-		return -1;
 		
 	}
 	
@@ -107,22 +71,6 @@ public class Level {
 		}
 		
 		return false;
-	}
-	
-	public boolean isTile(int row, int column) {
-		
-		for(int i=1;i<=tileList.getLength();i++) {
-			
-			int tempRow = tileList.getEntry(i).getRow();
-			int tempColumn = tileList.getEntry(i).getColumn();
-			
-			if(row == tempRow && column == tempColumn) {
-				return true;
-			}
-		}
-		
-		return false;
-		
 	}
 
 	public Block getBlock(int row, int column) {

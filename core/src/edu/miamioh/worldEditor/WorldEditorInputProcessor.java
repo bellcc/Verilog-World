@@ -9,12 +9,12 @@
 
 package edu.miamioh.worldEditor;
 
-import edu.miamioh.AbstractEditor.AbstractInputProcessor;
-import edu.miamioh.GameObjects.Block;
-import edu.miamioh.Linked.LinkedList;
+import com.badlogic.gdx.InputProcessor;
 
-public class WorldEditorInputProcessor extends AbstractInputProcessor{
+public class WorldEditorInputProcessor implements InputProcessor{
 
+	private boolean clicked = false;
+	
 	public boolean keyDown(int keyCode) {
 		return false;
 	}
@@ -92,15 +92,26 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 	
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		
-		int row = WorldEditorScreen.getScreen().detectRow();
-		int column = WorldEditorScreen.getScreen().detectColumn();
-		
-		WorldEditorController.getCurrentController().gridPressed(row, column);
+		if(!clicked) {
+			
+			clicked = true;
+			
+			int row = WorldEditorScreen.getScreen().detectRow();
+			int column = WorldEditorScreen.getScreen().detectColumn();
+			
+			System.out.println("CLICKED: " + row + ", " + column);
+			
+			WorldEditorController.getCurrentController().gridPressed(row, column);
+			
+		}
 		
 		return false;
 	}
 	
 	public boolean touchUp(int x, int y, int pointer, int button) {
+		
+		clicked = false;
+		
 		return false;
 	}
 	
