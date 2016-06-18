@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import edu.miamioh.worldEditor.Stages.BlockSelectedStage;
 import edu.miamioh.worldEditor.Stages.BlockStage;
 import edu.miamioh.worldEditor.Stages.HomeStage;
 import edu.miamioh.worldEditor.Stages.OptionStage;
@@ -51,6 +52,7 @@ public class WorldEditorScreen implements Screen {
 	private Stage optionStage;
 	private Stage homeStage;
 	private Stage blockStage;
+	private Stage blockSelectedStage;
 	private Stage toolStage;
 	private Stage simulatorStage;
 	
@@ -84,6 +86,7 @@ public class WorldEditorScreen implements Screen {
 		optionStage = new OptionStage().getStage();
 		homeStage = new HomeStage().getStage();		
 		blockStage = new BlockStage().getStage();
+		blockSelectedStage = new BlockSelectedStage().getStage();
 		//toolStage = new ToolStage().getStage();
 		simulatorStage = new SimulatorStage().getStage();
 	}
@@ -211,6 +214,11 @@ public class WorldEditorScreen implements Screen {
 				blockStage.draw();
 				break;
 				
+			case BLOCK_SELECTED:
+				blockSelectedStage.act(Gdx.graphics.getDeltaTime());
+				blockSelectedStage.draw();
+				break;
+				
 			case SIMULATOR:
 				simulatorStage.act(Gdx.graphics.getDeltaTime());
 				simulatorStage.draw();
@@ -284,6 +292,10 @@ public class WorldEditorScreen implements Screen {
 	
 	public Stage getBlockStage() {
 		return blockStage;
+	}
+	
+	public Stage getBlockSelectedStage() {
+		return blockSelectedStage;
 	}
 	
 	public Stage getToolStage() {

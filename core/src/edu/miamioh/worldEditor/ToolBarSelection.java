@@ -2,5 +2,5 @@ package edu.miamioh.worldEditor;
 
 public enum ToolBarSelection {
 
-	NONE, HOME, BLOCK, TOOLS, SIMULATOR
+	NONE, HOME, BLOCK, BLOCK_SELECTED, TOOLS, SIMULATOR
 }

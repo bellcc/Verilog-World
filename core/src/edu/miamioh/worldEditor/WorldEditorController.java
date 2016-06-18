@@ -87,12 +87,14 @@ public class WorldEditorController extends AbstractController{
 		Stage optionStage = WorldEditorScreen.getScreen().getOptionStage();
 		Stage homeStage = WorldEditorScreen.getScreen().getHomeStage();
 		Stage blockStage = WorldEditorScreen.getScreen().getBlockStage();
+		Stage blockSelectedStage = WorldEditorScreen.getScreen().getBlockSelectedStage();
 		//Stage toolStage = WorldEditorScreen.getScreen().getToolStage();
 		Stage simulatorStage = WorldEditorScreen.getScreen().getSimulatorStage();
 		
 		multiplexer.removeProcessor(optionStage);
 		multiplexer.removeProcessor(homeStage);
 		multiplexer.removeProcessor(blockStage);
+		multiplexer.removeProcessor(blockSelectedStage);
 		//multiplexer.removeProcessor(toolStage);
 		multiplexer.removeProcessor(simulatorStage);
 		
@@ -107,6 +109,10 @@ public class WorldEditorController extends AbstractController{
 				
 			case BLOCK:
 				multiplexer.addProcessor(blockStage);
+				break;
+				
+			case BLOCK_SELECTED:
+				multiplexer.addProcessor(blockSelectedStage);
 				break;
 				
 			case SIMULATOR:
