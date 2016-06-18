@@ -45,6 +45,7 @@ public class WorldSimulatorController {
 	
 	public void initWorld() {
 		
+		/**
 		Configuration config = VerilogWorldController.getController().getDefaultConfig();
 		
 		setWorldWidth(config.getWorldWidth());
@@ -61,6 +62,7 @@ public class WorldSimulatorController {
 		
 		setStepWidth(config.getStepWidth());
 		setStepHeight(config.getStepHeight());
+		*/
 		
 	}
 	

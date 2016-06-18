@@ -18,15 +18,15 @@ public class SimulatorChangeListener extends ChangeListener{
 		System.out.println("Simulator Change Listener");
 
 		//VerilogWorldController.getController().setState(VerilogWorld.WORLD_SIMULATOR);
-		VerilogWorldController.getController().updateInputMultiplexer();
+		//VerilogWorldController.getController().updateInputMultiplexer();
 		
-		Level currentLevel = WorldEditorController.getCurrentWorldController().getCurrentLevel();
+		Level currentLevel = WorldEditorController.getCurrentController().getCurrentLevel();
 		WorldSimulatorController.getController().setCurrentLevel(currentLevel);
 
 		//Reset selection variable to default.
-		ToolBarSelection selection = WorldEditorController.getCurrentWorldController().getToolBarSelection();
+		ToolBarSelection selection = WorldEditorController.getCurrentController().getToolBarSelection();
 		selection = ToolBarSelection.NONE;
-		WorldEditorController.getCurrentWorldController().setToolBarSelection(selection);
+		WorldEditorController.getCurrentController().setToolBarSelection(selection);
 		
 	}
 

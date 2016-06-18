@@ -25,7 +25,7 @@ public class TilesChangeListener extends ChangeListener{
 		//WorldEditorRenderer.getWorldRenderer().setBlocksActor(false);
 		//WorldEditorRenderer.getWorldRenderer().setTilesActor(true);
 		
-		ToolBarSelection selection = WorldEditorController.getCurrentWorldController().getToolBarSelection();
+		ToolBarSelection selection = WorldEditorController.getCurrentController().getToolBarSelection();
 		
 		switch(selection) {
 
@@ -50,12 +50,12 @@ public class TilesChangeListener extends ChangeListener{
 	
 		}
 		
-		WorldEditorController.getCurrentWorldController().setToolBarSelection(selection);
+		WorldEditorController.getCurrentController().setToolBarSelection(selection);
 		
 		//Update the input multiplexer so that only the tool bar stage, 
 		//the tiles sub menu stage, and the input process processors 
 		//are attached to the input multiplexer.
-		WorldEditorController.getCurrentWorldController().getMultiplexer().updateMultiplexer();
+		WorldEditorController.getCurrentController().getMultiplexer().updateMultiplexer();
 	}
 	
 }

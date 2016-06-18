@@ -1,6 +1,6 @@
 
 /**
- * @author Chris Bell
+ * @author Clark Bell
  * @date   05-27-2016
  * @info   
  */
@@ -27,9 +27,9 @@ public class DesktopLauncher {
 		config.width = 600;
 		config.height = 600;
 		
-		config.resizable = false;
+		//config.resizable = false;
 		config.backgroundFPS = 30;
-		//new LwjglApplication(new ScreenSwitch(), config);
+
 		new LwjglApplication(new VerilogWorldMain(), config);
 		
 	}

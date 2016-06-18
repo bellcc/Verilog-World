@@ -86,7 +86,7 @@ public class WorldEditorInputMultiplexer {
 		//Add all of the appropriate input processors based on the user's input.
 		//multiplexer.addProcessor(toolBarStage);
 		
-		ToolBarSelection selection = WorldEditorController.getCurrentWorldController().getToolBarSelection();
+		ToolBarSelection selection = WorldEditorController.getCurrentController().getToolBarSelection();
 		
 		switch(selection) {
 		

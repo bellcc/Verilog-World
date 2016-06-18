@@ -10,6 +10,7 @@
 package edu.miamioh.worldEditor;
 
 import edu.miamioh.AbstractEditor.AbstractController;
+import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.GameObjects.Block;
 
 import edu.miamioh.GameObjects.Tile;
@@ -17,7 +18,7 @@ import edu.miamioh.Level.Level;
 
 public class WorldEditorController extends AbstractController{
 	
-	private static WorldEditorController currentWorldController;
+	private static WorldEditorController currentController;
 	private static WorldEditorInputMultiplexer worldEditorMultiplexer;
 		
 	private static Level currentLevel;
@@ -45,10 +46,32 @@ public class WorldEditorController extends AbstractController{
 	
 	public WorldEditorController() {
 		
-		currentWorldController = this;
+		currentController = this;
 		paused = false;
-		init();
+		//init();
 
+		selection = ToolBarSelection.NONE;
+		blockID = 0;
+	}
+	
+	public WorldEditorController(Configuration config) {
+
+		this();
+		
+		windowWidth = config.getWindowWidth();
+		windowHeight = config.getWindowHeight();
+		
+		worldWidth = config.getWorldWidth();
+		worldHeight = config.getWorldHeight();
+		
+		gridWidth = config.getGridWidth();
+		gridHeight = config.getGridHeight();
+		
+		stepWidth = config.getStepWidth();
+		stepHeight = config.getStepHeight();
+		
+		bufferWidth = config.getBufferWidth();
+		bufferHeight= config.getBufferHeight();
 	}
 
 	/**
@@ -56,42 +79,9 @@ public class WorldEditorController extends AbstractController{
 	 */
 	public void init() {
 		
-		selection = ToolBarSelection.NONE;
-			
-		initWorld();
-		initPlayer();
-		blockID = 0;
+
 	}
 
-	public void initWorld() {
-		
-		currentLevel = new Level();
-
-		/**
-		Configuration config = VerilogWorldController.getController().getDefaultConfig();
-		
-		setWorldWidth(config.getWorldWidth());
-		setWorldHeight(config.getWorldHeight());
-		
-		setWindowWidth(config.getWindowWidth());
-		setWindowHeight(config.getWindowHeight());
-		
-		setBufferWidth(config.getBufferWidth());
-		setBufferHeight(config.getBufferHeight());
-		
-		setGridWidth(config.getGridWidth());
-		setGridHeight(config.getGridHeight());
-		
-		setStepWidth(config.getStepWidth());
-		setStepHeight(config.getStepHeight());
-		*/
-		
-	}
-
-	public void initPlayer() {
-		
-	}
-	
 	public void initMultiplexer() {
 	
 		worldEditorMultiplexer = new WorldEditorInputMultiplexer();
@@ -125,9 +115,9 @@ public class WorldEditorController extends AbstractController{
 //				WorldEditorRenderer.getWorldRenderer().setBlockOption(true);
 //			}
 			
-			WorldEditorController.getCurrentWorldController().getMultiplexer().updateMultiplexer();
+			//WorldEditorController.getCurrentWorldController().getMultiplexer().updateMultiplexer();
 			
-			Block selectedBlock = currentLevel.getBlock(row, column);
+			//Block selectedBlock = currentLevel.getBlock(row, column);
 			//WorldEditorRenderer.getWorldRenderer().setSelectedBlock(selectedBlock);
 			
 			return;
@@ -176,8 +166,8 @@ public class WorldEditorController extends AbstractController{
 		currentLevel.addTile(tile);
 	}
 	
-	public static WorldEditorController getCurrentWorldController() {
-		return currentWorldController;
+	public static WorldEditorController getCurrentController() {
+		return currentController;
 	}
 	
 	public Level getCurrentLevel() {

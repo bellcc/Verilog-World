@@ -9,14 +9,15 @@ package edu.miamioh.worldEditor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.worldEditor.Stages.OptionStage;
 
 public class WorldEditorScreen implements Screen {
 
-	private static WorldEditorController controller;
+	private WorldEditorController controller;
 	
 	private int windowWidth;
 	private int windowHeight;
@@ -33,84 +34,38 @@ public class WorldEditorScreen implements Screen {
 	private int bufferWidth;
 	private int bufferHeight;
 	
+	private OrthographicCamera camera;
+
 	private Stage optionStage;
-	private Stage homeStage;
-	private Stage blockStage;
-	private Stage toolStage;
-
-	public WorldEditorScreen(Configuration config) {
-
-		this.windowWidth = config.getWindowWidth();
-		this.windowHeight = config.getWindowHeight();
-		
-		this.worldWidth = config.getWorldWidth();
-		this.worldHeight = config.getWorldHeight();
-		
-		this.gridWidth = config.getGridWidth();
-		this.gridHeight = config.getGridHeight();
-		
-		this.stepWidth = config.getStepWidth();
-		this.stepHeight = config.getStepHeight();
-		
-		this.bufferWidth = config.getBufferWidth();
-		this.bufferHeight = config.getBufferHeight();
-	
-		//initOptionStage();
-		//initHomeStage();
-		//initBlockStage();
-		//initToolStage();
+			
+	public WorldEditorScreen(WorldEditorController controller) {
+		this.controller = controller;
 	}
 	
-	private void initOptionStage() {
-	
-		//optionStage = new OptionStage().getStage();
-		OptionStage temp = new OptionStage();
-		optionStage = temp.getStage();
+	@Override
+	public void show() {
 		
-	}
-	
-	private void initHomeStage() {
+		float w = Gdx.graphics.getWidth();
+		float h = Gdx.graphics.getHeight();
 		
-		homeStage = new Stage();
-	}
-	
-	private void initBlockStage() {
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, w, h);
 		
-		blockStage = new Stage();
-	}
-
-	private void initToolStage() {
-		
-		toolStage = new Stage();
+		optionStage = new OptionStage().getStage();
+				
 	}
 
 	@Override
-	public void dispose() {
+	public void render(float delta) {
 		
-		optionStage.dispose();
-		homeStage.dispose();
-		blockStage.dispose();
-		toolStage.dispose();
-	}
-
-	@Override
-	public void hide() {
+		Gdx.gl.glClearColor(255, 255, 255, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-	}
+		renderToolBar();
 
-	@Override
-	public void pause() {
-
-		controller.setPaused(true);
-	}
-
-	@Override
-	public void render(float arg0) {
-		
-		renderOptionStage();
 	}
 	
-	private void renderOptionStage() {
+	public void renderToolBar() {
 		
 		optionStage.act(Gdx.graphics.getDeltaTime());
 		optionStage.draw();
@@ -118,53 +73,38 @@ public class WorldEditorScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
+
+		controller.setWindowWidth(width);
+		controller.setWindowHeight(height);
 		
-		optionStage.getViewport().update(width, height);
-		homeStage.getViewport().update(width, height);
-		blockStage.getViewport().update(width, height);
-		toolStage.getViewport().update(width, height);
+		optionStage = new OptionStage().getStage();
+		
+		Gdx.input.setInputProcessor(optionStage);
+
+	}
+
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void resume() {
-	
-		controller.setPaused(false);
+		// TODO Auto-generated method stub
+		
 	}
 
-	/**
-	 * Called when this screen becomes the current screen for the game.
-	 */
 	@Override
-	public void show() {
+	public void hide() {
+		// TODO Auto-generated method stub
 		
-		updateWorld();
-	}
-	
-	/**
-	 * This method is used to update the world conditions that 
-	 * specifically relate to the drawing of the grid background 
-	 * and the step width/height for moving around the world. 
-	 * The world editor controller acts as a hub for this information so 
-	 * any time it is changed it is first changed in the controller and 
-	 * that update propagates down to the world editor screen.
-	 */
-	private void updateWorld() {
-		
-		worldWidth = controller.getWindowWidth();
-		worldHeight = controller.getWindowHeight();
-		
-		worldWidth = controller.getWindowWidth();
-		worldHeight = controller.getWindowHeight();
-		
-		gridWidth = controller.getGridWidth();
-		gridHeight = controller.getGridHeight();
-		
-		stepWidth = controller.getStepWidth();
-		stepHeight = controller.getStepHeight();
-		
-		bufferWidth = controller.getBufferWidth();
-		bufferHeight = controller.getBufferHeight();
-	
 	}
 
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

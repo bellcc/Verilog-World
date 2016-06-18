@@ -153,12 +153,12 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 
 	private boolean canMoveUp(int posY) {
 		
-		int worldHeight = WorldEditorController.getCurrentWorldController().getWorldHeight();
-		int gridHeight = WorldEditorController.getCurrentWorldController().getGridHeight();
+		int worldHeight = WorldEditorController.getCurrentController().getWorldHeight();
+		int gridHeight = WorldEditorController.getCurrentController().getGridHeight();
 		int worldSize = worldHeight * gridHeight;
 		
-		int windowHeight = WorldEditorController.getCurrentWorldController().getWindowHeight();
-		int bufferHeight = WorldEditorController.getCurrentWorldController().getBufferHeight();
+		int windowHeight = WorldEditorController.getCurrentController().getWindowHeight();
+		int bufferHeight = WorldEditorController.getCurrentController().getBufferHeight();
 		
 		if(posY < (worldSize - windowHeight) + (2 * bufferHeight)) {
 			return true;

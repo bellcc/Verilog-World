@@ -2,8 +2,22 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/antlr-4.5.3-complete.jar"/>
-	<classpathentry kind="lib" path="lib/gdx-backend-lwjgl-1.9.3.jar"/>
-	<classpathentry kind="lib" path="lib/gdx-1.9.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Clark/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx/1.9.3/1a3775429980a6c8da0cdefb656ad1dabf91d629/gdx-1.9.3.jar" sourcepath="C:/Users/Clark/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx/1.9.3/2bf97653cc496f9ef2f76ecf2f29b1918821f474/gdx-1.9.3-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Clark/Documents/Verilog-World/core/lib/antlr-4.5.3-complete.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Clark/Documents/Verilog-World/core/lib/gdx-1.9.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Clark/Documents/Verilog-World/core/lib/gdx-backend-lwjgl-1.9.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Clark/Documents/Verilog-World/core/lib/gdx-platform-1.9.3-natives-desktop.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Clark/Documents/Verilog-World/core/lib/jinput-2.0.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Clark/Documents/Verilog-World/core/lib/jinput-platform-2.0.5-natives-linux.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Clark/Documents/Verilog-World/core/lib/jinput-platform-2.0.5-natives-osx.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Clark/Documents/Verilog-World/core/lib/jinput-platform-2.0.5-natives-windows.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Clark/Documents/Verilog-World/core/lib/jlayer-1.0.1-gdx.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Clark/Documents/Verilog-World/core/lib/jorbis-0.0.17.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Clark/Documents/Verilog-World/core/lib/jutils-1.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Clark/Documents/Verilog-World/core/lib/lwjgl_util-2.9.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Clark/Documents/Verilog-World/core/lib/lwjgl-2.9.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Clark/Documents/Verilog-World/core/lib/lwjgl-platform-2.9.2-natives-linux.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Clark/Documents/Verilog-World/core/lib/lwjgl-platform-2.9.2-natives-osx.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Clark/Documents/Verilog-World/core/lib/lwjgl-platform-2.9.2-natives-windows.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

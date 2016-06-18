@@ -12,7 +12,7 @@ public class PictureButtonChangeListener extends AbstractChangeListener{
 			
 			System.out.println("Picture Button Change Listener");
 
-			WorldEditorController.getCurrentWorldController().getMultiplexer().updateMultiplexer();
+			WorldEditorController.getCurrentController().getMultiplexer().updateMultiplexer();
 		
 
 

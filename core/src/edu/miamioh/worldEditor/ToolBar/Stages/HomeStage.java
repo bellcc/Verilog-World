@@ -29,7 +29,7 @@ public class HomeStage {
 	
 	private void createStage() {
 		
-		int windowHeight = WorldEditorController.getCurrentWorldController().getWindowHeight();
+		int windowHeight = WorldEditorController.getCurrentController().getWindowHeight();
 
 		Actor simulator = new SimulatorActor().getButtonActor();
 		simulator.setPosition(50, windowHeight - 100);

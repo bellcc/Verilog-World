@@ -50,7 +50,7 @@ public class NormalBlock extends Block {
 		String pathToTemplate = modulePath + "templates/" + template;
 		File templateFile = new File(pathToTemplate);
 		
-		String uniqueName = "module_" + WorldEditorController.getCurrentWorldController().getUniqueBlockID() + ".v";
+		String uniqueName = "module_" + WorldEditorController.getCurrentController().getUniqueBlockID() + ".v";
 		String pathToUnique = modulePath + uniqueName;
 		File uniqueFile = new File(pathToUnique);
 		
