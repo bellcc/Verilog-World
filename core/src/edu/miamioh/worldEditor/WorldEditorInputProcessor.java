@@ -99,8 +99,17 @@ public class WorldEditorInputProcessor implements InputProcessor{
 			int row = WorldEditorScreen.getScreen().detectRow();
 			int column = WorldEditorScreen.getScreen().detectColumn();
 			
-			System.out.println("CLICKED: " + row + ", " + column);
+			int worldWidth = WorldEditorController.getCurrentController().getWorldWidth();
+			int worldHeight = WorldEditorController.getCurrentController().getWorldHeight();
 			
+			if(row >= worldHeight) {
+				row = -1;
+			}
+			
+			if(column >= worldWidth) {
+				column = -1;
+			}
+						
 			WorldEditorController.getCurrentController().gridPressed(row, column);
 			
 		}

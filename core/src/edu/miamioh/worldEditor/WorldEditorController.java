@@ -155,9 +155,7 @@ public class WorldEditorController {
 	 * @param column
 	 */
 	public void gridPressed(int row, int column) {
-		
-		System.out.println(row + ", " + column);
-		
+				
 		boolean isBlock = currentLevel.isBlock(row, column);
 		
 		if(isBlock) {
