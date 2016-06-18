@@ -18,6 +18,7 @@ import edu.miamioh.Buttons.TextButtonActor;
 import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.ChangeListeners.BlockChangeListener;
 import edu.miamioh.worldEditor.ChangeListeners.HomeChangeListener;
+import edu.miamioh.worldEditor.ChangeListeners.SimulatorChangeListener;
 import edu.miamioh.worldEditor.ChangeListeners.ToolsChangeListener;
 
 public class OptionStage {
@@ -27,6 +28,7 @@ public class OptionStage {
 	private Actor homeActor;
 	private Actor blockActor;
 	private Actor toolActor;
+	private Actor simulatorActor;
 	
 	public OptionStage() {
 		
@@ -38,16 +40,18 @@ public class OptionStage {
 		homeActor = new TextButtonActor().createTextButton(Color.GREEN, "HOME");
 		blockActor = new TextButtonActor().createTextButton(Color.BLUE, "BLOCKS");
 		toolActor = new TextButtonActor().createTextButton(Color.PURPLE, "TOOLS");
+		simulatorActor = new TextButtonActor().createTextButton(Color.RED, "SIMULATOR");
 		
 		// Add the appropriate change listener to the actor which 
 		// is located at edu.miamioh.worldEditor.ChangeListeners.
 		homeActor.addListener(new HomeChangeListener());
 		blockActor.addListener(new BlockChangeListener());
 		toolActor.addListener(new ToolsChangeListener());
+		simulatorActor.addListener(new SimulatorChangeListener());
 		
 		int windowHeight = WorldEditorController.getCurrentController().getWindowHeight();
 		
-		int actorCount = 3;
+		int actorCount = 4;
 		int actorHeight = windowHeight / actorCount;
 		int actorWidth = 50;
 		
@@ -65,6 +69,8 @@ public class OptionStage {
 		table.add(blockActor).width(actorWidth).height(actorHeight);
 		table.row();
 		table.add(toolActor).width(actorWidth).height(actorHeight);
+		table.row();
+		table.add(simulatorActor).width(actorWidth).height(actorHeight);
 		
 		stage.addActor(table);
 

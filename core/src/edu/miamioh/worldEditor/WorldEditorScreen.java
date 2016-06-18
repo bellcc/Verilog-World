@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import edu.miamioh.worldEditor.Stages.BlockStage;
 import edu.miamioh.worldEditor.Stages.HomeStage;
 import edu.miamioh.worldEditor.Stages.OptionStage;
+import edu.miamioh.worldEditor.Stages.SimulatorStage;
 
 public class WorldEditorScreen implements Screen {
 
@@ -41,7 +42,9 @@ public class WorldEditorScreen implements Screen {
 	private Stage optionStage;
 	private Stage homeStage;
 	private Stage blockStage;
-			
+	private Stage toolStage;
+	private Stage simulatorStage;
+	
 	public WorldEditorScreen(WorldEditorController controller) {
 		this.controller = controller;
 	}
@@ -58,7 +61,8 @@ public class WorldEditorScreen implements Screen {
 		optionStage = new OptionStage().getStage();
 		homeStage = new HomeStage().getStage();		
 		blockStage = new BlockStage().getStage();
-		
+		//tooStage = 
+		simulatorStage = new SimulatorStage().getStage();
 	}
 
 	@Override
@@ -79,8 +83,12 @@ public class WorldEditorScreen implements Screen {
 		//homeStage.act(Gdx.graphics.getDeltaTime());
 		//homeStage.draw();
 		
-		blockStage.act(Gdx.graphics.getDeltaTime());
-		blockStage.draw();
+		//blockStage.act(Gdx.graphics.getDeltaTime());
+		//blockStage.draw();
+	
+		simulatorStage.act(Gdx.graphics.getDeltaTime());
+		simulatorStage.draw();
+	
 	}
 
 	@Override
@@ -92,10 +100,13 @@ public class WorldEditorScreen implements Screen {
 		optionStage = new OptionStage().getStage();
 		homeStage = new HomeStage().getStage();
 		blockStage = new BlockStage().getStage();
+		//toolStage = new ToolStage().getStage();
+		simulatorStage = new SimulatorStage().getStage();
 		
 		Gdx.input.setInputProcessor(optionStage);
-		Gdx.input.setInputProcessor(homeStage);
-		Gdx.input.setInputProcessor(blockStage);
+		//Gdx.input.setInputProcessor(homeStage);
+		//Gdx.input.setInputProcessor(blockStage);
+		Gdx.input.setInputProcessor(simulatorStage);
 	}
 
 	@Override
