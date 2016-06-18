@@ -28,9 +28,8 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 	 */
 	public boolean keyUp(int keyCode) {
 
-		/**
-		int worldX = WorldEditorRenderer.getWorldRenderer().getWorldX();
-		int worldY = WorldEditorRenderer.getWorldRenderer().getWorldY();
+		int worldX = WorldEditorScreen.getScreen().getWorldX();
+		int worldY = WorldEditorScreen.getScreen().getWorldY();
 				
 		switch (keyCode) {
 		
@@ -39,8 +38,8 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 				
 				if(canMoveUp(worldY)) {
 					
-					worldY += WorldEditorController.getCurrentWorldController().getStepHeight();
-					WorldEditorRenderer.getWorldRenderer().setWorldY(worldY);
+					worldY += WorldEditorController.getCurrentController().getStepHeight();
+					WorldEditorScreen.getScreen().setWorldY(worldY);
 										
 				}
 				
@@ -51,8 +50,8 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 				
 				if(canMoveDown(worldY)) {
 					
-					worldY -= WorldEditorController.getCurrentWorldController().getStepHeight();
-					WorldEditorRenderer.getWorldRenderer().setWorldY(worldY);
+					worldY -= WorldEditorController.getCurrentController().getStepHeight();
+					WorldEditorScreen.getScreen().setWorldY(worldY);
 					
 				}
 
@@ -63,8 +62,8 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 								
 				if(canMoveLeft(worldX)) {
 					
-					worldX -= WorldEditorController.getCurrentWorldController().getStepWidth();
-					WorldEditorRenderer.getWorldRenderer().setWorldX(worldX);
+					worldX -= WorldEditorController.getCurrentController().getStepWidth();
+					WorldEditorScreen.getScreen().setWorldX(worldX);
 					
 				}
 
@@ -75,15 +74,14 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 				
 				if(canMoveRight(worldX)) {
 				
-					worldX += WorldEditorController.getCurrentWorldController().getStepWidth();
-					WorldEditorRenderer.getWorldRenderer().setWorldX(worldX);
+					worldX += WorldEditorController.getCurrentController().getStepWidth();
+					WorldEditorScreen.getScreen().setWorldX(worldX);
 					
 				}
 
 				return true;
 			
 		}
-		*/
 		
 		return false;
 	}
@@ -95,10 +93,10 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		
 		/**
-		int row = WorldEditorRenderer.getWorldRenderer().detectRow();
-		int column = WorldEditorRenderer.getWorldRenderer().detectColumn();
+		int row = WorldEditorScreen.getScreen().detectRow();
+		int column = WorldEditorScreen.getScreen().detectColumn();
 		
-		WorldEditorController.getCurrentWorldController().gridPressed(row, column);
+		WorldEditorController.getCurrentController().gridPressed(row, column);
 		*/
 		
 		return false;
@@ -131,22 +129,18 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 
 	private boolean canMoveRight(int posX) {
 		
-		/**
-		int worldWidth = WorldEditorController.getCurrentWorldController().getWorldWidth();
-		int gridWidth = WorldEditorController.getCurrentWorldController().getGridWidth();
+		int worldWidth = WorldEditorController.getCurrentController().getWorldWidth();
+		int gridWidth = WorldEditorController.getCurrentController().getGridWidth();
 		int worldSize = worldWidth * gridWidth;
 		
-		int windowWidth = WorldEditorController.getCurrentWorldController().getWindowWidth();
-		int bufferWidth = WorldEditorController.getCurrentWorldController().getBufferWidth();
+		int windowWidth = WorldEditorController.getCurrentController().getWindowWidth();
+		int bufferWidth = WorldEditorController.getCurrentController().getBufferWidth();
 		
-		int toolBarWidth = WorldEditorRenderer.getWorldRenderer().getToolBarWidth();
-		//int subToolBarWidth = WorldEditorRenderer.getWorldRenderer().getSubToolBarWidth();
-		int subToolBarWidth = WorldEditorRenderer.getWorldRenderer().getToolBarOptionsWidth();
+		int toolBarWidth = WorldEditorScreen.getScreen().getToolBarWidth();
 		
-		if(posX < (worldSize - windowWidth) + (2 * bufferWidth) + toolBarWidth + subToolBarWidth) {
+		if(posX < (worldSize - windowWidth) + (2 * bufferWidth) + toolBarWidth) {
 			return true;
 		}
-		*/
 		
 		return false;
 	}

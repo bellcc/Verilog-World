@@ -23,6 +23,8 @@ import edu.miamioh.Level.Level;
 public class WorldEditorController extends AbstractController{
 	
 	private static WorldEditorController currentController;
+	
+	private WorldEditorInputProcessor inputProcessor;
 	private InputMultiplexer multiplexer;	
 	
 	private static Level currentLevel;
@@ -53,6 +55,7 @@ public class WorldEditorController extends AbstractController{
 		currentController = this;
 		paused = false;
 
+		inputProcessor = new WorldEditorInputProcessor();
 		multiplexer = new InputMultiplexer();
 		
 		selection = ToolBarSelection.NONE;
@@ -93,6 +96,7 @@ public class WorldEditorController extends AbstractController{
 		//multiplexer.removeProcessor(toolStage);
 		multiplexer.removeProcessor(simulatorStage);
 		
+		multiplexer.addProcessor(inputProcessor);
 		multiplexer.addProcessor(optionStage);
 				
 		switch (selection) {
@@ -136,13 +140,11 @@ public class WorldEditorController extends AbstractController{
 	
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
 		
 	}
 

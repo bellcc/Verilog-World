@@ -9,8 +9,11 @@ package edu.miamioh.worldEditor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import edu.miamioh.worldEditor.Stages.BlockStage;
@@ -40,12 +43,18 @@ public class WorldEditorScreen implements Screen {
 	private int bufferHeight;
 	
 	private OrthographicCamera camera;
-
+	private ShapeRenderer renderer;
+	
+	private int worldX;
+	private int worldY;
+	
 	private Stage optionStage;
 	private Stage homeStage;
 	private Stage blockStage;
 	private Stage toolStage;
 	private Stage simulatorStage;
+	
+	private final int TOOLBAR_WIDTH = 150;
 	
 	public WorldEditorScreen() {
 		screen = this;
@@ -59,6 +68,13 @@ public class WorldEditorScreen implements Screen {
 	@Override
 	public void show() {
 		
+		updateWorldParameters();
+		
+		renderer = new ShapeRenderer();
+		
+		worldX = 0;
+		worldY = 0;
+		
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		
@@ -68,21 +84,115 @@ public class WorldEditorScreen implements Screen {
 		optionStage = new OptionStage().getStage();
 		homeStage = new HomeStage().getStage();		
 		blockStage = new BlockStage().getStage();
-		//tooStage = 
+		//toolStage = new ToolStage().getStage();
 		simulatorStage = new SimulatorStage().getStage();
+	}
+	
+	private void updateWorldParameters() {
+		
+		windowWidth = controller.getWindowWidth();
+		windowHeight = controller.getWindowHeight();
+		
+		worldWidth = controller.getWorldWidth();
+		worldHeight = controller.getWorldHeight();
+		
+		gridWidth = controller.getGridWidth();
+		gridHeight = controller.getGridHeight();
+		
+		stepWidth = controller.getStepWidth();
+		stepHeight = controller.getStepHeight();
+		
+		bufferWidth = controller.getBufferWidth();
+		bufferHeight = controller.getBufferHeight();
+		
 	}
 
 	@Override
 	public void render(float delta) {
 		
+		camera.update();
+		renderer.setProjectionMatrix(camera.combined);
+		
 		Gdx.gl.glClearColor(255, 255, 255, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
+
+		renderWorld();
 		renderToolBar();
 
 	}
+	
+	private void renderWorld() {
 		
-	public void renderToolBar() {
+		renderGrid();
+		renderLevel();
+	}
+	
+	private void renderGrid() {
+		
+		int width = worldWidth * gridWidth;
+		int height = worldHeight * gridHeight;
+
+		renderer.begin(ShapeType.Line);
+		renderer.setColor(Color.LIGHT_GRAY);
+				
+		for(int i = 0;i <= width;i += gridWidth) {			
+			renderer.line(i, 0, i, height);
+		}
+		
+		for(int i = 0;i <= height;i += gridHeight) {
+			renderer.line(0, i, width, i);
+		}
+		
+		renderer.end();
+		
+		translateCamera();
+		
+	}
+	
+	private void translateCamera() {
+		
+		int width = gridWidth * worldWidth;
+		int height = gridHeight * worldHeight;
+		
+		int translateX = worldX - bufferWidth;
+		int translateY = worldY - bufferHeight;
+
+		if(worldX <	 bufferWidth) {
+			translateX = (-1) * (bufferWidth - worldX);
+		}
+
+		if(worldY < bufferHeight) {
+			translateY = (-1) * (bufferHeight - worldY);
+		}
+		
+		translateX -= TOOLBAR_WIDTH;
+				
+		int windowWidthRange = windowWidth - TOOLBAR_WIDTH;
+		
+		if(width < windowWidthRange) {
+			translateX = TOOLBAR_WIDTH + ((windowWidthRange / 2) - (width / 2));
+			translateX *= (-1);			
+		}
+		
+		if(height < windowHeight) {
+			translateY = ((windowHeight / 2) - (height / 2));
+			translateY *= (-1);
+		}
+
+		
+		float w = Gdx.graphics.getWidth();
+		float h = Gdx.graphics.getHeight();
+		
+		camera.setToOrtho(false, w, h);
+		camera.translate(translateX, translateY);
+		
+	}
+	
+	private void renderLevel() {
+		
+	}
+		
+	private void renderToolBar() {
 		
 		optionStage.act(Gdx.graphics.getDeltaTime());
 		optionStage.draw();
@@ -119,6 +229,8 @@ public class WorldEditorScreen implements Screen {
 		controller.setWindowWidth(width);
 		controller.setWindowHeight(height);
 		
+		updateWorldParameters();
+		
 		controller.resetMultiplexer();
 		
 		optionStage = new OptionStage().getStage();
@@ -150,8 +262,12 @@ public class WorldEditorScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
+
+		optionStage.dispose();
+		homeStage.dispose();
+		blockStage.dispose();
+		toolStage.dispose();
+		simulatorStage.dispose();
 	}
 	
 	public static WorldEditorScreen getScreen() {
@@ -176,6 +292,26 @@ public class WorldEditorScreen implements Screen {
 	
 	public Stage getSimulatorStage() {
 		return simulatorStage;
+	}
+	
+	public int getWorldX() {
+		return worldX;
+	}
+	
+	public void setWorldX(int worldX) {
+		this.worldX = worldX;
+	}
+	
+	public int getWorldY() {
+		return worldY;
+	}
+	
+	public void setWorldY(int worldY) {
+		this.worldY = worldY;
+	}
+	
+	public int getToolBarWidth() {
+		return TOOLBAR_WIDTH;
 	}
 	
 }
