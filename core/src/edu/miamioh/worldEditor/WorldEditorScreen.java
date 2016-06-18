@@ -119,6 +119,8 @@ public class WorldEditorScreen implements Screen {
 		controller.setWindowWidth(width);
 		controller.setWindowHeight(height);
 		
+		controller.resetMultiplexer();
+		
 		optionStage = new OptionStage().getStage();
 		homeStage = new HomeStage().getStage();
 		blockStage = new BlockStage().getStage();

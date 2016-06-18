@@ -23,7 +23,6 @@ import edu.miamioh.Level.Level;
 public class WorldEditorController extends AbstractController{
 	
 	private static WorldEditorController currentController;
-	//private static WorldEditorInputMultiplexer worldEditorMultiplexer;
 	private InputMultiplexer multiplexer;	
 	
 	private static Level currentLevel;
@@ -118,25 +117,35 @@ public class WorldEditorController extends AbstractController{
 		Gdx.input.setInputProcessor(multiplexer);
 		
 	}
-
-	/**
-	 * This method is used to initialize any of the 
-	 */
+	
+	public void resetMultiplexer() {
+		
+		Stage optionStage = WorldEditorScreen.getScreen().getOptionStage();
+		Stage homeStage = WorldEditorScreen.getScreen().getHomeStage();
+		Stage blockStage = WorldEditorScreen.getScreen().getBlockStage();
+		//Stage toolStage = WorldEditorScreen.getScreen().getToolStage();
+		Stage simulatorStage = WorldEditorScreen.getScreen().getSimulatorStage();
+		
+		multiplexer.removeProcessor(optionStage);
+		multiplexer.removeProcessor(homeStage);
+		multiplexer.removeProcessor(blockStage);
+		//multiplexer.removeProcessor(toolStage);
+		multiplexer.removeProcessor(simulatorStage);
+		
+	}
+	
+	@Override
 	public void init() {
+		// TODO Auto-generated method stub
 		
-
 	}
 
-	public void initMultiplexer() {
-	
-		//worldEditorMultiplexer = new WorldEditorInputMultiplexer();
-
-	}
-	
+	@Override
 	public void update() {
+		// TODO Auto-generated method stub
 		
 	}
-	
+
 	/**
 	 * This method discerns which action should be taken after a user touches down in the world. 
 	 * @param row
