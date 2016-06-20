@@ -72,6 +72,7 @@ public class WorldEditorScreen implements Screen {
 	public void show() {
 		
 		updateWorldParameters();
+		controller.setToolBarSelection(ToolBarSelection.NONE);
 		
 		renderer = new ShapeRenderer();
 		

@@ -59,6 +59,7 @@ public class WorldSimulatorScreen implements Screen {
 	public void show() {
 		
 		updateWorldParameters();
+		controller.setSelection(ToolBarSelection.NONE);
 		
 		renderer = new ShapeRenderer();
 		
@@ -101,7 +102,7 @@ public class WorldSimulatorScreen implements Screen {
 		Gdx.gl.glClearColor(255, 255, 255, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		//renderWorld();
+		renderWorld();
 		renderToolBar();
 
 	}

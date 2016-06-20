@@ -40,8 +40,8 @@ public class VerilogWorldMain extends Game {
 		//Set the default screen
 		
 		//this.setScreen(worldEditorScreen);
-		this.setScreen(worldSimulatorScreen);
-		//updateScreen();
+		//this.setScreen(worldSimulatorScreen);
+		updateScreen();
 	}
 	
 	public void updateScreen() {
@@ -52,6 +52,7 @@ public class VerilogWorldMain extends Game {
 			break;
 			
 		case WORLD_SIMULATOR:
+			this.setScreen(worldSimulatorScreen);
 			break;
 		}
 	}

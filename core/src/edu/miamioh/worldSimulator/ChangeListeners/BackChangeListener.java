@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import edu.miamioh.verilogWorld.VerilogWorld;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
+import edu.miamioh.worldSimulator.WorldSimulatorController;
 
 public class BackChangeListener extends ChangeListener {
 
@@ -12,6 +13,8 @@ public class BackChangeListener extends ChangeListener {
 	public void changed(ChangeEvent event, Actor actor) {
 
 		System.out.println("Back Change Listener");
+		
+		WorldSimulatorController.getController().resetMultiplexer();
 
 		VerilogWorldMain.getVerilogWorldMain().setVerilogWorldScreen(VerilogWorld.WORLD_EDITOR);
 		VerilogWorldMain.getVerilogWorldMain().updateScreen();

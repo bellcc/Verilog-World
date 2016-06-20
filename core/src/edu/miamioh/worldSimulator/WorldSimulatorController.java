@@ -18,6 +18,8 @@ import edu.miamioh.worldSimulator.ToolBarSelection;
 public class WorldSimulatorController {
 	
 	private static WorldSimulatorController currentController;
+	
+	private WorldSimulatorInputProcessor inputProcessor;
 	private InputMultiplexer multiplexer;
 	
 	private Level currentLevel;
@@ -43,6 +45,8 @@ public class WorldSimulatorController {
 		
 		currentController = this;
 		selection = ToolBarSelection.NONE;
+		
+		inputProcessor = new WorldSimulatorInputProcessor();
 		
 		multiplexer = new InputMultiplexer();
 	}
@@ -73,6 +77,7 @@ public class WorldSimulatorController {
 		Stage homeStage = WorldSimulatorScreen.getScreen().getHomeStage();
 		Stage simulatorStage = WorldSimulatorScreen.getScreen().getSimulatorStage();
 		
+		multiplexer.removeProcessor(inputProcessor);
 		multiplexer.removeProcessor(optionStage);
 		multiplexer.removeProcessor(homeStage);
 		multiplexer.removeProcessor(simulatorStage);
@@ -103,7 +108,7 @@ public class WorldSimulatorController {
 			
 		}
 		
-		//multiplexer.addProcessor(inputProcessor);
+		multiplexer.addProcessor(inputProcessor);
 		
 		Gdx.input.setInputProcessor(multiplexer);
 		
