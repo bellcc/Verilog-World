@@ -116,6 +116,7 @@ public class WorldEditorScreen implements Screen {
 
 		renderWorld();
 		renderToolBar();
+		renderSelector();
 
 	}
 	
@@ -183,6 +184,34 @@ public class WorldEditorScreen implements Screen {
 		
 		camera.setToOrtho(false, w, h);
 		camera.translate(translateX, translateY);
+		
+	}
+	
+	public void renderSelector() {
+
+		int row = detectRow();
+		int column = detectColumn();
+
+		column = detectColumn();
+		row = detectRow();
+				
+		int x = column * gridWidth;
+		int y = row * gridHeight;
+
+		if((column >= 0 && column <= (worldWidth - 1)) && (row >= 0 && row <= (worldHeight - 1))) {
+			
+			int selectorWidth = gridWidth - 1;
+			int selectorHeight = gridHeight - 1;
+			
+			y += 1;
+			
+			renderer.begin(ShapeType.Filled);
+			renderer.setColor(Color.DARK_GRAY);
+			renderer.rect(x, y, selectorWidth, selectorHeight);
+
+			renderer.end();
+			
+		}
 		
 	}
 	
