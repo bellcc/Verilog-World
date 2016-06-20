@@ -31,6 +31,9 @@ public class WorldEditorController {
 	private Level currentLevel;
 	
 	private ToolBarSelection selection;
+	private int selectedRow;
+	private int selectedColumn;
+	
 	private BlockSelectionType blockSelection;
 
 	private int worldWidth;
@@ -95,17 +98,11 @@ public class WorldEditorController {
 		Stage blockSelectedStage = WorldEditorScreen.getScreen().getBlockSelectedStage();
 		//Stage toolStage = WorldEditorScreen.getScreen().getToolStage();
 		Stage simulatorStage = WorldEditorScreen.getScreen().getSimulatorStage();
+
+		resetMultiplexer();
 		
-		multiplexer.removeProcessor(optionStage);
-		multiplexer.removeProcessor(homeStage);
-		multiplexer.removeProcessor(blockStage);
-		multiplexer.removeProcessor(blockSelectedStage);
-		//multiplexer.removeProcessor(toolStage);
-		multiplexer.removeProcessor(simulatorStage);
-		
-		multiplexer.addProcessor(inputProcessor);
 		multiplexer.addProcessor(optionStage);
-				
+		
 		switch (selection) {
 		
 			case HOME:
@@ -129,6 +126,8 @@ public class WorldEditorController {
 			
 		}
 		
+		multiplexer.addProcessor(inputProcessor);
+				
 		Gdx.input.setInputProcessor(multiplexer);
 		
 	}
@@ -138,12 +137,15 @@ public class WorldEditorController {
 		Stage optionStage = WorldEditorScreen.getScreen().getOptionStage();
 		Stage homeStage = WorldEditorScreen.getScreen().getHomeStage();
 		Stage blockStage = WorldEditorScreen.getScreen().getBlockStage();
+		Stage blockSelectedStage = WorldEditorScreen.getScreen().getBlockSelectedStage();
 		//Stage toolStage = WorldEditorScreen.getScreen().getToolStage();
 		Stage simulatorStage = WorldEditorScreen.getScreen().getSimulatorStage();
 		
+		multiplexer.removeProcessor(inputProcessor);
 		multiplexer.removeProcessor(optionStage);
 		multiplexer.removeProcessor(homeStage);
 		multiplexer.removeProcessor(blockStage);
+		multiplexer.removeProcessor(blockSelectedStage);
 		//multiplexer.removeProcessor(toolStage);
 		multiplexer.removeProcessor(simulatorStage);
 		
@@ -159,28 +161,30 @@ public class WorldEditorController {
 		boolean isBlock = currentLevel.isBlock(row, column);
 		
 		if(isBlock) {
-		
-			/*
-			 * Not used
-			 */
-//			boolean blockOption = WorldEditorRenderer.getWorldRenderer().getBlockOption();
-//			
-//			if(blockOption) {
-//				WorldEditorRenderer.getWorldRenderer().setBlockOption(false);
-//			}else {
-//				WorldEditorRenderer.getWorldRenderer().setBlockOption(true);
-//			}
-			
-			//WorldEditorController.getCurrentWorldController().getMultiplexer().updateMultiplexer();
-			
-			//Block selectedBlock = currentLevel.getBlock(row, column);
-			//WorldEditorRenderer.getWorldRenderer().setSelectedBlock(selectedBlock);
+
+			if(selection == ToolBarSelection.BLOCK_SELECTED) {
+				selection = ToolBarSelection.NONE;
+			}else {
+				selection = ToolBarSelection.BLOCK_SELECTED;
+				resetMultiplexer();
+				updateInputMultiplexer();
+				
+				selectedRow = row;
+				selectedColumn = column;
+			}
 			
 			return;
 		}
+		else {
+		
+			if(selection == ToolBarSelection.BLOCK_SELECTED) {
+				selection = ToolBarSelection.NONE;
+			}
+			
+		}
 		
 		if (selection == ToolBarSelection.BLOCK) {
-			
+						
 			switch(blockSelection) {
 			
 				case Block_Blank:
@@ -200,6 +204,7 @@ public class WorldEditorController {
 			}
 		
 		}
+		
 				
 	}
 	
@@ -315,6 +320,22 @@ public class WorldEditorController {
 	
 	public void setPaused(boolean paused) {
 		this.paused = paused;
+	}
+	
+	public BlockSelectionType getBlockSelection() {
+		return blockSelection;
+	}
+	
+	public void setBlockSelection(BlockSelectionType blockSelection) {
+		this.blockSelection = blockSelection;
+	}
+	
+	public int getSelectedRow() {
+		return selectedRow;
+	}
+	
+	public int getSelectedColumn() {
+		return selectedColumn;
 	}
 
 }

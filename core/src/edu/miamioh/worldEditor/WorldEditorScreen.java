@@ -7,6 +7,8 @@
 
 package edu.miamioh.worldEditor;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -16,6 +18,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import edu.miamioh.GameObjects.Block;
 import edu.miamioh.worldEditor.Stages.BlockSelectedStage;
 import edu.miamioh.worldEditor.Stages.BlockStage;
 import edu.miamioh.worldEditor.Stages.HomeStage;
@@ -86,7 +89,7 @@ public class WorldEditorScreen implements Screen {
 		blockStage = new BlockStage().getStage();
 		blockSelectedStage = new BlockSelectedStage().getStage();
 		//toolStage = new ToolStage().getStage();
-		simulatorStage = new SimulatorStage().getStage();
+		simulatorStage = new SimulatorStage().getStage();		
 	}
 	
 	private void updateWorldParameters() {
@@ -115,15 +118,15 @@ public class WorldEditorScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		renderWorld();
-		renderToolBar();
 		renderSelector();
+		renderToolBar();
 
 	}
 	
 	private void renderWorld() {
 		
-		renderGrid();
 		renderLevel();
+		renderGrid();
 	}
 	
 	private void renderGrid() {
@@ -216,7 +219,21 @@ public class WorldEditorScreen implements Screen {
 	}
 	
 	private void renderLevel() {
+	
+		ArrayList<Block> blockList = controller.getCurrentLevel().getBlockList();
 		
+		for(int i=0;i<blockList.size();i++) {
+
+			int row = blockList.get(i).getRow();
+			int column = blockList.get(i).getColumn();
+			Color color = blockList.get(i).getColor();
+			
+			renderer.begin(ShapeType.Filled);
+			renderer.setColor(color);
+			renderer.rect(column * gridWidth, row * gridHeight, gridWidth, gridHeight);
+			renderer.end();
+		
+		}
 	}
 		
 	private void renderToolBar() {

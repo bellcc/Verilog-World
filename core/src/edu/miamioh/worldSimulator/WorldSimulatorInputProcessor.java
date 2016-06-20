@@ -9,7 +9,7 @@ package edu.miamioh.worldSimulator;
 
 import com.badlogic.gdx.InputProcessor;
 
-public class WorldSimulatorInputProcessor implements InputProcessor{
+public class WorldSimulatorInputProcessor implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {

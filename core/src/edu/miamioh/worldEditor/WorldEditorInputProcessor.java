@@ -102,19 +102,15 @@ public class WorldEditorInputProcessor implements InputProcessor{
 			int worldWidth = WorldEditorController.getCurrentController().getWorldWidth();
 			int worldHeight = WorldEditorController.getCurrentController().getWorldHeight();
 			
-			if(row >= worldHeight) {
-				row = -1;
+			if(row >= worldHeight || row < 0 || column >= worldWidth || column < 0) {
+				return true;
 			}
-			
-			if(column >= worldWidth) {
-				column = -1;
-			}
-						
+
 			WorldEditorController.getCurrentController().gridPressed(row, column);
 			
 		}
 		
-		return false;
+		return true;
 	}
 	
 	public boolean touchUp(int x, int y, int pointer, int button) {

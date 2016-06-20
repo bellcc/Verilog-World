@@ -7,16 +7,22 @@
 
 package edu.miamioh.worldSimulator;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+
 import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.Level.Level;
-import edu.miamioh.verilogWorld.VerilogWorldController;
+import edu.miamioh.worldSimulator.ToolBarSelection;
 
 public class WorldSimulatorController {
 	
 	private static WorldSimulatorController currentController;
-	private static WorldSimulatorMultiplexer multiplexer;
+	private InputMultiplexer multiplexer;
 	
 	private Level currentLevel;
+	
+	private ToolBarSelection selection;
 	
 	private int worldWidth;
 	private int worldHeight;
@@ -33,48 +39,80 @@ public class WorldSimulatorController {
 	private int stepWidth;
 	private int stepHeight;
 
+	public WorldSimulatorController() {
+		
+		currentController = this;
+		selection = ToolBarSelection.NONE;
+		
+		multiplexer = new InputMultiplexer();
+	}
+	
+	public WorldSimulatorController(Configuration config) {
+
+		this();
+		
+		windowWidth = config.getWindowWidth();
+		windowHeight = config.getWindowHeight();
+		
+		worldWidth = config.getWorldWidth();
+		worldHeight = config.getWorldHeight();
+		
+		gridWidth = config.getGridWidth();
+		gridHeight = config.getGridHeight();
+		
+		stepWidth = config.getStepWidth();
+		stepHeight = config.getStepHeight();
+		
+		bufferWidth = config.getBufferWidth();
+		bufferHeight= config.getBufferHeight();		
+	}
+	
+	public void resetMultiplexer() {
+		
+		Stage optionStage = WorldSimulatorScreen.getScreen().getOptionStage();
+		Stage homeStage = WorldSimulatorScreen.getScreen().getHomeStage();
+		Stage simulatorStage = WorldSimulatorScreen.getScreen().getSimulatorStage();
+		
+		multiplexer.removeProcessor(optionStage);
+		multiplexer.removeProcessor(homeStage);
+		multiplexer.removeProcessor(simulatorStage);
+	}
+	
+	public void updateInputMultiplexer() {
+		
+		Stage optionStage = WorldSimulatorScreen.getScreen().getOptionStage();
+		Stage homeStage = WorldSimulatorScreen.getScreen().getHomeStage();
+		Stage simulatorStage = WorldSimulatorScreen.getScreen().getSimulatorStage();
+		
+		resetMultiplexer();
+		
+		multiplexer.addProcessor(optionStage);
+		
+		switch (selection) {
+		
+			case HOME:
+				multiplexer.addProcessor(homeStage);
+				break;
+
+			case SIMULATOR:
+				multiplexer.addProcessor(simulatorStage);
+				break;
+				
+			default:
+				break;
+			
+		}
+		
+		//multiplexer.addProcessor(inputProcessor);
+		
+		Gdx.input.setInputProcessor(multiplexer);
+		
+	}
+	
 	public void setCurrentLevel(Level currentLevel) {
 		this.currentLevel = currentLevel;
 	}
 
-	public WorldSimulatorController() {
-		
-		currentController = this;
-		initWorld();
-	}
-	
-	public void initWorld() {
-		
-		/**
-		Configuration config = VerilogWorldController.getController().getDefaultConfig();
-		
-		setWorldWidth(config.getWorldWidth());
-		setWorldHeight(config.getWorldHeight());
-		
-		setWindowWidth(config.getWindowWidth());
-		setWindowHeight(config.getWindowHeight());
-		
-		setBufferWidth(config.getBufferWidth());
-		setBufferHeight(config.getBufferHeight());
-		
-		setGridWidth(config.getGridWidth());
-		setGridHeight(config.getGridHeight());
-		
-		setStepWidth(config.getStepWidth());
-		setStepHeight(config.getStepHeight());
-		*/
-		
-	}
-	
-	public void initMultiplexer() {
-		
-		multiplexer = new WorldSimulatorMultiplexer();
-	}
-	
-	public void update() {
-		
-	}
-	
 	public Level getCurrentLevel() {
 		return currentLevel;
 	}
@@ -162,9 +200,13 @@ public class WorldSimulatorController {
 	public void setStepHeight(int stepHeight) {
 		this.stepHeight = stepHeight;
 	}
-
-	public static WorldSimulatorMultiplexer getMultiplexer() {
-		return multiplexer;
+	
+	public void setSelection(ToolBarSelection selection) {
+		this.selection = selection;
+	}
+	
+	public ToolBarSelection getSelection() {
+		return selection;
 	}
 
 }

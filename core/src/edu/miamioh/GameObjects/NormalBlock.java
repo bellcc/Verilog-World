@@ -35,7 +35,7 @@ public class NormalBlock extends Block {
 			setColor(Color.BLACK);
 		}
 		
-		makeUniqueFile();
+		//makeUniqueFile();
 	}
 	
 	public void compile() {
