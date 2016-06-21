@@ -29,6 +29,13 @@ public class Block extends AbstractGameObject {
 		setRow(row);
 		setColumn(column);
 	}
+	
+	public Block(int row, int column, Color color) {
+		
+		setRow(row);
+		setColumn(column);
+		setColor(color);
+	}
 
 	public void setColor(Color color) {
 		this.color = color;

@@ -1,6 +1,6 @@
 
 /**
- * @author Chris Bell
+ * @author Clark Bell
  * @date   05-27-2016
  * @info   
  */
@@ -11,7 +11,7 @@ import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
-import edu.miamioh.Screens.StartScreen;
+import edu.miamioh.verilogWorld.VerilogWorldMain;
 
 public class DesktopLauncher {
 
@@ -22,15 +22,15 @@ public class DesktopLauncher {
 		config.addIcon("game-256.png", FileType.Internal);
 		config.addIcon("game-128.png", FileType.Internal);
 		config.addIcon("game-32.png", FileType.Internal);
-		
+
 		config.title = "Verilog World";
 		config.width = 600;
 		config.height = 600;
 		
-		//config.resizable = false;
 		config.backgroundFPS = 30;
-		new LwjglApplication(new StartScreen(), config);
-	
+
+		new LwjglApplication(new VerilogWorldMain(), config);
+
 	}
 
 }

@@ -39,7 +39,7 @@ public class NormalBlock extends Block {
 			setColor(Color.BLACK);
 		}
 		
-		makeUniqueFile();
+		//makeUniqueFile();
 	}
 	
 	public ModuleWrapper compile() {
@@ -60,12 +60,13 @@ public class NormalBlock extends Block {
 	public void makeUniqueFile() {
 		
 		String modulePath = VerilogWorldController.getController().getRootPath() + "core/assets/modules/";
+//		String modulePath = "/home/pheonix/GitHub/Verilog-World/core/assets/modules/";
 		
 		String template = type.toString() + ".v";
 		String pathToTemplate = modulePath + "templates/" + template;
 		File templateFile = new File(pathToTemplate);
 		
-		String uniqueName = "module_" + WorldEditorController.getCurrentWorldController().getUniqueBlockID() + ".v";
+		String uniqueName = "module_" + WorldEditorController.getCurrentController().getUniqueBlockID() + ".v";
 		String pathToUnique = modulePath + uniqueName;
 		File uniqueFile = new File(pathToUnique);
 		

@@ -9,8 +9,11 @@
 
 package edu.miamioh.worldEditor;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+
 import edu.miamioh.Configuration.Configuration;
-import edu.miamioh.AbstractEditor.AbstractController;
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.GameObjects.NormalBlock;
 import edu.miamioh.GameObjects.NormalBlockType;
@@ -19,12 +22,20 @@ import edu.miamioh.GameObjects.SpecialBlockType;
 import edu.miamioh.Level.Level;
 import edu.miamioh.verilogWorld.VerilogWorldController;
 
-public class WorldEditorController extends AbstractController{
+public class WorldEditorController {
 	
-	private static WorldEditorController currentWorldController;
-	private static WorldEditorInputMultiplexer worldEditorMultiplexer;
-		
-	private static Level currentLevel;
+	private static WorldEditorController currentController;
+	
+	private WorldEditorInputProcessor inputProcessor;
+	private InputMultiplexer multiplexer;	
+	
+	private Level currentLevel;
+	
+	private ToolBarSelection selection;
+	private int selectedRow;
+	private int selectedColumn;
+	
+	private BlockSelectionType blockSelection;
 
 	private int worldWidth;
 	private int worldHeight;
@@ -43,60 +54,114 @@ public class WorldEditorController extends AbstractController{
 	
 	private int blockID;
 	
+	private boolean paused;
+	
 	public WorldEditorController() {
 		
-		currentWorldController = this;
-		init();
+		currentController = this;
+		paused = false;
 
-	}
-
-	/**
-	 * This method is used to initialize any of the 
-	 */
-	public void init() {
-			
-		initWorld();
-		initPlayer();
+		inputProcessor = new WorldEditorInputProcessor();
+		multiplexer = new InputMultiplexer();
+		
+		selection = ToolBarSelection.NONE;
+		blockSelection = BlockSelectionType.NONE;
 		blockID = 0;
 	}
+	
+	public WorldEditorController(Configuration config, Level currentLevel) {
 
+		this();
+	}
+	
 	public void initWorld() {
 		
-		currentLevel = VerilogWorldController.getController().getLevel();
+		//currentLevel = VerilogWorldController.getController().getLevel();
 
 		Configuration config = VerilogWorldController.getController().getDefaultConfig();
 		
 		setWorldWidth(config.getWorldWidth());
 		setWorldHeight(config.getWorldHeight());
 		
-		setWindowWidth(config.getWindowWidth());
-		setWindowHeight(config.getWindowHeight());
+		windowWidth = config.getWindowWidth();
+		windowHeight = config.getWindowHeight();
 		
-		setBufferWidth(config.getBufferWidth());
-		setBufferHeight(config.getBufferHeight());
+		worldWidth = config.getWorldWidth();
+		worldHeight = config.getWorldHeight();
 		
-		setGridWidth(config.getGridWidth());
-		setGridHeight(config.getGridHeight());
+		gridWidth = config.getGridWidth();
+		gridHeight = config.getGridHeight();
 		
-		setStepWidth(config.getStepWidth());
-		setStepHeight(config.getStepHeight());
+		stepWidth = config.getStepWidth();
+		stepHeight = config.getStepHeight();
+		
+		bufferWidth = config.getBufferWidth();
+		bufferHeight= config.getBufferHeight();
+		
+		this.currentLevel = currentLevel;
+	}
+	
+	public void updateInputMultiplexer() {		
+		
+		Stage optionStage = WorldEditorScreen.getScreen().getOptionStage();
+		Stage homeStage = WorldEditorScreen.getScreen().getHomeStage();
+		Stage blockStage = WorldEditorScreen.getScreen().getBlockStage();
+		Stage blockSelectedStage = WorldEditorScreen.getScreen().getBlockSelectedStage();
+		//Stage toolStage = WorldEditorScreen.getScreen().getToolStage();
+		Stage simulatorStage = WorldEditorScreen.getScreen().getSimulatorStage();
+
+		resetMultiplexer();
+		
+		multiplexer.addProcessor(optionStage);
+		
+		switch (selection) {
+		
+			case HOME:
+				multiplexer.addProcessor(homeStage);
+				break;
+				
+			case BLOCK:
+				multiplexer.addProcessor(blockStage);
+				break;
+				
+			case BLOCK_SELECTED:
+				multiplexer.addProcessor(blockSelectedStage);
+				break;
+				
+			case SIMULATOR:
+				multiplexer.addProcessor(simulatorStage);
+				break;
+				
+			default:
+				break;
+			
+		}
+		
+		multiplexer.addProcessor(inputProcessor);
+				
+		Gdx.input.setInputProcessor(multiplexer);
+		
+	}
+	
+	public void resetMultiplexer() {
+		
+		Stage optionStage = WorldEditorScreen.getScreen().getOptionStage();
+		Stage homeStage = WorldEditorScreen.getScreen().getHomeStage();
+		Stage blockStage = WorldEditorScreen.getScreen().getBlockStage();
+		Stage blockSelectedStage = WorldEditorScreen.getScreen().getBlockSelectedStage();
+		//Stage toolStage = WorldEditorScreen.getScreen().getToolStage();
+		Stage simulatorStage = WorldEditorScreen.getScreen().getSimulatorStage();
+		
+		multiplexer.removeProcessor(inputProcessor);
+		multiplexer.removeProcessor(optionStage);
+		multiplexer.removeProcessor(homeStage);
+		multiplexer.removeProcessor(blockStage);
+		multiplexer.removeProcessor(blockSelectedStage);
+		//multiplexer.removeProcessor(toolStage);
+		multiplexer.removeProcessor(simulatorStage);
 		
 	}
 
-	public void initPlayer() {
-		
-	}
-	
-	public void initMultiplexer() {
-	
-		worldEditorMultiplexer = new WorldEditorInputMultiplexer();
-
-	}
-	
-	public void update() {
-		
-	}
-	
 	/**
 	 * This method discerns which action should be taken after a user touches down in the world. 
 	 * @param row
@@ -107,21 +172,26 @@ public class WorldEditorController extends AbstractController{
 		boolean isBlock = currentLevel.isBlock(row, column);
 		
 		if(isBlock) {
-		
-			// Notifies the world renderer to renderer block options (such as remove, and edit).
-			WorldEditorRenderer.getWorldRenderer().toggleBlockOption();
+
+			if(selection == ToolBarSelection.BLOCK_SELECTED) {
+				selection = ToolBarSelection.NONE;
+			}else {
+				selection = ToolBarSelection.BLOCK_SELECTED;
+				resetMultiplexer();
+				updateInputMultiplexer();
+				
+				selectedRow = row;
+				selectedColumn = column;
+			}
 			
-			WorldEditorController.getCurrentWorldController().getMultiplexer().updateMultiplexer();
-			
-			Block selectedBlock = currentLevel.getBlock(row, column);
-			WorldEditorRenderer.getWorldRenderer().setSelectedBlock(selectedBlock);
+			return;
 		}
 		else {
-			boolean blocksActor = WorldEditorRenderer.getWorldRenderer().getBlocksActor();
+			//boolean blocksActor = WorldEditorRenderer.getWorldRenderer().getBlocksActor();
 			
-			SelectionType type = WorldEditorRenderer.getWorldRenderer().getSelectionType();
+			BlockSelectionType type = WorldEditorController.getCurrentController().getBlockSelection();
 			
-			if (blocksActor) {
+			//if (blocksActor) {
 				switch(type) {
 				case Block_Blank:
 					currentLevel.addBlock(new NormalBlock(NormalBlockType.Blank, row, column));
@@ -135,19 +205,51 @@ public class WorldEditorController extends AbstractController{
 				case Block_Wall:
 					currentLevel.addBlock(new NormalBlock(NormalBlockType.Wall, row, column));
 					break;
+				default:
+					break;
 				}
 				
 				++blockID;
-			}
+			//}
+			
 		}
 		
-		//Procedures for all other block states go here in the form of else if statements.
+		if (selection == ToolBarSelection.BLOCK) {
+						
+			switch(blockSelection) {
+			
+				case Block_Blank:
+					currentLevel.addBlock(new NormalBlock(NormalBlockType.Blank, row, column));
+					break;
+				case Block_Clock:
+					currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Clock, row, column));
+					break;
+				case Block_Reset:
+					currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Reset, row, column));
+					break;
+				case Block_Wall:
+					currentLevel.addBlock(new NormalBlock(NormalBlockType.Wall, row, column));
+					break;
+				default:
+					break;
+			}
+		
+		}
+		
+				
 	}
 	
-	public static WorldEditorController getCurrentWorldController() {
-		return currentWorldController;
+	public void addNewBlock(Block aBlock) {
+		
+		++blockID;
+		currentLevel.addBlock(aBlock);
 	}
-	
+
+	public static WorldEditorController getCurrentController() {
+
+		return currentController;
+	}
+
 	public Level getCurrentLevel() {
 		return currentLevel;
 	}
@@ -231,13 +333,41 @@ public class WorldEditorController extends AbstractController{
 	public void setStepHeight(int stepHeight) {
 		this.stepHeight = stepHeight;
 	}
-	
-	public WorldEditorInputMultiplexer getMultiplexer() {
-		
-		return worldEditorMultiplexer;
-	}
-	
+
 	public int getUniqueBlockID() {
 		return this.blockID;
 	}
+	
+	public ToolBarSelection getToolBarSelection() {
+		return selection;
+	}
+	
+	public void setToolBarSelection(ToolBarSelection selection) {
+		this.selection = selection;
+	}
+	
+	public boolean getPaused() {
+		return paused;
+	}
+	
+	public void setPaused(boolean paused) {
+		this.paused = paused;
+	}
+	
+	public BlockSelectionType getBlockSelection() {
+		return blockSelection;
+	}
+	
+	public void setBlockSelection(BlockSelectionType blockSelection) {
+		this.blockSelection = blockSelection;
+	}
+	
+	public int getSelectedRow() {
+		return selectedRow;
+	}
+	
+	public int getSelectedColumn() {
+		return selectedColumn;
+	}
+
 }

@@ -4,7 +4,6 @@
 	<classpathentry kind="src" path="assets"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/antlr-4.5.3-complete.jar"/>
-	<classpathentry kind="lib" path="lib/gdx-backend-lwjgl-1.9.3.jar"/>
 	<classpathentry kind="lib" path="lib/gdx-1.9.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

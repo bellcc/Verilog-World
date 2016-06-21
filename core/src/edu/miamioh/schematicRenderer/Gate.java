@@ -12,38 +12,30 @@ import static edu.miamioh.schematicRenderer.GateType.*;
  */
 class Gate {
 
-    Constants constants = new Constants();
-
     private GateType type;
     private String id = "";
     private ArrayList<String> inputs = new ArrayList<>();
     private int level = 0;
     private int cx = 0, cy = 0;
-    private float r, g, b, a;
+    private float r = 0, g = 0, b = 0, a = 0;
     private ArrayList<Integer> inputYCoords = new ArrayList<>();
     private ArrayList<Integer> inputXCoords = new ArrayList<>();
     private int scaledGS = Constants.gateSize * Constants.scaleFactor;
-
-    /**
-     * Gate default constructor. WILL ERROR OUT IF ATTEMPTED TO RENDER.
-     */
-    public Gate() {
-        this(null, null, 0);
-    }
 
     /**
      * Gate constructor. Requires a GateType (enumerated class), a number of
      * numOfInputs, a unique ID, and a level (distance
      * from the numOfInputs).
      *
-     * @param type        The type of gate to be created. Types can be found
-     *                    in {@link GateType}.
-     * @param id
-     * @param level
+     * @param type  The type of gate to be created. Types can be found
+     *              in {@link GateType}.
+     * @param id    Unique identifier of the Gate.
+     * @param level The level (right from 0) of the Gate. Levels are two
+     *              scaled gate widths, center to center.
      */
-    public Gate(GateType type, String id, int level) {
+    Gate(GateType type, String id, int level) {
 
-        float r, g, b, a = 255;
+        float r = 0, g = 0, b = 0, a = 255;
 
         switch (type) {
 
@@ -52,6 +44,16 @@ class Gate {
                 this.id = id;
                 this.level = level;
                 r = 255;
+                g = 0;
+                b = 0;
+                setColor(r, g, b, a);
+                break;
+
+            case NAND:
+                this.type = NAND;
+                this.id = id;
+                this.level = level;
+                r = 125;
                 g = 0;
                 b = 0;
                 setColor(r, g, b, a);
@@ -67,6 +69,16 @@ class Gate {
                 setColor(r, g, b, a);
                 break;
 
+            case NOR:
+                this.type = NOR;
+                this.id = id;
+                this.level = level;
+                r = 0;
+                g = 125;
+                b = 0;
+                setColor(r, g, b, a);
+                break;
+
             case XOR:
                 this.type = XOR;
                 this.id = id;
@@ -74,6 +86,16 @@ class Gate {
                 r = 0;
                 g = 0;
                 b = 255;
+                setColor(r, g, b, a);
+                break;
+
+            case XNOR:
+                this.type = XNOR;
+                this.id = id;
+                this.level = level;
+                r = 0;
+                g = 0;
+                b = 125;
                 setColor(r, g, b, a);
                 break;
 
@@ -107,16 +129,6 @@ class Gate {
                 setColor(r, g, b, a);
                 break;
 
-            case FF:
-                this.type = FF;
-                this.id = id;
-                this.level = level;
-                r = 0;
-                g = 0;
-                b = 0;
-                setColor(r, g, b, a);
-                break;
-
             case BLANK:
                 this.type = BLANK;
                 this.id = id;
@@ -127,16 +139,10 @@ class Gate {
                 setColor(r, g, b, a);
                 break;
 
-//            case MODULE:
-//                this.type = type;
-//                this.setNumOfOutputs(numOfOutputs);
-
             default:
                 this.type = BLANK;
                 this.level = 0;
-                r = 0;
-                g = 0;
-                b = 0;
+                setColor(r, g, b, a);
                 break;
 
         }
@@ -148,7 +154,7 @@ class Gate {
         switch (this.getType()) {
 
             case AND:
-
+            case NAND:
                 for (int i = 0; i < this.getNumOfInputs(); i++) {
                     inputXCoords.add(this.cx - scaledGS / 2);
                 }
@@ -159,7 +165,9 @@ class Gate {
                 break;
 
             case OR:
+            case NOR:
             case XOR:
+            case XNOR:
                 for (int i = 0; i < this.getNumOfInputs(); i++) {
                     inputXCoords.add(this.cx - scaledGS / 2);
                 }
@@ -167,7 +175,6 @@ class Gate {
 
             case WIRE:
             case REG:
-            case FF:
                 inputXCoords.add(this.cx - scaledGS / 2);
                 break;
 
@@ -186,6 +193,7 @@ class Gate {
         switch (this.getType()) {
 
             case AND:
+            case NAND:
                 for (int i = 1; i <= this.getNumOfInputs(); i++) {
 
                     y = this.cy - scaledGS / 2 - scaledGS / (this.getNumOfInputs() * 2) + (int) ((i / (float) this.getNumOfInputs()) * (scaledGS)); //casting inspired by Connor
@@ -199,7 +207,9 @@ class Gate {
                 break;
 
             case OR:
+            case NOR:
             case XOR:
+            case XNOR:
                 for (int i = 1; i <= this.getNumOfInputs(); i++) {
 
                     y = this.cy - scaledGS / 2 - scaledGS / (this.getNumOfInputs() * 2) + (int) ((i / (float) this.getNumOfInputs()) * (scaledGS)); //casting inspired by Connor
@@ -210,7 +220,6 @@ class Gate {
 
             case WIRE:
             case REG:
-            case FF:
                 inputYCoords.add(this.cy);
                 break;
 
@@ -222,26 +231,26 @@ class Gate {
 
     }
 
-    private void setColor(float r, float g, float b, float a){
+    private void setColor(float r, float g, float b, float a) {
         this.r = r;
         this.g = g;
         this.b = b;
         this.a = a;
     }
 
-    public float getR(){
+    float getR() {
         return this.r;
     }
 
-    public float getG(){
+    float getG() {
         return this.g;
     }
 
-    public float getB(){
+    float getB() {
         return this.b;
     }
 
-    public float getA(){
+    float getA() {
         return this.a;
     }
 
@@ -261,7 +270,7 @@ class Gate {
      *
      * @return The unique ID of this instance.
      */
-    public String getID() {
+    String getID() {
 
         return this.id;
 
@@ -272,7 +281,7 @@ class Gate {
      *
      * @return The Center X coordinate of this Gate instance.
      */
-    public int getCX() {
+    int getCX() {
 
         return this.cx;
 
@@ -284,7 +293,7 @@ class Gate {
      * @param cx An integer location of the Center X coordinate of this Gate
      *           instance. Relative to the bottom left corner of the window.
      */
-    public void setCX(int cx) {
+    void setCX(int cx) {
 
         this.cx = cx;
         setInputXCoords();
@@ -296,7 +305,7 @@ class Gate {
      *
      * @return The Center Y coordinate of this Gate instance.
      */
-    public int getCY() {
+    int getCY() {
 
         return this.cy;
 
@@ -308,7 +317,7 @@ class Gate {
      * @param cy An integer location of the Center Y relative to the bottom
      *           left corner of the screen.
      */
-    public void setCY(int cy) {
+    void setCY(int cy) {
 
         this.cy = cy;
         setInputYCoords();
@@ -320,7 +329,7 @@ class Gate {
      *
      * @return The number of numOfInputs containd in this Gate instance.
      */
-    public int getNumOfInputs() {
+    int getNumOfInputs() {
 
         return this.inputs.size();
 
@@ -334,7 +343,7 @@ class Gate {
      * @param gatePort The identifier of the port to get the X coordinate of.
      * @return The X coordinate of the specified port.
      */
-    public int getPortX(String gatePort) {
+    int getPortX(String gatePort) {
 
         String[] name = gatePort.split("~");
         int portNum = Integer.parseInt(name[1]);
@@ -342,13 +351,16 @@ class Gate {
         switch (this.getType()) {
 
             case AND:
+            case NAND:
                 if (name[0].equals("IN"))
                     return inputXCoords.get(portNum);
                 else
                     return this.getCX() + scaledGS / 2;
 
             case OR:
+            case NOR:
             case XOR:
+            case XNOR:
                 if (name[0].equals("IN"))
                     return inputXCoords.get(portNum);
                 else
@@ -362,14 +374,13 @@ class Gate {
 
             case WIRE:
             case REG:
-            case FF:
-                if(name[0].equals("IN"))
+                if (name[0].equals("IN"))
                     return inputXCoords.get(0);
                 else
                     return this.getCX() + scaledGS / 2;
 
             default:
-                if(name[0].equals("IN"))
+                if (name[0].equals("IN"))
                     return inputXCoords.get(0);
                 else
                     return this.getCX() + scaledGS / 2;
@@ -384,7 +395,7 @@ class Gate {
      * @param gatePort The identifier of the port.
      * @return The Y coordinate of the port.
      */
-    public int getPortY(String gatePort) {
+    int getPortY(String gatePort) {
 
         String[] name = gatePort.split("~");
         int portNum = Integer.parseInt(name[1]);
@@ -392,13 +403,16 @@ class Gate {
         switch (this.getType()) {
 
             case AND:
+            case NAND:
                 if (name[0].equals("IN"))
                     return inputYCoords.get(portNum);
                 else
                     return this.getCY();
 
             case OR:
+            case NOR:
             case XOR:
+            case XNOR:
                 if (name[0].equals("IN"))
                     return inputYCoords.get(portNum);
                 else
@@ -409,7 +423,6 @@ class Gate {
 
             case WIRE:
             case REG:
-            case FF:
                 return this.getCY();
 
             default:
@@ -429,17 +442,17 @@ class Gate {
         return this.level;
     }
 
-    public void setLevel(int newLevel){
+    public void setLevel(int newLevel) {
         this.level = newLevel;
     }
 
-    public void addInput(String id){
+    void addInput(String id) {
 
         inputs.add(id);
 
     }
 
-    public ArrayList<String> getInputs(){
+    ArrayList<String> getInputs() {
 
         return this.inputs;
 

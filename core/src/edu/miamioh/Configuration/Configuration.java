@@ -26,49 +26,25 @@ public class Configuration {
 	private int stepWidth;
 	private int stepHeight;
 	
-	/**
-	 * This method is used to initialize the default configuration 
-	 * values that is defined within the "world.xml" file.
-	 */
-	public void init() {
+	public Configuration() {
 		
-		Configuration config = retrieveConfiguration();
-		
-		setWorldWidth(config.getWorldWidth());
-		setWorldHeight(config.getWorldHeight());
-		
-		setWindowWidth(config.getWindowWidth());
-		setWindowHeight(config.getWindowHeight());
-		
-		setBufferWidth(config.getBufferWidth());
-		setBufferHeight(config.getBufferHeight());
-		
-		setGridWidth(config.getGridWidth());
-		setGridHeight(config.getGridHeight());
-		
-		setStepWidth(config.getStepWidth());
-		setStepHeight(config.getStepHeight());
-		
+		this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	}
 	
-	/**
-	 * This method is used to call the parse method that is 
-	 * defined in the ConfigurationParser. This data is return 
-	 * to this method and then that data is then returned to 
-	 * the calling method.
-	 * 
-	 * @return This is the configuration of the default settings 
-	 * as defined by the "world.xml" file.
-	 */
-	private Configuration retrieveConfiguration() {
-		
-		ConfigurationParser parser = new ConfigurationParser();
-		Configuration config = parser.getDefaultConfiguration();
-		
-		return config;
-		
+	public Configuration(int worldWidth, int worldHeight, int windowWidth, int windowHeight, int bufferWidth,
+			int bufferHeight, int gridWidth, int gridHeight, int stepWidth, int stepHeight) {
+		this.worldWidth = worldWidth;
+		this.worldHeight = worldHeight;
+		this.windowWidth = windowWidth;
+		this.windowHeight = windowHeight;
+		this.bufferWidth = bufferWidth;
+		this.bufferHeight = bufferHeight;
+		this.gridWidth = gridWidth;
+		this.gridHeight = gridHeight;
+		this.stepWidth = stepWidth;
+		this.stepHeight = stepHeight;
 	}
-	
+
 	public int getWorldWidth() {
 		return worldWidth;
 	}

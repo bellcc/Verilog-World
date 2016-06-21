@@ -9,12 +9,12 @@
 
 package edu.miamioh.worldEditor;
 
-import edu.miamioh.AbstractEditor.AbstractInputProcessor;
-import edu.miamioh.GameObjects.Block;
-import edu.miamioh.Linked.LinkedList;
+import com.badlogic.gdx.InputProcessor;
 
-public class WorldEditorInputProcessor extends AbstractInputProcessor{
+public class WorldEditorInputProcessor implements InputProcessor{
 
+	private boolean clicked = false;
+	
 	public boolean keyDown(int keyCode) {
 		return false;
 	}
@@ -28,8 +28,8 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 	 */
 	public boolean keyUp(int keyCode) {
 
-		int worldX = WorldEditorRenderer.getWorldRenderer().getWorldX();
-		int worldY = WorldEditorRenderer.getWorldRenderer().getWorldY();
+		int worldX = WorldEditorScreen.getScreen().getWorldX();
+		int worldY = WorldEditorScreen.getScreen().getWorldY();
 				
 		switch (keyCode) {
 		
@@ -38,8 +38,8 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 				
 				if(canMoveUp(worldY)) {
 					
-					worldY += WorldEditorController.getCurrentWorldController().getStepHeight();
-					WorldEditorRenderer.getWorldRenderer().setWorldY(worldY);
+					worldY += WorldEditorController.getCurrentController().getStepHeight();
+					WorldEditorScreen.getScreen().setWorldY(worldY);
 										
 				}
 				
@@ -50,8 +50,8 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 				
 				if(canMoveDown(worldY)) {
 					
-					worldY -= WorldEditorController.getCurrentWorldController().getStepHeight();
-					WorldEditorRenderer.getWorldRenderer().setWorldY(worldY);
+					worldY -= WorldEditorController.getCurrentController().getStepHeight();
+					WorldEditorScreen.getScreen().setWorldY(worldY);
 					
 				}
 
@@ -62,8 +62,8 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 								
 				if(canMoveLeft(worldX)) {
 					
-					worldX -= WorldEditorController.getCurrentWorldController().getStepWidth();
-					WorldEditorRenderer.getWorldRenderer().setWorldX(worldX);
+					worldX -= WorldEditorController.getCurrentController().getStepWidth();
+					WorldEditorScreen.getScreen().setWorldX(worldX);
 					
 				}
 
@@ -74,8 +74,8 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 				
 				if(canMoveRight(worldX)) {
 				
-					worldX += WorldEditorController.getCurrentWorldController().getStepWidth();
-					WorldEditorRenderer.getWorldRenderer().setWorldX(worldX);
+					worldX += WorldEditorController.getCurrentController().getStepWidth();
+					WorldEditorScreen.getScreen().setWorldX(worldX);
 					
 				}
 
@@ -92,15 +92,31 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 	
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		
-		int row = WorldEditorRenderer.getWorldRenderer().detectRow();
-		int column = WorldEditorRenderer.getWorldRenderer().detectColumn();
+		if(!clicked) {
+			
+			clicked = true;
+			
+			int row = WorldEditorScreen.getScreen().detectRow();
+			int column = WorldEditorScreen.getScreen().detectColumn();
+			
+			int worldWidth = WorldEditorController.getCurrentController().getWorldWidth();
+			int worldHeight = WorldEditorController.getCurrentController().getWorldHeight();
+			
+			if(row >= worldHeight || row < 0 || column >= worldWidth || column < 0) {
+				return true;
+			}
+
+			WorldEditorController.getCurrentController().gridPressed(row, column);
+			
+		}
 		
-		WorldEditorController.getCurrentWorldController().gridPressed(row, column);
-		
-		return false;
+		return true;
 	}
 	
 	public boolean touchUp(int x, int y, int pointer, int button) {
+		
+		clicked = false;
+		
 		return false;
 	}
 	
@@ -124,31 +140,37 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 
 	private boolean canMoveRight(int posX) {
 		
-		int worldWidth = WorldEditorController.getCurrentWorldController().getWorldWidth();
-		int gridWidth = WorldEditorController.getCurrentWorldController().getGridWidth();
+		int worldWidth = WorldEditorController.getCurrentController().getWorldWidth();
+		int gridWidth = WorldEditorController.getCurrentController().getGridWidth();
 		int worldSize = worldWidth * gridWidth;
 		
-		int windowWidth = WorldEditorController.getCurrentWorldController().getWindowWidth();
-		int bufferWidth = WorldEditorController.getCurrentWorldController().getBufferWidth();
+		int windowWidth = WorldEditorController.getCurrentController().getWindowWidth();
+		int bufferWidth = WorldEditorController.getCurrentController().getBufferWidth();
 		
-		int toolBarWidth = WorldEditorRenderer.getWorldRenderer().getToolBarWidth();
-		//int subToolBarWidth = WorldEditorRenderer.getWorldRenderer().getSubToolBarWidth();
-		int subToolBarWidth = WorldEditorRenderer.getWorldRenderer().getToolBarOptionsWidth();
-
-		return posX < (worldSize - windowWidth) + (2 * bufferWidth) + toolBarWidth + subToolBarWidth;
+		int toolBarWidth = WorldEditorScreen.getScreen().getToolBarWidth();
+		
+		if(posX < (worldSize - windowWidth) + (2 * bufferWidth) + toolBarWidth) {
+			return true;
+		}
+		
+		return false;
 
 	}
 
 	private boolean canMoveUp(int posY) {
 		
-		int worldHeight = WorldEditorController.getCurrentWorldController().getWorldHeight();
-		int gridHeight = WorldEditorController.getCurrentWorldController().getGridHeight();
+		int worldHeight = WorldEditorController.getCurrentController().getWorldHeight();
+		int gridHeight = WorldEditorController.getCurrentController().getGridHeight();
 		int worldSize = worldHeight * gridHeight;
 		
-		int windowHeight = WorldEditorController.getCurrentWorldController().getWindowHeight();
-		int bufferHeight = WorldEditorController.getCurrentWorldController().getBufferHeight();
-
-		return posY < (worldSize - windowHeight) + (2 * bufferHeight);
+		int windowHeight = WorldEditorController.getCurrentController().getWindowHeight();
+		int bufferHeight = WorldEditorController.getCurrentController().getBufferHeight();
+		
+		if(posY < (worldSize - windowHeight) + (2 * bufferHeight)) {
+			return true;
+		}
+		
+		return false;
 
 	}
 

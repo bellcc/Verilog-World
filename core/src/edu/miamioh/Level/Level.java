@@ -10,13 +10,12 @@ package edu.miamioh.Level;
 import java.util.ArrayList;
 
 import edu.miamioh.GameObjects.Block;
-import edu.miamioh.verilogWorld.VerilogWorldController;
 
 public class Level {
 	
 	private ArrayList<Block> blockList;
-	
-	public Level(VerilogWorldController worldController) {
+
+	public Level() {
 		
 		blockList = new ArrayList<Block>();
 	}
@@ -24,13 +23,14 @@ public class Level {
 	public Level(ArrayList<Block> blockList) {
 		
 		this.blockList = blockList;
+
 	}
 	
 	public void addBlock(Block block) {
 		
 		blockList.add(block);
 	}
-	
+
 	public void removeBlock(Block block) {
 		
 		int index = findBlockIndex(block);
@@ -38,6 +38,22 @@ public class Level {
 		if(index != -1) {
 			blockList.remove(index);
 		}
+		
+	}
+	
+	public void removeBlock(int row, int column) {
+		
+		for(int i=0;i<blockList.size();i++) {
+			
+			int blockRow = blockList.get(i).getRow();
+			int blockColumn = blockList.get(i).getColumn();
+			
+			if(blockRow == row && blockColumn == column) {
+				blockList.remove(i);
+				return;
+			}
+		}
+
 	}
 	
 	private int findBlockIndex(Block block) {
@@ -58,7 +74,7 @@ public class Level {
 	
 	public boolean isBlock(int row, int column) {
 		
-		for(int i=0; i < blockList.size();i++) {
+		for(int i=0;i<blockList.size();i++) {
 			
 			int tempRow = blockList.get(i).getRow();
 			int tempColumn = blockList.get(i).getColumn();
@@ -73,7 +89,7 @@ public class Level {
 
 	public Block getBlock(int row, int column) {
 		
-		for(int i=0; i < blockList.size();i++) {
+		for(int i=0;i<blockList.size();i++) {
 			
 			int blockRow = blockList.get(i).getRow();
 			int blockColumn = blockList.get(i).getColumn();

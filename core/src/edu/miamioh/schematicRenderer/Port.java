@@ -27,7 +27,7 @@ class Port {
      * @param id    The unique ID of the Port.
      * @param level The level of the Port, usually 0 or max Gate level + 1.
      */
-    public Port(GateType type, String id, int level) {
+    Port(GateType type, String id, int level) {
 
         float r, g, b, a = 255;
 
@@ -58,6 +58,7 @@ class Port {
                 r = 255;
                 g = 255;
                 b = 255;
+                setColor(r, g, b, a);
                 break;
 
         }
@@ -71,19 +72,19 @@ class Port {
         this.a = a;
     }
 
-    public float getR(){
+    float getR(){
         return this.r;
     }
 
-    public float getG(){
+    float getG(){
         return this.g;
     }
 
-    public float getB(){
+    float getB(){
         return this.b;
     }
 
-    public float getA(){
+    float getA(){
         return this.a;
     }
 
