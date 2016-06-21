@@ -1,3 +1,10 @@
+
+/**
+ * @author Clark Bell
+ * @date   06-21-2016
+ * @info   
+ */
+
 package edu.miamioh.verilogWorld;
 
 import com.badlogic.gdx.Game;
@@ -41,6 +48,14 @@ public class VerilogWorldMain extends Game {
 		this.setScreen(worldEditorScreen);
 		//this.setScreen(worldSimulatorScreen);
 		//updateScreen();
+	}
+	
+	public void setWorldEditorScreen() {
+		this.setScreen(worldEditorScreen);
+	}
+	
+	public void setWorldSimulatorScreen() {
+		this.setScreen(worldSimulatorScreen);
 	}
 	
 	public void updateScreen() {
