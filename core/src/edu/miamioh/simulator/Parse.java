@@ -19,14 +19,13 @@ import org.antlr.v4.runtime.*;
 
 public class Parse {
 	
-	private String				rootPath;
-	private ParseTree 			root_tree;
-	private RootModuleInstance 	root_module;
+	private String					rootPath;
+	private JTextPane 				errorText;
 	
-	private boolean 	is_compiled;
-	private boolean 	is_no_parse_errors;
+	private boolean 				is_compiled;
+	private boolean 				is_no_parse_errors;
 	
-	private JTextPane 	errorText;
+	private RootModuleSimulator 	sim;
 	
 	public int RESET = 0;
 	public int RUN = 1;
@@ -38,9 +37,8 @@ public class Parse {
 		
 		this.errorText = errorText;
 		this.rootPath = rootPath;
+		this.sim = new RootModuleSimulator(this);
 	}
-	
-	public ModuleInstance getRootModule() {return this.root_module;}
 	
 	public RootModuleInstance compileFileForGame(String fileName) throws IOException {
 		
@@ -55,22 +53,16 @@ public class Parse {
 
 		is_no_parse_errors = true;
 
-		root_tree = parser.module_declaration();
-		root_module = new RootModuleInstance(parser, this, root_tree, "root_module");
+		ParseTree root_tree = parser.module_declaration();
+		String name = fileName.substring(0, fileName.length() - 2); // Removes .v file ending
+		RootModuleInstance root_module = new RootModuleInstance(parser, this, sim, root_tree, name);
 
-		if (is_no_parse_errors)
-		{
-			is_compiled = true;
-		}
-		else
-		{
-			is_compiled = false;
-		}
+		is_compiled = is_no_parse_errors;
 		
 		return root_module;
 	}
 	
-	public void compileFileForEditor(String fileName) throws IOException {
+	public RootModuleInstance compileFileForEditor(String fileName) throws IOException {
 		
 		errorText.setText("Compiling " + fileName + "...");
 
@@ -84,126 +76,13 @@ public class Parse {
 		is_no_parse_errors = true;
 
 		
-		root_tree = parser.module_declaration();
-		root_module = new RootModuleInstance(parser, this, root_tree, "root_module");
+		ParseTree root_tree = parser.module_declaration();
+		String name = fileName.substring(0, fileName.length() - 2); // Removes .v file ending
+		RootModuleInstance root_module = new RootModuleInstance(parser, this, sim, root_tree, name);
 
-		if (is_no_parse_errors)
-		{
-			is_compiled = true;
-		}
-		else
-		{
-			is_compiled = false;
-		}
-	}
-	
-	public void displayResults() {
-		errorText.setText("Simulation Results:");
+		is_compiled = is_no_parse_errors;
 		
-		for(int i = 0; i < root_module.getVars_list().size(); ++i) {
-			
-			String name = root_module.getVars_list().get(i).getName();
-			int index = root_module.getVisitor().getNewIndex();
-			int value = root_module.getVars_list().get(i).getValue(index);
-			
-			if (!name.equals("clk") && !name.equals("rst")) {
-				this.reportParseInfo(name + ": " + value);
-			}
-		}
-	}
-
-	public void sim_cycle(int mode)
-	{
-		if (is_compiled)
-		{
-			this.simComb();
-			this.simSequ();
-			root_module.getVisitor().clean_sim_cycle();
-			
-			this.displayResults();
-		}
-	}
-	
-	public void simComb() {
-		
-		SimVisitor visitor = root_module.getVisitor();
-		
-		do {
-			
-			/*
-			 * For debugging
-			 */
-//			System.out.println("*********** Comb Cycle ************");
-//			System.out.println(">>> Top Module");
-//			DebugUtils.printModuleVars(visitor, this.root_module);
-//			for(ModuleInstance sub : root_module.getSubModulesList()) {
-//				System.out.println(">>> " + sub.getName());
-//				DebugUtils.printModuleVars(sub.getVisitor(), sub);
-//			}
-			
-			// Assume the circuit is steady at the start. 
-			// Simulate it and let it change it's own steady or not steady state.
-			visitor.setState(SimVisitor.STEADY);
-			for(ModuleInstance module : root_module.getSubModulesList()) {
-				module.getVisitor().setState(SimVisitor.STEADY);
-			}
-			
-			// Run one simulation cycle for combinational circuit
-			visitor.next_sim_cycle();
-			visitor.visit(root_tree);
-			updateSequWires();
-
-		} while(visitor.getState() == SimVisitor.NOT_STEADY);
-	}
-	
-	public void simSequ() {
-		/*
-		 * For debugging
-		 */
-//		System.out.print("************************\n" +
-//						 "*        Clock!        *\n" +
-//						 "************************\n");
-		
-		// Toggle sequ clock and simulate
-		root_module.getVisitor().toggleSequClock();
-		simComb();
-		root_module.getVisitor().toggleSequClock();
-
-		// Reset sequential wire update flags
-		root_module.getVisitor().resetSequUpdateFlag();
-	}
-	
-	public void updateSequWires() {
-		
-		SimVisitor visitor = root_module.getVisitor();
-		
-		for(ParseRegWire wire : root_module.getVars_list()) {
-			if (wire.getType() == RegWireType.SEQUENTIAL) {
-				wire.setValue(visitor.getOldIndex(), 
-							  wire.getValue(visitor.getNewIndex()), 
-							  false);
-			}
-		}
-		
-		for(ModuleInstance module : root_module.getSubModulesList()) {
-			for(ParseRegWire wire : module.getVars_list()) {
-				if (wire.getType() == RegWireType.SEQUENTIAL) {
-					wire.setValue(visitor.getOldIndex(), 
-							  wire.getValue(visitor.getNewIndex()), 
-							  false);
-				}
-			} 
-		}
-	}
-	
-	// Bring reset line high and simulate circuit until steady
-	public void resetSimulation() {
-		
-		root_module.getVisitor().toggleResetLine(); // Turn on
-		simComb(); // Simulate until steady
-		root_module.getVisitor().resetSequUpdateFlag();
-		root_module.getVisitor().toggleResetLine(); // Turn off
-		this.displayResults();
+		return root_module;
 	}
 	
 	public void reportParseError(String message) {
@@ -256,14 +135,9 @@ public class Parse {
 		return result_tree;
 	}
 	
-	public void updateRootModule(RootModuleInstance module) {this.root_module = module;}
-	
 	public JTextPane getErrorText() 					{ return this.errorText;}
 	public void setIs_no_parse_errors(Boolean value) 	{this.is_no_parse_errors = value;}
-	public Boolean is_compiled_yet() 					{ return is_compiled;}
-	
-	public ParseTree getRootTree() 									{return this.root_tree;}
-	public RootModuleInstance getRootModuleInstance() 				{return this.root_module;}
+	public Boolean isCompiled() 						{ return is_compiled;}
 	
 	public class VerboseListenerE extends BaseErrorListener
 	{ 
@@ -291,4 +165,6 @@ public class Parse {
 			is_no_parse_errors = false;
 		}
 	}
+	
+	public RootModuleSimulator getRootModuleSimulator() {return sim;}
 }

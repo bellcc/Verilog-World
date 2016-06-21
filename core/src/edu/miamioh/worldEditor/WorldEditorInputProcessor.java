@@ -118,11 +118,8 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 
 	private boolean canMoveLeft(int posX) {
 
-		if(posX > 0) {
-			return true;
-		}
-		
-		return false;
+		return posX > 0;
+
 	}
 
 	private boolean canMoveRight(int posX) {
@@ -137,12 +134,9 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 		int toolBarWidth = WorldEditorRenderer.getWorldRenderer().getToolBarWidth();
 		//int subToolBarWidth = WorldEditorRenderer.getWorldRenderer().getSubToolBarWidth();
 		int subToolBarWidth = WorldEditorRenderer.getWorldRenderer().getToolBarOptionsWidth();
-		
-		if(posX < (worldSize - windowWidth) + (2 * bufferWidth) + toolBarWidth + subToolBarWidth) {
-			return true;
-		}
-		
-		return false;
+
+		return posX < (worldSize - windowWidth) + (2 * bufferWidth) + toolBarWidth + subToolBarWidth;
+
 	}
 
 	private boolean canMoveUp(int posY) {
@@ -153,21 +147,15 @@ public class WorldEditorInputProcessor extends AbstractInputProcessor{
 		
 		int windowHeight = WorldEditorController.getCurrentWorldController().getWindowHeight();
 		int bufferHeight = WorldEditorController.getCurrentWorldController().getBufferHeight();
-		
-		if(posY < (worldSize - windowHeight) + (2 * bufferHeight)) {
-			return true;
-		}
-		
-		return false;
+
+		return posY < (worldSize - windowHeight) + (2 * bufferHeight);
+
 	}
 
 	private boolean canMoveDown(int posY) {
 
-		if(posY > 0) {
-			return true;
-		}
-		
-		return false;
+		return posY > 0;
+
 	}
 	
 }

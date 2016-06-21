@@ -23,7 +23,6 @@ public class BlocksChangeListener extends AbstractChangeListener{
 		//Set the current selection option to view the blocks sub menu.
 		WorldEditorRenderer.getWorldRenderer().setHomeActor(false);
 		WorldEditorRenderer.getWorldRenderer().setBlocksActor(true);
-		WorldEditorRenderer.getWorldRenderer().setTilesActor(false);
 		
 		//Update the input multiplexer so that only the tool bar stage, 
 		//the blocks sub menu stage, and the input process processors 

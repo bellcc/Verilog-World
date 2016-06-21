@@ -74,7 +74,7 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
      * @param ctx
      */
     @Override
-    public T visitContinuous_assign(Verilog2001Parser.Continuous_assignContext ctx) {
+    public T visitContinuous_assign(Verilog2001Parser.Continuous_assignContext ctx)     {
 
         T t = super.visitContinuous_assign(ctx);
 
@@ -112,8 +112,8 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
     /**
      * Translates the text of the BLOGIC node into its GateType.
      *
-     * @param ctx
-     * @return
+     * @param ctx ParseTree with root_module of this BLOGIC.
+     * @return The GateType of this BLOGIC.
      */
     private GateType getNewLogicType_GateType(ParseTree ctx) {
 
@@ -150,8 +150,8 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
      * Translates the text from the BLOGIC node to its String conversion of
      * GateType.
      *
-     * @param ctx
-     * @return
+     * @param ctx ParseTree with root_module of this BLOGIC.
+     * @return The String of this BLOGIC.
      */
     private String getNewLogicType_String(ParseTree ctx) {
 
@@ -188,7 +188,7 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
      * Gets the number of Gates of the same type.
      *
      * @param type The type of Gate being counted.
-     * @return
+     * @return The number of Gates of type Type.
      */
     private int getNumOfGates(GateType type){
         return schematic.getGateCount(type);
@@ -200,12 +200,31 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor adds an Adder or Subtractor. (Currently just adds a
+     * Blank gate.)</p>
+     *
      * @param ctx
      */
     @Override
     public T visitADD_SUB(Verilog2001Parser.ADD_SUBContext ctx) {
-        return super.visitADD_SUB(ctx);
-    }
+        T t = super.visitADD_SUB(ctx);
+
+        lValue = gateInputs.pop();
+        rValue = gateInputs.pop();
+
+        gateValue = "AddSub";
+        GateType type = GateType.BLANK;
+        gateValue += getNumOfGates(type);
+        int level = schematic.getLevel(lValue) + 1;
+
+        schematic.addGate(type, gateValue, level);
+
+        schematic.connect(lValue, gateValue);
+        schematic.connect(rValue, gateValue);
+
+        gateInputs.push(gateValue);
+
+        return t;    }
 
     /**
      * {@inheritDoc}
@@ -431,12 +450,30 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor adds an LOR gate. (Currently just adds a Blank gate.)</p>
+     *
      * @param ctx
      */
     @Override
     public T visitLOR(Verilog2001Parser.LORContext ctx) {
-        return super.visitLOR(ctx);
-    }
+        T t = super.visitLOR(ctx);
+
+        lValue = gateInputs.pop();
+        rValue = gateInputs.pop();
+
+        gateValue = "LOR";
+        GateType type = GateType.BLANK;
+        gateValue += getNumOfGates(type);
+        int level = schematic.getLevel(lValue) + 1;
+
+        schematic.addGate(type, gateValue, level);
+
+        schematic.connect(lValue, gateValue);
+        schematic.connect(rValue, gateValue);
+
+        gateInputs.push(gateValue);
+
+        return t;    }
 
     /**
      * {@inheritDoc}
@@ -629,12 +666,31 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor adds an LNOT gate. (Currently just adds a Blank gate.)
+     * </p>
+     *
      * @param ctx
      */
     @Override
     public T visitLNOT(Verilog2001Parser.LNOTContext ctx) {
-        return super.visitLNOT(ctx);
-    }
+        T t = super.visitLNOT(ctx);
+
+        lValue = gateInputs.pop();
+        rValue = gateInputs.pop();
+
+        gateValue = "LNOT";
+        GateType type = GateType.BLANK;
+        gateValue += getNumOfGates(type);
+        int level = schematic.getLevel(lValue) + 1;
+
+        schematic.addGate(type, gateValue, level);
+
+        schematic.connect(lValue, gateValue);
+        schematic.connect(rValue, gateValue);
+
+        gateInputs.push(gateValue);
+
+        return t;    }
 
     /**
      * {@inheritDoc}
@@ -708,12 +764,31 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor adds a Comparator. (Currently just adds a Blank gate.)
+     * </p>
+     *
      * @param ctx
      */
     @Override
     public T visitCOMPARES(Verilog2001Parser.COMPARESContext ctx) {
-        return super.visitCOMPARES(ctx);
-    }
+        T t = super.visitCOMPARES(ctx);
+
+        lValue = gateInputs.pop();
+        rValue = gateInputs.pop();
+
+        gateValue = "Compares";
+        GateType type = GateType.BLANK;
+        gateValue += getNumOfGates(type);
+        int level = schematic.getLevel(lValue) + 1;
+
+        schematic.addGate(type, gateValue, level);
+
+        schematic.connect(lValue, gateValue);
+        schematic.connect(rValue, gateValue);
+
+        gateInputs.push(gateValue);
+
+        return t;    }
 
     /**
      * {@inheritDoc}
@@ -721,12 +796,30 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor adds a LAND gate. (Currently just adds a Blank gate.)</p>
+     *
      * @param ctx
      */
     @Override
     public T visitLAND(Verilog2001Parser.LANDContext ctx) {
-        return super.visitLAND(ctx);
-    }
+        T t = super.visitLAND(ctx);
+
+        lValue = gateInputs.pop();
+        rValue = gateInputs.pop();
+
+        gateValue = "LAND";
+        GateType type = GateType.BLANK;
+        gateValue += getNumOfGates(type);
+        int level = schematic.getLevel(lValue) + 1;
+
+        schematic.addGate(type, gateValue, level);
+
+        schematic.connect(lValue, gateValue);
+        schematic.connect(rValue, gateValue);
+
+        gateInputs.push(gateValue);
+
+        return t;    }
 
     /**
      * {@inheritDoc}
@@ -777,7 +870,9 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
      */
     @Override
     public T visitCase_statement(Verilog2001Parser.Case_statementContext ctx) {
-        return super.visitCase_statement(ctx);
+        T t = super.visitCase_statement(ctx);
+
+        return t;
     }
 
     /**
@@ -848,11 +943,31 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor adds a multiplication, division, or modulous block.
+     * (currently just a Blank gate.)</p>
+     *
      * @param ctx
      */
     @Override
     public T visitMULT_DIV_MOD(Verilog2001Parser.MULT_DIV_MODContext ctx) {
-        return super.visitMULT_DIV_MOD(ctx);
+        T t = super.visitMULT_DIV_MOD(ctx);
+
+        lValue = gateInputs.pop();
+        rValue = gateInputs.pop();
+
+        gateValue = "MultDivMod";
+        GateType type = GateType.BLANK;
+        gateValue += getNumOfGates(type);
+        int level = schematic.getLevel(lValue) + 1;
+
+        schematic.addGate(type, gateValue, level);
+
+        schematic.connect(lValue, gateValue);
+        schematic.connect(rValue, gateValue);
+
+        gateInputs.push(gateValue);
+
+        return t;
     }
 
     /**
@@ -1055,11 +1170,28 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor adds a sign inverter. (Currently just a blank Gate.)</p>
+     *
      * @param ctx
      */
     @Override
     public T visitUMINUS(Verilog2001Parser.UMINUSContext ctx) {
-        return super.visitUMINUS(ctx);
+        T t = super.visitUMINUS(ctx);
+
+        lValue = gateInputs.pop();
+
+        gateValue = "MINUS";
+        GateType type = GateType.BLANK;
+        gateValue += getNumOfGates(type);
+        int level = schematic.getLevel(lValue) + 1;
+
+        schematic.addGate(type, gateValue, level);
+
+        schematic.connect(lValue, gateValue);
+
+        gateInputs.push(gateValue);
+
+        return t;
     }
 
     /**
@@ -1110,7 +1242,9 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
      */
     @Override
     public T visitConditional_statement(Verilog2001Parser.Conditional_statementContext ctx) {
-        return super.visitConditional_statement(ctx);
+        T t = super.visitConditional_statement(ctx);
+
+        return t;
     }
 
     /**
@@ -1133,12 +1267,33 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor creates a new Question switch ( 'if' ? 'then' :
+     * 'else' ). (Currently just makes a new Blank gate.)</p>
+     *
      * @param ctx
      */
     @Override
     public T visitQUES(Verilog2001Parser.QUESContext ctx) {
-        return super.visitQUES(ctx);
-    }
+        T t = super.visitQUES(ctx);
+
+        lValue = gateInputs.pop();
+        String mValue = gateInputs.pop();
+        rValue = gateInputs.pop();
+
+        gateValue = "Ques";
+        GateType type = GateType.BLANK;
+        gateValue += getNumOfGates(type);
+        int level = schematic.getLevel(lValue) + 1;
+
+        schematic.addGate(type, gateValue, level);
+
+        schematic.connect(lValue, gateValue);
+        schematic.connect(mValue, gateValue);
+        schematic.connect(rValue, gateValue);
+
+        gateInputs.push(gateValue);
+
+        return t;    }
 
     /**
      * {@inheritDoc}

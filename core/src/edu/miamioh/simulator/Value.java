@@ -116,10 +116,7 @@ public class Value
 	{
 		if (value instanceof Integer)
 		{
-			if ((int) value == 0)
-				return false;
-			else
-				return true;
+			return (int) value != 0;
 		}
 
 		return (Boolean) value;

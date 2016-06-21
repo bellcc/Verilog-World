@@ -16,23 +16,30 @@
 
 package edu.miamioh.verilogWorld;
 
+import javax.swing.JTextPane;
+
 import edu.miamioh.Configuration.Configuration;
+import edu.miamioh.Level.Level;
+import edu.miamioh.simulator.Parse;
 import edu.miamioh.worldEditor.WorldEditorController;
+import edu.miamioh.worldSimulator.WorldSimulator;
 import edu.miamioh.worldSimulator.WorldSimulatorController;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 
 import edu.miamioh.AbstractEditor.AbstractController;
 
-public class VerilogWorldController extends AbstractController{
+public class VerilogWorldController extends AbstractController {
 
 	private static VerilogWorldController controller;
 
-	private static InputMultiplexer multiplexer;
-	private static VerilogWorld state;
+	private static VerilogWorldType state;
 	
-	private static String rootPath;
+	private Level currentLevel;
+	private WorldSimulator sim;
+	private Parse compiler;
+	
+	private String rootPath;
 
 	public VerilogWorldController() {
 		
@@ -56,11 +63,22 @@ public class VerilogWorldController extends AbstractController{
 	 */
 	@Override
 	public void init() {
+		
+		
+		
+		this.rootPath = System.getProperty("user.dir") + "\\..\\";
 
 		controller = this;
+		currentLevel = new Level(this);
+		try {
+			compiler = new Parse(new JTextPane(), rootPath);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		sim = new WorldSimulator(compiler.getRootModuleSimulator());
 		//TODO This needs to be set to the main menu controller.
 		//state = VerilogWorld.WORLD_SIMULATOR;
-		state = VerilogWorld.WORLD_EDITOR;
+		state = VerilogWorldType.WORLD_EDITOR;
 		
 		//The default configurations only need to be set once which 
 		//is why there is not a public setter for this field.
@@ -81,8 +99,6 @@ public class VerilogWorldController extends AbstractController{
 	}
 	
 	public void updateInputMultiplexer() {
-		
-		multiplexer = new InputMultiplexer();
 		
 		switch(state) {
 		
@@ -118,16 +134,16 @@ public class VerilogWorldController extends AbstractController{
 		return this.defaultConfig;
 	}
 	
-	public static String getRootPath() {
-		return System.getProperty("user.dir");
-	}
-	
-	public void setState(VerilogWorld newState) {
+	public void setState(VerilogWorldType newState) {
 		state = newState;
 	}
 	
-	public VerilogWorld getState() {
+	public VerilogWorldType getState() {
 		return state;
 	}
 	
+	public Level getLevel() 		{return this.currentLevel;}
+	public WorldSimulator getSim() 	{return this.sim;}
+	public Parse getCompiler()		{return this.compiler;}
+	public String getRootPath() 	{return this.rootPath;}
 }

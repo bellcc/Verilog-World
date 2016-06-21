@@ -7,6 +7,8 @@
 
 package edu.miamioh.worldEditor;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,11 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import edu.miamioh.AbstractEditor.AbstractRenderer;
 import edu.miamioh.GameObjects.Block;
-import edu.miamioh.Linked.LinkedList;
 import edu.miamioh.worldEditor.BlockOption.BlockOptionStage;
 import edu.miamioh.worldEditor.ToolBar.Stages.BlockStage;
 import edu.miamioh.worldEditor.ToolBar.Stages.HomeStage;
-import edu.miamioh.worldEditor.ToolBar.Stages.TileStage;
 import edu.miamioh.worldEditor.ToolBar.Stages.ToolBarStage;
 import edu.miamioh.worldEditor.types.Point;
 
@@ -38,7 +38,6 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	
 	private static boolean homeActor;
 	private static boolean blocksActor;
-	private static boolean tilesActor;
 	
 	private SelectionType selectionType;
 
@@ -104,10 +103,6 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		tempBlockStage.init();
 		blockStage = tempBlockStage.getStage();
 		
-		TileStage tempTileStage = new TileStage();
-		tempTileStage.init();
-		tileStage = tempTileStage.getStage();
-		
 		HomeStage tempHomeStage = new HomeStage();
 		tempHomeStage.init();
 		homeStage = tempHomeStage.getStage();
@@ -141,17 +136,17 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	 */
 	public void renderBlocks() {
 		
-		LinkedList<Block> blockList = worldEditorController.getCurrentLevel().getBlockList();
+		ArrayList<Block> blockList = worldEditorController.getCurrentLevel().getBlockList();
 		
-		for(int i=1;i<=blockList.getLength();i++) {
+		for(int i=0; i < blockList.size();i++) {
 			
 			int gridWidth = worldEditorController.getGridWidth();
 			int gridHeight = worldEditorController.getGridHeight();
 			
-			int y = blockList.getEntry(i).getRow() * gridWidth;
-			int x = blockList.getEntry(i).getColumn() * gridHeight;
+			int y = blockList.get(i).getRow() * gridWidth;
+			int x = blockList.get(i).getColumn() * gridHeight;
 			
-			Color blockColor = blockList.getEntry(i).getColor();
+			Color blockColor = blockList.get(i).getColor();
 
 			//This causes the blocks to be within the bounds 
 			//of the grid's cells so that the blocks do not 
@@ -186,11 +181,6 @@ public class WorldEditorRenderer extends AbstractRenderer{
 			blockStage.act(Gdx.graphics.getDeltaTime());
 			blockStage.draw();
 			
-		}else if(tilesActor) {
-			
-			tileStage.act(Gdx.graphics.getDeltaTime());
-			tileStage.draw();
-			
 		}
 		
 		if(blockOption) {
@@ -203,7 +193,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 	}
 	
 	public void toggleBlockOption() {
-		blockOption = blockOption ? false : true;
+		blockOption = !blockOption;
 	}
 
 	/**
@@ -214,8 +204,8 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		int gridWidth = worldEditorController.getGridWidth();
 		int gridHeight = worldEditorController.getGridHeight();
 		
-		int worldWidth = worldEditorController.getWorldWidth();;
-		int worldHeight = worldEditorController.getWorldHeight();;
+		int worldWidth = worldEditorController.getWorldWidth();
+		int worldHeight = worldEditorController.getWorldHeight();
 
 		int width = worldWidth * gridWidth;
 		int height = worldHeight * gridHeight;
@@ -385,7 +375,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 			
 			if(displayLeftX <= (windowWidth - currentX) && displayRightX >= (windowWidth - currentX)) {
 				
-				column = (int) (windowWidth - currentX - displayLeftX) / gridWidth;
+				column = (windowWidth - currentX - displayLeftX) / gridWidth;
 				column = (worldWidth - 1) - column;
 			}
 			
@@ -439,7 +429,7 @@ public class WorldEditorRenderer extends AbstractRenderer{
 
 			if(displayLowerY <= (windowHeight - currentY) && displayUpperY >= (windowHeight - currentY)) {
 				
-				row = (int) (windowHeight - currentY - displayLowerY) / gridHeight;
+				row = (windowHeight - currentY - displayLowerY) / gridHeight;
 				
 			}
 
@@ -478,12 +468,9 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		int gridHeight = worldEditorController.getGridHeight();
 		int windowHeight = worldEditorController.getWindowHeight();
 		int height = worldHeight * gridHeight;
-		
-		if(height < windowHeight) {
-			return true;
-		}
-		
-		return false;
+
+		return height < windowHeight;
+
 	}
 	
 	/**
@@ -500,12 +487,9 @@ public class WorldEditorRenderer extends AbstractRenderer{
 		int gridWidth = worldEditorController.getGridWidth();
 		int windowWidth = worldEditorController.getWindowWidth();
 		int width = worldWidth * gridWidth;
-		
-		if(width < windowWidth) {
-			return true;
-		}
-		
-		return false;
+
+		return width < windowWidth;
+
 	}
 	
 	/**
@@ -593,14 +577,6 @@ public class WorldEditorRenderer extends AbstractRenderer{
 
 	public void setBlocksActor(boolean blocksActor) {
 		WorldEditorRenderer.blocksActor = blocksActor;
-	}
-
-	public boolean getTilesActor() {
-		return tilesActor;
-	}
-
-	public void setTilesActor(boolean tilesActor) {
-		WorldEditorRenderer.tilesActor = tilesActor;
 	}
 
 	public Stage getHomeStage() {

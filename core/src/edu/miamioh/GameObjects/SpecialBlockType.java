@@ -4,5 +4,5 @@ public enum SpecialBlockType {
 	
 	None,
 	Clock,
-	Reset;
+	Reset
 }

@@ -11,12 +11,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 
-import edu.miamioh.verilogEditor.VerilogEditor;
+import edu.miamioh.simulator.Parse;
+import edu.miamioh.simulator.RootModuleSimulator;
 import edu.miamioh.verilogEditor.RunEditor;
 import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.WorldEditorRenderer;
@@ -39,6 +38,9 @@ public class VerilogWorldMain implements Screen {
 	private WorldSimulatorController simulatorController;
 	private WorldSimulatorRenderer simulatorRenderer;
 	
+	private RootModuleSimulator sim;
+	private Parse 				compiler;
+	
 	private boolean paused;
 	
 	/**
@@ -58,6 +60,8 @@ public class VerilogWorldMain implements Screen {
 		//as the central hub for data during execution of the application.
 		verilogWorldController = new VerilogWorldController();
 		verilogWorldController.init();
+		setCompiler(verilogWorldController.getCompiler());
+		sim = VerilogWorldController.getController().getSim().getRootModuleSimulator();
 				
 		worldEditorController = new WorldEditorController();
 		worldRenderer = new WorldEditorRenderer(worldEditorController);
@@ -116,7 +120,7 @@ public class VerilogWorldMain implements Screen {
 		worldRenderer.render();
 		//simulatorRenderer.render();
 		
-		VerilogWorld state = VerilogWorldController.getController().getState();
+		VerilogWorldType state = VerilogWorldController.getController().getState();
 		
 		switch(state) {
 		
@@ -166,7 +170,7 @@ public class VerilogWorldMain implements Screen {
 			e.printStackTrace();
 		}*/
 		
-		Thread thread = new Thread(new RunEditor(fileName));
+		Thread thread = new Thread(new RunEditor(sim, compiler, fileName));
 		thread.start();
 	}
 
@@ -216,4 +220,6 @@ public class VerilogWorldMain implements Screen {
 		
 	}
 
+	public void setSimulator(RootModuleSimulator sim) {this.sim = sim;}
+	public void setCompiler(Parse compiler) {this.compiler = compiler;}
 }

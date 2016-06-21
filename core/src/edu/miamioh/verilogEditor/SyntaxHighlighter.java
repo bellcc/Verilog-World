@@ -112,9 +112,7 @@ public class SyntaxHighlighter implements DocumentListener
 	public boolean isWordCharacter(Document doc, int pos) throws BadLocationException
 	{
 		char ch = getCharAt(doc, pos);
-		if (Character.isLetter(ch) || Character.isDigit(ch) || ch == '_')
-		{ return true; }
-		return false;
+		return Character.isLetter(ch) || Character.isDigit(ch) || ch == '_';
 	}
 	
 	@Override

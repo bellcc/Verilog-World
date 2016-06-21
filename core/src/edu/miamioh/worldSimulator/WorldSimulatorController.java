@@ -61,7 +61,6 @@ public class WorldSimulatorController {
 		
 		setStepWidth(config.getStepWidth());
 		setStepHeight(config.getStepHeight());
-		
 	}
 	
 	public void initMultiplexer() {

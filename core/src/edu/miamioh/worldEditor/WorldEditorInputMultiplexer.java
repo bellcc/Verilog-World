@@ -77,7 +77,6 @@ public class WorldEditorInputMultiplexer {
 		//Determine which actor of the tool bar stage has been selected.
 		boolean homeActor = WorldEditorRenderer.getWorldRenderer().getHomeActor();
 		boolean blockActor = WorldEditorRenderer.getWorldRenderer().getBlocksActor();
-		boolean tileActor = WorldEditorRenderer.getWorldRenderer().getTilesActor();
 		
 		boolean blockOption = WorldEditorRenderer.getWorldRenderer().getBlockOption();
 		
@@ -91,10 +90,6 @@ public class WorldEditorInputMultiplexer {
 			
 			multiplexer.addProcessor(blockStage);
 		
-		}else if(tileActor) {
-		
-			multiplexer.addProcessor(tileStage);
-			
 		}
 				
 		if(blockOption) {
