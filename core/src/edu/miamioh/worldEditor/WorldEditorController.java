@@ -72,6 +72,27 @@ public class WorldEditorController {
 	public WorldEditorController(Configuration config, Level currentLevel) {
 
 		this();
+		
+		updateParameters(config);
+		this.currentLevel = currentLevel;
+	}
+	
+	private void updateParameters(Configuration config) {
+		
+		windowWidth = config.getWindowWidth();
+		windowHeight = config.getWindowHeight();
+		
+		worldWidth = config.getWorldWidth();
+		worldHeight = config.getWorldHeight();
+		
+		gridWidth = config.getGridWidth();
+		gridHeight = config.getGridHeight();
+		
+		stepWidth = config.getStepWidth();
+		stepHeight = config.getStepHeight();
+		
+		bufferWidth = config.getBufferWidth();
+		bufferHeight = config.getBufferHeight();
 	}
 	
 	public void initWorld() {

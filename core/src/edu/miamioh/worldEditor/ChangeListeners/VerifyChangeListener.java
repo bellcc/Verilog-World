@@ -11,25 +11,27 @@ import edu.miamioh.worldSimulator.ModuleWrapper;
 
 public class VerifyChangeListener extends ChangeListener{
 	
-	private VerilogWorldController worldController;
-	private Level level;
-	
-	public VerifyChangeListener() {
-		worldController = VerilogWorldController.getController();
-		level = worldController.getLevel();
-	}
+//	private VerilogWorldController worldController;
+//	private Level level;
+//	
+//	public VerifyChangeListener() {
+//		worldController = VerilogWorldController.getController();
+//		level = worldController.getLevel();
+//	}
 
 	@Override
 	public void changed(ChangeEvent event, Actor actor) {
 		
-		for(Block block : level.getBlockList()) {
-			if (block instanceof NormalBlock) {
-				NormalBlock normBlock = (NormalBlock)block;
-				
-				ModuleWrapper module = normBlock.compile();
-				worldController.getSim().addModule(module);
-			}
-		}
+		System.out.println("Verify Change Listener");
+		
+//		for(Block block : level.getBlockList()) {
+//			if (block instanceof NormalBlock) {
+//				NormalBlock normBlock = (NormalBlock)block;
+//				
+//				ModuleWrapper module = normBlock.compile();
+//				worldController.getSim().addModule(module);
+//			}
+//		}
 	}
 
 }

@@ -12,10 +12,10 @@ public class ViewSimulatorChangeListener extends ChangeListener {
 	public void changed(ChangeEvent event, Actor actor) {
 
 		System.out.println("View Simulator Change Listener");
-		
-		WorldEditorController.getCurrentController().resetMultiplexer();
-
-		WorldSimulatorController.getController().setCurrentLevel(WorldEditorController.getCurrentController().getCurrentLevel());
+//		
+//		WorldEditorController.getCurrentController().resetMultiplexer();
+//
+//		WorldSimulatorController.getController().setCurrentLevel(WorldEditorController.getCurrentController().getCurrentLevel());
 
 	}
 

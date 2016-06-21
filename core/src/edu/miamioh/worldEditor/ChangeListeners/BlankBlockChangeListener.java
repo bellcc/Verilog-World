@@ -13,15 +13,15 @@ public class BlankBlockChangeListener extends ChangeListener {
 		
 		System.out.println("Blank Block Change Listener");
 		
-		BlockSelectionType selection = WorldEditorController.getCurrentController().getBlockSelection();
-		
-		if(selection == BlockSelectionType.Block_Blank) {
-			selection = BlockSelectionType.NONE;
-		}else {
-			selection = BlockSelectionType.Block_Blank;
-		}
-		
-		WorldEditorController.getCurrentController().setBlockSelection(selection);
+//		BlockSelectionType selection = WorldEditorController.getCurrentController().getBlockSelection();
+//		
+//		if(selection == BlockSelectionType.Block_Blank) {
+//			selection = BlockSelectionType.NONE;
+//		}else {
+//			selection = BlockSelectionType.Block_Blank;
+//		}
+//		
+//		WorldEditorController.getCurrentController().setBlockSelection(selection);
 	}
 	
 }

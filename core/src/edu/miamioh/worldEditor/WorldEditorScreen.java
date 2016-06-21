@@ -94,7 +94,7 @@ public class WorldEditorScreen implements Screen {
 	}
 	
 	private void updateWorldParameters() {
-		
+				
 		windowWidth = controller.getWindowWidth();
 		windowHeight = controller.getWindowHeight();
 		
@@ -117,9 +117,9 @@ public class WorldEditorScreen implements Screen {
 		
 		Gdx.gl.glClearColor(255, 255, 255, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+		
 		renderWorld();
-		renderSelector();
+		//renderSelector();
 		renderToolBar();
 
 	}

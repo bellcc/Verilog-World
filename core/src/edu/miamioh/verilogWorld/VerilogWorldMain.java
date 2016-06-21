@@ -27,10 +27,10 @@ public class VerilogWorldMain extends Game {
 
 		verilogWorldController = new VerilogWorldController();
 		worldEditorController = new WorldEditorController(verilogWorldController.getDefaultConfig(), new Level());
-		worldSimulatorController = new WorldSimulatorController(verilogWorldController.getDefaultConfig());
+		//worldSimulatorController = new WorldSimulatorController(verilogWorldController.getDefaultConfig());
 		
 		worldEditorScreen = new WorldEditorScreen(worldEditorController);
-		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
+		//worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
 		
 	}
 	
@@ -38,9 +38,9 @@ public class VerilogWorldMain extends Game {
 	public void create() {
 		//Set the default screen
 		
-		//this.setScreen(worldEditorScreen);
+		this.setScreen(worldEditorScreen);
 		//this.setScreen(worldSimulatorScreen);
-		updateScreen();
+		//updateScreen();
 	}
 	
 	public void updateScreen() {

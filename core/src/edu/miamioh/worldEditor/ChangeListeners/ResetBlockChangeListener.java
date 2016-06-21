@@ -13,15 +13,15 @@ public class ResetBlockChangeListener extends ChangeListener {
 		
 		System.out.println("Reset Block Change Listener");
 		
-		BlockSelectionType selection = WorldEditorController.getCurrentController().getBlockSelection();
-		
-		if(selection == BlockSelectionType.Block_Reset) {
-			selection = BlockSelectionType.NONE;
-		}else {
-			selection = BlockSelectionType.Block_Reset;
-		}
-		
-		WorldEditorController.getCurrentController().setBlockSelection(selection);
+//		BlockSelectionType selection = WorldEditorController.getCurrentController().getBlockSelection();
+//		
+//		if(selection == BlockSelectionType.Block_Reset) {
+//			selection = BlockSelectionType.NONE;
+//		}else {
+//			selection = BlockSelectionType.Block_Reset;
+//		}
+//		
+//		WorldEditorController.getCurrentController().setBlockSelection(selection);
 	}
 	
 }

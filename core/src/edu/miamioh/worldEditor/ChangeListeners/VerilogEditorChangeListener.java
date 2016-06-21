@@ -23,23 +23,22 @@ public class VerilogEditorChangeListener extends ChangeListener {
 
 		System.out.println("Verilog Editor Change Listener");
 		
-		int row = WorldEditorController.getCurrentController().getSelectedRow();
-		int column = WorldEditorController.getCurrentController().getSelectedColumn();
+//		int row = WorldEditorController.getCurrentController().getSelectedRow();
+//		int column = WorldEditorController.getCurrentController().getSelectedColumn();
+//		
+//		Block targetBlock = WorldEditorController.getCurrentController().getCurrentLevel().getBlock(row, column);
+//		
+//		if(targetBlock instanceof NormalBlock) {
+//			NormalBlock block = (NormalBlock)targetBlock;
+//			
+//			if(block.getModuleWrapper() == null) {
+//				block.compile();
+//			}
+//			
+//			sim.updateTargetBlock(block);
+//			VerilogWorldMain.getVerilogWorldMain().launchVerilogEditor(block.getSourceFile());
+//		}
 		
-		Block targetBlock = WorldEditorController.getCurrentController().getCurrentLevel().getBlock(row, column);
-		
-		/**
-		if(targetBlock instanceof NormalBlock) {
-			NormalBlock block = (NormalBlock)targetBlock;
-			
-			if(block.getModuleWrapper() == null) {
-				block.compile();
-			}
-			
-			sim.updateTargetBlock(block);
-			VerilogWorldMain.getVerilogWorldMain().launchVerilogEditor(block.getSourceFile());
-		}
-		*/
 	}
 
 }
