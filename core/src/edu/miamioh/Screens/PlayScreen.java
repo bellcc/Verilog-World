@@ -28,7 +28,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import edu.miamioh.verilogWorld.VerilogWorldMain;
+import edu.miamioh.verilogworld.VerilogWorldMain;
  
 public class PlayScreen implements Screen {
 	private SpriteBatch batch;

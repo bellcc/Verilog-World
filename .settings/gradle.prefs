@@ -1,8 +1,8 @@
 {
   "1.0": {
     "project_path": ":",
-    "project_dir": "C:\\Users\\Kyle\\Documents\\dev\\Github-Rep\\Verilog-World",
-    "connection_project_dir": "C:\\Users\\Kyle\\Documents\\dev\\Github-Rep\\Verilog-World",
+    "project_dir": "/home/pheonix/GitHub/Verilog-World",
+    "connection_project_dir": "/home/pheonix/GitHub/Verilog-World",
     "connection_gradle_user_home": null,
     "connection_gradle_distribution": "GRADLE_DISTRIBUTION(WRAPPER)",
     "connection_java_home": null,

@@ -49,12 +49,24 @@ class GateRenderer {
                 drawAND(x, y);
                 break;
 
+            case NAND:
+                drawNAND(x, y);
+                break;
+
             case OR:
                 drawOR(x, y);
                 break;
 
+            case NOR:
+                drawNOR(x, y);
+                break;
+
             case XOR:
                 drawXOR(x, y);
+                break;
+
+            case XNOR:
+                drawXNOR(x, y);
                 break;
 
             case NOT:
@@ -180,6 +192,42 @@ class GateRenderer {
     }
 
     /**
+     * Draws an AND gate at a variable location with a variable scale factor.
+     *
+     * @param cx Horizontal location in pixels relative to the bottom left corner.
+     * @param cy Vertical location in pixels relative to the bottom left corner.
+     */
+    public void drawNAND(int cx, int cy) {
+
+        //Draw AND
+        int lx = cx - gateSize * scaleFactor / 2;
+        int rx = cx + gateSize * scaleFactor / 4;
+        int by = cy - gateSize * scaleFactor / 2;
+        int ty = cy + gateSize * scaleFactor / 2;
+        int curveFactor = scaleFactor / 4;
+
+        renderer.line(cx, by, lx, by);
+        renderer.line(lx, by, lx, ty);
+        renderer.line(lx, ty, cx, ty);
+        //top curve
+        renderer.curve(cx, ty, cx + gateSize * scaleFactor / 6 + curveFactor, cy + gateSize *
+                scaleFactor / 3 + curveFactor, cx + gateSize * scaleFactor / 3 + curveFactor, cy +
+                gateSize * scaleFactor / 6 + curveFactor, rx, cy, 1000);
+        //bottom curve
+        renderer.curve(cx, by, cx + gateSize * scaleFactor / 6 + curveFactor, cy - gateSize *
+                scaleFactor / 3 - curveFactor, cx + gateSize * scaleFactor / 3 + curveFactor, cy -
+                gateSize * scaleFactor / 6 - curveFactor, rx, cy, 1000);
+
+        //Draw NOT
+        int rxc = rx + gateSize * scaleFactor / 8;
+        int cr = gateSize * scaleFactor / 8;
+        renderer.circle(rxc, cy, cr);
+
+        if (Constants.frame)
+            frame(cx, cy);
+    }
+
+    /**
      * Draws an OR gate at a variable location with a variable scale factor.
      *
      * @param cx Horizontal location in pixels relative to the bottom left corner.
@@ -205,6 +253,42 @@ class GateRenderer {
         //side curve
         renderer.curve(lx, by, lxrc, cy - gateSize * scaleFactor / 3, lxrc, cy + gateSize *
                 scaleFactor / 3, lx, ty, 1000);
+
+        if (Constants.frame)
+            frame(cx, cy);
+    }
+
+    /**
+     * Draws an OR gate at a variable location with a variable scale factor.
+     *
+     * @param cx Horizontal location in pixels relative to the bottom left corner.
+     * @param cy Vertical location in pixels relative to the bottom left corner.
+     */
+    public void drawNOR(int cx, int cy) {
+
+        int lx = cx - gateSize * scaleFactor / 2;
+        int lxrc = lx + gateSize * scaleFactor / 4;
+        int rx = cx + gateSize * scaleFactor / 4;
+        int by = cy - gateSize * scaleFactor / 2;
+        int ty = cy + gateSize * scaleFactor / 2;
+        int curveFactor = scaleFactor / 3;
+
+        //top curve
+        renderer.curve(lx, ty, cx - gateSize * scaleFactor / 6 + curveFactor, cy + gateSize *
+                scaleFactor / 3 + curveFactor, cx + gateSize * scaleFactor / 6 + curveFactor, cy +
+                gateSize * scaleFactor / 6 + curveFactor, rx, cy, 1000);
+        //bottom curve
+        renderer.curve(lx, by, cx - gateSize * scaleFactor / 6 + curveFactor, cy - gateSize *
+                scaleFactor / 3 - curveFactor, cx + gateSize * scaleFactor / 6 + curveFactor, cy -
+                gateSize * scaleFactor / 6 - curveFactor, rx, cy, 1000);
+        //side curve
+        renderer.curve(lx, by, lxrc, cy - gateSize * scaleFactor / 3, lxrc, cy + gateSize *
+                scaleFactor / 3, lx, ty, 1000);
+
+        //Draw NOT
+        int rxc = rx + gateSize * scaleFactor / 8;
+        int cr = gateSize * scaleFactor / 8;
+        renderer.circle(rxc, cy, cr);
 
         if (Constants.frame)
             frame(cx, cy);
@@ -241,6 +325,47 @@ class GateRenderer {
         //side curve (left)
         renderer.curve(lxl, by, lxlc, cy - gateSize * scaleFactor / 3, lxlc, cy + gateSize *
                 scaleFactor / 3, lxl, ty, 1000);
+
+        if (Constants.frame)
+            frame(cx, cy);
+    }
+
+    /**
+     * Draws an XOR gate at a variable location with a variable scale factor.
+     *
+     * @param cx Horizontal location in pixels relative to the bottom left corner.
+     * @param cy Vertical location in pixels relative to the bottom left corner.
+     */
+    public void drawXNOR(int cx, int cy) {
+
+        int lxr = cx - gateSize * scaleFactor / 4;
+        int lxrc = lxr + gateSize * scaleFactor / 4; //Redundant (could be just cx) but left it for consistency
+        int lxl = cx - gateSize * scaleFactor / 2;
+        int lxlc = lxl + gateSize * scaleFactor / 4;
+        int rx = cx + gateSize * scaleFactor / 4;
+        int by = cy - gateSize * scaleFactor / 2;
+        int ty = cy + gateSize * scaleFactor / 2;
+        int curveFactor = scaleFactor / 3;
+
+        //top curve
+        renderer.curve(lxr, ty, cx - gateSize * scaleFactor / 6 + curveFactor, cy + gateSize *
+                scaleFactor / 3 + curveFactor, cx + gateSize * scaleFactor / 6 + curveFactor, cy +
+                gateSize * scaleFactor / 6 + curveFactor, rx, cy, 1000);
+        //bottom curve
+        renderer.curve(lxr, by, cx - gateSize * scaleFactor / 6 + curveFactor, cy - gateSize *
+                scaleFactor / 3 - curveFactor, cx + gateSize * scaleFactor / 6 + curveFactor, cy -
+                gateSize * scaleFactor / 6 - curveFactor, rx, cy, 1000);
+        //side curve (right)
+        renderer.curve(lxr, by, lxrc, cy - gateSize * scaleFactor / 3, lxrc, cy + gateSize *
+                scaleFactor / 3, lxr, ty, 1000);
+        //side curve (left)
+        renderer.curve(lxl, by, lxlc, cy - gateSize * scaleFactor / 3, lxlc, cy + gateSize *
+                scaleFactor / 3, lxl, ty, 1000);
+
+        //Draw NOT
+        int rxc = rx + gateSize * scaleFactor / 8;
+        int cr = gateSize * scaleFactor / 8;
+        renderer.circle(rxc, cy, cr);
 
         if (Constants.frame)
             frame(cx, cy);
