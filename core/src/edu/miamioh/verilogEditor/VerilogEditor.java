@@ -23,8 +23,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+//import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+//import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import edu.miamioh.schematicRenderer.SchematicRendererMain;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.util.Constants;
@@ -786,7 +786,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	}
 
 	public void schematicButtonFunction() {
-
+		/**
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
 		config.title = "Schematic Render of " + this.fileName;
@@ -796,7 +796,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		config.resizable = false;
 
 		LwjglApplication schematicRender = new LwjglApplication(new SchematicRendererMain(Compiler), config);
-
+		*/
 	}
 	/*
 	public void comboHeaderButtonFunction() {
