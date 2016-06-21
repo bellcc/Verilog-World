@@ -3,26 +3,31 @@ package edu.miamioh.schematicRenderer;
 import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.omg.CORBA.UNKNOWN;
+import java.util.Stack;
 
 /**
  * Visits nodes on the parse tree to build the schematic.
  *
  * Created by shaffebd.
  */
-public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001BaseVisitor<T> {
+class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001BaseVisitor<T> {
 
-    SchematicRenderer schematic;
+    private SchematicRenderer schematic;
 
-    public SchematicVisitor(SchematicRenderer schematic) {this.schematic = schematic;}
+    private String lValue, rValue, gateValue;
+    private Stack<String> gateInputs = new Stack<>();
+
+    SchematicVisitor(SchematicRenderer schematic) {this.schematic = schematic;}
 
     /**
      * {@inheritDoc}
      * <p>
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
-            *
-            * @param ctx
+     *
+     * <p>This visitor is not used.</p>
+     *
+     * @param ctx
     */
     @Override
     public T visitInstance_identifier(Verilog2001Parser.Instance_identifierContext ctx) {
@@ -48,6 +53,8 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor is only used as a node.</p>
+     *
      * @param ctx
      */
     @Override
@@ -61,72 +68,25 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor creates a new assignment of "expression = wire."
+     * Left-hand arguments are always wires or outputs.</p>
+     *
      * @param ctx
      */
     @Override
-    public T visitContinuous_assign(Verilog2001Parser.Continuous_assignContext ctx) {
+    public T visitContinuous_assign(Verilog2001Parser.Continuous_assignContext ctx)     {
 
-        String lValue = "", rValue;
+        T t = super.visitContinuous_assign(ctx);
+
+        //Get lValue -> variable assigning
+        lValue = gateInputs.pop();
 
         //Get rValue -> variable getting assigned
-        rValue = getValue(ctx.getChild(1));
-
-        //Get lValue -> expression being assigned
-        ParseTree expression = ctx.getChild(3);
-        if(expression instanceof Verilog2001Parser.BLOGICContext){
-            lValue = newBLogic(expression);
-        } else if (expression instanceof Verilog2001Parser.IDENTContext){
-            lValue = getValue(expression);
-        } else if (expression instanceof Verilog2001Parser.UNOTContext){
-            lValue = newUNot(expression);
-        }
+        rValue = gateInputs.pop();
 
         schematic.connect(lValue, rValue);
 
-        return super.visitContinuous_assign(ctx);
-    }
-
-    private String newBLogic(ParseTree exp){
-
-        String lValue, rValue, gateValue;
-
-        lValue = getValue(exp.getChild(0));
-        rValue = getValue(exp.getChild(2));
-        gateValue = getValue(exp.getChild(1));
-
-        GateType type = getNewLogicType_GateType(exp.getChild(1));
-        //id = rValue
-
-        int lLevel, rLevel;
-        lLevel = schematic.getLevel(lValue);
-        rLevel = schematic.getLevel(rValue);
-
-        int level = ((lLevel > rLevel)? lLevel : rLevel) + 1;
-
-        schematic.addGate(type, gateValue, level);
-        schematic.connect(lValue, gateValue);
-        schematic.connect(rValue, gateValue);
-
-        return gateValue;
-
-    }
-
-    private String newUNot(ParseTree exp){
-
-        String lValue, gateValue;
-
-        lValue = getValue(exp.getChild(1));
-        gateValue = getValue(exp.getChild(0));
-
-        GateType type = getNewLogicType_GateType(exp.getChild(0));
-        //id = gateValue
-        int level = schematic.getLevel(lValue) + 1;
-
-        schematic.addGate(type, gateValue, level);
-        schematic.connect(lValue, gateValue);
-
-        return gateValue;
-
+        return t;
     }
 
     private String getValue(ParseTree exp) {
@@ -144,15 +104,17 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
             return exp.getText();
         } else if (exp instanceof Verilog2001Parser.BRACKETSContext) {
             return getValue(exp.getChild(1));
-        } else if (exp instanceof Verilog2001Parser.BLOGICContext) {
-            return newBLogic(exp);
-        } else if (exp instanceof Verilog2001Parser.UNOTContext) {
-            return newUNot(exp);
         } else
             return "";
 
     }
 
+    /**
+     * Translates the text of the BLOGIC node into its GateType.
+     *
+     * @param ctx ParseTree with root_module of this BLOGIC.
+     * @return The GateType of this BLOGIC.
+     */
     private GateType getNewLogicType_GateType(ParseTree ctx) {
 
         switch(ctx.getText()){
@@ -184,6 +146,13 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
         }
     }
 
+    /**
+     * Translates the text from the BLOGIC node to its String conversion of
+     * GateType.
+     *
+     * @param ctx ParseTree with root_module of this BLOGIC.
+     * @return The String of this BLOGIC.
+     */
     private String getNewLogicType_String(ParseTree ctx) {
 
         switch(ctx.getText()){
@@ -215,6 +184,12 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
         }
     }
 
+    /**
+     * Gets the number of Gates of the same type.
+     *
+     * @param type The type of Gate being counted.
+     * @return The number of Gates of type Type.
+     */
     private int getNumOfGates(GateType type){
         return schematic.getGateCount(type);
     }
@@ -225,12 +200,31 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor adds an Adder or Subtractor. (Currently just adds a
+     * Blank gate.)</p>
+     *
      * @param ctx
      */
     @Override
     public T visitADD_SUB(Verilog2001Parser.ADD_SUBContext ctx) {
-        return super.visitADD_SUB(ctx);
-    }
+        T t = super.visitADD_SUB(ctx);
+
+        lValue = gateInputs.pop();
+        rValue = gateInputs.pop();
+
+        gateValue = "AddSub";
+        GateType type = GateType.BLANK;
+        gateValue += getNumOfGates(type);
+        int level = schematic.getLevel(lValue) + 1;
+
+        schematic.addGate(type, gateValue, level);
+
+        schematic.connect(lValue, gateValue);
+        schematic.connect(rValue, gateValue);
+
+        gateInputs.push(gateValue);
+
+        return t;    }
 
     /**
      * {@inheritDoc}
@@ -251,11 +245,26 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor creates an assignment of the format "variable <=
+     * expression."</p>
+     *
      * @param ctx
      */
     @Override
     public T visitNonblocking_assignment(Verilog2001Parser.Nonblocking_assignmentContext ctx) {
-        return super.visitNonblocking_assignment(ctx);
+
+        //Process the children
+        T t = super.visitNonblocking_assignment(ctx);
+
+        //Get lValue -> expression being assigned
+        lValue = gateInputs.pop();
+
+        //Get rValue -> variable getting assigned
+        rValue = gateInputs.pop();
+
+        schematic.connect(lValue, rValue);
+
+        return t;
     }
 
     /**
@@ -263,6 +272,8 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
+     *
+     * <p>This visitor is not used.</p>
      *
      * @param ctx
      */
@@ -276,6 +287,10 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code exp}.</p>
+     *
+     * <p>This visitor creates a new Input Port object in the schematic for
+     * every Input identifier in the Input_declaration. Range expressions
+     * are supported but not required.</p>
      *
      * @param exp
      */
@@ -314,6 +329,8 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor only calls its children.</p>
+     *
      * @param ctx
      */
     @Override
@@ -326,6 +343,8 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
+     *
+     * <p>This visitor only calls its children.</p>
      *
      * @param ctx
      */
@@ -340,12 +359,30 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
-     * @param ctx
+     * <p>This visitor creates a new Not gate with one input. Inputs can be
+     * gates, ports or wires.</p>
+     *
+     * @param exp
      */
     @Override
-    public T visitUNOT(Verilog2001Parser.UNOTContext ctx) {
-//        schematic.addGate(GateType.NOT, 1, "NOT0", 1);
-        return super.visitUNOT(ctx);
+    public T visitUNOT(Verilog2001Parser.UNOTContext exp) {
+
+        T t = super.visitUNOT(exp);
+
+        lValue = gateInputs.pop();
+        gateValue = getValue(exp.getChild(0));
+
+        GateType type = getNewLogicType_GateType(exp.getChild(0));
+        //id = gateValue
+        int lLevel = schematic.getLevel(lValue);
+        int level = lLevel + 1;
+        schematic.addGate(type, gateValue, level);
+
+        schematic.connect(lValue, gateValue);
+
+        gateInputs.push(gateValue);
+
+        return t;
     }
 
     /**
@@ -353,6 +390,8 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
+     *
+     * <p>This visitor only calls its children.</p>
      *
      * @param ctx
      */
@@ -366,6 +405,8 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
+     *
+     * <p>This visitor is visited but performs no actions.</p>
      *
      * @param ctx
      */
@@ -393,6 +434,9 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor does not need to perform any functions besides calling
+     * its children.</p>
+     *
      * @param ctx
      */
     @Override
@@ -406,18 +450,39 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor adds an LOR gate. (Currently just adds a Blank gate.)</p>
+     *
      * @param ctx
      */
     @Override
     public T visitLOR(Verilog2001Parser.LORContext ctx) {
-        return super.visitLOR(ctx);
-    }
+        T t = super.visitLOR(ctx);
+
+        lValue = gateInputs.pop();
+        rValue = gateInputs.pop();
+
+        gateValue = "LOR";
+        GateType type = GateType.BLANK;
+        gateValue += getNumOfGates(type);
+        int level = schematic.getLevel(lValue) + 1;
+
+        schematic.addGate(type, gateValue, level);
+
+        schematic.connect(lValue, gateValue);
+        schematic.connect(rValue, gateValue);
+
+        gateInputs.push(gateValue);
+
+        return t;    }
 
     /**
      * {@inheritDoc}
      * <p>
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
+     *
+     * <p>This visitor does not need to perform any functions besides calling
+     * its children.</p>
      *
      * @param ctx
      */
@@ -445,6 +510,9 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor does not need to perform any functions besides calling
+     * its children.</p>
+     *
      * @param ctx
      */
     @Override
@@ -471,6 +539,9 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor does not need to perform any functions besides calling
+     * its children.</p>
+     *
      * @param ctx
      */
     @Override
@@ -484,10 +555,38 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor creates a new Reg object for every Reg Identifier in
+     * a Reg_declaration. Range expressions are accepted but not required.</p>
+     *
      * @param ctx
      */
     @Override
     public T visitReg_declaration(Verilog2001Parser.Reg_declarationContext ctx) {
+
+        ParseTree regIdentifiers = ctx.list_of_identifiers();
+        int numOfRegs = regIdentifiers.getChildCount();
+        String id;
+
+        if(ctx.getChild(1) instanceof Verilog2001Parser.RangeContext){
+            int msb = Integer.parseInt(ctx.getChild(1).getChild(1).getText());
+            ParseTree idList = ctx.list_of_identifiers();
+            for(int j = 0; j < numOfRegs; j++) {
+                if (idList.getChild(j) instanceof Verilog2001Parser.IdentifierContext){
+                    for (int i = 0; i <= msb; i++) {
+                        id = ctx.getChild(2).getChild(j).getText();
+                        schematic.addGate(GateType.REG, id + "[" + i + "]", 1);
+                    }
+                }
+            }
+        } else {
+            for (int i = 0; i < numOfRegs; i++){
+                if(regIdentifiers.getChild(i) instanceof Verilog2001Parser.IdentifierContext) {
+                    id = regIdentifiers.getChild(i).getText();
+                    schematic.addGate(GateType.REG, id, 1);
+                }
+            }
+        }
+
         return super.visitReg_declaration(ctx);
     }
 
@@ -523,6 +622,9 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor does not need to perform any functions besides calling
+     * its children.</p>
+     *
      * @param ctx
      */
     @Override
@@ -535,6 +637,8 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
+     *
+     * <p>This visitor only calls its childre.</p>
      *
      * @param ctx
      */
@@ -562,12 +666,31 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor adds an LNOT gate. (Currently just adds a Blank gate.)
+     * </p>
+     *
      * @param ctx
      */
     @Override
     public T visitLNOT(Verilog2001Parser.LNOTContext ctx) {
-        return super.visitLNOT(ctx);
-    }
+        T t = super.visitLNOT(ctx);
+
+        lValue = gateInputs.pop();
+        rValue = gateInputs.pop();
+
+        gateValue = "LNOT";
+        GateType type = GateType.BLANK;
+        gateValue += getNumOfGates(type);
+        int level = schematic.getLevel(lValue) + 1;
+
+        schematic.addGate(type, gateValue, level);
+
+        schematic.connect(lValue, gateValue);
+        schematic.connect(rValue, gateValue);
+
+        gateInputs.push(gateValue);
+
+        return t;    }
 
     /**
      * {@inheritDoc}
@@ -601,11 +724,25 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor creates an assignment of the format "variable <=
+     * expression."</p>
+     *
      * @param ctx
      */
     @Override
     public T visitBlocking_assignment(Verilog2001Parser.Blocking_assignmentContext ctx) {
-        return super.visitBlocking_assignment(ctx);
+
+        T t = super.visitBlocking_assignment(ctx);
+
+        //Get lValue -> variable assigning
+        lValue = gateInputs.pop();
+
+        //Get rValue -> variable getting assigned
+        rValue = gateInputs.pop();
+
+        schematic.connect(lValue, rValue);
+
+        return t;
     }
 
     /**
@@ -627,12 +764,31 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor adds a Comparator. (Currently just adds a Blank gate.)
+     * </p>
+     *
      * @param ctx
      */
     @Override
     public T visitCOMPARES(Verilog2001Parser.COMPARESContext ctx) {
-        return super.visitCOMPARES(ctx);
-    }
+        T t = super.visitCOMPARES(ctx);
+
+        lValue = gateInputs.pop();
+        rValue = gateInputs.pop();
+
+        gateValue = "Compares";
+        GateType type = GateType.BLANK;
+        gateValue += getNumOfGates(type);
+        int level = schematic.getLevel(lValue) + 1;
+
+        schematic.addGate(type, gateValue, level);
+
+        schematic.connect(lValue, gateValue);
+        schematic.connect(rValue, gateValue);
+
+        gateInputs.push(gateValue);
+
+        return t;    }
 
     /**
      * {@inheritDoc}
@@ -640,12 +796,30 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor adds a LAND gate. (Currently just adds a Blank gate.)</p>
+     *
      * @param ctx
      */
     @Override
     public T visitLAND(Verilog2001Parser.LANDContext ctx) {
-        return super.visitLAND(ctx);
-    }
+        T t = super.visitLAND(ctx);
+
+        lValue = gateInputs.pop();
+        rValue = gateInputs.pop();
+
+        gateValue = "LAND";
+        GateType type = GateType.BLANK;
+        gateValue += getNumOfGates(type);
+        int level = schematic.getLevel(lValue) + 1;
+
+        schematic.addGate(type, gateValue, level);
+
+        schematic.connect(lValue, gateValue);
+        schematic.connect(rValue, gateValue);
+
+        gateInputs.push(gateValue);
+
+        return t;    }
 
     /**
      * {@inheritDoc}
@@ -696,7 +870,9 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      */
     @Override
     public T visitCase_statement(Verilog2001Parser.Case_statementContext ctx) {
-        return super.visitCase_statement(ctx);
+        T t = super.visitCase_statement(ctx);
+
+        return t;
     }
 
     /**
@@ -718,6 +894,9 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor does not need to perform any functions besides calling
+     * its children.</p>
+     *
      * @param ctx
      */
     @Override
@@ -731,11 +910,31 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
-     * @param ctx
+     * @param exp
      */
     @Override
-    public T visitBLOGIC(Verilog2001Parser.BLOGICContext ctx) {
-        return super.visitBLOGIC(ctx);
+    public T visitBLOGIC(Verilog2001Parser.BLOGICContext exp) {
+
+        T t = super.visitBLOGIC(exp);
+
+        lValue = gateInputs.pop();
+        rValue = gateInputs.pop();
+        gateValue = getValue(exp.getChild(1));
+
+        GateType type = getNewLogicType_GateType(exp.getChild(1));
+        //id = rValue
+        int lLevel, rLevel;
+        lLevel = schematic.getLevel(lValue);
+        rLevel = schematic.getLevel(rValue);
+        int level = ((lLevel > rLevel)? lLevel : rLevel) + 1;
+        schematic.addGate(type, gateValue, level);
+
+        schematic.connect(lValue, gateValue);
+        schematic.connect(rValue, gateValue);
+
+        gateInputs.push(gateValue);
+
+        return t;
     }
 
     /**
@@ -744,11 +943,31 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor adds a multiplication, division, or modulous block.
+     * (currently just a Blank gate.)</p>
+     *
      * @param ctx
      */
     @Override
     public T visitMULT_DIV_MOD(Verilog2001Parser.MULT_DIV_MODContext ctx) {
-        return super.visitMULT_DIV_MOD(ctx);
+        T t = super.visitMULT_DIV_MOD(ctx);
+
+        lValue = gateInputs.pop();
+        rValue = gateInputs.pop();
+
+        gateValue = "MultDivMod";
+        GateType type = GateType.BLANK;
+        gateValue += getNumOfGates(type);
+        int level = schematic.getLevel(lValue) + 1;
+
+        schematic.addGate(type, gateValue, level);
+
+        schematic.connect(lValue, gateValue);
+        schematic.connect(rValue, gateValue);
+
+        gateInputs.push(gateValue);
+
+        return t;
     }
 
     /**
@@ -915,6 +1134,7 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      */
     @Override
     public T visitVariable_lvalue(Verilog2001Parser.Variable_lvalueContext ctx) {
+        gateInputs.push(ctx.getText());
         return super.visitVariable_lvalue(ctx);
     }
 
@@ -950,11 +1170,28 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor adds a sign inverter. (Currently just a blank Gate.)</p>
+     *
      * @param ctx
      */
     @Override
     public T visitUMINUS(Verilog2001Parser.UMINUSContext ctx) {
-        return super.visitUMINUS(ctx);
+        T t = super.visitUMINUS(ctx);
+
+        lValue = gateInputs.pop();
+
+        gateValue = "MINUS";
+        GateType type = GateType.BLANK;
+        gateValue += getNumOfGates(type);
+        int level = schematic.getLevel(lValue) + 1;
+
+        schematic.addGate(type, gateValue, level);
+
+        schematic.connect(lValue, gateValue);
+
+        gateInputs.push(gateValue);
+
+        return t;
     }
 
     /**
@@ -969,14 +1206,14 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
     public T visitNet_declaration(Verilog2001Parser.Net_declarationContext
                                               exp) {
 
-        ParseTree inputIdentifiers = exp.list_of_identifiers();
-        int numOfInputs = inputIdentifiers.getChildCount();
+        ParseTree netIdentifiers = exp.list_of_identifiers();
+        int numOfNets = netIdentifiers.getChildCount();
         String id;
         
         if(exp.getChild(1) instanceof Verilog2001Parser.RangeContext){
             int msb = Integer.parseInt(exp.getChild(1).getChild(1).getText());
             ParseTree idList = exp.list_of_identifiers();
-            for(int j = 0; j < numOfInputs; j++) {
+            for(int j = 0; j < numOfNets; j++) {
                 if (idList.getChild(j) instanceof Verilog2001Parser.IdentifierContext){
                     for (int i = 0; i <= msb; i++) {
                         id = exp.getChild(2).getChild(j).getText();
@@ -985,9 +1222,9 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
                 }
             }
         } else {
-            for (int i = 0; i < numOfInputs; i++){
-                if(inputIdentifiers.getChild(i) instanceof Verilog2001Parser.IdentifierContext) {
-                    id = inputIdentifiers.getChild(i).getText();
+            for (int i = 0; i < numOfNets; i++){
+                if(netIdentifiers.getChild(i) instanceof Verilog2001Parser.IdentifierContext) {
+                    id = netIdentifiers.getChild(i).getText();
                     schematic.addGate(GateType.WIRE, id, 1);
                 }
             }
@@ -1005,7 +1242,9 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      */
     @Override
     public T visitConditional_statement(Verilog2001Parser.Conditional_statementContext ctx) {
-        return super.visitConditional_statement(ctx);
+        T t = super.visitConditional_statement(ctx);
+
+        return t;
     }
 
     /**
@@ -1018,6 +1257,7 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      */
     @Override
     public T visitIDENT(Verilog2001Parser.IDENTContext ctx) {
+        gateInputs.push(ctx.getText());
         return super.visitIDENT(ctx);
     }
 
@@ -1027,12 +1267,33 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      *
+     * <p>This visitor creates a new Question switch ( 'if' ? 'then' :
+     * 'else' ). (Currently just makes a new Blank gate.)</p>
+     *
      * @param ctx
      */
     @Override
     public T visitQUES(Verilog2001Parser.QUESContext ctx) {
-        return super.visitQUES(ctx);
-    }
+        T t = super.visitQUES(ctx);
+
+        lValue = gateInputs.pop();
+        String mValue = gateInputs.pop();
+        rValue = gateInputs.pop();
+
+        gateValue = "Ques";
+        GateType type = GateType.BLANK;
+        gateValue += getNumOfGates(type);
+        int level = schematic.getLevel(lValue) + 1;
+
+        schematic.addGate(type, gateValue, level);
+
+        schematic.connect(lValue, gateValue);
+        schematic.connect(mValue, gateValue);
+        schematic.connect(rValue, gateValue);
+
+        gateInputs.push(gateValue);
+
+        return t;    }
 
     /**
      * {@inheritDoc}
@@ -1078,6 +1339,9 @@ public class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2
      * <p>
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
+     *
+     * <p>This visitor does not need to perform any functions besides calling
+     * its children.</p>
      *
      * @param ctx
      */

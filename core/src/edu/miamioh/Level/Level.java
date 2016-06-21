@@ -13,8 +13,8 @@ import edu.miamioh.GameObjects.Block;
 
 public class Level {
 	
-	ArrayList<Block> blockList;
-	
+	private ArrayList<Block> blockList;
+
 	public Level() {
 		
 		blockList = new ArrayList<Block>();
@@ -23,7 +23,7 @@ public class Level {
 	public Level(ArrayList<Block> blockList) {
 		
 		this.blockList = blockList;
-		
+
 	}
 	
 	public void addBlock(Block block) {
@@ -53,13 +53,14 @@ public class Level {
 				return;
 			}
 		}
+
 	}
 	
 	private int findBlockIndex(Block block) {
 		
 		int blockID = block.getId();
 		
-		for(int i=0;i<blockList.size();i++) {
+		for(int i=0;i < blockList.size();i++) {
 			
 			int tempID = blockList.get(i).getId();
 			

@@ -120,6 +120,10 @@ class Port {
 
     }
 
+    public void setLevel(int newLevel){
+        this.level = newLevel;
+    }
+
     /**
      * Gets the Center X coordinate of the Port.
      *
@@ -176,10 +180,10 @@ class Port {
         switch (this.getType()) {
 
             case INPUT:
-                return this.getCX() + constants.gateSize * constants.scaleFactor / 2;
+                return this.getCX() + Constants.gateSize * Constants.scaleFactor / 2;
 
             case OUTPUT:
-                return this.getCX() - constants.gateSize * constants.scaleFactor / 2;
+                return this.getCX() - Constants.gateSize * Constants.scaleFactor / 2;
 
             default:
                 return 0;

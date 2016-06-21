@@ -16,27 +16,64 @@
 
 package edu.miamioh.verilogWorld;
 
+
+import javax.swing.JTextPane;
+
 import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.Configuration.ConfigurationParser;
-import edu.miamioh.worldEditor.WorldEditorScreen;
+
+import edu.miamioh.Level.Level;
+import edu.miamioh.simulator.Parse;
+import edu.miamioh.worldSimulator.WorldSimulator;
 
 public class VerilogWorldController {
 
 	private Configuration defaultConfig;
-	
-	public VerilogWorldController() {
 
+	private static VerilogWorldController controller;
+
+	private static VerilogWorldType state;
+	
+	private Level currentLevel;
+	private WorldSimulator sim;
+	private Parse compiler;
+	
+	private String rootPath;
+
+	public VerilogWorldController() {
+		
 		ConfigurationParser parser = new ConfigurationParser();
 		defaultConfig = parser.getDefaultConfiguration();
 		
-	}
-
-	public void update() {
-
+		init();
 	}
 	
-	public void updateInputMultiplexer() {
+	/**
+	 * This may be used if non-default configuration settings are ever needed 
+	 * however by default the variables are defined within the "world.xml" file.
+	 * @param config
+	 */
+	public VerilogWorldController(Configuration config) {
+		
+		defaultConfig = config;
+	}
+
+	public void init() {
 				
+		this.rootPath = System.getProperty("user.dir") + "\\..\\";
+
+		controller = this;
+		currentLevel = new Level();
+		try {
+			compiler = new Parse(new JTextPane(), rootPath);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		sim = new WorldSimulator(compiler.getRootModuleSimulator());
+		//TODO This needs to be set to the main menu controller.
+		//state = VerilogWorld.WORLD_SIMULATOR;
+		state = VerilogWorldType.WORLD_EDITOR;
+		
 	}
 
 	public Configuration getDefaultConfig() {	
@@ -47,4 +84,20 @@ public class VerilogWorldController {
 		return System.getProperty("user.dir");
 	}
 	
+	public void setState(VerilogWorldType newState) {
+		state = newState;
+	}
+	
+	public VerilogWorldType getState() {
+		return state;
+	}
+	
+	public static VerilogWorldController getController() {
+		return controller;
+	}
+	
+	public Level getLevel() 		{return this.currentLevel;}
+	public WorldSimulator getSim() 	{return this.sim;}
+	public Parse getCompiler()		{return this.compiler;}
+	//public String getRootPath() 	{return this.rootPath;}
 }

@@ -115,7 +115,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 	
 	public void toggleResetLine() {
 		
-		resetLineHigh = resetLineHigh ? false : true;
+		resetLineHigh = !resetLineHigh;
 		
 		int resetValue = 0;
 		if(resetLineHigh) resetValue = 1;
@@ -143,7 +143,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 	public void toggleSequClock() {
 		
 		/* toggle between sequential sims and combinational sims */
-		is_sequential_sim_cycle = (is_sequential_sim_cycle) ? false : true;
+		is_sequential_sim_cycle = !is_sequential_sim_cycle;
 		processed = false;
 		
 		// Pass the clock signal
@@ -213,7 +213,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 	public Value visitConditional_statement(
 			Verilog2001Parser.Conditional_statementContext ctx)
 	{
-		if ((this.is_sequential_sim_cycle && !processed) || !this.is_sequential_sim_cycle) {
+		if (!this.is_sequential_sim_cycle || !processed) {
 			test = null;
 			for (int i = 0; i < ctx.statement().size(); i++)
 			{

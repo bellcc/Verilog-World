@@ -30,7 +30,7 @@ public class DesktopLauncher {
 		config.backgroundFPS = 30;
 
 		new LwjglApplication(new VerilogWorldMain(), config);
-		
+
 	}
 
 }

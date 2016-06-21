@@ -1,6 +1,6 @@
 package edu.miamioh.verilogWorld;
 
-public enum VerilogWorld {
+public enum VerilogWorldType {
 
 	WORLD_EDITOR, WORLD_SIMULATOR
 	

@@ -15,8 +15,12 @@ public class RootModuleInstance extends ModuleInstance {
 	private ArrayList<ParseTree> 				subTrees;
 	private Hashtable<String, ParseTree> 		subTreesHash;
 	
-	public RootModuleInstance(Verilog2001Parser parser, Parse Compiler, ParseTree tree, String name) {
-		super(parser, null, tree, name); // Pass it null for Compiler so it doesn't generate the symbol table.
+	public RootModuleInstance(Verilog2001Parser parser, 
+							  Parse Compiler, 
+							  RootModuleSimulator sim, 
+							  ParseTree tree, 
+							  String name) {
+		super(parser, null, sim, tree, name); // Pass it null for Compiler so it doesn't generate the symbol table.
 										 // We want to generate the table
 		
 		subModules_list = new ArrayList<>();
@@ -30,12 +34,13 @@ public class RootModuleInstance extends ModuleInstance {
 		this.name = name;
 		this.tree = tree;
 		
-		Compiler.updateRootModule(this);
+		sim.setRootModule(this);
+		sim.setRootTree(this.tree);
 		
 		visitor = new SimVisitor(this, this.subModules_hash, this.subModules_list);
 		// Generate symbol table and check syntax
 		ParseTreeWalker walker = new ParseTreeWalker();
-		ParseListener listener = new ParseListener(visitor, parser, Compiler, this);
+		ParseListener listener = new ParseListener(visitor, parser, sim, Compiler, this);
 		walker.walk(listener, this.tree);
 	}
 	

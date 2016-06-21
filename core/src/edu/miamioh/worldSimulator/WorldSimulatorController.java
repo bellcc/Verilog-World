@@ -69,6 +69,7 @@ public class WorldSimulatorController {
 		
 		bufferWidth = config.getBufferWidth();
 		bufferHeight= config.getBufferHeight();		
+
 	}
 	
 	public void resetMultiplexer() {

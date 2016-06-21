@@ -19,11 +19,11 @@ public class VerilogWorldMain extends Game {
 	private WorldEditorScreen worldEditorScreen;
 	private WorldSimulatorScreen worldSimulatorScreen;
 	
-	private VerilogWorld verilogWorldScreen;
+	private VerilogWorldStage verilogWorldScreen;
 	
 	public VerilogWorldMain() {
 		verilogWorldMain = this;
-		verilogWorldScreen = VerilogWorld.WORLD_EDITOR;
+		verilogWorldScreen = VerilogWorldStage.WORLD_EDITOR;
 
 		verilogWorldController = new VerilogWorldController();
 		worldEditorController = new WorldEditorController(verilogWorldController.getDefaultConfig(), new Level());
@@ -31,7 +31,6 @@ public class VerilogWorldMain extends Game {
 		
 		worldEditorScreen = new WorldEditorScreen(worldEditorController);
 		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
-		
 		
 	}
 	
@@ -61,11 +60,11 @@ public class VerilogWorldMain extends Game {
 		return verilogWorldMain;
 	}
 	
-	public VerilogWorld getVerilogWorldScreen() {
+	public VerilogWorldStage getVerilogWorldScreen() {
 		return verilogWorldScreen;
 	}
 	
-	public void setVerilogWorldScreen(VerilogWorld verilogWorldScreen) {
+	public void setVerilogWorldScreen(VerilogWorldStage verilogWorldScreen) {
 		this.verilogWorldScreen = verilogWorldScreen;
 	}
 

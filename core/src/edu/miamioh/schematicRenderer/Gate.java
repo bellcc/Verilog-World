@@ -22,7 +22,7 @@ class Gate {
     private float r, g, b, a;
     private ArrayList<Integer> inputYCoords = new ArrayList<>();
     private ArrayList<Integer> inputXCoords = new ArrayList<>();
-    private int scaledGS = constants.gateSize * constants.scaleFactor;
+    private int scaledGS = Constants.gateSize * Constants.scaleFactor;
 
     /**
      * Gate default constructor. WILL ERROR OUT IF ATTEMPTED TO RENDER.
@@ -107,6 +107,16 @@ class Gate {
                 setColor(r, g, b, a);
                 break;
 
+            case FF:
+                this.type = FF;
+                this.id = id;
+                this.level = level;
+                r = 0;
+                g = 0;
+                b = 0;
+                setColor(r, g, b, a);
+                break;
+
             case BLANK:
                 this.type = BLANK;
                 this.id = id;
@@ -157,6 +167,7 @@ class Gate {
 
             case WIRE:
             case REG:
+            case FF:
                 inputXCoords.add(this.cx - scaledGS / 2);
                 break;
 
@@ -199,6 +210,7 @@ class Gate {
 
             case WIRE:
             case REG:
+            case FF:
                 inputYCoords.add(this.cy);
                 break;
 
@@ -350,6 +362,7 @@ class Gate {
 
             case WIRE:
             case REG:
+            case FF:
                 if(name[0].equals("IN"))
                     return inputXCoords.get(0);
                 else
@@ -396,6 +409,7 @@ class Gate {
 
             case WIRE:
             case REG:
+            case FF:
                 return this.getCY();
 
             default:

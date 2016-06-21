@@ -4,5 +4,5 @@ public enum WireRoleType {
 	
 	NONE,
 	INPUT,
-	OUTPUT;
+	OUTPUT
 }

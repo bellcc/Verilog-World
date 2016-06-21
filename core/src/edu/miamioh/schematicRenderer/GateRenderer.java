@@ -96,7 +96,7 @@ class GateRenderer {
         renderer.line(rx, ty, rxp, cy);
         renderer.line(rx, by, rxp, cy);
 
-        if (constants.frame)
+        if (Constants.frame)
             frame(cx, cy);
     }
 
@@ -121,7 +121,7 @@ class GateRenderer {
         renderer.line(rx, by, lx, by);
         renderer.line(lx, by, lxp, cy);
 
-        if (constants.frame)
+        if (Constants.frame)
             frame(cx, cy);
     }
 
@@ -145,7 +145,7 @@ class GateRenderer {
         renderer.line(lx, ty, lx, by);
         renderer.circle(rxc, cy, cr);
 
-        if (constants.frame)
+        if (Constants.frame)
             frame(cx, cy);
     }
 
@@ -175,7 +175,7 @@ class GateRenderer {
                 scaleFactor / 3 - curveFactor, cx + gateSize * scaleFactor / 3 + curveFactor, cy -
                 gateSize * scaleFactor / 6 - curveFactor, rx, cy, 1000);
 
-        if (constants.frame)
+        if (Constants.frame)
             frame(cx, cy);
     }
 
@@ -206,7 +206,7 @@ class GateRenderer {
         renderer.curve(lx, by, lxrc, cy - gateSize * scaleFactor / 3, lxrc, cy + gateSize *
                 scaleFactor / 3, lx, ty, 1000);
 
-        if (constants.frame)
+        if (Constants.frame)
             frame(cx, cy);
     }
 
@@ -242,7 +242,7 @@ class GateRenderer {
         renderer.curve(lxl, by, lxlc, cy - gateSize * scaleFactor / 3, lxlc, cy + gateSize *
                 scaleFactor / 3, lxl, ty, 1000);
 
-        if (constants.frame)
+        if (Constants.frame)
             frame(cx, cy);
     }
 
@@ -263,11 +263,11 @@ class GateRenderer {
         renderer.rect(lx, by, w, h);
         renderer.line(lx, cy, rx, cy);
 
-        if (constants.frame) frame(cx, cy);
+        if (Constants.frame) frame(cx, cy);
     }
 
     /**
-     * Draws a new Reg 'Net' object.
+     * Draws a new Reg object. Reg's are composed of Flip-Flops.
      *
      * @param cx Center X coordinate.
      * @param cy Center Y coordinate.
@@ -278,11 +278,15 @@ class GateRenderer {
         int by = cy - gateSize * scaleFactor / 2;
         int w = gateSize * scaleFactor;
         int h = w;
+        int clklx = cx - gateSize * scaleFactor / 4;
+        int clkrx = cx + gateSize * scaleFactor / 4;
+        int clky = cy - gateSize * scaleFactor / 4;
 
         renderer.rect(lx, by, w, h);
         renderer.line(lx, cy, rx, cy);
+        renderer.triangle(clklx, by, clkrx, by, cx, clky);
 
-        if (constants.frame) frame(cx, cy);
+        if (Constants.frame) frame(cx, cy);
     }
 
     /**
@@ -299,7 +303,7 @@ class GateRenderer {
 
         renderer.rect(lx, by, w, h);
 
-        if (constants.frame) frame(cx, cy);
+        if (Constants.frame) frame(cx, cy);
     }
 
     /**

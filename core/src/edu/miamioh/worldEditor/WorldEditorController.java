@@ -20,6 +20,7 @@ import edu.miamioh.GameObjects.NormalBlockType;
 import edu.miamioh.GameObjects.SpecialBlock;
 import edu.miamioh.GameObjects.SpecialBlockType;
 import edu.miamioh.Level.Level;
+import edu.miamioh.verilogWorld.VerilogWorldController;
 
 public class WorldEditorController {
 	
@@ -71,6 +72,16 @@ public class WorldEditorController {
 	public WorldEditorController(Configuration config, Level currentLevel) {
 
 		this();
+	}
+	
+	public void initWorld() {
+		
+		//currentLevel = VerilogWorldController.getController().getLevel();
+
+		Configuration config = VerilogWorldController.getController().getDefaultConfig();
+		
+		setWorldWidth(config.getWorldWidth());
+		setWorldHeight(config.getWorldHeight());
 		
 		windowWidth = config.getWindowWidth();
 		windowHeight = config.getWindowHeight();
@@ -176,10 +187,30 @@ public class WorldEditorController {
 			return;
 		}
 		else {
-		
-			if(selection == ToolBarSelection.BLOCK_SELECTED) {
-				selection = ToolBarSelection.NONE;
-			}
+			//boolean blocksActor = WorldEditorRenderer.getWorldRenderer().getBlocksActor();
+			
+			BlockSelectionType type = WorldEditorController.getCurrentController().getBlockSelection();
+			
+			//if (blocksActor) {
+				switch(type) {
+				case Block_Blank:
+					currentLevel.addBlock(new NormalBlock(NormalBlockType.Blank, row, column));
+					break;
+				case Block_Clock:
+					currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Clock, row, column));
+					break;
+				case Block_Reset:
+					currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Reset, row, column));
+					break;
+				case Block_Wall:
+					currentLevel.addBlock(new NormalBlock(NormalBlockType.Wall, row, column));
+					break;
+				default:
+					break;
+				}
+				
+				++blockID;
+			//}
 			
 		}
 		
@@ -215,9 +246,10 @@ public class WorldEditorController {
 	}
 
 	public static WorldEditorController getCurrentController() {
+
 		return currentController;
 	}
-	
+
 	public Level getCurrentLevel() {
 		return currentLevel;
 	}

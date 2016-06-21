@@ -134,11 +134,8 @@ public class WorldEditorInputProcessor implements InputProcessor{
 
 	private boolean canMoveLeft(int posX) {
 
-		if(posX > 0) {
-			return true;
-		}
-		
-		return false;
+		return posX > 0;
+
 	}
 
 	private boolean canMoveRight(int posX) {
@@ -157,6 +154,7 @@ public class WorldEditorInputProcessor implements InputProcessor{
 		}
 		
 		return false;
+
 	}
 
 	private boolean canMoveUp(int posY) {
@@ -173,15 +171,13 @@ public class WorldEditorInputProcessor implements InputProcessor{
 		}
 		
 		return false;
+
 	}
 
 	private boolean canMoveDown(int posY) {
 
-		if(posY > 0) {
-			return true;
-		}
-		
-		return false;
+		return posY > 0;
+
 	}
 	
 }
