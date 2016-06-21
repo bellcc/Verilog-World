@@ -28,7 +28,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import edu.miamioh.verilogworld.VerilogWorldMain;
+import edu.miamioh.verilogWorld.VerilogWorldMain;
  
 public class MainMenuScreen implements Screen {
 	private SpriteBatch batch;
