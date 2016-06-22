@@ -43,7 +43,8 @@ public class VerilogWorldController {
 	public VerilogWorldController() {
 		
 		ConfigurationParser parser = new ConfigurationParser();
-		defaultConfig = parser.getDefaultConfiguration();		
+		defaultConfig = parser.getDefaultConfiguration();
+		init();
 	}
 	
 	/**

@@ -13,13 +13,17 @@ import edu.miamioh.worldSimulator.ModuleWrapper;
 
 public class NormalBlock extends Block {
 	
-	private static Parse compiler = VerilogWorldController.getController().getSim().getCompiler();
+	private static Parse compiler;
 	
 	private String sourceFile;
 	private ModuleWrapper module;
 	private NormalBlockType type;
 	
 	public NormalBlock(NormalBlockType type, int row, int column) {
+		
+		if(compiler == null) {
+			compiler = VerilogWorldController.getController().getSim().getCompiler();
+		}
 
 		setRow(row);
 		setColumn(column);
