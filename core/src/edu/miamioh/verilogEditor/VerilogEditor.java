@@ -23,13 +23,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-//import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-//import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import edu.miamioh.schematicRenderer.SchematicRendererMain;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.RootModuleSimulator;
-import edu.miamioh.util.Constants;
+import edu.miamioh.verilogWorld.VerilogWorldMain;
+import edu.miamioh.verilogWorld.VerilogWorldStage;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -787,27 +786,16 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	}
 
 	public void schematicButtonFunction() {
-		/**
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
-		config.title = "Schematic Render of " + sim.getRootModuleInstance().getName() + ".v";
-		config.width = Constants.WINDOW_WIDTH;
-		config.height = Constants.WINDOW_HEIGHT;
-		config.forceExit = false;
-		config.resizable = false;
-
-		LwjglApplication schematicRender = new LwjglApplication(new SchematicRendererMain(Compiler), config);
-		*/
-		
-		/**
-		if(Compiler.isCompiled()) {
-			LwjglApplication schematicRender = new LwjglApplication(new SchematicRendererMain(sim), config);
+		if(Compiler.isCompiled()){
+			VerilogWorldMain vwm = VerilogWorldMain.getVerilogWorldMain();
+			SchematicRendererMain srm = vwm.getSchematicRendererMain();
+			srm.setSim(this.sim);
+			vwm.setVerilogWorldScreen(VerilogWorldStage.SCHEMATIC);
 		} else {
 			errorText.setText(
 					"The Verilog code has not been successfully compiled yet.  Please click the check mark above and/or fix Verilog errors.");
 		}
-		*/
-
 	}
 	/*
 	public void comboHeaderButtonFunction() {

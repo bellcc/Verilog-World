@@ -1,12 +1,16 @@
 package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Disposable;
 import edu.miamioh.util.Constants;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -16,7 +20,7 @@ import static edu.miamioh.schematicRenderer.GateType.OUTPUT;
 import static edu.miamioh.schematicRenderer.GateType.REG;
 
 /**
- * Created by shaffebd.
+ * Created by bdshaffer73.
  */
 class SchematicRenderer implements Disposable {
 
@@ -24,12 +28,30 @@ class SchematicRenderer implements Disposable {
     private ArrayList<Port> ports = new ArrayList<>();
     private Constants constants = new Constants();
     private ShapeRenderer renderer = new ShapeRenderer();
+    private Screen screen;
+    private Stage stage;
+    private ParseTree root_tree;
 
     private int maxLevel = 0;
 
-    SchematicRenderer(){}
+    /**
+     * The Schematic Renderer recieves a
+     */
+    SchematicRenderer(Screen screen, ParseTree root_tree){
+        this.screen = screen;
+        this.root_tree = root_tree;
+        this.stage = new Stage();
+    }
 
-    //Public methods for setting up the render
+    //Methods for setting up the render
+
+    /**
+     * Runs the SchematicVisitor to collect Ports, Gates, and relationships from the root_tree.
+     */
+    void getData(){
+        SchematicVisitor visitor = new SchematicVisitor(this);
+        visitor.visit(root_tree);
+    }
 
     /**
      * Adds a new Gate to the schematic.
@@ -82,16 +104,6 @@ class SchematicRenderer implements Disposable {
             return 0;
 
     }
-
-//    public void setLevel(String id, int level){
-//        Gate tempG = gateLookup(id);
-//        Port tempP = portLookup(id);
-//
-//        if(tempG != null)
-//            tempG.setLevel(level);
-//        else if (tempP != null)
-//            tempP.setLevel(level);
-//    }
 
     /**
      * Adds a new Input to the schematic.
@@ -195,6 +207,9 @@ class SchematicRenderer implements Disposable {
 
             Port tempP;
             Gate tempG;
+//            Label label;
+//            Label.LabelStyle style = new Label.LabelStyle(new BitmapFont(), Color.BLACK);
+//            Point labelPos;
 
             //Set coordinates of INPUT Ports.
             for (int i = 0; i < ports.size(); i++) {
@@ -204,7 +219,11 @@ class SchematicRenderer implements Disposable {
 
                     tempP.setCX(getXCenter(0));
                     tempP.setCY(getYCenter(i - totalOuts));
-                    grenderer.render(tempP.getType(), tempP.getCX(), tempP.getCY());
+//                    labelPos =
+                            grenderer.render(tempP.getType(), tempP.getCX(), tempP.getCY());
+//                    label = new Label(tempP.getID(), style);
+//                    label.setPosition(labelPos.x, labelPos.y);
+//                    stage.addActor(label);
 
                 } else
                     totalOuts++;
@@ -509,10 +528,17 @@ class SchematicRenderer implements Disposable {
 
     }
 
+    private void clearData(){
+        gates.clear();
+        ports.clear();
+    }
+
     /**
      * Releases all resources of this object.
      */
     @Override
     public void dispose() {
+        this.clearData();
+        renderer.dispose();
     }
 }

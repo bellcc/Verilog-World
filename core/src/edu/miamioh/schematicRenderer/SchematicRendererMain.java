@@ -7,41 +7,39 @@ import org.antlr.v4.runtime.tree.ParseTree;
 /**
  * @author bdshaffer73
  */
-
-public class SchematicRendererMain implements ApplicationListener {
+public class SchematicRendererMain implements Screen {
 
     private SchematicRenderer schematic;
     private ParseTree root_tree;
 
     /**
-     * Constructor for SchematicRendererMain. Requires a Parse to have already been created.
-     * @param sim Contains information on the design to be rendered.
+     * Constructor for SchematicRendererMain.
      */
-    public SchematicRendererMain(RootModuleSimulator sim){
+    public SchematicRendererMain(){
+        schematic = new SchematicRenderer(this, root_tree);
+    }
 
+    public void setSim(RootModuleSimulator sim){
         this.root_tree = sim.getRootModuleTree();
+    }
 
+    @Override
+    public void show() {
+        schematic.getData();
     }
 
     /**
-     * Called when the {@link Application} is first created.
+     * This method draws a new window with the schematic design determined by
+     * the Verilog logic.
      */
     @Override
-    public void create() {
-        schematic = new SchematicRenderer();
-        getData();
-    }
-
-    private void getData(){
-
-        SchematicVisitor visitor = new SchematicVisitor(schematic);
-        visitor.visit(root_tree);
-
+    public void render(float arg0) {
+        schematic.render();
     }
 
     /**
      * Called when the {@link Application} is resized. This can happen at any point during a non-paused state but will never happen
-     * before a call to {@link #create()}.
+     * before a call to create().
      *
      * @param width  the new width in pixels
      * @param height the new height in pixels
@@ -52,18 +50,11 @@ public class SchematicRendererMain implements ApplicationListener {
     }
 
     /**
-     * This method draws a new window with the schematic design determined by
-     * the Verilog logic.
-     */
-    public void render() {schematic.render();}
-
-    /**
      * Called when the {@link Application} is paused, usually when it's not active or visible on screen. An Application is also
      * paused before it is destroyed.
      */
     @Override
     public void pause() {
-
     }
 
     /**
@@ -71,7 +62,6 @@ public class SchematicRendererMain implements ApplicationListener {
      */
     @Override
     public void resume() {
-
     }
 
     /**
@@ -79,6 +69,10 @@ public class SchematicRendererMain implements ApplicationListener {
      */
     @Override
     public void dispose() {
-
+        schematic.dispose();
     }
+
+	@Override
+	public void hide() {}
+
 }

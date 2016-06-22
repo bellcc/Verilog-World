@@ -8,8 +8,8 @@ import edu.miamioh.simulator.WireRoleType;
 enum GateType {
 
     INPUT(WireRoleType.INPUT), OUTPUT(WireRoleType.OUTPUT), REG(null), WIRE
-            (null), AND(null), OR(null), XOR(null), XNOR(null), NAND(null), NOR
-    (null), NOT(null), FF(null), BLANK(null), MODULE(null);
+            (null), AND(null), NAND(null), OR(null), NOR(null), XOR(null), XNOR
+            (null), NOT(null), BLANK(null);
 
     GateType(WireRoleType wrt) {
     }

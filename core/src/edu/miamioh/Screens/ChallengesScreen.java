@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -48,6 +49,8 @@ public class ChallengesScreen implements Screen {
     private TextButtonStyle buttonStyleL9;
     private TextButtonStyle buttonStyleL10;
     private TextButtonStyle buttonStyleB;
+    private TextButtonStyle buttonStyleIm;
+
 
 
     protected Skin skinL1;
@@ -61,6 +64,12 @@ public class ChallengesScreen implements Screen {
     protected Skin skinL9;
     protected Skin skinL10;
     protected Skin skinB;
+    protected Skin skinIm1;
+    protected Skin skinIm2;
+    protected Skin skinIm3;
+    protected Skin textSkin;
+
+
 
     private Table mainTable;
 
@@ -82,8 +91,11 @@ public class ChallengesScreen implements Screen {
     	skinL9 = new Skin();
     	skinL10 = new Skin();
     	skinB = new Skin();
+    	skinIm1 = new Skin();
+    	skinIm2 = new Skin();
+    	skinIm3 = new Skin();
+    	textSkin = new Skin(Gdx.files.internal ("uiskin.json"));
 
-    	
     	buttonSetUp();
     	
 	    batch = new SpriteBatch();
@@ -120,6 +132,9 @@ public class ChallengesScreen implements Screen {
 	        TextButton l9Button = new TextButton("", skinL9);
 	        TextButton l10Button = new TextButton("", skinL10);
 	        TextButton backButton = new TextButton("", skinB);
+	        TextButton im1Button = new TextButton("", skinIm1);
+	        TextButton im2Button = new TextButton("", skinIm2);
+	        TextButton im3Button = new TextButton("", skinIm3);
 
 
 	        //Click listeners for each of the buttons
@@ -127,6 +142,16 @@ public class ChallengesScreen implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {	            	
 	            	System.out.println("level 1 Click Listener");
+	        		String text = "LEVEL 01\n"
+	        				+ "This is a rather large and important string that "
+	        				+ "describes this level and everything about it. I will "
+	        				+ "continue to write write write. Done";
+	            	TextArea textArea = new TextArea(text, textSkin);
+	            	textArea.setDisabled(true);
+	            	textArea.setWidth(350);
+	            	textArea.setHeight(350);
+	    	        textArea.setPosition(200, 140);
+	        		stage.addActor(textArea);
 	            }
 	        });
 	        
@@ -134,6 +159,16 @@ public class ChallengesScreen implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {	 
 	            	System.out.println("level 2 Click Listener");
+	        		String text = "LEVEL 02\n"
+	        				+ "This is a rather large and important string that "
+	        				+ "describes this level and everything about it. I will "
+	        				+ "continue to write write write. Done";
+	            	TextArea textArea = new TextArea(text, textSkin);
+	            	textArea.setDisabled(true);
+	            	textArea.setWidth(350);
+	            	textArea.setHeight(350);
+	    	        textArea.setPosition(200, 140);
+	        		stage.addActor(textArea);
 	            }
 	        });
 	        
@@ -141,6 +176,16 @@ public class ChallengesScreen implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	            	System.out.println("level 3 Click Listener");
+	        		String text = "LEVEL 03\n"
+	        				+ "This is a rather large and important string that "
+	        				+ "describes this level and everything about it. I will "
+	        				+ "continue to write write write. Done";
+	            	TextArea textArea = new TextArea(text, textSkin);
+	            	textArea.setDisabled(true);
+	            	textArea.setWidth(350);
+	            	textArea.setHeight(350);
+	    	        textArea.setPosition(200, 140);
+	        		stage.addActor(textArea);
 	            }
 	        });
 	        
@@ -148,6 +193,16 @@ public class ChallengesScreen implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	            	System.out.println("level 4 Click Listener");
+	        		String text = "LEVEL 04\n"
+	        				+ "This is a rather large and important string that "
+	        				+ "describes this level and everything about it. I will "
+	        				+ "continue to write write write. Done";
+	            	TextArea textArea = new TextArea(text, textSkin);
+	            	textArea.setDisabled(true);
+	            	textArea.setWidth(350);
+	            	textArea.setHeight(350);
+	    	        textArea.setPosition(200, 140);
+	        		stage.addActor(textArea);
 	            }
 	        });
 	        
@@ -155,6 +210,16 @@ public class ChallengesScreen implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	            	System.out.println("level 5 Click Listener");
+	        		String text = "LEVEL 05\n"
+	        				+ "This is a rather large and important string that "
+	        				+ "describes this level and everything about it. I will "
+	        				+ "continue to write write write. Done";
+	            	TextArea textArea = new TextArea(text, textSkin);
+	            	textArea.setDisabled(true);
+	            	textArea.setWidth(350);
+	            	textArea.setHeight(350);
+	    	        textArea.setPosition(200, 140);
+	        		stage.addActor(textArea);
 	            }
 	        });
 	        
@@ -162,6 +227,16 @@ public class ChallengesScreen implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	            	System.out.println("level 6 Click Listener");
+	        		String text = "LEVEL 06\n"
+	        				+ "This is a rather large and important string that "
+	        				+ "describes this level and everything about it. I will "
+	        				+ "continue to write write write. Done";
+	            	TextArea textArea = new TextArea(text, textSkin);
+	            	textArea.setDisabled(true);
+	            	textArea.setWidth(350);
+	            	textArea.setHeight(350);
+	    	        textArea.setPosition(200, (Gdx.graphics.getHeight()- mainTable.getMinHeight())/2);
+	        		stage.addActor(textArea);
 	            }
 	        });
 	        
@@ -169,6 +244,16 @@ public class ChallengesScreen implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	            	System.out.println("level 7 Click Listener");
+	        		String text = "LEVEL 07\n"
+	        				+ "This is a rather large and important string that "
+	        				+ "describes this level and everything about it. I will "
+	        				+ "continue to write write write. Done";
+	            	TextArea textArea = new TextArea(text, textSkin);
+	            	textArea.setDisabled(true);
+	            	textArea.setWidth(350);
+	            	textArea.setHeight(350);
+	    	        textArea.setPosition(200, 140);
+	        		stage.addActor(textArea);
 	            }
 	        });
 	        
@@ -176,6 +261,16 @@ public class ChallengesScreen implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	            	System.out.println("level 8 Click Listener");
+	        		String text = "LEVEL 08\n"
+	        				+ "This is a rather large and important string that "
+	        				+ "describes this level and everything about it. I will "
+	        				+ "continue to write write write. Done";
+	            	TextArea textArea = new TextArea(text, textSkin);
+	            	textArea.setDisabled(true);
+	            	textArea.setWidth(350);
+	            	textArea.setHeight(350);
+	    	        textArea.setPosition(200, 140);
+	        		stage.addActor(textArea);
 	            }
 	        });
 	        
@@ -183,6 +278,16 @@ public class ChallengesScreen implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	            	System.out.println("level 9 Click Listener");
+	        		String text = "LEVEL 09\n"
+	        				+ "This is a rather large and important string that "
+	        				+ "describes this level and everything about it. I will "
+	        				+ "continue to write write write. Done";
+	            	TextArea textArea = new TextArea(text, textSkin);
+	            	textArea.setDisabled(true);
+	            	textArea.setWidth(350);
+	            	textArea.setHeight(350);
+	    	        textArea.setPosition(200, 140);
+	        		stage.addActor(textArea);
 	            }
 	        });
 	        
@@ -190,6 +295,16 @@ public class ChallengesScreen implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	            	System.out.println("level 10 Click Listener");
+	        		String text = "LEVEL 10\n"
+	        				+ "This is a rather large and important string that "
+	        				+ "describes this level and everything about it. I will "
+	        				+ "continue to write write write. Done";
+	            	TextArea textArea = new TextArea(text, textSkin);
+	            	textArea.setDisabled(true);
+	            	textArea.setWidth(350);
+	            	textArea.setHeight(350);
+	    	        textArea.setPosition(200, 140);
+	        		stage.addActor(textArea);
 	            }
 	        });
 	        
@@ -197,6 +312,27 @@ public class ChallengesScreen implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	            	g.setScreen(new PlayScreen(g));
+	            }
+	        });
+	        
+	        im1Button.addListener(new ClickListener(){
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	            	System.out.println("import Click Listener");
+	            }
+	        });
+	        
+	        im2Button.addListener(new ClickListener(){
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	            	System.out.println("import Click Listener");
+	            }
+	        });
+	        
+	        im3Button.addListener(new ClickListener(){
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	            	System.out.println("import Click Listener");
 	            }
 	        });
 
@@ -223,7 +359,24 @@ public class ChallengesScreen implements Screen {
 	        mainTable.row();
 	        mainTable.add(backButton).height(40).width(100);
 	        
+	        im1Button.setHeight(40);
+	        im1Button.setWidth(100);
+	        im2Button.setHeight(40);
+	        im2Button.setWidth(100);
+	        im3Button.setHeight(40);
+	        im3Button.setWidth(100);
+	        im1Button.setPosition(0, mainTable.getMinHeight()+90);
+	        im2Button.setPosition(200, mainTable.getMinHeight()+90);
+	        im3Button.setPosition(400, mainTable.getMinHeight()+90);
+	        
+	        System.out.println(mainTable.getRows());
+	        
+	        stage.addActor(im1Button);
+	        stage.addActor(im2Button);
+	        stage.addActor(im3Button);
 	        stage.addActor(mainTable);
+
+
 	    }
 
 	    @Override
@@ -272,6 +425,9 @@ public class ChallengesScreen implements Screen {
 	        skinL9.dispose();
 	        skinL10.dispose();
 	        skinB.dispose();
+	        skinIm1.dispose();
+	        skinIm2.dispose();
+	        skinIm3.dispose();
 	        stage.dispose();
 	    }
 	    
@@ -287,7 +443,9 @@ public class ChallengesScreen implements Screen {
 	    	buttonStyle(skinL9, buttonStyleL9, "level 9.png");
 	    	buttonStyle(skinL10, buttonStyleL10, "level 10.png");
 	    	buttonStyle(skinB, buttonStyleB, "back.png");
-
+	    	buttonStyle(skinIm1, buttonStyleIm, "import.png");
+	    	buttonStyle(skinIm2, buttonStyleIm, "import.png");
+	    	buttonStyle(skinIm3, buttonStyleIm, "import.png");
 
 	    }
 	    
@@ -308,6 +466,11 @@ public class ChallengesScreen implements Screen {
 			skin.add("default", buttonStyle);
 			
 	    }
+	    
+    	public void drawText(){
+    		textSkin.add("default", font);
+    		TextArea textArea = new TextArea("hello", textSkin);
+    	}
 	    
 }
 
