@@ -11,6 +11,7 @@ package edu.miamioh.worldEditor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import edu.miamioh.Configuration.Configuration;
@@ -207,39 +208,13 @@ public class WorldEditorController {
 			
 			return;
 		}
-		else {
-			//boolean blocksActor = WorldEditorRenderer.getWorldRenderer().getBlocksActor();
-			
-			BlockSelectionType type = WorldEditorController.getCurrentController().getBlockSelection();
-			
-			//if (blocksActor) {
-				switch(type) {
-				case Block_Blank:
-					currentLevel.addBlock(new NormalBlock(NormalBlockType.Blank, row, column));
-					break;
-				case Block_Clock:
-					currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Clock, row, column));
-					break;
-				case Block_Reset:
-					currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Reset, row, column));
-					break;
-				case Block_Wall:
-					currentLevel.addBlock(new NormalBlock(NormalBlockType.Wall, row, column));
-					break;
-				default:
-					break;
-				}
-				
-				++blockID;
-			//}
-			
-		}
 		
 		if (selection == ToolBarSelection.BLOCK) {
 						
 			switch(blockSelection) {
 			
 				case Block_Blank:
+					//currentLevel.addBlock(new Block(row, column, Color.GREEN));
 					currentLevel.addBlock(new NormalBlock(NormalBlockType.Blank, row, column));
 					break;
 				case Block_Clock:
@@ -254,10 +229,11 @@ public class WorldEditorController {
 				default:
 					break;
 			}
+			
+			++blockID;
 		
 		}
 		
-				
 	}
 	
 	public void addNewBlock(Block aBlock) {
