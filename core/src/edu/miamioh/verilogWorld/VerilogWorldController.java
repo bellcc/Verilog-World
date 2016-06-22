@@ -77,11 +77,7 @@ public class VerilogWorldController {
 	public Configuration getDefaultConfig() {	
 		return this.defaultConfig;
 	}
-	
-	public static String getRootPath() {
-		return System.getProperty("user.dir");
-	}
-	
+
 	public void setState(VerilogWorldType newState) {
 		state = newState;
 	}
@@ -97,5 +93,5 @@ public class VerilogWorldController {
 	public Level getLevel() 		{return this.currentLevel;}
 	public WorldSimulator getSim() 	{return this.sim;}
 	public Parse getCompiler()		{return this.compiler;}
-	//public String getRootPath() 	{return this.rootPath;}
+	public String getRootPath() 	{return this.rootPath;}
 }
