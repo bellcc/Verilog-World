@@ -214,17 +214,17 @@ public class WorldEditorController {
 			switch(blockSelection) {
 			
 				case Block_Blank:
-					currentLevel.addBlock(new Block(row, column, Color.GREEN));
-					//currentLevel.addBlock(new NormalBlock(NormalBlockType.Blank, row, column));
+					//currentLevel.addBlock(new Block(row, column, Color.GREEN));
+					currentLevel.addBlock(new NormalBlock(NormalBlockType.Blank, row, column));
 					break;
 				case Block_Clock:
-					//currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Clock, row, column));
+					currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Clock, row, column));
 					break;
 				case Block_Reset:
-					//currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Reset, row, column));
+					currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Reset, row, column));
 					break;
 				case Block_Wall:
-					//currentLevel.addBlock(new NormalBlock(NormalBlockType.Wall, row, column));
+					currentLevel.addBlock(new NormalBlock(NormalBlockType.Wall, row, column));
 					break;
 				default:
 					break;
