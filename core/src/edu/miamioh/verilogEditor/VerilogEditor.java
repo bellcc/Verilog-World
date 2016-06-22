@@ -26,6 +26,7 @@ THE SOFTWARE.
 
 import edu.miamioh.schematicRenderer.SchematicRendererMain;
 import edu.miamioh.simulator.Parse;
+import edu.miamioh.simulator.RootModuleInstance;
 import edu.miamioh.simulator.RootModuleSimulator;
 import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
@@ -79,12 +80,15 @@ public class VerilogEditor extends JFrame implements ActionListener {
 //	 *            opened, the exact top-level path of the game files, and the
 //	 *            Level Number (eg. Lv0).
 //	 */
-	public static void main(String[] args) {
-		String fileName = "module_0.v";
+	public static void main(String[] args) throws IOException {
+		String fileName = "SevenSeg.v";
 		String rootPath = System.getProperty("user.dir") + "//..//";
 		String filePath = rootPath + "core/assets/modules/" + fileName;
 		Parse compiler = new Parse(new JTextPane(), rootPath);
 		RootModuleSimulator sim = compiler.getRootModuleSimulator();
+		
+		compiler.compileFileForGame(fileName);
+		
 		new VerilogEditor(sim, compiler, rootPath, filePath);
 	}
 
