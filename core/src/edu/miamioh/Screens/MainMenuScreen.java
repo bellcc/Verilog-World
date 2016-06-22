@@ -31,6 +31,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
  
 public class MainMenuScreen implements Screen {
+	private VerilogWorldMain verilogWorldMain;
+	
 	private SpriteBatch batch;
 	private SpriteBatch batch2;
 	private Sprite sprite;
@@ -48,6 +50,9 @@ public class MainMenuScreen implements Screen {
     public MainMenuScreen(Game g)
     {
     	this.g = g;
+    	
+    	verilogWorldMain = new VerilogWorldMain();
+    	
     	font = new BitmapFont();
     	skinPg = new Skin();
     	skinO = new Skin();
