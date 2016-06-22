@@ -224,7 +224,7 @@ public class WorldEditorScreen implements Screen {
 		ArrayList<Block> blockList = controller.getCurrentLevel().getBlockList();
 		
 		for(int i=0;i<blockList.size();i++) {
-
+			
 			int row = blockList.get(i).getRow();
 			int column = blockList.get(i).getColumn();
 			Color color = blockList.get(i).getColor();

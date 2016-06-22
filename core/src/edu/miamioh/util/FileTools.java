@@ -10,7 +10,6 @@ public class FileTools {
 		
 		try {
 		    if(!destFile.exists()) {
-				System.out.println(destFile.toString());
 		        destFile.createNewFile();
 		    }
 	

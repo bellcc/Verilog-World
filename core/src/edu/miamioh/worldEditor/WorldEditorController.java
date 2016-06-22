@@ -241,6 +241,16 @@ public class WorldEditorController {
 		++blockID;
 		currentLevel.addBlock(aBlock);
 	}
+	
+	public void toggleBlockSelection(BlockSelectionType selectionType) {
+				
+		if(blockSelection == selectionType) {
+			blockSelection = BlockSelectionType.NONE;
+		}else {
+			blockSelection = selectionType;
+		}
+				
+	}
 
 	public static WorldEditorController getCurrentController() {
 
