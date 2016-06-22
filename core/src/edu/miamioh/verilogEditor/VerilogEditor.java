@@ -29,7 +29,6 @@ import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.RootModuleSimulator;
 import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
-import edu.miamioh.verilogWorld.VerilogWorldStage;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -796,7 +795,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			VerilogWorldMain vwm = VerilogWorldMain.getVerilogWorldMain();
 			SchematicRendererMain srm = vwm.getSchematicRendererMain();
 			srm.setSim(this.sim);
-			vwm.setVerilogWorldScreen(VerilogWorldStage.SCHEMATIC);
+			//TODO Change this to a screen set in verilog world main.
+			//vwm.setVerilogWorldScreen(VerilogWorldStage.SCHEMATIC);
 		} else {
 			errorText.setText(
 					"The Verilog code has not been successfully compiled yet.  Please click the check mark above and/or fix Verilog errors.");
