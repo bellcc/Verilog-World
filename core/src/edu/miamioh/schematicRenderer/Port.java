@@ -104,7 +104,7 @@ class Port {
      *
      * @return The ID of the Port.
      */
-    public String getID() {
+    String getID() {
 
         return this.id;
 
@@ -130,7 +130,7 @@ class Port {
      *
      * @return The Center X coordinate of the Port.
      */
-    public int getCX() {
+    int getCX() {
 
         return this.cx;
 
@@ -141,7 +141,7 @@ class Port {
      *
      * @param cx An integer of the Center X coordinate of the Port.
      */
-    public void setCX(int cx) {
+    void setCX(int cx) {
 
         this.cx = cx;
 
@@ -152,7 +152,7 @@ class Port {
      *
      * @return The Center Y coordinate of the Port.
      */
-    public int getCY() {
+    int getCY() {
 
         return this.cy;
 
@@ -163,7 +163,7 @@ class Port {
      *
      * @param cy An integer of the Center Y coordinate of the Port.
      */
-    public void setCY(int cy) {
+    void setCY(int cy) {
 
         this.cy = cy;
 
@@ -174,9 +174,7 @@ class Port {
      *
      * @return The X coordinate of the Port port.
      */
-    public int getPortX() {
-
-        Constants constants = new Constants();
+    int getPortX() {
 
         switch (this.getType()) {
 
@@ -198,27 +196,21 @@ class Port {
      *
      * @return The Y coordinate of the Port port.
      */
-    public int getPortY() {
+    int getPortY() {
 
         return this.getCY();
 
     }
 
-    public void addInput(String id) {
+    void addInput(String id) {
 
         inputs.add(id);
 
     }
 
-    public ArrayList<String> getInputs(){
+    ArrayList<String> getInputs(){
 
         return this.inputs;
-
-    }
-
-    public int getNumOfInputs(){
-
-        return this.inputs.size();
 
     }
 }
