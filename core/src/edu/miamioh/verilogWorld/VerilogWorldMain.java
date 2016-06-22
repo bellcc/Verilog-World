@@ -65,8 +65,6 @@ public class VerilogWorldMain extends Game {
 	public void setWorldSimulatorScreen() {
 		this.setScreen(worldSimulatorScreen);
 	}
-
-
 	
 	public void updateScreen() {
 		

@@ -119,7 +119,7 @@ public class WorldEditorScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		renderWorld();
-		//renderSelector();
+		renderSelector();
 		renderToolBar();
 
 	}
