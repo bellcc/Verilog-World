@@ -4,10 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Disposable;
 import edu.miamioh.util.Constants;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -27,9 +24,9 @@ class SchematicRenderer implements Disposable {
     private ArrayList<Gate> gates = new ArrayList<>();
     private ArrayList<Port> ports = new ArrayList<>();
     private Constants constants = new Constants();
-    private ShapeRenderer renderer = new ShapeRenderer();
-    private Screen screen;
-    private Stage stage;
+    private ShapeRenderer renderer;
+//    private Screen screen;
+//    private Stage stage;
     private ParseTree root_tree;
 
     private int maxLevel = 0;
@@ -38,9 +35,10 @@ class SchematicRenderer implements Disposable {
      * The Schematic Renderer recieves a
      */
     SchematicRenderer(Screen screen, ParseTree root_tree){
-        this.screen = screen;
+//        this.screen = screen;
         this.root_tree = root_tree;
-        this.stage = new Stage();
+//        this.stage = new Stage();
+        this.renderer = new ShapeRenderer();
     }
 
     //Methods for setting up the render
@@ -199,7 +197,7 @@ class SchematicRenderer implements Disposable {
         {
             this.renderer.begin(ShapeRenderer.ShapeType.Line);
             this.renderer.setColor(Color.BLACK);
-            GateRenderer grenderer = new GateRenderer(this.renderer, constants);
+            GateRenderer grenderer = new GateRenderer(this.renderer);
 
             int totalOuts = 0;
             int totalIns = 0;

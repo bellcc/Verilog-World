@@ -89,61 +89,27 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
         return t;
     }
 
-    private String getValue(ParseTree exp) {
+    /**
+     * Gets the ID of a new Gate.
+     * @param exp   Parse Tree of the BLOGIC gate.
+     * @return      ID of the new Gate.
+     */
+    private String gateValue(ParseTree exp) {
 
-        if (exp instanceof Verilog2001Parser.Variable_lvalueContext) {
-            //Return ID of a variable *(left hand arg)
-            return exp.getText();
-        } else if (exp instanceof TerminalNode) {
+//        if (exp instanceof Verilog2001Parser.Variable_lvalueContext) {
+//            //Return ID of a variable *(left hand arg)
+//            return exp.getText();
+//        } else
+            if (exp instanceof TerminalNode) {
             //Return ID of a logic gate
             String id = getNewLogicType_String(exp);
             GateType gType = getNewLogicType_GateType(exp);
             id += getNumOfGates(gType);
             return id;
-        } else if (exp instanceof Verilog2001Parser.IDENTContext) {
-            return exp.getText();
-        } else if (exp instanceof Verilog2001Parser.BRACKETSContext) {
-            return getValue(exp.getChild(1));
+//        } else if (exp instanceof Verilog2001Parser.IDENTContext) {
+//            return exp.getText();
         } else
             return "";
-
-    }
-
-    /**
-     * Translates the text of the BLOGIC node into its GateType.
-     *
-     * @param ctx ParseTree with root_module of this BLOGIC.
-     * @return The GateType of this BLOGIC.
-     */
-    private GateType getNewLogicType_GateType(ParseTree ctx) {
-
-        switch(ctx.getText()){
-
-            case("&"):
-                return GateType.AND;
-
-            case("|"):
-                return GateType.OR;
-
-            case("^"):
-                return GateType.XOR;
-
-            case("~^"):
-                return GateType.XNOR;
-
-            case("~&"):
-                return GateType.NAND;
-
-            case("~|"):
-                return GateType.NOR;
-
-            case("~"):
-                return GateType.NOT;
-
-            default:
-                return GateType.BLANK;
-
-        }
     }
 
     /**
@@ -160,8 +126,14 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
             case("&"):
                 return "AND";
 
+            case("~&"):
+                return "NAND";
+
             case("|"):
                 return "OR";
+
+            case("~|"):
+                return "NOR";
 
             case("^"):
                 return "XOR";
@@ -169,17 +141,47 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
             case("~^"):
                 return "XNOR";
 
-            case("~&"):
-                return "NAND";
-
-            case("~|"):
-                return "NOR";
-
             case("~"):
                 return "NOT";
 
             default:
                 return "NULL";
+        }
+    }
+
+    /**
+     * Translates the text of the BLOGIC node into its GateType.
+     *
+     * @param ctx ParseTree with root_module of this BLOGIC.
+     * @return The GateType of this BLOGIC.
+     */
+    private GateType getNewLogicType_GateType(ParseTree ctx) {
+
+        switch(ctx.getText()){
+
+            case("&"):
+                return GateType.AND;
+
+            case("~&"):
+                return GateType.NAND;
+
+            case("|"):
+                return GateType.OR;
+
+            case("~|"):
+                return GateType.NOR;
+
+            case("^"):
+                return GateType.XOR;
+
+            case("~^"):
+                return GateType.XNOR;
+
+            case("~"):
+                return GateType.NOT;
+
+            default:
+                return GateType.BLANK;
 
         }
     }
@@ -370,7 +372,7 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
         T t = super.visitUNOT(exp);
 
         lValue = gateInputs.pop();
-        gateValue = getValue(exp.getChild(0));
+        gateValue = gateValue(exp.getChild(0));
 
         GateType type = getNewLogicType_GateType(exp.getChild(0));
         //id = gateValue
@@ -919,7 +921,7 @@ class SchematicVisitor<T> extends edu.miamioh.simulator.AntlrGen.Verilog2001Base
 
         lValue = gateInputs.pop();
         rValue = gateInputs.pop();
-        gateValue = getValue(exp.getChild(1));
+        gateValue = gateValue(exp.getChild(1));
 
         GateType type = getNewLogicType_GateType(exp.getChild(1));
         //id = rValue
