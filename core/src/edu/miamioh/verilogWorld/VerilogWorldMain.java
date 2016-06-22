@@ -19,8 +19,6 @@ import edu.miamioh.worldEditor.WorldEditorScreen;
 import edu.miamioh.worldSimulator.WorldSimulatorController;
 import edu.miamioh.worldSimulator.WorldSimulatorScreen;
 
-import static edu.miamioh.verilogWorld.VerilogWorldStage.SCHEMATIC;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -37,9 +35,7 @@ public class VerilogWorldMain extends Game {
 	private WorldSimulatorScreen worldSimulatorScreen;
 
 	private SchematicRendererMain schematicRendererMain;
-	
-	private VerilogWorldStage verilogWorldScreen;
-	
+		
 	private String	VERILOG_WORLD_DEVELOPMENT	= "VERILOG_WORLD_DEVELOPMENT";
 	
 	private RootModuleSimulator sim;
@@ -48,27 +44,19 @@ public class VerilogWorldMain extends Game {
 	public VerilogWorldMain() {
 		
 		verilogWorldMain = this;
-		verilogWorldScreen = VerilogWorldStage.WORLD_EDITOR;
-
-		verilogWorldController = new VerilogWorldController();
-		worldEditorController = new WorldEditorController(verilogWorldController.getDefaultConfig(), new Level());
-		//worldSimulatorController = new WorldSimulatorController(verilogWorldController.getDefaultConfig());
-		
-		worldEditorScreen = new WorldEditorScreen(worldEditorController);
-		//worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
-		
-		//worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
-
-		//schematicRendererMain = new SchematicRendererMain();
 	}
 	
 	@Override
 	public void create() {
-		//Set the default screen
+		
+		verilogWorldController = new VerilogWorldController();
+		worldEditorController = new WorldEditorController(verilogWorldController.getDefaultConfig(), new Level());
+		worldSimulatorController = new WorldSimulatorController(verilogWorldController.getDefaultConfig());
+		
+		worldEditorScreen = new WorldEditorScreen(worldEditorController);
+		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
 		
 		this.setScreen(worldEditorScreen);
-		//this.setScreen(worldSimulatorScreen);
-		//updateScreen();
 	}
 	
 	public void setWorldEditorScreen() {
@@ -78,24 +66,6 @@ public class VerilogWorldMain extends Game {
 	public void setWorldSimulatorScreen() {
 		this.setScreen(worldSimulatorScreen);
 	}
-	
-	public void updateScreen() {
-		
-		switch(verilogWorldScreen) {
-			case WORLD_EDITOR:
-				this.setScreen(worldEditorScreen);
-				break;
-
-			case WORLD_SIMULATOR:
-				this.setScreen(worldSimulatorScreen);
-				break;
-
-			case SCHEMATIC:
-				this.setScreen(schematicRendererMain);
-				break;
-		}
-	}
-	
 	
 	public void launchVerilogEditor(String fileName){
 		/*String pathToJar = getRootPath() + "/VerilogEditor.jar";
@@ -156,14 +126,6 @@ public class VerilogWorldMain extends Game {
 
 	public SchematicRendererMain getSchematicRendererMain(){
 		return schematicRendererMain;
-	}
-	
-	public VerilogWorldStage getVerilogWorldScreen() {
-		return verilogWorldScreen;
-	}
-	
-	public void setVerilogWorldScreen(VerilogWorldStage verilogWorldScreen) {
-		this.verilogWorldScreen = verilogWorldScreen;
 	}
 
 }

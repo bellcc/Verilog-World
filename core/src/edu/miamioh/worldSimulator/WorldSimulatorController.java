@@ -47,8 +47,9 @@ public class WorldSimulatorController {
 		selection = ToolBarSelection.NONE;
 		
 		inputProcessor = new WorldSimulatorInputProcessor();
-		
 		multiplexer = new InputMultiplexer();
+		
+		currentLevel = new Level();
 	}
 	
 	public WorldSimulatorController(Configuration config) {
