@@ -1,15 +1,29 @@
+
+/**
+ * @author Clark Bell
+ * @date   06-21-2016
+ * @info   
+ */
+
 package edu.miamioh.verilogWorld;
 
 import com.badlogic.gdx.Game;
 
 import edu.miamioh.Level.Level;
 import edu.miamioh.schematicRenderer.SchematicRendererMain;
+import edu.miamioh.simulator.Parse;
+import edu.miamioh.simulator.RootModuleSimulator;
+import edu.miamioh.verilogEditor.RunEditor;
 import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.WorldEditorScreen;
 import edu.miamioh.worldSimulator.WorldSimulatorController;
 import edu.miamioh.worldSimulator.WorldSimulatorScreen;
 
 import static edu.miamioh.verilogWorld.VerilogWorldStage.SCHEMATIC;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class VerilogWorldMain extends Game {
 
@@ -26,30 +40,44 @@ public class VerilogWorldMain extends Game {
 	
 	private VerilogWorldStage verilogWorldScreen;
 	
+	private String	VERILOG_WORLD_DEVELOPMENT	= "VERILOG_WORLD_DEVELOPMENT";
+	
+	private RootModuleSimulator sim;
+	private Parse compiler;
+	
 	public VerilogWorldMain() {
+		
 		verilogWorldMain = this;
 		verilogWorldScreen = VerilogWorldStage.WORLD_EDITOR;
 
 		verilogWorldController = new VerilogWorldController();
 		worldEditorController = new WorldEditorController(verilogWorldController.getDefaultConfig(), new Level());
-		worldSimulatorController = new WorldSimulatorController(verilogWorldController.getDefaultConfig());
+		//worldSimulatorController = new WorldSimulatorController(verilogWorldController.getDefaultConfig());
 		
 		worldEditorScreen = new WorldEditorScreen(worldEditorController);
-		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
+		//worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
+		
+		//worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
 
-		schematicRendererMain = new SchematicRendererMain();
+		//schematicRendererMain = new SchematicRendererMain();
 	}
 	
 	@Override
 	public void create() {
 		//Set the default screen
 		
-		//this.setScreen(worldEditorScreen);
+		this.setScreen(worldEditorScreen);
 		//this.setScreen(worldSimulatorScreen);
-		updateScreen();
+		//updateScreen();
 	}
-
-
+	
+	public void setWorldEditorScreen() {
+		this.setScreen(worldEditorScreen);
+	}
+	
+	public void setWorldSimulatorScreen() {
+		this.setScreen(worldSimulatorScreen);
+	}
 	
 	public void updateScreen() {
 		
@@ -67,6 +95,60 @@ public class VerilogWorldMain extends Game {
 				break;
 		}
 	}
+	
+	
+	public void launchVerilogEditor(String fileName){
+		/*String pathToJar = getRootPath() + "/VerilogEditor.jar";
+		ProcessBuilder pb = new ProcessBuilder("java", "-jar", pathToJar, getRootPath(), fileName);
+
+		try {
+			Process p = pb.start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
+		
+		Thread thread = new Thread(new RunEditor(sim, compiler, fileName));
+		thread.start();
+	}
+
+	public String getRootPath()
+	{
+		String path = null;
+		try
+		{
+			path = VerilogWorldMain.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+			// Path can be a filename when executing a jar file. (filename/../)
+			// doesn't work.
+			path = new File(path).getParent() + "/../";
+			// Development environment has different directory structure than
+			// that when releasing
+			if (isDevelopment())
+				path += "../";
+			/* getCanonicalPath() returns a path containing "\", which doesn't
+			 * work (even on Windows) when passing the path as a command line
+			 * argument. Thus, regular expression <code>\\\b</code> is used to
+			 * substitute '\' to '/'. */
+			path = new File(path).getCanonicalPath().replaceAll("\\\\\\b", "/");
+		}
+		catch (URISyntaxException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		return path;
+	}
+	public boolean isDevelopment()
+	{
+		String env = System.getenv(VERILOG_WORLD_DEVELOPMENT);
+		return env != null && !env.equals("0");
+	}
+
+	public void setSimulator(RootModuleSimulator sim) {this.sim = sim;}
+	public void setCompiler(Parse compiler) {this.compiler = compiler;}
 	
 	public static VerilogWorldMain getVerilogWorldMain() {
 		return verilogWorldMain;

@@ -44,7 +44,6 @@ public class VerilogWorldController {
 		
 		ConfigurationParser parser = new ConfigurationParser();
 		defaultConfig = parser.getDefaultConfiguration();
-		
 		init();
 	}
 	
@@ -60,7 +59,7 @@ public class VerilogWorldController {
 
 	public void init() {
 				
-		this.rootPath = System.getProperty("user.dir") + "\\..\\";
+		this.rootPath = System.getProperty("user.dir") + "/../";
 
 		controller = this;
 		currentLevel = new Level();
@@ -76,28 +75,13 @@ public class VerilogWorldController {
 		
 	}
 
-	public Configuration getDefaultConfig() {	
-		return this.defaultConfig;
-	}
+	public void setState(VerilogWorldType newState)      {state = newState;}
 	
-	public static String getRootPath() {
-		return System.getProperty("user.dir");
-	}
-	
-	public void setState(VerilogWorldType newState) {
-		state = newState;
-	}
-	
-	public VerilogWorldType getState() {
-		return state;
-	}
-	
-	public static VerilogWorldController getController() {
-		return controller;
-	}
-	
-	public Level getLevel() 		{return this.currentLevel;}
-	public WorldSimulator getSim() 	{return this.sim;}
-	public Parse getCompiler()		{return this.compiler;}
-	//public String getRootPath() 	{return this.rootPath;}
+	public Configuration getDefaultConfig()              {return this.defaultConfig;}
+	public VerilogWorldType getState()                   {return state;}
+	public static VerilogWorldController getController() {return controller;}
+	public Level getLevel() 		                     {return this.currentLevel;}
+	public WorldSimulator getSim() 	                     {return this.sim;}
+	public Parse getCompiler()		                     {return this.compiler;}
+	public String getRootPath() 	                     {return this.rootPath;}
 }

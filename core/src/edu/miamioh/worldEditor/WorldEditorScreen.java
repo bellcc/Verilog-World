@@ -94,7 +94,7 @@ public class WorldEditorScreen implements Screen {
 	}
 	
 	private void updateWorldParameters() {
-		
+				
 		windowWidth = controller.getWindowWidth();
 		windowHeight = controller.getWindowHeight();
 		
@@ -117,7 +117,7 @@ public class WorldEditorScreen implements Screen {
 		
 		Gdx.gl.glClearColor(255, 255, 255, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+		
 		renderWorld();
 		renderSelector();
 		renderToolBar();
@@ -224,7 +224,7 @@ public class WorldEditorScreen implements Screen {
 		ArrayList<Block> blockList = controller.getCurrentLevel().getBlockList();
 		
 		for(int i=0;i<blockList.size();i++) {
-
+			
 			int row = blockList.get(i).getRow();
 			int column = blockList.get(i).getColumn();
 			Color color = blockList.get(i).getColor();

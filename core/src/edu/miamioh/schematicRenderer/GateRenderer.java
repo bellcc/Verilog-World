@@ -2,25 +2,23 @@ package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import edu.miamioh.util.Constants;
 
 import static edu.miamioh.util.Constants.gateSize;
 import static edu.miamioh.util.Constants.scaleFactor;
+import static edu.miamioh.util.Constants.frame;
 
 /**
  * Created by shaffebd.
  */
 class GateRenderer {
 
-    Constants constants;
-    ShapeRenderer renderer;
+    private ShapeRenderer renderer;
 
     /**
      * Default constructor
      */
-    public GateRenderer(ShapeRenderer renderer, Constants constants) {
+    GateRenderer(ShapeRenderer renderer) {
         this.renderer = renderer;
-        this.constants = constants;
     }
 
     /**
@@ -93,7 +91,7 @@ class GateRenderer {
      * @param cx Horizontal location of the center in pixels relative to the bottom left corner.
      * @param cy Vertical location of the center in pixels relative to the bottom left corner.
      */
-    public void drawINPUT(int cx, int cy) {
+    private void drawINPUT(int cx, int cy) {
 
         //Differing offsets because the object should be rectangular.
         int lx = cx - gateSize * scaleFactor / 2;
@@ -108,7 +106,7 @@ class GateRenderer {
         renderer.line(rx, ty, rxp, cy);
         renderer.line(rx, by, rxp, cy);
 
-        if (Constants.frame)
+        if (frame)
             frame(cx, cy);
     }
 
@@ -118,7 +116,7 @@ class GateRenderer {
      * @param cx Horizontal location in pixels relative to the bottom left corner.
      * @param cy Vertical location in pixels relative to the bottom left corner.
      */
-    public void drawOUTPUT(int cx, int cy) {
+    private void drawOUTPUT(int cx, int cy) {
 
         //Differing offsets because the object should be rectangular.
         int lx = cx - gateSize * scaleFactor / 4;
@@ -133,7 +131,7 @@ class GateRenderer {
         renderer.line(rx, by, lx, by);
         renderer.line(lx, by, lxp, cy);
 
-        if (Constants.frame)
+        if (frame)
             frame(cx, cy);
     }
 
@@ -143,7 +141,7 @@ class GateRenderer {
      * @param cx Horizontal location in pixels relative to the bottom left corner.
      * @param cy Vertical location in pixels relative to the bottom left corner.
      */
-    public void drawNOT(int cx, int cy) {
+    private void drawNOT(int cx, int cy) {
 
         int lx = cx - gateSize * scaleFactor / 2;
         int rxt = cx + gateSize * scaleFactor / 4;
@@ -157,7 +155,7 @@ class GateRenderer {
         renderer.line(lx, ty, lx, by);
         renderer.circle(rxc, cy, cr);
 
-        if (Constants.frame)
+        if (frame)
             frame(cx, cy);
     }
 
@@ -167,7 +165,7 @@ class GateRenderer {
      * @param cx Horizontal location in pixels relative to the bottom left corner.
      * @param cy Vertical location in pixels relative to the bottom left corner.
      */
-    public void drawAND(int cx, int cy) {
+    private void drawAND(int cx, int cy) {
 
         int lx = cx - gateSize * scaleFactor / 2;
         int rx = cx + gateSize * scaleFactor / 2;
@@ -187,7 +185,7 @@ class GateRenderer {
                 scaleFactor / 3 - curveFactor, cx + gateSize * scaleFactor / 3 + curveFactor, cy -
                 gateSize * scaleFactor / 6 - curveFactor, rx, cy, 1000);
 
-        if (Constants.frame)
+        if (frame)
             frame(cx, cy);
     }
 
@@ -197,7 +195,7 @@ class GateRenderer {
      * @param cx Horizontal location in pixels relative to the bottom left corner.
      * @param cy Vertical location in pixels relative to the bottom left corner.
      */
-    public void drawNAND(int cx, int cy) {
+    private void drawNAND(int cx, int cy) {
 
         //Draw AND
         int lx = cx - gateSize * scaleFactor / 2;
@@ -223,7 +221,7 @@ class GateRenderer {
         int cr = gateSize * scaleFactor / 8;
         renderer.circle(rxc, cy, cr);
 
-        if (Constants.frame)
+        if (frame)
             frame(cx, cy);
     }
 
@@ -233,7 +231,7 @@ class GateRenderer {
      * @param cx Horizontal location in pixels relative to the bottom left corner.
      * @param cy Vertical location in pixels relative to the bottom left corner.
      */
-    public void drawOR(int cx, int cy) {
+    private void drawOR(int cx, int cy) {
 
         int lx = cx - gateSize * scaleFactor / 2;
         int lxrc = lx + gateSize * scaleFactor / 4;
@@ -254,7 +252,7 @@ class GateRenderer {
         renderer.curve(lx, by, lxrc, cy - gateSize * scaleFactor / 3, lxrc, cy + gateSize *
                 scaleFactor / 3, lx, ty, 1000);
 
-        if (Constants.frame)
+        if (frame)
             frame(cx, cy);
     }
 
@@ -264,7 +262,7 @@ class GateRenderer {
      * @param cx Horizontal location in pixels relative to the bottom left corner.
      * @param cy Vertical location in pixels relative to the bottom left corner.
      */
-    public void drawNOR(int cx, int cy) {
+    private void drawNOR(int cx, int cy) {
 
         int lx = cx - gateSize * scaleFactor / 2;
         int lxrc = lx + gateSize * scaleFactor / 4;
@@ -290,7 +288,7 @@ class GateRenderer {
         int cr = gateSize * scaleFactor / 8;
         renderer.circle(rxc, cy, cr);
 
-        if (Constants.frame)
+        if (frame)
             frame(cx, cy);
     }
 
@@ -300,7 +298,7 @@ class GateRenderer {
      * @param cx Horizontal location in pixels relative to the bottom left corner.
      * @param cy Vertical location in pixels relative to the bottom left corner.
      */
-    public void drawXOR(int cx, int cy) {
+    private void drawXOR(int cx, int cy) {
 
         int lxr = cx - gateSize * scaleFactor / 4;
         int lxrc = lxr + gateSize * scaleFactor / 4; //Redundant (could be just cx) but left it for consistency
@@ -326,7 +324,7 @@ class GateRenderer {
         renderer.curve(lxl, by, lxlc, cy - gateSize * scaleFactor / 3, lxlc, cy + gateSize *
                 scaleFactor / 3, lxl, ty, 1000);
 
-        if (Constants.frame)
+        if (frame)
             frame(cx, cy);
     }
 
@@ -336,7 +334,7 @@ class GateRenderer {
      * @param cx Horizontal location in pixels relative to the bottom left corner.
      * @param cy Vertical location in pixels relative to the bottom left corner.
      */
-    public void drawXNOR(int cx, int cy) {
+    private void drawXNOR(int cx, int cy) {
 
         int lxr = cx - gateSize * scaleFactor / 4;
         int lxrc = lxr + gateSize * scaleFactor / 4; //Redundant (could be just cx) but left it for consistency
@@ -367,7 +365,7 @@ class GateRenderer {
         int cr = gateSize * scaleFactor / 8;
         renderer.circle(rxc, cy, cr);
 
-        if (Constants.frame)
+        if (frame)
             frame(cx, cy);
     }
 
@@ -377,7 +375,7 @@ class GateRenderer {
      * @param cx Center X coordinate.
      * @param cy Center Y coordinate.
      */
-    public void drawWire(int cx, int cy) {
+    private void drawWire(int cx, int cy) {
 
         int lx = cx - gateSize * scaleFactor / 2;
         int rx = cx + gateSize * scaleFactor / 2;
@@ -388,7 +386,7 @@ class GateRenderer {
         renderer.rect(lx, by, w, h);
         renderer.line(lx, cy, rx, cy);
 
-        if (Constants.frame) frame(cx, cy);
+        if (frame) frame(cx, cy);
     }
 
     /**
@@ -397,21 +395,21 @@ class GateRenderer {
      * @param cx Center X coordinate.
      * @param cy Center Y coordinate.
      */
-    public void drawReg(int cx, int cy) {
+    private void drawReg(int cx, int cy) {
         int lx = cx - gateSize * scaleFactor / 2;
         int rx = cx + gateSize * scaleFactor / 2;
         int by = cy - gateSize * scaleFactor / 2;
         int w = gateSize * scaleFactor;
-        int h = w;
+
         int clklx = cx - gateSize * scaleFactor / 4;
         int clkrx = cx + gateSize * scaleFactor / 4;
         int clky = cy - gateSize * scaleFactor / 4;
 
-        renderer.rect(lx, by, w, h);
+        renderer.rect(lx, by, w, w);
         renderer.line(lx, cy, rx, cy);
         renderer.triangle(clklx, by, clkrx, by, cx, clky);
 
-        if (Constants.frame) frame(cx, cy);
+        if (frame) frame(cx, cy);
     }
 
     /**
@@ -420,15 +418,14 @@ class GateRenderer {
      * @param cx Center X coordinate.
      * @param cy Center Y coordinate.
      */
-    public void drawBlank(int cx, int cy) {
+    private void drawBlank(int cx, int cy) {
         int lx = cx - gateSize * scaleFactor / 2;
         int by = cy - gateSize * scaleFactor / 2;
         int w = gateSize * scaleFactor;
-        int h = w;
 
-        renderer.rect(lx, by, w, h);
+        renderer.rect(lx, by, w, w);
 
-        if (Constants.frame) frame(cx, cy);
+        if (frame) frame(cx, cy);
     }
 
     /**
@@ -443,11 +440,10 @@ class GateRenderer {
         int lx = cx - gateSize * scaleFactor / 2;
         int by = cy - gateSize * scaleFactor / 2;
         int width = gateSize * scaleFactor;
-        int height = width;
 
         renderer.setColor(Color.BLUE);
         renderer.x(cx, cy, gateSize);
-        renderer.rect(lx, by, width, height);
+        renderer.rect(lx, by, width, width);
         renderer.setColor(Color.BLACK);
     }
 }

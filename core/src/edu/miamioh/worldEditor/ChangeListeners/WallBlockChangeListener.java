@@ -13,15 +13,7 @@ public class WallBlockChangeListener extends ChangeListener {
 
 		System.out.println("Wall Block Change Listener");
 		
-		BlockSelectionType selection = WorldEditorController.getCurrentController().getBlockSelection();
-		
-		if(selection == BlockSelectionType.Block_Wall) {
-			selection = BlockSelectionType.NONE;
-		}else {
-			selection = BlockSelectionType.Block_Wall;
-		}
-		
-		WorldEditorController.getCurrentController().setBlockSelection(selection);
+		WorldEditorController.getCurrentController().toggleBlockSelection(BlockSelectionType.Block_Wall);
 	}
 
 	

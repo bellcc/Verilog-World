@@ -13,15 +13,8 @@ public class ClockBlockChangeListener extends ChangeListener {
 		
 		System.out.println("Clock Block Change Listener");
 		
-		BlockSelectionType selection = WorldEditorController.getCurrentController().getBlockSelection();
-		
-		if(selection == BlockSelectionType.Block_Clock) {
-			selection = BlockSelectionType.NONE;
-		}else {
-			selection = BlockSelectionType.Block_Clock;
-		}
-		
-		WorldEditorController.getCurrentController().setBlockSelection(selection);
+		WorldEditorController.getCurrentController().toggleBlockSelection(BlockSelectionType.Block_Clock);
+
 	}
 	
 }

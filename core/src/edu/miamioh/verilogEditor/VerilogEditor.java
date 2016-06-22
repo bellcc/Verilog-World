@@ -27,6 +27,7 @@ THE SOFTWARE.
 import edu.miamioh.schematicRenderer.SchematicRendererMain;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.RootModuleSimulator;
+import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
 import edu.miamioh.verilogWorld.VerilogWorldStage;
 
@@ -78,10 +79,14 @@ public class VerilogEditor extends JFrame implements ActionListener {
 //	 *            opened, the exact top-level path of the game files, and the
 //	 *            Level Number (eg. Lv0).
 //	 */
-//	public static void main(String[] args) {
-//		// name = "Traffic_signal_set_1";
-//		
-//	}
+	public static void main(String[] args) {
+		String fileName = "module_0.v";
+		String rootPath = System.getProperty("user.dir") + "//..//";
+		String filePath = rootPath + "core/assets/modules/" + fileName;
+		Parse compiler = new Parse(new JTextPane(), rootPath);
+		RootModuleSimulator sim = compiler.getRootModuleSimulator();
+		new VerilogEditor(sim, compiler, rootPath, filePath);
+	}
 
 	public VerilogEditor(RootModuleSimulator sim, Parse compiler, String rootPath, String filePath) {
 		// Create the window
