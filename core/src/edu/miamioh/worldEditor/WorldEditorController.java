@@ -214,8 +214,8 @@ public class WorldEditorController {
 			switch(blockSelection) {
 			
 				case Block_Blank:
-					//currentLevel.addBlock(new Block(row, column, Color.GREEN));
-					currentLevel.addBlock(new NormalBlock(NormalBlockType.Blank, row, column));
+					currentLevel.addBlock(new Block(row, column, Color.GREEN));
+					//currentLevel.addBlock(new NormalBlock(NormalBlockType.Blank, row, column));
 					break;
 				case Block_Clock:
 					//currentLevel.addBlock(new SpecialBlock(SpecialBlockType.Clock, row, column));

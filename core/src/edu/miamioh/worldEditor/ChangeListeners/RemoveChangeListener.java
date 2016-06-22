@@ -13,11 +13,11 @@ public class RemoveChangeListener extends ChangeListener {
 
 		System.out.println("Remove Change Listener");
 		
-//		int row = WorldEditorController.getCurrentController().getSelectedRow();
-//		int column = WorldEditorController.getCurrentController().getSelectedColumn();
-//		
-//		WorldEditorController.getCurrentController().getCurrentLevel().removeBlock(row, column);
-//		WorldEditorController.getCurrentController().setToolBarSelection(ToolBarSelection.NONE);
+		int row = WorldEditorController.getCurrentController().getSelectedRow();
+		int column = WorldEditorController.getCurrentController().getSelectedColumn();
+		
+		WorldEditorController.getCurrentController().getCurrentLevel().removeBlock(row, column);
+		WorldEditorController.getCurrentController().setToolBarSelection(ToolBarSelection.NONE);
 	}
 
 }
