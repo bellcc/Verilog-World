@@ -28,8 +28,13 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import edu.miamioh.verilogWorld.VerilogWorldMain;
+import edu.miamioh.worldEditor.WorldEditorScreen;
+
  
 public class PlayScreen implements Screen {
+	private VerilogWorldMain verilogWorldMain;
+	
 	private SpriteBatch batch;
 	private SpriteBatch batch2;
 	private Sprite sprite;
@@ -43,12 +48,14 @@ public class PlayScreen implements Screen {
     protected Skin skinS;
     protected Skin skinB;
 
-
     private Game g;
     
-    public PlayScreen(Game g)
-    {
+    public PlayScreen(Game g) {
+    	
     	this.g = g;
+    	
+    	verilogWorldMain = new VerilogWorldMain();
+    	
     	font = new BitmapFont();
     	skinT = new Skin();
     	skinC = new Skin();
@@ -110,7 +117,7 @@ public class PlayScreen implements Screen {
 	        sandboxButton.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	//g.setScreen(new VerilogWorldMain(g));
+	            	g.setScreen(new WorldEditorScreen());;
 	            }
 	        });
 	        
