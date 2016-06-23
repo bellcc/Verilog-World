@@ -36,7 +36,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
  
 public class ChallengesScreen implements Screen {
-	private VerilogWorldMain verilogWorldMain;
 	
 	private SpriteBatch batch;
 	private BitmapFont font;
@@ -88,14 +87,10 @@ public class ChallengesScreen implements Screen {
     
     private Table mainTable;
     
-    private Game g;
+    private Game g;    
     
-    public ChallengesScreen(Game g) {
-    	
-    	this.g = g;
-    	
-    	verilogWorldMain = new VerilogWorldMain();
-    	    	
+    public ChallengesScreen(VerilogWorldMain vwm) {
+    	    	    	    	
     	font = new BitmapFont();
 		
     	skinL1 = new Skin();
@@ -235,11 +230,6 @@ public class ChallengesScreen implements Screen {
 	        table.setFillParent(true);
 	        table.add(scroller).width(buttonWidth + 20).height(buttonHeight * 10);
 	        table.left();
-	        
-	        System.out.println(scroller.getMinHeight());
-	        System.out.println(table.getMinHeight());
-	        System.out.println(mainTable.getMinHeight());
-	        System.out.println(buttonHeight);
 	        
 	        stage.addActor(backButton);
 	        stage.addActor(im1Button);
@@ -549,7 +539,9 @@ public class ChallengesScreen implements Screen {
 	        backButton.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	g.setScreen(new PlayScreen(g));
+	            	//g.setScreen(new PlayScreen(g));
+	            	VerilogWorldMain.getVerilogWorldMain().setPlayScreen();	            	
+
 	            }
 	        });
 	        
