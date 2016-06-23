@@ -34,11 +34,11 @@ class SchematicRenderer implements Disposable {
     /**
      * The Schematic Renderer recieves a
      */
-    SchematicRenderer(Screen screen, ParseTree root_tree){
+    SchematicRenderer(Screen screen, ParseTree root_tree, ShapeRenderer renderer){
 //        this.screen = screen;
         this.root_tree = root_tree;
 //        this.stage = new Stage();
-        this.renderer = new ShapeRenderer();
+        this.renderer = renderer;
     }
 
     //Methods for setting up the render

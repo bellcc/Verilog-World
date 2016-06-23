@@ -24,11 +24,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 
-import edu.miamioh.schematicRenderer.SchematicRendererMain;
 import edu.miamioh.simulator.Parse;
-import edu.miamioh.simulator.RootModuleInstance;
 import edu.miamioh.simulator.RootModuleSimulator;
-import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
 
 import javax.swing.*;
@@ -535,7 +532,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		});
 		toolBar.add(resetButton);
 		
-		JButton schematicRenderButton = makeToolBarButton("schemEdit", "Schematic Renderer", "Schematic Renderer");
+		JButton schematicRenderButton = makeToolBarButton("schemEdit", "Schematic Compiler",
+				"Schematic Compiler");
 		schematicRenderButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -796,11 +794,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	public void schematicButtonFunction() {
 
 		if(Compiler.isCompiled()){
-			VerilogWorldMain vwm = VerilogWorldMain.getVerilogWorldMain();
-			SchematicRendererMain srm = vwm.getSchematicRendererMain();
-			srm.setSim(this.sim);
-			//TODO Change this to a screen set in verilog world main.
-			//vwm.setVerilogWorldScreen(VerilogWorldStage.SCHEMATIC);
+			VerilogWorldMain.getVerilogWorldMain().getSchematicRendererScreen().setRoot_tree(this.sim.getRootModuleTree());
+//			VerilogWorldMain.getVerilogWorldMain().setSchematicRendererScreen();
 		} else {
 			errorText.setText(
 					"The Verilog code has not been successfully compiled yet.  Please click the check mark above and/or fix Verilog errors.");
