@@ -12,21 +12,35 @@ import org.antlr.v4.runtime.tree.ParseTree;
  */
 public class SchematicRendererScreen implements Screen {
 
-//    private SchematicRenderer schematic;
+    private SchematicRenderer schematic;
     private ShapeRenderer renderer;
-    private ParseTree root_tree;
 
     /**
      * Constructor for SchematicRendererMain.
      */
-    public SchematicRendererScreen(){}
+    public SchematicRendererScreen(){schematic = new SchematicRenderer();}
 
     public void setRoot_tree(ParseTree root_tree){
-        this.root_tree = root_tree;
+        schematic.setRoot_tree(root_tree);
+        if(schematic.getRoot_tree() == null) {
+            System.out.println("The root_tree has been set to null.");
+        } else {
+            System.out.println("The root_tree has successfully been set.");
+        }
     }
 
+    private void setRenderer(){schematic.setRenderer(this.renderer);}
+
     public ParseTree getRoot_tree(){
-        return this.root_tree;
+        return schematic.getRoot_tree();
+    }
+
+    public void compile(){
+        if(schematic.getRoot_tree() != null){
+            schematic.getData();
+        } else {
+            System.out.println("The root_tree has not been set or has not been created.");
+        }
     }
 
     @Override

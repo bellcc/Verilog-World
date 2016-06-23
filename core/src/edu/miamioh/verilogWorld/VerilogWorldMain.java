@@ -10,7 +10,7 @@ package edu.miamioh.verilogWorld;
 import com.badlogic.gdx.Game;
 
 import edu.miamioh.Level.Level;
-import edu.miamioh.schematicRenderer.SchematicRendererMain;
+import edu.miamioh.schematicRenderer.SchematicRendererScreen;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.RootModuleSimulator;
 import edu.miamioh.verilogEditor.RunEditor;
@@ -34,7 +34,7 @@ public class VerilogWorldMain extends Game {
 	private WorldEditorScreen worldEditorScreen;
 	private WorldSimulatorScreen worldSimulatorScreen;
 
-	private SchematicRendererMain schematicRendererMain;
+	private SchematicRendererScreen schematicRendererScreen;
 		
 	private String	VERILOG_WORLD_DEVELOPMENT	= "VERILOG_WORLD_DEVELOPMENT";
 	
@@ -55,6 +55,8 @@ public class VerilogWorldMain extends Game {
 		
 		worldEditorScreen = new WorldEditorScreen(worldEditorController);
 		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
+
+		schematicRendererScreen = new SchematicRendererScreen();
 		
 		this.setScreen(worldEditorScreen);
 	}
@@ -65,6 +67,10 @@ public class VerilogWorldMain extends Game {
 	
 	public void setWorldSimulatorScreen() {
 		this.setScreen(worldSimulatorScreen);
+	}
+
+	public void setSchematicRendererScreen(){
+		this.setScreen(schematicRendererScreen);
 	}
 
 	public void launchVerilogEditor(String fileName){
@@ -124,8 +130,8 @@ public class VerilogWorldMain extends Game {
 		return verilogWorldMain;
 	}
 
-	public SchematicRendererMain getSchematicRendererMain(){
-		return schematicRendererMain;
+	public SchematicRendererScreen getSchematicRendererScreen(){
+		return schematicRendererScreen;
 	}
 
 }
