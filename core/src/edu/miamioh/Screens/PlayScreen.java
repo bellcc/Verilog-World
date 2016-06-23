@@ -47,15 +47,9 @@ public class PlayScreen implements Screen {
     protected Skin skinC;
     protected Skin skinS;
     protected Skin skinB;
-
-    private Game g;
     
-    public PlayScreen(Game g) {
-    	
-    	this.g = g;
-    	
-    	verilogWorldMain = new VerilogWorldMain();
-    	
+    public PlayScreen(VerilogWorldMain vwm) {
+    	    	    	
     	font = new BitmapFont();
     	skinT = new Skin();
     	skinC = new Skin();
@@ -110,21 +104,23 @@ public class PlayScreen implements Screen {
 	        challengesButton.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {	 
-	            	g.setScreen(new ChallengesScreen(g));
+	            	//g.setScreen(new ChallengesScreen(g));
+	            	VerilogWorldMain.getVerilogWorldMain().setChallengesScreen();	            	
 	            }
 	        });
 	        
 	        sandboxButton.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	g.setScreen(new WorldEditorScreen());;
+	            	VerilogWorldMain.getVerilogWorldMain().setWorldEditorScreen();	            	
 	            }
 	        });
 	        
 	        backButton.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	g.setScreen(new MainMenuScreen(g));
+	            	//g.setScreen(new MainMenuScreen(g));
+	            	VerilogWorldMain.getVerilogWorldMain().setMainMenuScreen();	            	
 	            }
 	        });
 
