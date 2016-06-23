@@ -18,6 +18,10 @@ public class WorldSimulator {
 		this.sim = sim;
 	}
 	
+	public void executeCycle() {
+		
+	}
+	
 	public void addModule(ModuleWrapper module) {
 		modules.add(module);
 	}
