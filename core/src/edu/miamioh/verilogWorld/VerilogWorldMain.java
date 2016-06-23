@@ -58,7 +58,7 @@ public class VerilogWorldMain extends Game {
 		
 		this.setScreen(worldEditorScreen);
 	}
-	
+		
 	public void setWorldEditorScreen() {
 		this.setScreen(worldEditorScreen);
 	}
@@ -66,7 +66,7 @@ public class VerilogWorldMain extends Game {
 	public void setWorldSimulatorScreen() {
 		this.setScreen(worldSimulatorScreen);
 	}
-	
+
 	public void launchVerilogEditor(String fileName){
 		/*String pathToJar = getRootPath() + "/VerilogEditor.jar";
 		ProcessBuilder pb = new ProcessBuilder("java", "-jar", pathToJar, getRootPath(), fileName);

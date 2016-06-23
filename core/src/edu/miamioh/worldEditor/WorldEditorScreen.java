@@ -119,6 +119,9 @@ public class WorldEditorScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		renderWorld();
+		//renderErrorHUD();
+		//renderBlockHighlight(new Block(10, 10, Color.PINK));
+		
 		renderSelector();
 		renderToolBar();
 
@@ -271,6 +274,57 @@ public class WorldEditorScreen implements Screen {
 				
 		}
 	
+	}
+	
+	private void renderErrorHUD() {
+		
+		
+		
+	}
+	
+	private void renderBlockHighlight(Block block) {
+		
+		//Shade the grid.
+		int width = windowWidth * worldWidth;
+		int height = windowHeight * worldHeight;
+		
+		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
+	    Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+	    
+	    renderer.begin(ShapeType.Filled);
+	    renderer.setColor(new Color(255,255,255,.8f));
+	    renderer.rect(-1, 0, width, height);
+	    renderer.end();
+	    
+	    //Redraw the selected element.
+	    renderer.begin(ShapeType.Filled);
+	    renderer.setColor(block.getColor());
+	    renderer.rect(block.getColumn() * gridWidth, block.getRow() * gridHeight, gridWidth, gridHeight);
+	    renderer.end();
+	    
+	    //Center the block in the screen.
+	    
+	    //Modify worldX and worldY
+	    if(!hasIrregularWidth()) {
+	    	
+	    	int column = block.getColumn();
+	    	worldX = (column * gridWidth) - ((windowWidth - TOOLBAR_WIDTH)/2);
+	    	
+	    }
+	    
+	    if(!hasIrregularHeight()) {
+	    	
+	    	int row = block.getRow();
+	    	worldY = (row * gridHeight) - ((windowHeight - TOOLBAR_WIDTH)/2);
+	    	
+	    }
+	    
+		float w = Gdx.graphics.getWidth();
+		float h = Gdx.graphics.getHeight();
+	    
+		camera.setToOrtho(false, w, h);
+	    camera.translate(0, 0);
+		
 	}
 	
 	/**
@@ -473,6 +527,8 @@ public class WorldEditorScreen implements Screen {
 	@Override
 	public void dispose() {
 
+		renderer.dispose();
+		
 		optionStage.dispose();
 		homeStage.dispose();
 		blockStage.dispose();
