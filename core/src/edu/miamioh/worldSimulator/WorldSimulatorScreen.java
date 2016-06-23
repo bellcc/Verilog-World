@@ -182,6 +182,7 @@ public class WorldSimulatorScreen implements Screen {
 
 			int row = blockList.get(i).getRow();
 			int column = blockList.get(i).getColumn();
+
 			Color color = blockList.get(i).getColor();
 			
 			renderer.begin(ShapeType.Filled);
@@ -190,6 +191,7 @@ public class WorldSimulatorScreen implements Screen {
 			renderer.end();
 		
 		}
+		
 	}
 		
 	private void renderToolBar() {
