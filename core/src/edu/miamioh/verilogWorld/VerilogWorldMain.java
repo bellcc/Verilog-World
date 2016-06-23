@@ -10,7 +10,7 @@ package edu.miamioh.verilogWorld;
 import com.badlogic.gdx.Game;
 
 import edu.miamioh.Level.Level;
-import edu.miamioh.schematicRenderer.SchematicRendererScreen;
+import edu.miamioh.schematicRenderer.SchematicRendererMain;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.RootModuleSimulator;
 import edu.miamioh.verilogEditor.RunEditor;
@@ -34,7 +34,7 @@ public class VerilogWorldMain extends Game {
 	private WorldEditorScreen worldEditorScreen;
 	private WorldSimulatorScreen worldSimulatorScreen;
 
-	private SchematicRendererScreen schematicRendererScreen;
+	private SchematicRendererMain schematicRendererMain;
 		
 	private String	VERILOG_WORLD_DEVELOPMENT	= "VERILOG_WORLD_DEVELOPMENT";
 	
@@ -50,19 +50,15 @@ public class VerilogWorldMain extends Game {
 	public void create() {
 		
 		verilogWorldController = new VerilogWorldController();
-		this.sim = verilogWorldController.getSim().getRootModuleSimulator();
-		this.compiler = verilogWorldController.getCompiler();
 		worldEditorController = new WorldEditorController(verilogWorldController.getDefaultConfig(), new Level());
 		worldSimulatorController = new WorldSimulatorController(verilogWorldController.getDefaultConfig());
 		
 		worldEditorScreen = new WorldEditorScreen(worldEditorController);
 		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
-
-		schematicRendererScreen = new SchematicRendererScreen();
-
+		
 		this.setScreen(worldEditorScreen);
 	}
-	
+		
 	public void setWorldEditorScreen() {
 		this.setScreen(worldEditorScreen);
 	}
@@ -71,10 +67,6 @@ public class VerilogWorldMain extends Game {
 		this.setScreen(worldSimulatorScreen);
 	}
 
-	public void setSchematicRendererScreen() {
-		this.setScreen(schematicRendererScreen);
-	}
-	
 	public void launchVerilogEditor(String fileName){
 		/*String pathToJar = getRootPath() + "/VerilogEditor.jar";
 		ProcessBuilder pb = new ProcessBuilder("java", "-jar", pathToJar, getRootPath(), fileName);
@@ -132,8 +124,8 @@ public class VerilogWorldMain extends Game {
 		return verilogWorldMain;
 	}
 
-	public SchematicRendererScreen getSchematicRendererScreen(){
-		return schematicRendererScreen;
+	public SchematicRendererMain getSchematicRendererMain(){
+		return schematicRendererMain;
 	}
 
 }
