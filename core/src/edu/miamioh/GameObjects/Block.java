@@ -9,10 +9,11 @@ package edu.miamioh.GameObjects;
 
 import com.badlogic.gdx.graphics.Color;
 
-public class Block extends AbstractGameObject {
+import edu.miamioh.simulator.RootModuleSimulator;
 
-	private static final int DEFAULT_ROW = 0;
-	private static final int DEFAULT_COLUMN = 0;
+public abstract class Block {
+
+	private static RootModuleSimulator rootSim;
 	
 	//Modifiable variables.
 	private Color color;
@@ -21,7 +22,7 @@ public class Block extends AbstractGameObject {
 	
 	public Block() {
 
-		this(DEFAULT_ROW, DEFAULT_COLUMN);
+		this(0, 0);
 	}
 	
 	public Block(int row, int column) {
@@ -60,6 +61,9 @@ public class Block extends AbstractGameObject {
 	public int getColumn() {
 		return column;
 	}
+	
+	public static void setRootSim(RootModuleSimulator sim) {rootSim = sim;}
+	public static RootModuleSimulator getRootSim() {return rootSim;}
 
 	@Override
 	public String toString() {

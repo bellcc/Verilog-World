@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.Level.Level;
+import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldSimulator.ToolBarSelection;
 
 public class WorldSimulatorController {
@@ -49,7 +50,7 @@ public class WorldSimulatorController {
 		inputProcessor = new WorldSimulatorInputProcessor();
 		multiplexer = new InputMultiplexer();
 		
-		currentLevel = new Level();
+		currentLevel = WorldEditorController.getCurrentController().getCurrentLevel();
 	}
 	
 	public WorldSimulatorController(Configuration config) {

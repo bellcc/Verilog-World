@@ -21,9 +21,9 @@ import javax.swing.JTextPane;
 
 import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.Configuration.ConfigurationParser;
-
 import edu.miamioh.Level.Level;
 import edu.miamioh.simulator.Parse;
+import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldSimulator.WorldSimulator;
 
 public class VerilogWorldController {
@@ -69,6 +69,7 @@ public class VerilogWorldController {
 			e.printStackTrace();
 		}
 		sim = new WorldSimulator(compiler.getRootModuleSimulator());
+		sim.setBlockList(currentLevel.getBlockList());
 		//TODO This needs to be set to the main menu controller.
 		//state = VerilogWorld.WORLD_SIMULATOR;
 		state = VerilogWorldType.WORLD_EDITOR;
@@ -84,4 +85,5 @@ public class VerilogWorldController {
 	public WorldSimulator getSim() 	                     {return this.sim;}
 	public Parse getCompiler()		                     {return this.compiler;}
 	public String getRootPath() 	                     {return this.rootPath;}
+	public Level getCurrentLevel() 						 {return this.currentLevel;}
 }

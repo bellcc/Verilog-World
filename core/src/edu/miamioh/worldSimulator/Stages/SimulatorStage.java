@@ -9,14 +9,16 @@ import edu.miamioh.Buttons.TextButtonActor;
 import edu.miamioh.worldSimulator.WorldSimulatorController;
 import edu.miamioh.worldSimulator.ChangeListeners.BackChangeListener;
 import edu.miamioh.worldSimulator.ChangeListeners.ResetChangeListener;
-import edu.miamioh.worldSimulator.ChangeListeners.SimulateChangeListener;
+import edu.miamioh.worldSimulator.ChangeListeners.StartChangeListener;
+import edu.miamioh.worldSimulator.ChangeListeners.StopChangeListener;
 import edu.miamioh.worldSimulator.ChangeListeners.VerifyChangeListener;
 
 public class SimulatorStage {
 
 	private Stage stage;
 	
-	private Actor simulateActor;
+	private Actor startActor;
+	private Actor stopActor;
 	private Actor verifyActor;
 	private Actor resetActor;
 	
@@ -27,13 +29,15 @@ public class SimulatorStage {
 		// Construct the text button actors. This can be 
 		// configured to add pictures to the buttons instead 
 		// of a color.
-		simulateActor = new TextButtonActor().createTextButton(Color.RED, "SIMULATE");
+		startActor = new TextButtonActor().createTextButton(Color.RED, "START");
+		stopActor = new TextButtonActor().createTextButton(Color.BLUE, "STOP");
 		verifyActor = new TextButtonActor().createTextButton(Color.PINK, "VERIFY");
 		resetActor = new TextButtonActor().createTextButton(Color.YELLOW, "RESET");
 		
 		// Add the appropriate change listener to the actor which 
 		// is located at edu.miamioh.worldEditor.ChangeListeners.
-		simulateActor.addListener(new SimulateChangeListener());
+		startActor.addListener(new StartChangeListener());
+		stopActor.addListener(new StopChangeListener());
 		verifyActor.addListener(new VerifyChangeListener());
 		resetActor.addListener(new ResetChangeListener());
 		
@@ -50,8 +54,10 @@ public class SimulatorStage {
 		table.setSize(actorWidth, windowHeight);
 		table.setPosition(50, 0);
 		table.right().top();
-		
-		table.add(simulateActor).width(actorWidth).height(actorHeight);
+
+		table.add(startActor).width(actorWidth).height(actorHeight);
+		table.row();
+		table.add(stopActor).width(actorWidth).height(actorHeight);
 		table.row();
 		table.add(verifyActor).width(actorWidth).height(actorHeight);
 		table.row();

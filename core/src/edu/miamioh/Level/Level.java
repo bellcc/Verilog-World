@@ -20,25 +20,9 @@ public class Level {
 		blockList = new ArrayList<Block>();
 	}
 	
-	public Level(ArrayList<Block> blockList) {
-		
-		this.blockList = blockList;
-
-	}
-	
 	public void addBlock(Block block) {
 		
 		blockList.add(block);
-	}
-
-	public void removeBlock(Block block) {
-		
-		int index = findBlockIndex(block);
-		
-		if(index != -1) {
-			blockList.remove(index);
-		}
-		
 	}
 	
 	public void removeBlock(int row, int column) {
@@ -54,22 +38,6 @@ public class Level {
 			}
 		}
 
-	}
-	
-	private int findBlockIndex(Block block) {
-		
-		int blockID = block.getId();
-		
-		for(int i=0;i < blockList.size();i++) {
-			
-			int tempID = blockList.get(i).getId();
-			
-			if(blockID == tempID) {		
-				return i;
-			}
-		}
-		
-		return -1;
 	}
 	
 	public boolean isBlock(int row, int column) {

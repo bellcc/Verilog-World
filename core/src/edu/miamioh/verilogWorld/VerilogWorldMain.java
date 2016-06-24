@@ -8,9 +8,6 @@
 package edu.miamioh.verilogWorld;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Screen;
-
-import edu.miamioh.Level.Level;
 import edu.miamioh.Screens.ChallengesScreen;
 import edu.miamioh.Screens.MainMenuScreen;
 import edu.miamioh.Screens.PlayScreen;
@@ -61,7 +58,8 @@ public class VerilogWorldMain extends Game {
 		this.sim = verilogWorldController.getSim().getRootModuleSimulator();
 		this.compiler = verilogWorldController.getCompiler();
 
-		worldEditorController = new WorldEditorController(verilogWorldController.getDefaultConfig(), new Level());
+		worldEditorController = new WorldEditorController(verilogWorldController.getDefaultConfig(), 
+														  verilogWorldController.getCurrentLevel());
 		worldSimulatorController = new WorldSimulatorController(verilogWorldController.getDefaultConfig());
 		
 		worldEditorScreen = new WorldEditorScreen(worldEditorController);
