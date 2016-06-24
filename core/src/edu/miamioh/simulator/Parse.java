@@ -1,6 +1,7 @@
 package edu.miamioh.simulator;
 
 import org.antlr.v4.runtime.tree.*;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 
+import edu.miamioh.GameObjects.Block;
 import edu.miamioh.simulator.AntlrGen.Verilog2001Lexer;
 import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
 import edu.miamioh.util.DebugUtils;
@@ -38,6 +40,7 @@ public class Parse {
 		this.errorText = errorText;
 		this.rootPath = rootPath;
 		this.sim = new RootModuleSimulator(this);
+		Block.setRootSim(sim);
 	}
 	
 	public RootModuleInstance compileFileForGame(String fileName) throws IOException {
