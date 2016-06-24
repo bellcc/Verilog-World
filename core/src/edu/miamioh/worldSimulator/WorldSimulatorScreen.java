@@ -193,7 +193,7 @@ public class WorldSimulatorScreen implements Screen {
 		}
 		
 	}
-		
+	
 	private void renderToolBar() {
 		
 		optionStage.act(Gdx.graphics.getDeltaTime());

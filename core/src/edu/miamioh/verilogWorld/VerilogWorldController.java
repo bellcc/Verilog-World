@@ -58,7 +58,7 @@ public class VerilogWorldController {
 	}
 
 	public void init() {
-				
+	
 		this.rootPath = System.getProperty("user.dir") + "/../";
 
 		controller = this;

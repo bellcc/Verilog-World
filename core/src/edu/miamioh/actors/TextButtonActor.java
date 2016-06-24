@@ -1,4 +1,4 @@
-package edu.miamioh.Buttons;
+package edu.miamioh.actors;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;

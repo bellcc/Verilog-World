@@ -10,6 +10,7 @@ package edu.miamioh.verilogWorld;
 import com.badlogic.gdx.Game;
 
 import edu.miamioh.Level.Level;
+import edu.miamioh.Screens.ConfigurationScreen;
 import edu.miamioh.schematicRenderer.SchematicRendererMain;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.RootModuleSimulator;
@@ -33,7 +34,8 @@ public class VerilogWorldMain extends Game {
 	
 	private WorldEditorScreen worldEditorScreen;
 	private WorldSimulatorScreen worldSimulatorScreen;
-
+	//private ConfigurationScreen configScreen;
+	
 	private SchematicRendererMain schematicRendererMain;
 		
 	private String	VERILOG_WORLD_DEVELOPMENT	= "VERILOG_WORLD_DEVELOPMENT";
@@ -55,8 +57,11 @@ public class VerilogWorldMain extends Game {
 		
 		worldEditorScreen = new WorldEditorScreen(worldEditorController);
 		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
+		//configScreen = new ConfigurationScreen();
 		
-		this.setScreen(worldEditorScreen);
+		//this.setScreen(configScreen);
+		//this.setScreen(worldEditorScreen);
+		this.setScreen(worldSimulatorScreen);
 	}
 		
 	public void setWorldEditorScreen() {

@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-import edu.miamioh.Buttons.TextButtonActor;
+import edu.miamioh.actors.TextButtonActor;
 import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.ChangeListeners.RemoveChangeListener;
 import edu.miamioh.worldEditor.ChangeListeners.SchematicChangeListener;

@@ -503,6 +503,7 @@ public class WorldEditorScreen implements Screen {
 		optionStage = new OptionStage().getStage();
 		homeStage = new HomeStage().getStage();
 		blockStage = new BlockStage().getStage();
+		blockSelectedStage = new BlockSelectedStage().getStage();
 		//toolStage = new ToolStage().getStage();
 		simulatorStage = new SimulatorStage().getStage();
 
