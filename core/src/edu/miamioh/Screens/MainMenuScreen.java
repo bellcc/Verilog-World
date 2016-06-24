@@ -31,6 +31,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
  
 public class MainMenuScreen implements Screen {
+	
 	private SpriteBatch batch;
 	private SpriteBatch batch2;
 	private Sprite sprite;
@@ -42,12 +43,10 @@ public class MainMenuScreen implements Screen {
     protected Skin skinPg;
     protected Skin skinO;
     protected Skin skinE;
-
-    private Game g;
     
-    public MainMenuScreen(Game g)
+    public MainMenuScreen(VerilogWorldMain vwm)
     {
-    	this.g = g;
+    	
     	font = new BitmapFont();
     	skinPg = new Skin();
     	skinO = new Skin();
@@ -92,7 +91,10 @@ public class MainMenuScreen implements Screen {
 	        playButton.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {	            	
-	            	g.setScreen(new PlayScreen(g));
+	            	//g.setScreen(new PlayScreen(g));
+	            	VerilogWorldMain.getVerilogWorldMain().setPlayScreen();	 
+	            	//System.out.println("Main Menu Click Listener");
+
 	            }
 	        });
 	        
