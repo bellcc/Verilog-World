@@ -11,7 +11,7 @@ import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldSimulator.ModuleWrapper;
 
-public class NormalBlock extends Block {
+public abstract class NormalBlock extends Block {
 	
 	private static Parse compiler;
 	
@@ -46,7 +46,7 @@ public class NormalBlock extends Block {
 		makeUniqueFile();
 	}
 	
-
+	public abstract void updateProperties();
 	
 	public ModuleWrapper compile() {
 		
