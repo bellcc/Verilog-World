@@ -9,7 +9,7 @@ package edu.miamioh.GameObjects;
 
 import com.badlogic.gdx.graphics.Color;
 
-public class Block extends AbstractGameObject {
+public abstract class Block extends AbstractGameObject {
 
 	private static final int DEFAULT_ROW = 0;
 	private static final int DEFAULT_COLUMN = 0;
