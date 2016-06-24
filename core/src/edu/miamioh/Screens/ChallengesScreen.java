@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -35,7 +36,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
  
 public class ChallengesScreen implements Screen {
-	private VerilogWorldMain verilogWorldMain;
 	
 	private SpriteBatch batch;
 	private BitmapFont font;
@@ -57,6 +57,7 @@ public class ChallengesScreen implements Screen {
     private TextButtonStyle buttonStyleL12;
     private TextButtonStyle buttonStyleB;
     private TextButtonStyle buttonStyleIm;
+    private TextButtonStyle buttonStyleN;
 
     protected Skin skinL1;
     protected Skin skinL2;
@@ -75,24 +76,21 @@ public class ChallengesScreen implements Screen {
     protected Skin skinIm2;
     protected Skin skinIm3;
     protected Skin textSkin;
-
+    protected Skin skinN;
+    
     private TextArea textArea;
     private boolean textActorCheck;
 
     private int buttonHeight;
     private int buttonWidth;
-
+    private int level;
     
     private Table mainTable;
     
-    private Game g;
+    private Game g;    
     
-    public ChallengesScreen(Game g) {
-    	
-    	this.g = g;
-    	
-    	verilogWorldMain = new VerilogWorldMain();
-    	    	
+    public ChallengesScreen(VerilogWorldMain vwm) {
+    	    	    	    	
     	font = new BitmapFont();
 		
     	skinL1 = new Skin();
@@ -111,6 +109,8 @@ public class ChallengesScreen implements Screen {
     	skinIm1 = new Skin();
     	skinIm2 = new Skin();
     	skinIm3 = new Skin();
+    	skinN = new Skin();
+    	
     	textSkin = new Skin(Gdx.files.internal ("uiskin.json"));
 
     	buttonSetUp();
@@ -143,7 +143,6 @@ public class ChallengesScreen implements Screen {
 	       
 	    	//This sets up a table to add the buttons to
 	    	mainTable = new Table();
-	        mainTable.setFillParent(true);
 
 	        //Creates buttons
 	        TextButton l1Button = new TextButton("", skinL1);
@@ -162,10 +161,12 @@ public class ChallengesScreen implements Screen {
 	        TextButton im1Button = new TextButton("", skinIm1);
 	        TextButton im2Button = new TextButton("", skinIm2);
 	        TextButton im3Button = new TextButton("", skinIm3);
+	        TextButton nextButton = new TextButton("", skinN);
 
 	        buttonHeight = (Gdx.graphics.getHeight() - (Gdx.graphics.getHeight()/4))/10;
 	        buttonWidth = Gdx.graphics.getWidth()/5;
 	        
+
 	        //Add buttons to table
 	        mainTable.add(l1Button).height(buttonHeight).width(buttonWidth);
 	        mainTable.row();
@@ -190,6 +191,9 @@ public class ChallengesScreen implements Screen {
 	        mainTable.add(l11Button).height(buttonHeight).width(buttonWidth);
 	        mainTable.row();
 	        mainTable.add(l12Button).height(buttonHeight).width(buttonWidth);
+	        mainTable.row();
+
+	        mainTable.left();
   
 	        backButton.setHeight(buttonHeight);
 	        backButton.setWidth(buttonWidth);
@@ -199,18 +203,32 @@ public class ChallengesScreen implements Screen {
 	        im2Button.setWidth(buttonWidth);
 	        im3Button.setHeight(buttonHeight);
 	        im3Button.setWidth(buttonWidth);
+	        nextButton.setHeight(buttonHeight);
+	        nextButton.setWidth(buttonWidth);
+	        
 	        
 	        backButton.setPosition(0, 0);
 	        im1Button.setPosition(0, ((7 * Gdx.graphics.getHeight())/8) + 20);
 	        im2Button.setPosition(buttonWidth * 2, ((7 * Gdx.graphics.getHeight())/8) + 20);
 	        im3Button.setPosition(buttonWidth * 4, ((7 * Gdx.graphics.getHeight())/8) + 20);
+	        nextButton.setPosition(Gdx.graphics.getWidth() - buttonWidth, 0);
 	        
-	        final ScrollPane scroller = new ScrollPane(mainTable);
-	        scroller.setScrollBarPositions(false, true);
+	        Skin scrollSkin = new Skin(Gdx.files.internal("uiskin.json"));
 	        
 	        final Table table = new Table();
+	        
+	        final ScrollPane scroller = new ScrollPane(mainTable, scrollSkin);	        
+	        scroller.setScrollingDisabled(true, false);
+	        scroller.setFadeScrollBars(false);
+	        scroller.setOverscroll(false, false);
+
+	       
+	        //table.setWidth(buttonWidth + 20);
+	        //table.setHeight(buttonHeight*10);
+	        //table.setPosition(0, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
+	        
 	        table.setFillParent(true);
-	        table.add(scroller).width(buttonWidth+50).height(buttonHeight * 10);
+	        table.add(scroller).width(buttonWidth + 20).height(buttonHeight * 10);
 	        table.left();
 	        
 	        stage.addActor(backButton);
@@ -218,13 +236,15 @@ public class ChallengesScreen implements Screen {
 	        stage.addActor(im2Button);
 	        stage.addActor(im3Button);
 	        stage.addActor(table);
-	        
+	        	        
 	        //Click listeners for each of the buttons
 	        l1Button.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {	            	
-	        		if(textActorCheck)
+	            	if(textActorCheck) {
 	        			textArea.remove();
+	        			nextButton.remove();
+	            	}
 	            	
 	        		String text = "LEVEL 01\n\n"
 	        				+ "This is a rather large and important string that "
@@ -237,14 +257,19 @@ public class ChallengesScreen implements Screen {
 	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
 	        		stage.addActor(textArea);
 	        		textActorCheck = true;
+	        		
+	        		stage.addActor(nextButton);
+	        		level = 1;
 	            }
 	        });
 	        
 	        l2Button.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {	 
-	            	if(textActorCheck)
+	            	if(textActorCheck) {
 	        			textArea.remove();
+	        			nextButton.remove();
+	            	}
 	            	
 	            	String text = "LEVEL 02\n\n"
 	        				+ "This is a rather large and important string that "
@@ -257,14 +282,19 @@ public class ChallengesScreen implements Screen {
 	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
 	        		stage.addActor(textArea);
 	        		textActorCheck = true;
+	        		
+	        		stage.addActor(nextButton);
+	        		level = 2;
 	            }
 	        });
 	        
 	        l3Button.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck)
+	            	if(textActorCheck) {
 	        			textArea.remove();
+	        			nextButton.remove();
+	            	}
 	            	
 	            	String text = "LEVEL 03\n\n"
 	        				+ "This is a rather large and important string that "
@@ -277,14 +307,19 @@ public class ChallengesScreen implements Screen {
 	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
 	        		stage.addActor(textArea);
 	        		textActorCheck = true;
+	        		
+	        		stage.addActor(nextButton);
+	        		level = 3;
 	            }
 	        });
 	        
 	        l4Button.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck)
+	            	if(textActorCheck) {
 	        			textArea.remove();
+	        			nextButton.remove();
+	            	}
 	        		
 	            	String text = "LEVEL 04\n\n"
 	        				+ "This is a rather large and important string that "
@@ -297,14 +332,19 @@ public class ChallengesScreen implements Screen {
 	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
 	        		stage.addActor(textArea);
 	        		textActorCheck = true;
+	        		
+	        		stage.addActor(nextButton);
+	        		level = 4;
 	            }
 	        });
 	        
 	        l5Button.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck)
+	            	if(textActorCheck) {
 	        			textArea.remove();
+	        			nextButton.remove();
+	            	}
 	        	
 	            	String text = "LEVEL 05\n\n"
 	        				+ "This is a rather large and important string that "
@@ -317,14 +357,19 @@ public class ChallengesScreen implements Screen {
 	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
 	        		stage.addActor(textArea);
 	        		textActorCheck = true;
+	        		
+	        		stage.addActor(nextButton);
+	        		level = 5;
 	            }
 	        });
 	        
 	        l6Button.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck)
+	            	if(textActorCheck) {
 	        			textArea.remove();
+	        			nextButton.remove();
+	            	}
 	        		
 	            	String text = "LEVEL 06\n\n"
 	        				+ "This is a rather large and important string that "
@@ -337,14 +382,19 @@ public class ChallengesScreen implements Screen {
 	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
 	        		stage.addActor(textArea);
 	        		textActorCheck = true;
+	        		
+	        		stage.addActor(nextButton);
+	        		level = 6;
 	            }
 	        });
 	        
 	        l7Button.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck)
+	            	if(textActorCheck) {
 	        			textArea.remove();
+	        			nextButton.remove();
+	            	}
 	        		
 	            	String text = "LEVEL 07\n\n"
 	        				+ "This is a rather large and important string that "
@@ -357,14 +407,19 @@ public class ChallengesScreen implements Screen {
 	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
 	        		stage.addActor(textArea);
 	        		textActorCheck = true;
+	        		
+	        		stage.addActor(nextButton);
+	        		level = 7;
 	            }
 	        });
 	        
 	        l8Button.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck)
+	            	if(textActorCheck) {
 	        			textArea.remove();
+	        			nextButton.remove();
+	            	}
 	        		
 	            	String text = "LEVEL 08\n\n"
 	        				+ "This is a rather large and important string that "
@@ -377,14 +432,19 @@ public class ChallengesScreen implements Screen {
 	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
 	        		stage.addActor(textArea);
 	        		textActorCheck = true;
+	        		
+	        		stage.addActor(nextButton);
+	        		level = 8;
 	            }
 	        });
 	        
 	        l9Button.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck)
+	            	if(textActorCheck) {
 	        			textArea.remove();
+	        			nextButton.remove();
+	            	}
 	        		
 	            	String text = "LEVEL 09\n\n"
 	        				+ "This is a rather large and important string that "
@@ -397,14 +457,19 @@ public class ChallengesScreen implements Screen {
 	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
 	        		stage.addActor(textArea);
 	        		textActorCheck = true;
+	        		
+	        		stage.addActor(nextButton);
+	        		level = 9;
 	            }
 	        });
 	        
 	        l10Button.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck)
+	            	if(textActorCheck) {
 	        			textArea.remove();
+	        			nextButton.remove();
+	            	}
 	        		
 	            	String text = "LEVEL 10\n\n"
 	        				+ "This is a rather large and important string that "
@@ -417,13 +482,18 @@ public class ChallengesScreen implements Screen {
 	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
 	        		stage.addActor(textArea);
 	        		textActorCheck = true;
+	        		
+	        		stage.addActor(nextButton);
+	        		level = 10;
 	            }
 	        });
 	        l11Button.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck)
+	            	if(textActorCheck) {
 	        			textArea.remove();
+	        			nextButton.remove();
+	            	}
 	        		
 	            	String text = "LEVEL 11\n\n"
 	        				+ "This is a rather large and important string that "
@@ -436,13 +506,18 @@ public class ChallengesScreen implements Screen {
 	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
 	        		stage.addActor(textArea);
 	        		textActorCheck = true;
+	        		
+	        		stage.addActor(nextButton);
+	        		level = 11;
 	            }
 	        });
 	        l12Button.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck)
+	            	if(textActorCheck) {
 	        			textArea.remove();
+	        			nextButton.remove();
+	            	}
 	        		
 	            	String text = "LEVEL 12\n\n"
 	        				+ "This is a rather large and important string that "
@@ -455,21 +530,29 @@ public class ChallengesScreen implements Screen {
 	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
 	        		stage.addActor(textArea);
 	        		textActorCheck = true;
+	        		
+	        		stage.addActor(nextButton);
+	        		level = 12;
 	            }
 	        });
 	        
 	        backButton.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	g.setScreen(new PlayScreen(g));	            }
+	            	//g.setScreen(new PlayScreen(g));
+	            	VerilogWorldMain.getVerilogWorldMain().setPlayScreen();	            	
+
+	            }
 	        });
 	        
 	        im1Button.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	            	System.out.println("import Click Listener");
-	            	if(textActorCheck)
+	            	if(textActorCheck) {
 	        			textArea.remove();
+	        			nextButton.remove();
+	            	}
 	            }
 	        });
 	        
@@ -477,8 +560,10 @@ public class ChallengesScreen implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	            	System.out.println("import Click Listener");
-	            	if(textActorCheck)
+	            	if(textActorCheck) {
 	        			textArea.remove();
+	        			nextButton.remove();
+	            	}
 	            }
 	        });
 	        
@@ -486,11 +571,69 @@ public class ChallengesScreen implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	            	System.out.println("import Click Listener");
-	            	if(textActorCheck)
+	            	if(textActorCheck) {
 	        			textArea.remove();
+	        			nextButton.remove();
+	            	}
 	            }
 	        });
 	        
+	        im3Button.addListener(new ClickListener(){
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	            	System.out.println("import Click Listener");
+	            	if(textActorCheck) {
+	        			textArea.remove();
+	        			nextButton.remove();
+	            	}
+	            }
+	        });
+	        
+	        nextButton.addListener(new ClickListener(){
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	            	switch(level){
+	            	
+		            	case 1:
+			            	System.out.println("Play Level 1");
+			            	break;
+		            	case 2:
+			            	System.out.println("Play Level 2");
+			            	break;
+		            	case 3:
+			            	System.out.println("Play Level 3");
+			            	break;
+		            	case 4:
+			            	System.out.println("Play Level 4");
+			            	break;
+		            	case 5:
+			            	System.out.println("Play Level 5");
+			            	break;
+		            	case 6:
+			            	System.out.println("Play Level 6");
+			            	break;
+		            	case 7:
+			            	System.out.println("Play Level 7");
+			            	break;
+		            	case 8:
+			            	System.out.println("Play Level 8");
+			            	break;
+		            	case 9:
+			            	System.out.println("Play Level 9");
+			            	break;
+		            	case 10:
+			            	System.out.println("Play Level 10");
+			            	break;
+		            	case 11:
+			            	System.out.println("Play Level 11");
+			            	break;
+		            	case 12:
+			            	System.out.println("Play Level 12");
+			            	break;
+	            	
+	            	}
+	            }
+	        });
 	    }
 
 	    @Override
@@ -545,6 +688,7 @@ public class ChallengesScreen implements Screen {
 	        skinIm1.dispose();
 	        skinIm2.dispose();
 	        skinIm3.dispose();
+	        skinN.dispose();
 	        stage.dispose();
 	    }
 	    
@@ -566,22 +710,18 @@ public class ChallengesScreen implements Screen {
 	    	buttonStyle(skinIm1, buttonStyleIm, "import.png");
 	    	buttonStyle(skinIm2, buttonStyleIm, "import.png");
 	    	buttonStyle(skinIm3, buttonStyleIm, "import.png");
+	    	buttonStyle(skinN, buttonStyleN, "next.png");
+
 			
 	    }
 	    
 	    public void buttonStyle(Skin skin, TextButtonStyle buttonStyle, String imgName){
 	    	
-			//Pixmap pixmap = new Pixmap((int)Gdx.graphics.getWidth()/4,(int)Gdx.graphics.getHeight()/10, Pixmap.Format.RGB888);
-			//pixmap.setColor(Color.WHITE);
-			//pixmap.fill();
 	    	
 	    	skin.add("default", font);
 		
 	    	//adds an image texture to the skin of each button
 			skin.add("textColor", new Texture(Gdx.files.internal(imgName)));
-	    	
-			//skin.add("textColor", new Texture(pixmap));
-
 			
 	    	//This sets up a style for each button
 			buttonStyle = new TextButtonStyle();

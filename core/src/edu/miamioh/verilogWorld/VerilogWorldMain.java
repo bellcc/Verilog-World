@@ -8,10 +8,14 @@
 package edu.miamioh.verilogWorld;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Screen;
 
 import edu.miamioh.Level.Level;
 import edu.miamioh.Screens.ConfigurationScreen;
-import edu.miamioh.schematicRenderer.SchematicRendererMain;
+import edu.miamioh.Screens.ChallengesScreen;
+import edu.miamioh.Screens.MainMenuScreen;
+import edu.miamioh.Screens.PlayScreen;
+import edu.miamioh.schematicRenderer.SchematicRendererScreen;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.RootModuleSimulator;
 import edu.miamioh.verilogEditor.RunEditor;
@@ -34,9 +38,13 @@ public class VerilogWorldMain extends Game {
 	
 	private WorldEditorScreen worldEditorScreen;
 	private WorldSimulatorScreen worldSimulatorScreen;
-	//private ConfigurationScreen configScreen;
 	
-	private SchematicRendererMain schematicRendererMain;
+	private SchematicRendererScreen schematicRendererMain;
+
+	private MainMenuScreen mainMenuScreen;
+	private PlayScreen playScreen;
+	private ChallengesScreen challengesScreen;
+	private SchematicRendererScreen schematicRendererScreen;
 		
 	private String	VERILOG_WORLD_DEVELOPMENT	= "VERILOG_WORLD_DEVELOPMENT";
 	
@@ -51,17 +59,21 @@ public class VerilogWorldMain extends Game {
 	@Override
 	public void create() {
 		
+		// Make controller and update the sim and compiler variables
 		verilogWorldController = new VerilogWorldController();
+		this.sim = verilogWorldController.getSim().getRootModuleSimulator();
+		this.compiler = verilogWorldController.getCompiler();
+
 		worldEditorController = new WorldEditorController(verilogWorldController.getDefaultConfig(), new Level());
 		worldSimulatorController = new WorldSimulatorController(verilogWorldController.getDefaultConfig());
 		
 		worldEditorScreen = new WorldEditorScreen(worldEditorController);
 		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
-		//configScreen = new ConfigurationScreen();
+		schematicRendererScreen = new SchematicRendererScreen();				
+		mainMenuScreen = new MainMenuScreen(getVerilogWorldMain());
 		
-		//this.setScreen(configScreen);
-		//this.setScreen(worldEditorScreen);
-		this.setScreen(worldSimulatorScreen);
+		this.setScreen(mainMenuScreen);
+		
 	}
 		
 	public void setWorldEditorScreen() {
@@ -70,6 +82,25 @@ public class VerilogWorldMain extends Game {
 	
 	public void setWorldSimulatorScreen() {
 		this.setScreen(worldSimulatorScreen);
+	}
+
+	public void setSchematicRendererScreen() {
+		this.setScreen(schematicRendererScreen);
+	}
+	
+	public void setMainMenuScreen() {
+		mainMenuScreen = new MainMenuScreen(getVerilogWorldMain());
+		this.setScreen(mainMenuScreen);
+	}
+	
+	public void setPlayScreen() {
+		playScreen = new PlayScreen(getVerilogWorldMain());
+		this.setScreen(playScreen);
+	}
+	
+	public void setChallengesScreen() {
+		challengesScreen = new ChallengesScreen(getVerilogWorldMain());
+		this.setScreen(challengesScreen);
 	}
 
 	public void launchVerilogEditor(String fileName){
@@ -129,8 +160,7 @@ public class VerilogWorldMain extends Game {
 		return verilogWorldMain;
 	}
 
-	public SchematicRendererMain getSchematicRendererMain(){
-		return schematicRendererMain;
+	public SchematicRendererScreen getSchematicRendererScreen(){
+		return schematicRendererScreen;
 	}
-
 }

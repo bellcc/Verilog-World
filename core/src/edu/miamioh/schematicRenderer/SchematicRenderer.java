@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
+import edu.miamioh.simulator.Parse;
 import edu.miamioh.util.Constants;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -34,11 +35,50 @@ class SchematicRenderer implements Disposable {
     /**
      * The Schematic Renderer recieves a
      */
-    SchematicRenderer(Screen screen, ParseTree root_tree){
+    SchematicRenderer(Screen screen, ParseTree root_tree, ShapeRenderer renderer){
 //        this.screen = screen;
         this.root_tree = root_tree;
 //        this.stage = new Stage();
-        this.renderer = new ShapeRenderer();
+        this.renderer = renderer;
+    }
+
+    /**
+     * This constructor expects the root_tree and renderer to be set before rendering.
+     */
+    SchematicRenderer() {
+
+    }
+
+    /**
+     * Sets the root_tree to an existing ParseTree.
+     * @param root_tree A valid root module tree.
+     */
+    void setRoot_tree(ParseTree root_tree){
+        this.root_tree = root_tree;
+    }
+
+    /**
+     * Returns the root_tree of the schematic.
+     * @return the schematic's root tree.
+     */
+    ParseTree getRoot_tree(){
+        return this.root_tree;
+    }
+
+    /**
+     * Sets the renderer to a valid ShapeRenderer.
+     * @param renderer A valid ShapeRenderer.
+     */
+    void setRenderer(ShapeRenderer renderer){
+        this.renderer = renderer;
+    }
+
+    /**
+     * Gets the ShapeRenderer in use by this schematic.
+     * @return The active ShapeRenderer.
+     */
+    ShapeRenderer getRenderer(){
+        return this.renderer;
     }
 
     //Methods for setting up the render
@@ -47,8 +87,10 @@ class SchematicRenderer implements Disposable {
      * Runs the SchematicVisitor to collect Ports, Gates, and relationships from the root_tree.
      */
     void getData(){
-        SchematicVisitor visitor = new SchematicVisitor(this);
-        visitor.visit(root_tree);
+        if(root_tree != null) {
+            SchematicVisitor visitor = new SchematicVisitor(this);
+            visitor.visit(root_tree);
+        }
     }
 
     /**

@@ -14,7 +14,7 @@ public class StartScreen extends Game{
 	
 	@Override
 	public void create () {
-		mainMenuScreen = new MainMenuScreen(this);	
+		//mainMenuScreen = new MainMenuScreen(this);	
 		this.setScreen(mainMenuScreen);
 	}
 	

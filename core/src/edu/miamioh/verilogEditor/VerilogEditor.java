@@ -24,10 +24,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 
-import edu.miamioh.schematicRenderer.SchematicRendererMain;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.RootModuleSimulator;
-import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
 
 import javax.swing.*;
@@ -78,12 +76,15 @@ public class VerilogEditor extends JFrame implements ActionListener {
 //	 *            opened, the exact top-level path of the game files, and the
 //	 *            Level Number (eg. Lv0).
 //	 */
-	public static void main(String[] args) {
-		String fileName = "module_0.v";
+	public static void main(String[] args) throws IOException {
+		String fileName = "SevenSeg.v";
 		String rootPath = System.getProperty("user.dir") + "//..//";
 		String filePath = rootPath + "core/assets/modules/" + fileName;
 		Parse compiler = new Parse(new JTextPane(), rootPath);
 		RootModuleSimulator sim = compiler.getRootModuleSimulator();
+		
+		compiler.compileFileForGame(fileName);
+		
 		new VerilogEditor(sim, compiler, rootPath, filePath);
 	}
 
@@ -531,7 +532,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		});
 		toolBar.add(resetButton);
 		
-		JButton schematicRenderButton = makeToolBarButton("schemEdit", "Schematic Renderer", "Schematic Renderer");
+		JButton schematicRenderButton = makeToolBarButton("schemEdit", "Schematic Compiler",
+				"Schematic Compiler");
 		schematicRenderButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -792,11 +794,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	public void schematicButtonFunction() {
 
 		if(Compiler.isCompiled()){
-			VerilogWorldMain vwm = VerilogWorldMain.getVerilogWorldMain();
-			SchematicRendererMain srm = vwm.getSchematicRendererMain();
-			srm.setSim(this.sim);
-			//TODO Change this to a screen set in verilog world main.
-			//vwm.setVerilogWorldScreen(VerilogWorldStage.SCHEMATIC);
+			VerilogWorldMain.getVerilogWorldMain().getSchematicRendererScreen().setRoot_tree(this.sim.getRootModuleTree());
+			VerilogWorldMain.getVerilogWorldMain().getSchematicRendererScreen().compile();
 		} else {
 			errorText.setText(
 					"The Verilog code has not been successfully compiled yet.  Please click the check mark above and/or fix Verilog errors.");
