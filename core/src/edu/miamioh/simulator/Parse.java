@@ -51,8 +51,8 @@ public class Parse {
 		Verilog2001Lexer lexer = new Verilog2001Lexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		Verilog2001Parser parser = new Verilog2001Parser(tokens);
-		parser.removeErrorListeners();
-		parser.addErrorListener(new VerboseListenerE());
+//		parser.removeErrorListeners();
+//		parser.addErrorListener(new VerboseListenerE());
 
 		is_no_parse_errors = true;
 

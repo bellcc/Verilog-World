@@ -11,6 +11,7 @@ public class ModuleWrapper {
 	
 	public ModuleWrapper(RootModuleInstance module) {
 		this.module = module;
+		ports = new ArrayList<>();
 	}
 	
 	public void addPort(ModulePort port) {
