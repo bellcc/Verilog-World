@@ -4,6 +4,7 @@ public class ModulePort {
 	
 	private ModulePort target;
 	private String name;
+	private int value;
 	private boolean isInput;
 	
 	public ModulePort() {
@@ -18,6 +19,7 @@ public class ModulePort {
 		this.target = target;
 		this.isInput = isInput;
 		this.name = name;
+		this.value = 0;
 		
 		if (target != null) target.setTargetPort(this);
 	}
@@ -26,4 +28,6 @@ public class ModulePort {
 	public ModulePort getTargetPort() 				{return this.target;}
 	public void setTargetPort(ModulePort target) 	{this.target = target;}
 	public void setIsInput(boolean value) 			{this.isInput = value;}
+	public int getValue() 							{return this.value;}
+	public void setValue(int value)					{this.value = value;}
 }

@@ -1,14 +1,17 @@
 package edu.miamioh.GameObjects;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
 
 import edu.miamioh.simulator.Parse;
+import edu.miamioh.simulator.ParseRegWire;
 import edu.miamioh.simulator.RootModuleInstance;
 import edu.miamioh.util.FileTools;
 import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.worldEditor.WorldEditorController;
+import edu.miamioh.worldSimulator.ModulePort;
 import edu.miamioh.worldSimulator.ModuleWrapper;
 
 public abstract class NormalBlock extends Block {
@@ -44,6 +47,32 @@ public abstract class NormalBlock extends Block {
 		}
 		
 		makeUniqueFile();
+	}
+	
+	public void addDefaultPorts(ModulePort clock, ModulePort reset) {
+		
+		ArrayList<String> ports = module.getModule().getPorts_list();
+		
+		// Connect module clock and reset inputs to global clock and reset ports
+		if(ports.contains("clk")) {
+			module.addPort(new ModulePort("clk", clock, true));
+		}
+		
+		if(ports.contains("rst")) {
+			module.addPort(new ModulePort("rst", reset, true));
+		}
+	}
+	
+	public void updatePortValues() {
+		
+		for(ModulePort port : module.getPorts()) {
+			
+			// Get the module wire corresponding to the port
+			ParseRegWire wire = module.getModule().getHash_vars().get(port.getName());
+			
+			wire.setValue(0, port.getValue(), false);
+			wire.setValue(1, port.getValue(), false);
+		}
 	}
 	
 	public abstract void updateProperties();

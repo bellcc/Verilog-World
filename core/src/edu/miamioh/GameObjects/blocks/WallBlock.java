@@ -17,7 +17,7 @@ public class WallBlock extends NormalBlock {
 	@Override
 	public void updateProperties() {
 		RootModuleInstance module = this.getModuleWrapper().getModule();
-		ParseRegWire colorWire = module.getHash_vars().get("Color");
+		ParseRegWire colorWire = module.getHash_vars().get("color");
 		int color = colorWire.getValue(Block.getRootSim().getOldSimIndex());
 		
 		int red = (color & 0xff0000) >> 16;

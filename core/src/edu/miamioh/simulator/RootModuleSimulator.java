@@ -29,7 +29,7 @@ public class RootModuleSimulator {
 		}
 	}
 
-	public void sim_cycle(int mode)
+	public void sim_cycle()
 	{
 		if (compiler.isCompiled())
 		{
@@ -84,7 +84,7 @@ public class RootModuleSimulator {
 		// Toggle sequ clock and simulate
 		root_module.getVisitor().toggleSequClock();
 		simComb();
-		root_module.getVisitor().toggleSequClock();
+		//root_module.getVisitor().toggleSequClock();
 
 		// Reset sequential wire update flags
 		root_module.getVisitor().resetSequUpdateFlag();

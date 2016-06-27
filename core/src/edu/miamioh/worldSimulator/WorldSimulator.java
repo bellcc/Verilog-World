@@ -69,15 +69,31 @@ public class WorldSimulator {
 		
 		System.out.printf("Cycle\n");
 		
-		// Update clock wire
+		// Update clock
+		int value = (clock.getValue() == 0) ? 1 : 0;
+		clock.setValue(value);
 		
 		// Simulate block communication
-		
-		// Update block properties
 		for(Block block : blocks) {
+			
 			if (block instanceof NormalBlock) {
 				NormalBlock normBlock = (NormalBlock)block;
 				
+				normBlock.updatePortValues();
+			}
+		}
+		
+		// Simulate blocks and update properties
+		for(Block block : blocks) {
+			
+			if (block instanceof NormalBlock) {
+				NormalBlock normBlock = (NormalBlock)block;
+				
+				//Simulate
+				sim.updateTargetBlock(normBlock);
+				sim.sim_cycle();
+				
+				// Update
 				normBlock.updateProperties();
 			}
 		}
@@ -94,6 +110,7 @@ public class WorldSimulator {
 				NormalBlock normBlock = (NormalBlock)block;
 				
 				ModuleWrapper module = normBlock.compile();
+				normBlock.addDefaultPorts(clock, reset);
 				modules.add(module);
 			}
 		}
