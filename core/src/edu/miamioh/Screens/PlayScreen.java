@@ -34,6 +34,8 @@ public class PlayScreen implements Screen {
 	private SpriteBatch batch2;
 	private Sprite sprite;
 	private BitmapFont font;
+	private int buttonHeight;
+	private int buttonWidth;
 	
     protected Stage stage;
     private Viewport viewport;
@@ -64,7 +66,7 @@ public class PlayScreen implements Screen {
     	
 	    batch = new SpriteBatch();
 	    camera = new OrthographicCamera();
-	    viewport = new FitViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(), camera);
+	    viewport = new FitViewport(Gdx.graphics.getHeight(),Gdx.graphics.getHeight(), camera);
 	    viewport.apply();
 
 	    camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
@@ -130,14 +132,17 @@ public class PlayScreen implements Screen {
 	            }
 	        });
 
+	        buttonHeight = Gdx.graphics.getHeight()/6;
+	        buttonWidth = viewport.getScreenWidth() - viewport.getScreenWidth()/4;
+	        
 	        //Add buttons to table
-	        mainTable.add(tutorialButton);
+	        mainTable.add(tutorialButton).height(buttonHeight).width((5*buttonWidth)/6);
 	        mainTable.row();
-	        mainTable.add(challengesButton);
+	        mainTable.add(challengesButton).height(buttonHeight).width(buttonWidth);
 	        mainTable.row();
-	        mainTable.add(sandboxButton);
+	        mainTable.add(sandboxButton).height(buttonHeight).width((7*buttonWidth)/8);
 	        mainTable.row();
-	        mainTable.add(backButton);
+	        mainTable.add(backButton).height(buttonHeight).width(buttonWidth/3);
 	        
 	        stage.addActor(mainTable);
 	    }
