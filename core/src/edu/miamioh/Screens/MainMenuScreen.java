@@ -33,7 +33,10 @@ public class MainMenuScreen implements Screen {
 	private SpriteBatch batch2;
 	private Sprite sprite;
 	private BitmapFont font;
-
+	private int buttonWidth;
+	private int buttonHeight;
+	
+	
     protected Stage stage;
     private Viewport viewport;
     private OrthographicCamera camera;
@@ -53,7 +56,7 @@ public class MainMenuScreen implements Screen {
 		
 	    batch = new SpriteBatch();
 	    camera = new OrthographicCamera();
-	    viewport = new FitViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(), camera);
+	    viewport = new FitViewport(Gdx.graphics.getHeight(),Gdx.graphics.getHeight(), camera);
 	    viewport.apply();
 
 	    camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
@@ -109,12 +112,15 @@ public class MainMenuScreen implements Screen {
 	            }
 	        });
 
+	        buttonHeight = Gdx.graphics.getHeight()/6;
+	        buttonWidth = viewport.getScreenWidth() - viewport.getScreenWidth()/4;
+	        
 	        //Add buttons to table
-	        mainTable.add(playButton);
+	        mainTable.add(playButton).height(buttonHeight).width(buttonWidth);
 	        mainTable.row();
-	        mainTable.add(optionsButton);
+	        mainTable.add(optionsButton).height(buttonHeight).width((2*buttonWidth)/3);
 	        mainTable.row();
-	        mainTable.add(exitButton);
+	        mainTable.add(exitButton).height(buttonHeight).width(buttonWidth/3);
 	        
 	        stage.addActor(mainTable);
 	    }
