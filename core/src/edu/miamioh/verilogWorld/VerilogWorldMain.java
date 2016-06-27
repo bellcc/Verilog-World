@@ -56,7 +56,11 @@ public class VerilogWorldMain extends Game {
 	@Override
 	public void create() {
 		
+		// Make controller and update the sim and compiler variables
 		verilogWorldController = new VerilogWorldController();
+		this.sim = verilogWorldController.getSim().getRootModuleSimulator();
+		this.compiler = verilogWorldController.getCompiler();
+
 		worldEditorController = new WorldEditorController(verilogWorldController.getDefaultConfig(), new Level());
 		worldSimulatorController = new WorldSimulatorController(verilogWorldController.getDefaultConfig());
 		

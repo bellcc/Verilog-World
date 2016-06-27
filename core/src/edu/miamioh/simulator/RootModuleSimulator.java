@@ -128,6 +128,7 @@ public class RootModuleSimulator {
 		setRootTree(block.getModuleWrapper().getModule().getParseTree());
 	}
 	
+	public int getOldSimIndex() 							{return this.root_module.getVisitor().getOldIndex();}
 	public void setCompiler(Parse compiler)					{this.compiler = compiler;}
 	public RootModuleInstance getRootModuleInstance() 		{return this.root_module;}
 	public ParseTree getRootModuleTree()					{return this.root_tree;}
