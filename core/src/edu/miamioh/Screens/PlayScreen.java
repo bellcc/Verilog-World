@@ -7,7 +7,6 @@
 
 package edu.miamioh.Screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -25,15 +24,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import edu.miamioh.verilogWorld.VerilogWorldMain;
-import edu.miamioh.worldEditor.WorldEditorScreen;
-
  
 public class PlayScreen implements Screen {
-	private VerilogWorldMain verilogWorldMain;
 	
 	private SpriteBatch batch;
 	private SpriteBatch batch2;
@@ -47,9 +42,18 @@ public class PlayScreen implements Screen {
     protected Skin skinC;
     protected Skin skinS;
     protected Skin skinB;
+    public boolean challenges;
+    public boolean tutorials;
+    public static ChallengesScreen challengesScreen;
+   
+    //public PlayScreen() {
+    //	challengesScreen = new ChallengesScreen();
+    //}
     
     public PlayScreen(VerilogWorldMain vwm) {
     	    	    	
+    	challengesScreen = new ChallengesScreen();
+    	
     	font = new BitmapFont();
     	skinT = new Skin();
     	skinC = new Skin();
@@ -68,7 +72,7 @@ public class PlayScreen implements Screen {
         
         //sets up a background image for the menu
         batch2 = new SpriteBatch();
-        Texture backTex = new Texture(Gdx.files.internal("border.jpg"));
+        Texture backTex = new Texture(Gdx.files.internal("images/border.jpg"));
         sprite = new Sprite(backTex);
         sprite.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         
@@ -97,14 +101,17 @@ public class PlayScreen implements Screen {
 	        tutorialButton.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {	            	
-	            	System.out.println("tutorials Click Listener");
+	            	setTutorials(true);
+	            	setChallenges(false);
+	            	VerilogWorldMain.getVerilogWorldMain().setChallengesScreen();	            	
 	            }
 	        });
 	        
 	        challengesButton.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {	 
-	            	//g.setScreen(new ChallengesScreen(g));
+	            	setTutorials(false);
+	            	setChallenges(true);
 	            	VerilogWorldMain.getVerilogWorldMain().setChallengesScreen();	            	
 	            }
 	        });
@@ -119,7 +126,6 @@ public class PlayScreen implements Screen {
 	        backButton.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	//g.setScreen(new MainMenuScreen(g));
 	            	VerilogWorldMain.getVerilogWorldMain().setMainMenuScreen();	            	
 	            }
 	        });
@@ -190,10 +196,10 @@ public class PlayScreen implements Screen {
 
 			
 	    	//adds an image texture to the skin of each button
-			skinT.add("textColor", new Texture(Gdx.files.internal("tutorials.png")));
-			skinC.add("textColor", new Texture(Gdx.files.internal("challenges.png")));
-			skinS.add("textColor", new Texture(Gdx.files.internal("sandbox.png")));
-			skinB.add("textColor", new Texture(Gdx.files.internal("back.png")));
+			skinT.add("textColor", new Texture(Gdx.files.internal("images/tutorials.png")));
+			skinC.add("textColor", new Texture(Gdx.files.internal("images/challenges.png")));
+			skinS.add("textColor", new Texture(Gdx.files.internal("images/sandbox.png")));
+			skinB.add("textColor", new Texture(Gdx.files.internal("images/back.png")));
 
 	    	
 	    	//This sets up a style for each button
@@ -229,4 +235,13 @@ public class PlayScreen implements Screen {
 			buttonStyleB.font = skinB.getFont("default");
 			skinB.add("default", buttonStyleB);
 	    }
+	    
+	    public static void setTutorials(boolean tutorials) {
+	    	challengesScreen.setTutorials(tutorials);
+	    }
+	    
+	    public static void setChallenges(boolean challenges) {
+	    	challengesScreen.setChallenges(challenges);
+	    }
+	    
 }
