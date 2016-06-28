@@ -40,6 +40,7 @@ public class Parse {
 		this.errorText = errorText;
 		this.rootPath = rootPath;
 		this.sim = new RootModuleSimulator(this);
+		SimVisitor.setSim(this.sim);
 		Block.setRootSim(sim);
 	}
 	

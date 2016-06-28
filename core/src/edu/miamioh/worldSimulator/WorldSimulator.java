@@ -6,9 +6,12 @@ import java.util.TimerTask;
 
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.GameObjects.NormalBlock;
+import edu.miamioh.simulator.ModuleInstance;
 import edu.miamioh.simulator.Parse;
+import edu.miamioh.simulator.ParseRegWire;
 import edu.miamioh.simulator.RootModuleInstance;
 import edu.miamioh.simulator.RootModuleSimulator;
+import edu.miamioh.simulator.SimVisitor;
 import edu.miamioh.verilogWorld.VerilogWorldController;
 
 public class WorldSimulator {
@@ -49,55 +52,106 @@ public class WorldSimulator {
 								1000 / freq);
 	}
 	
-	public void addTestPorts() {
+	public void executeCycle() {
 		
-		for (ModuleWrapper wrapper : modules) {
-			RootModuleInstance module = wrapper.getModule();
-			ArrayList<ModulePort> ports = wrapper.getPorts();
+		if (compiler.isCompiled()) {
 			
-			if (module.getPorts_list().contains("clk")) {
-				wrapper.addPort(new ModulePort("clk", clock, true));
+			System.out.printf("Cycle\n");
+			
+			// Simulate combination logic blocks
+			for(Block block : blocks) {
+				
+				if (block instanceof NormalBlock) {
+					NormalBlock normBlock = (NormalBlock)block;
+					
+					//Simulate
+					sim.updateTargetBlock(normBlock);
+					sim.simComb();
+				}
 			}
 			
-			if (module.getPorts_list().contains("rst")) {
-				wrapper.addPort(new ModulePort("rst", clock, true));
+			// Update clock
+			toggleSequClock();
+			
+			// Simulate block communication
+			for(Block block : blocks) {
+				
+				if (block instanceof NormalBlock) {
+					NormalBlock normBlock = (NormalBlock)block;
+					
+					normBlock.updatePortValues();
+				}
 			}
+			
+			// Simulate sequenctial blocks and update properties
+			for(Block block : blocks) {
+				
+				if (block instanceof NormalBlock) {
+					NormalBlock normBlock = (NormalBlock)block;
+					
+					//Simulate
+					sim.updateTargetBlock(normBlock);
+					sim.simSequ();
+					sim.clean_sim_cycle();
+					
+					// Update
+					normBlock.updateProperties();
+				}
+			}
+			
+			// Update clock
+			toggleSequClock();
 		}
 	}
 	
-	public void executeCycle() {
+	public void toggleSequClock() {
 		
-		System.out.printf("Cycle\n");
+		SimVisitor visitor = sim.getRootModuleInstance().getVisitor();
 		
 		// Update clock
 		int value = (clock.getValue() == 0) ? 1 : 0;
 		clock.setValue(value);
 		
-		// Simulate block communication
-		for(Block block : blocks) {
-			
-			if (block instanceof NormalBlock) {
-				NormalBlock normBlock = (NormalBlock)block;
-				
-				normBlock.updatePortValues();
-			}
-		}
+		/* toggle between sequential sims and combinational sims */
+		sim.setIsSequCycle(!sim.isSequCycle());
+		visitor.setCondProcess(false); // Reset conditional processed flag
 		
-		// Simulate blocks and update properties
-		for(Block block : blocks) {
-			
-			if (block instanceof NormalBlock) {
-				NormalBlock normBlock = (NormalBlock)block;
-				
-				//Simulate
-				sim.updateTargetBlock(normBlock);
-				sim.sim_cycle();
-				
-				// Update
-				normBlock.updateProperties();
-			}
-		}
+		// Send the new clock signal to all blocks
+//		for(Block block : blocks) {
+//			if (block instanceof NormalBlock) {
+//				NormalBlock normBlock = (NormalBlock)block;
+//				
+//				ModulePort modClock = normBlock.getModuleWrapper().getPortsHash().get("clk");
+//			}
+//		}
 	}
+	
+//	public void sendClockSignal() {
+//		
+//		SimVisitor visitor = sim.getRootModuleInstance().getVisitor();
+//		int clockValue = clock.getValue();
+//		
+//		// Update root module clock
+//		ParseRegWire wire = sim.getRootModuleInstance().getHash_vars().get("clk");
+//		if (wire != null) {
+//			wire.setValue(visitor.getNewIndex(), 
+//						  clockValue, visitor.isInSequ() || !sim.getResetLine());
+//			wire.setValue(visitor.getOldIndex(), 
+//						  clockValue, visitor.isInSequ() || !sim.getResetLine());
+//		}
+//		
+//		// Update clock in all other modules
+//		for (ModuleInstance sub : sim.getRootModuleInstance().getSubModulesList()) {
+//			wire = sub.getHash_vars().get("clk");
+//			
+//			if (wire != null) {
+//				wire.setValue(visitor.getNewIndex(), 
+//							  clockValue, visitor.isInSequ() || !sim.getResetLine());
+//				wire.setValue(visitor.getOldIndex(), 
+//							  clockValue, visitor.isInSequ() || !sim.getResetLine());
+//			}
+//		}
+//	}
 	
 	public void updateModules() {
 		

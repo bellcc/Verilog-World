@@ -24,10 +24,17 @@ public class ModulePort {
 		if (target != null) target.setTargetPort(this);
 	}
 	
+	public void setValue(int value) {
+		this.value = value;
+		
+		if (!this.isInput) {
+			target.setValue(value);
+		}
+	}
+	
 	public String getName()							{return this.name;}
 	public ModulePort getTargetPort() 				{return this.target;}
 	public void setTargetPort(ModulePort target) 	{this.target = target;}
 	public void setIsInput(boolean value) 			{this.isInput = value;}
 	public int getValue() 							{return this.value;}
-	public void setValue(int value)					{this.value = value;}
 }

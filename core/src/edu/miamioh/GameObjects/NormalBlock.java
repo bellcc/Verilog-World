@@ -59,13 +59,15 @@ public abstract class NormalBlock extends Block {
 		}
 		
 		if(ports.contains("rst")) {
-			module.addPort(new ModulePort("rst", reset, true));
+			ModulePort resetPort = new ModulePort("rst", reset, true);
+			resetPort.setValue(1); // Active-low
+			module.addPort(resetPort);
 		}
 	}
 	
 	public void updatePortValues() {
 		
-		for(ModulePort port : module.getPorts()) {
+		for(ModulePort port : module.getPortsList()) {
 			
 			// Get the module wire corresponding to the port
 			ParseRegWire wire = module.getModule().getHash_vars().get(port.getName());
