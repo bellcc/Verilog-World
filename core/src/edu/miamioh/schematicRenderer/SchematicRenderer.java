@@ -1,12 +1,13 @@
 package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Disposable;
-import edu.miamioh.simulator.Parse;
 import edu.miamioh.util.Constants;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -16,6 +17,7 @@ import java.util.Stack;
 import static edu.miamioh.schematicRenderer.GateType.INPUT;
 import static edu.miamioh.schematicRenderer.GateType.OUTPUT;
 import static edu.miamioh.schematicRenderer.GateType.REG;
+import static edu.miamioh.util.Constants.*;
 
 /**
  * Created by bdshaffer73.
@@ -26,21 +28,21 @@ class SchematicRenderer implements Disposable {
     private ArrayList<Port> ports = new ArrayList<>();
     private Constants constants = new Constants();
     private ShapeRenderer renderer;
-//    private Screen screen;
-//    private Stage stage;
+    private Stage stage;
     private ParseTree root_tree;
 
     private int maxLevel = 0;
+    private boolean compiled = false;
 
-    /**
-     * The Schematic Renderer recieves a
-     */
-    SchematicRenderer(Screen screen, ParseTree root_tree, ShapeRenderer renderer){
-//        this.screen = screen;
-        this.root_tree = root_tree;
-//        this.stage = new Stage();
-        this.renderer = renderer;
-    }
+//    /**
+//     * The Schematic Renderer recieves a
+//     */
+//    SchematicRenderer(Screen screen, ParseTree root_tree, ShapeRenderer renderer){
+////        this.screen = screen;
+//        this.root_tree = root_tree;
+////        this.stage = new Stage();
+//        this.renderer = renderer;
+//    }
 
     /**
      * This constructor expects the root_tree and renderer to be set before rendering.
@@ -74,11 +76,36 @@ class SchematicRenderer implements Disposable {
     }
 
     /**
-     * Gets the ShapeRenderer in use by this schematic.
-     * @return The active ShapeRenderer.
+     * Sets the stage to a valid Stage.
+     * @param stage A valid Stage.
      */
-    ShapeRenderer getRenderer(){
-        return this.renderer;
+    void setStage(Stage stage){
+        this.stage = stage;
+    }
+
+//    /**
+//     * Gets the ShapeRenderer in use by this schematic.
+//     * @return The active ShapeRenderer.
+//     */
+//    ShapeRenderer getRenderer(){
+//        return this.renderer;
+//    }
+
+    /**
+     * Gets the status of the schematic.
+     * @return True if the root_tree has been visited and the schematic has built the gates and
+     * ports lists.
+     */
+    boolean is_Compiled(){
+        return this.compiled;
+    }
+
+    /**
+     * Sets the compilation status.
+     * @param status Whether or not the schematic has been compiled yet.
+     */
+    private void is_Compiled(boolean status){
+        this.compiled = status;
     }
 
     //Methods for setting up the render
@@ -90,6 +117,7 @@ class SchematicRenderer implements Disposable {
         if(root_tree != null) {
             SchematicVisitor visitor = new SchematicVisitor(this);
             visitor.visit(root_tree);
+            this.is_Compiled(true);
         }
     }
 
@@ -211,20 +239,27 @@ class SchematicRenderer implements Disposable {
         Gdx.gl.glClearColor(255, 255, 255, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        int cxAxis = Constants.WINDOW_HEIGHT / 2; /* Axis of the window
+//        renderer.begin(ShapeRenderer.ShapeType.Filled);
+//        renderer.setColor(Color.BLUE);
+//        renderer.rect(0, 0, 200, 200);
+//        renderer.end();
+
+        int cxAxis = WINDOW_HEIGHT / 2; /* Axis of the window
         where y = total height / 2 */
-        int cyAxis = Constants.WINDOW_WIDTH / 2; /* Axis of the window where
+        int cyAxis = WINDOW_WIDTH / 2; /* Axis of the window where
         x = total width / 2 */
 
 //        constants.frame = true;
 
         //Template
         if (Constants.frame) {
+        	renderer.begin(ShapeRenderer.ShapeType.Line);
             renderer.setColor(Color.BLUE);
             renderer.line(constants.leftEdge, cxAxis, constants.rightEdge, cxAxis);
             renderer.line(cyAxis, constants.bottomEdge, cyAxis, constants.topEdge);
             renderer.rect(constants.leftEdge, constants.bottomEdge, constants.rightEdge - constants.leftEdge,
-                    constants.topEdge - constants.bottomEdge);      //Draw a box to show the edges of the schematic.
+                    constants.topEdge - constants.bottomEdge);//Draw a box to show the edges of the schematic.
+            renderer.end();
         }
 
         //Actual drawing
@@ -235,22 +270,73 @@ class SchematicRenderer implements Disposable {
 
     private void renderHelper() {
 
+        Color color;
+
         //Render Gates and Ports
         {
-            this.renderer.begin(ShapeRenderer.ShapeType.Line);
-            this.renderer.setColor(Color.BLACK);
+//            this.renderer.begin(ShapeRenderer.ShapeType.Filled);
+//            this.renderer.setColor(Color.BLACK);
             GateRenderer grenderer = new GateRenderer(this.renderer);
 
             int totalOuts = 0;
             int totalIns = 0;
             int skips = 0;
+            int numOfGatesHoriz = 0;
+            int numOfGatesVert = 0;
 
             Port tempP;
             Gate tempG;
-//            Label label;
-//            Label.LabelStyle style = new Label.LabelStyle(new BitmapFont(), Color.BLACK);
-//            Point labelPos;
 
+            /*Determine a proper scalingFactor by the greatest number of gates in either
+            direction, divided by the gateSize and the number of gates in that direction.*/
+            //Count the number of INPUTs vertically
+            for(Port port : ports){
+                if(port.getType().equals(INPUT)) {
+                    numOfGatesHoriz = 1;
+                    numOfGatesVert++;
+                }
+            }
+
+            //Count the number of Gates vertically on the first level. The first level should set
+            // the vertical height because every other level must fit within it.
+            numOfGatesHoriz = (maxLevel + 1 > numOfGatesHoriz)? maxLevel + 1 : numOfGatesHoriz;
+            for (int i = 0; i < gates.size(); i++) {
+                tempG = gates.get(i);
+                if(tempG.getLevel() == 1)
+                    numOfGatesVert = (i - skips > numOfGatesVert)? i - skips : numOfGatesVert;
+                else
+                    skips++;
+            }
+
+            //Count the number of OUTPUTs vertically.
+            for(int i = 0; i < ports.size(); i++){
+                tempP = ports.get(i);
+                if(tempP.getType().equals(OUTPUT))
+                    numOfGatesVert = (i - totalIns > numOfGatesVert)? i - totalIns : numOfGatesVert;
+                else
+                    totalIns++;
+            }
+
+//            int width = VerilogWorldController.getController().getDefaultConfig().getWindowWidth();
+//            int width = Gdx.graphics.getWidth();
+//            int height = VerilogWorldController.getController().getDefaultConfig().getWorldHeight();
+//            int height = Gdx.graphics.getHeight();
+//            System.out.println(width + ", " + height);
+
+            //Assume 1 extra gate horizontally as the OUTPUT level.
+            if(numOfGatesVert > numOfGatesHoriz + 1){
+//                scaleFactor = height / constants.gateSize / numOfGatesVert;
+                scaleFactor = 40;
+            } else {
+//                scaleFactor = width / constants.gateSize / numOfGatesHoriz;
+                scaleFactor = 40;
+            }
+
+            Label nametag;
+            BitmapFont bfont = new BitmapFont();
+            Label.LabelStyle style = new Label.LabelStyle(bfont, Color.BLACK);
+
+            //Place the gates by their level, scaled gateSize and level multiplicity.
             //Set coordinates of INPUT Ports.
             for (int i = 0; i < ports.size(); i++) {
 
@@ -259,29 +345,40 @@ class SchematicRenderer implements Disposable {
 
                     tempP.setCX(getXCenter(0));
                     tempP.setCY(getYCenter(i - totalOuts));
-//                    labelPos =
-                            grenderer.render(tempP.getType(), tempP.getCX(), tempP.getCY());
-//                    label = new Label(tempP.getID(), style);
-//                    label.setPosition(labelPos.x, labelPos.y);
-//                    stage.addActor(label);
+
+                    //Add a nametag to the gate
+                    nametag = new Label(tempP.getID(), style);
+                    nametag.setPosition(tempP.getCX(), tempP.getCY());
+                    stage.addActor(nametag);
 
                 } else
-                    totalOuts++;
+                   totalOuts++;
             }
 
             //Set coordinates of Gates.
-            for (int p = 1; p <= maxLevel; p++) {
-                for (int j = 0; j < gates.size(); j++) {
+            skips = 0;
 
-                    tempG = gates.get(j);
+            for (int p = 1; p <= maxLevel; p++) {
+                for (int i = 0; i < gates.size(); i++) {
+
+                    tempG = gates.get(i);
                     if (tempG.getLevel() == p) {
 
                         tempG.setCX(getXCenter(p));
 
-                        //Set CY based on the average height of all its inputs
-                        tempG.setCY(getYCenter(tempG.getInputs(), j - skips));
-                        if(tempG.getInputs().size() > 0)
-                            grenderer.render(tempG.getType(), tempG.getCX(), tempG.getCY());
+                        //Change the algorithm for setting the cy of Gates so that the first
+                        // Level spreads out the following ones.
+                        if(p == 1) {
+                            //Place the first Level is stacked evenly
+                            tempG.setCY(getYCenter(i - skips));
+                        } else
+                            tempG.setCY(getYCenter(tempG.getInputs()));
+
+                        //Add a nametag to the gate
+                        nametag = new Label(tempG.getID(), style);
+                        nametag.setPosition(tempG.getCX(), tempG.getCY());
+                        stage.addActor(nametag);
+
                     } else
                         skips++;
                 }
@@ -289,20 +386,34 @@ class SchematicRenderer implements Disposable {
             }
 
             //Set coordinates of OUTPUT Ports.
-            for (int k = 0; k < ports.size(); k++) {
+            for (Port port : ports) {
 
-                tempP = ports.get(k);
+                tempP = port;
                 if (tempP.getType().equals(OUTPUT)) {
-                    tempP.setCX(getXCenter(maxLevel + 1));
-                    tempP.setCY(getYCenter(tempP.getInputs(), k - totalIns));
-                    grenderer.render(tempP.getType(), tempP.getCX(), tempP.getCY());
 
-                } else
-                    totalIns++;
+                    tempP.setCX(getXCenter(maxLevel + 1));
+
+                    //OUTUPUTs are always placed based on the average of their inputs' heights.
+                    tempP.setCY(getYCenter(tempP.getInputs()));
+
+                    //Add a nametag to the gate
+                    nametag = new Label(tempP.getID(), style);
+                    nametag.setPosition(tempP.getCX(), tempP.getCY());
+                    stage.addActor(nametag);
+
+                }
+            }
+
+            //Render all the ports.
+            for(Port port : ports){
+                grenderer.render(port.getType(), port.getCX(), port.getCY(), port.getColor());
+            }
+
+            //Render all the gates.
+            for(Gate gate : gates){
+                grenderer.render(gate.getType(), gate.getCX(), gate.getCY(), gate.getColor());
             }
         }
-
-        this.renderer.end();
 
         //Render Gate port connections
         {
@@ -314,7 +425,6 @@ class SchematicRenderer implements Disposable {
             //Connect all OUTPUT Ports to their inputs.
             for(Port port : ports){
                 tempPr = port;
-                float r, g, b, a;
                 for(String id : tempPr.getInputs()){
                     x2 = tempPr.getPortX();
                     y2 = tempPr.getPortY();
@@ -325,26 +435,20 @@ class SchematicRenderer implements Disposable {
                         tempGl = gateLookup(id);
                         gatePort = "OUT~0";
                         assert tempGl != null;
-                        r = tempGl.getR();
-                        g = tempGl.getG();
-                        b = tempGl.getB();
-                        a = tempGl.getA();
+                        color = tempGl.getColor();
                         x1 = tempGl.getPortX(gatePort);
                         y1 = tempGl.getPortY(gatePort);
-                        drawSquareLine(x1, y1, x2, y2, r, g, b, a);
+                        drawSquareLine(x1, y1, x2, y2, color);
 
                         //Check if the left-hand ID is a port; if a port,
                         // get its output coordinates.
                     } else if(portLookup(id) != null){
                         tempPl = portLookup(id);
                         assert tempPl != null;
-                        r = tempPl.getR();
-                        g = tempPl.getG();
-                        b = tempPl.getB();
-                        a = tempPl.getA();
+                        color = tempPl.getColor();
                         x1 = tempPl.getPortX();
                         y1 = tempPl.getPortY();
-                        drawSquareLine(x1, y1, x2, y2, r, g, b, a);
+                        drawSquareLine(x1, y1, x2, y2, color);
                     }
                 }
             }
@@ -391,12 +495,14 @@ class SchematicRenderer implements Disposable {
                             assert tempG != null;
                             if (tempG.getCY() == highestY) {
                                 sortedInputs.push(i);
+                                j = copyInputs.size();
                             }
                         } else if (portLookup(i) != null) {
                             tempP = portLookup(i);
                             assert tempP != null;
                             if (tempP.getCY() == highestY) {
                                 sortedInputs.push(i);
+                                j = copyInputs.size();
                             }
                         }
                     }
@@ -404,7 +510,6 @@ class SchematicRenderer implements Disposable {
                 }
 
                 String id;
-                float r, g, b, a;
 
                 for(int i = 0; i < tempGr.getNumOfInputs(); i++){
 
@@ -419,26 +524,20 @@ class SchematicRenderer implements Disposable {
                         tempGl = gateLookup(id);
                         gatePort = "OUT~0";
                         assert tempGl != null;
-                        r = tempGl.getR();
-                        g = tempGl.getG();
-                        b = tempGl.getB();
-                        a = tempGl.getA();
+                        color = tempGl.getColor();
                         x1 = tempGl.getPortX(gatePort);
                         y1 = tempGl.getPortY(gatePort);
-                        drawSquareLine(x1, y1, x2, y2, r, g, b, a);
+                        drawSquareLine(x1, y1, x2, y2, color);
 
                         //Check if the left-hand ID is a port; if a port, get
                         // its output coordinates.
                     } else if(portLookup(id) != null){
                         tempPl = portLookup(id);
                         assert tempPl != null;
-                        r = tempPl.getR();
-                        g = tempPl.getG();
-                        b = tempPl.getB();
-                        a = tempPl.getA();
+                        color = tempPl.getColor();
                         x1 = tempPl.getPortX();
                         y1 = tempPl.getPortY();
-                        drawSquareLine(x1, y1, x2, y2, r, g, b, a);
+                        drawSquareLine(x1, y1, x2, y2, color);
                     }
                 }
             }
@@ -462,13 +561,12 @@ class SchematicRenderer implements Disposable {
         }
     }
 
-    private void drawSquareLine(int x1, int y1, int x2, int y2, float r,
-                                float g, float b, float a){
+    private void drawSquareLine(int x1, int y1, int x2, int y2, Color color){
 
         int xm = (x1 + x2) / 2;
 
         this.renderer.begin(ShapeRenderer.ShapeType.Line);
-        this.renderer.setColor(r, g, b, a);
+        this.renderer.setColor(color);
         renderer.line(x1, y1, xm, y1);
         renderer.line(xm, y1, xm, y2);
         renderer.line(xm, y2, x2, y2);
@@ -481,9 +579,9 @@ class SchematicRenderer implements Disposable {
         int clkx = clk.getPortX();
         int clky = clk.getPortY();
 
-        int dy = cy - Constants.gateSize * Constants.scaleFactor / 2;
+        int dy = cy - constants.gateSize * scaleFactor / 2;
 
-        drawSquareLine(clkx, clky, cx, dy, 0, 0, 255, 255);
+        drawSquareLine(clkx, clky, cx, dy, Color.BLUE);
     }
 
     private Gate gateLookup(String id){
@@ -514,13 +612,15 @@ class SchematicRenderer implements Disposable {
 
     private int getXCenter(int level) {
 
-        return constants.leftEdge + Constants.gateSize * Constants.scaleFactor / 2 + level * Constants.gateSize * Constants.scaleFactor * 2;
+        return constants.leftEdge + constants.gateSize * scaleFactor / 2 + level * constants
+                .gateSize * scaleFactor * 2;
 
     }
 
     private int getYCenter(int row) {
 
-        return  constants.bottomEdge + Constants.gateSize * Constants.scaleFactor / 2 + row * Constants.gateSize * Constants.scaleFactor * 2;
+        return  constants.bottomEdge + constants.gateSize * scaleFactor / 2 + row * constants
+                .gateSize * scaleFactor * 2;
 
     }
 
@@ -528,21 +628,20 @@ class SchematicRenderer implements Disposable {
      * All inputs must have coordinates or else this will error out.
      *
      * @param inputs Of the gate.
-     * @param row Of the gate.
+//     * @param row Of the gate.
      * @return New y coordinate of the gate.
      */
-    private int getYCenter(ArrayList<String> inputs, int row){
+    private int getYCenter(ArrayList<String> inputs
+//                          , int row
+        ){
 
         int avgY = 0, numOfInputs = inputs.size();
 
         for(String id : inputs){
-
-            if(gateLookup(id) != null) {
+            if(gateLookup(id) != null)
                 avgY += gateLookup(id).getCY();
-            }
-            if(portLookup(id) != null) {
+            if(portLookup(id) != null)
                 avgY += portLookup(id).getCY();
-            }
         }
 
         if(numOfInputs != 0)
@@ -565,10 +664,12 @@ class SchematicRenderer implements Disposable {
 //        }while(moved);
 
         return avgY;
-
     }
 
-    private void clearData(){
+    /**
+     * Clears the lists so that new data can be collected.
+     */
+    void clearData(){
         gates.clear();
         ports.clear();
     }
@@ -578,7 +679,6 @@ class SchematicRenderer implements Disposable {
      */
     @Override
     public void dispose() {
-        this.clearData();
         renderer.dispose();
     }
 }

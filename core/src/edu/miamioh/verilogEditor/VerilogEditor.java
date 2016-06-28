@@ -796,6 +796,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		if(Compiler.isCompiled()){
 			VerilogWorldMain.getVerilogWorldMain().getSchematicRendererScreen().setRoot_tree(this.sim.getRootModuleTree());
 			VerilogWorldMain.getVerilogWorldMain().getSchematicRendererScreen().compile();
+			errorText.setText("The Verilog code has been converted to schematic code. Please exit" +
+					" the editor to view the schematic.");
 		} else {
 			errorText.setText(
 					"The Verilog code has not been successfully compiled yet.  Please click the check mark above and/or fix Verilog errors.");
