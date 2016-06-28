@@ -1,5 +1,6 @@
 package edu.miamioh.schematicRenderer;
 
+import com.badlogic.gdx.graphics.Color;
 import edu.miamioh.util.Constants;
 
 import java.util.ArrayList;
@@ -17,10 +18,11 @@ class Gate {
     private ArrayList<String> inputs = new ArrayList<>();
     private int level = 0;
     private int cx = 0, cy = 0;
-    private float r = 0, g = 0, b = 0, a = 0;
+//    private float r = 0, g = 0, b = 0, a = 0;
     private ArrayList<Integer> inputYCoords = new ArrayList<>();
     private ArrayList<Integer> inputXCoords = new ArrayList<>();
     private int scaledGS = Constants.gateSize * Constants.scaleFactor;
+    private Color color = Color.BLACK;
 
     /**
      * Gate constructor. Requires a GateType (enumerated class), a number of
@@ -35,118 +37,115 @@ class Gate {
      */
     Gate(GateType type, String id, int level) {
 
-        float r = 0, g = 0, b = 0, a = 255;
-
         switch (type) {
 
             case AND:
                 this.type = AND;
                 this.id = id;
                 this.level = level;
-                r = 255;
-                g = 0;
-                b = 0;
-                setColor(r, g, b, a);
+//                r = 255;
+//                g = 0;
+//                b = 0;
+                setColor(Color.RED);
                 break;
 
             case NAND:
                 this.type = NAND;
                 this.id = id;
                 this.level = level;
-                r = 125;
-                g = 0;
-                b = 0;
-                setColor(r, g, b, a);
+//                r = 125;
+//                g = 0;
+//                b = 0;
+                setColor(Color.PINK);
                 break;
 
             case OR:
                 this.type = OR;
                 this.id = id;
                 this.level = level;
-                r = 0;
-                g = 255;
-                b = 0;
-                setColor(r, g, b, a);
+//                r = 0;
+//                g = 255;
+//                b = 0;
+                setColor(Color.GREEN);
                 break;
 
             case NOR:
                 this.type = NOR;
                 this.id = id;
                 this.level = level;
-                r = 0;
-                g = 125;
-                b = 0;
-                setColor(r, g, b, a);
+//                r = 0;
+//                g = 125;
+//                b = 0;
+                setColor(Color.CYAN);
                 break;
 
             case XOR:
                 this.type = XOR;
                 this.id = id;
                 this.level = level;
-                r = 0;
-                g = 0;
-                b = 255;
-                setColor(r, g, b, a);
+//                r = 0;
+//                g = 0;
+//                b = 255;
+                setColor(Color.BLUE);
                 break;
 
             case XNOR:
                 this.type = XNOR;
                 this.id = id;
                 this.level = level;
-                r = 0;
-                g = 0;
-                b = 125;
-                setColor(r, g, b, a);
+//                r = 0;
+//                g = 0;
+//                b = 125;
+                setColor(Color.MAGENTA);
                 break;
 
             case NOT:
                 this.type = NOT;
                 this.id = id;
                 this.level = level;
-                r = 255;
-                g = 255;
-                b = 0;
-                setColor(r, g, b, a);
+//                r = 255;
+//                g = 255;
+//                b = 0;
+                setColor(Color.ORANGE);
                 break;
 
             case WIRE:
                 this.type = WIRE;
                 this.id = id;
                 this.level = level;
-                r = 255;
-                g = 0;
-                b = 255;
-                setColor(r, g, b, a);
+//                r = 255;
+//                g = 0;
+//                b = 255;
+                setColor(Color.DARK_GRAY);
                 break;
 
             case REG:
                 this.type = REG;
                 this.id = id;
                 this.level = level;
-                r = 0;
-                g = 255;
-                b = 255;
-                setColor(r, g, b, a);
+//                r = 0;
+//                g = 255;
+//                b = 255;
+                setColor(Color.LIGHT_GRAY);
                 break;
 
             case BLANK:
                 this.type = BLANK;
                 this.id = id;
                 this.level = level;
-                r = 0;
-                g = 0;
-                b = 0;
-                setColor(r, g, b, a);
+//                r = 0;
+//                g = 0;
+//                b = 0;
+                setColor(Color.BLACK);
                 break;
 
             default:
                 this.type = BLANK;
                 this.level = 0;
-                setColor(r, g, b, a);
+                setColor(Color.BLACK);
                 break;
 
         }
-
     }
 
     private void setInputXCoords() {
@@ -231,27 +230,32 @@ class Gate {
 
     }
 
-    private void setColor(float r, float g, float b, float a) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
+    private void setColor(Color color) {
+//        this.r = r;
+//        this.g = g;
+//        this.b = b;
+//        this.a = a;
+        this.color = color;
     }
 
-    float getR() {
-        return this.r;
-    }
+//    float getR() {
+//        return this.r;
+//    }
+//
+//    float getG() {
+//        return this.g;
+//    }
+//
+//    float getB() {
+//        return this.b;
+//    }
+//
+//    float getA() {
+//        return this.a;
+//    }
 
-    float getG() {
-        return this.g;
-    }
-
-    float getB() {
-        return this.b;
-    }
-
-    float getA() {
-        return this.a;
+    Color getColor(){
+        return this.color;
     }
 
     /**

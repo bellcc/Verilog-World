@@ -9,11 +9,14 @@ public class SchematicChangeListener extends ChangeListener {
 
 	@Override
 	public void changed(ChangeEvent arg0, Actor arg1) {
-		System.out.println("Schmematic Change Listener");
-
-//		SchematicRendererScreen srs = VerilogWorldMain.getVerilogWorldMain()
-//				.getSchematicRendererScreen();
-		VerilogWorldMain.getVerilogWorldMain().setSchematicRendererScreen();
+		SchematicRendererScreen srs = VerilogWorldMain.getVerilogWorldMain()
+				.getSchematicRendererScreen();
+		if(srs.schematic_is_Compiled()) {
+			VerilogWorldMain.getVerilogWorldMain().setSchematicRendererScreen();
+		} else {
+			System.out.println("Please compile the verilog module for this block before " +
+					"attempting to view its schematic design.");
+		}
 	}
 
 	
