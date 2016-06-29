@@ -112,7 +112,7 @@ public class MainMenuScreen implements Screen {
 	            }
 	        });
 
-	        buttonHeight = Gdx.graphics.getHeight()/6;
+	        buttonHeight = Gdx.graphics.getHeight()/7;
 	        buttonWidth = viewport.getScreenWidth() - viewport.getScreenWidth()/4;
 	        
 	        //Add buttons to table
@@ -122,6 +122,7 @@ public class MainMenuScreen implements Screen {
 	        mainTable.row();
 	        mainTable.add(exitButton).height(buttonHeight).width(buttonWidth/3);
 	        
+	        //Add the table to the stage
 	        stage.addActor(mainTable);
 	    }
 
@@ -184,7 +185,6 @@ public class MainMenuScreen implements Screen {
     		TextButtonStyle buttonStylePg = new TextButtonStyle();
     		buttonStylePg.up = skinPg.newDrawable("textColor", Color.WHITE);
     		buttonStylePg.down = skinPg.newDrawable("textColor", Color.DARK_GRAY);
-    		buttonStylePg.checked = skinPg.newDrawable("textColor", Color.WHITE);
     		buttonStylePg.over = skinPg.newDrawable("textColor", Color.LIGHT_GRAY);
     		buttonStylePg.font = skinPg.getFont("default");
     		skinPg.add("default", buttonStylePg);
@@ -192,7 +192,6 @@ public class MainMenuScreen implements Screen {
     		TextButtonStyle buttonStyleO = new TextButtonStyle();
     		buttonStyleO.up = skinO.newDrawable("textColor", Color.WHITE);
     		buttonStyleO.down = skinO.newDrawable("textColor", Color.DARK_GRAY);
-    		buttonStyleO.checked = skinO.newDrawable("textColor", Color.WHITE);
     		buttonStyleO.over = skinO.newDrawable("textColor", Color.LIGHT_GRAY);
     		buttonStyleO.font = skinO.getFont("default");
     		skinO.add("default", buttonStyleO);
@@ -200,7 +199,6 @@ public class MainMenuScreen implements Screen {
     		TextButtonStyle buttonStyleE = new TextButtonStyle();
     		buttonStyleE.up = skinE.newDrawable("textColor", Color.WHITE);
     		buttonStyleE.down = skinE.newDrawable("textColor", Color.DARK_GRAY);
-    		buttonStyleE.checked = skinE.newDrawable("textColor", Color.WHITE);
     		buttonStyleE.over = skinE.newDrawable("textColor", Color.LIGHT_GRAY);
     		buttonStyleE.font = skinE.getFont("default");
     		skinE.add("default", buttonStyleE);

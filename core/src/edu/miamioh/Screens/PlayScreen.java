@@ -46,15 +46,16 @@ public class PlayScreen implements Screen {
     protected Skin skinB;
     public boolean challenges;
     public boolean tutorials;
-    public static ChallengesScreen challengesScreen;
-   
+    private ChallengesScreen challengeScreen;
+    
+    
     //public PlayScreen() {
     //	challengesScreen = new ChallengesScreen();
     //}
     
     public PlayScreen(VerilogWorldMain vwm) {
-    	    	    	
-    	challengesScreen = new ChallengesScreen();
+    	
+    	challengeScreen = new ChallengesScreen();
     	
     	font = new BitmapFont();
     	skinT = new Skin();
@@ -74,7 +75,7 @@ public class PlayScreen implements Screen {
         
         //sets up a background image for the menu
         batch2 = new SpriteBatch();
-        Texture backTex = new Texture(Gdx.files.internal("images/border.jpg"));
+        Texture backTex = new Texture(Gdx.files.internal("images/0.png"));
         sprite = new Sprite(backTex);
         sprite.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         
@@ -103,8 +104,9 @@ public class PlayScreen implements Screen {
 	        tutorialButton.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {	            	
-	            	setTutorials(true);
-	            	setChallenges(false);
+	    	    	challengeScreen.setTutorials(true);	
+	    	    	challengeScreen.setChallenges(false);
+	    	    	
 	            	VerilogWorldMain.getVerilogWorldMain().setChallengesScreen();	            	
 	            }
 	        });
@@ -112,8 +114,9 @@ public class PlayScreen implements Screen {
 	        challengesButton.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {	 
-	            	setTutorials(false);
-	            	setChallenges(true);
+	    	    	challengeScreen.setTutorials(false);
+	    	    	challengeScreen.setChallenges(true);
+	    	    	
 	            	VerilogWorldMain.getVerilogWorldMain().setChallengesScreen();	            	
 	            }
 	        });
@@ -132,7 +135,7 @@ public class PlayScreen implements Screen {
 	            }
 	        });
 
-	        buttonHeight = Gdx.graphics.getHeight()/6;
+	        buttonHeight = Gdx.graphics.getHeight()/7;
 	        buttonWidth = viewport.getScreenWidth() - viewport.getScreenWidth()/4;
 	        
 	        //Add buttons to table
@@ -211,7 +214,6 @@ public class PlayScreen implements Screen {
 			TextButtonStyle buttonStyleT = new TextButtonStyle();
 			buttonStyleT.up = skinT.newDrawable("textColor", Color.WHITE);
 			buttonStyleT.down = skinT.newDrawable("textColor", Color.DARK_GRAY);
-			buttonStyleT.checked = skinT.newDrawable("textColor", Color.WHITE);
 			buttonStyleT.over = skinT.newDrawable("textColor", Color.LIGHT_GRAY);
 			buttonStyleT.font = skinT.getFont("default");
 			skinT.add("default", buttonStyleT);
@@ -219,7 +221,6 @@ public class PlayScreen implements Screen {
 			TextButtonStyle buttonStyleC = new TextButtonStyle();
 			buttonStyleC.up = skinC.newDrawable("textColor", Color.WHITE);
 			buttonStyleC.down = skinC.newDrawable("textColor", Color.DARK_GRAY);
-			buttonStyleC.checked = skinC.newDrawable("textColor", Color.WHITE);
 			buttonStyleC.over = skinC.newDrawable("textColor", Color.LIGHT_GRAY);
 			buttonStyleC.font = skinC.getFont("default");
 			skinC.add("default", buttonStyleC);
@@ -227,7 +228,6 @@ public class PlayScreen implements Screen {
 			TextButtonStyle buttonStyleS = new TextButtonStyle();
 			buttonStyleS.up = skinS.newDrawable("textColor", Color.WHITE);
 			buttonStyleS.down = skinS.newDrawable("textColor", Color.DARK_GRAY);
-			buttonStyleS.checked = skinS.newDrawable("textColor", Color.WHITE);
 			buttonStyleS.over = skinS.newDrawable("textColor", Color.LIGHT_GRAY);
 			buttonStyleS.font = skinS.getFont("default");
 			skinS.add("default", buttonStyleS);
@@ -235,18 +235,8 @@ public class PlayScreen implements Screen {
 			TextButtonStyle buttonStyleB = new TextButtonStyle();
 			buttonStyleB.up = skinB.newDrawable("textColor", Color.WHITE);
 			buttonStyleB.down = skinB.newDrawable("textColor", Color.DARK_GRAY);
-			buttonStyleB.checked = skinB.newDrawable("textColor", Color.WHITE);
 			buttonStyleB.over = skinB.newDrawable("textColor", Color.LIGHT_GRAY);
 			buttonStyleB.font = skinB.getFont("default");
 			skinB.add("default", buttonStyleB);
 	    }
-	    
-	    public static void setTutorials(boolean tutorials) {
-	    	challengesScreen.setTutorials(tutorials);
-	    }
-	    
-	    public static void setChallenges(boolean challenges) {
-	    	challengesScreen.setChallenges(challenges);
-	    }
-	    
 }
