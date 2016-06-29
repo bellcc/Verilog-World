@@ -75,7 +75,7 @@ public class PlayScreen implements Screen {
         
         //sets up a background image for the menu
         batch2 = new SpriteBatch();
-        Texture backTex = new Texture(Gdx.files.internal("images/0.png"));
+        Texture backTex = new Texture(Gdx.files.internal("images/circuit_0.png"));
         sprite = new Sprite(backTex);
         sprite.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         
