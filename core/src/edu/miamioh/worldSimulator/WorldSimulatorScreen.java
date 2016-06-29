@@ -60,6 +60,7 @@ public class WorldSimulatorScreen implements Screen {
 		
 		updateWorldParameters();
 		controller.setSelection(ToolBarSelection.NONE);
+		controller.setKeyPressed(-1);
 		
 		renderer = new ShapeRenderer();
 		
@@ -95,9 +96,7 @@ public class WorldSimulatorScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		
-		System.out.println("Keycode: " + controller.getKeyPressed());
-		
+				
 		camera.update();
 		renderer.setProjectionMatrix(camera.combined);
 		
