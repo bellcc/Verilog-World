@@ -26,6 +26,8 @@ public class WorldSimulatorController {
 	
 	private ToolBarSelection selection;
 	
+	private int keyPressed;
+	
 	private int worldWidth;
 	private int worldHeight;
 	
@@ -52,7 +54,7 @@ public class WorldSimulatorController {
 		currentLevel = new Level();
 	}
 	
-	public WorldSimulatorController(Configuration config) {
+	public WorldSimulatorController(Configuration config, Level level) {
 
 		this();
 		
@@ -69,7 +71,9 @@ public class WorldSimulatorController {
 		stepHeight = config.getStepHeight();
 		
 		bufferWidth = config.getBufferWidth();
-		bufferHeight= config.getBufferHeight();		
+		bufferHeight= config.getBufferHeight();
+		
+		this.currentLevel = level;
 
 	}
 	
@@ -214,6 +218,14 @@ public class WorldSimulatorController {
 	
 	public ToolBarSelection getSelection() {
 		return selection;
+	}
+	
+	public void setKeyPressed(int keyCode) {
+		this.keyPressed = keyCode;
+	}
+	
+	public int getKeyPressed() {
+		return keyPressed;
 	}
 
 }

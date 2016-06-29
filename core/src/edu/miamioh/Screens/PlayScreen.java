@@ -124,7 +124,7 @@ public class PlayScreen implements Screen {
 	        sandboxButton.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	VerilogWorldMain.getVerilogWorldMain().setWorldEditorScreen();	            	
+	            	VerilogWorldMain.getVerilogWorldMain().setConfigurationScreen();            	
 	            }
 	        });
 	        

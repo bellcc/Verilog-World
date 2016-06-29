@@ -21,34 +21,34 @@ public class BlockSelectedStage {
 	
 	public BlockSelectedStage() {
 				
-			stage = new Stage();
-
-			verilogEditorActor = new TextButtonActor().createTextButton(Color.RED, "VERILOG\nEDITOR");
-			schematicActor = new TextButtonActor().createTextButton(Color.ORANGE, "SCHEMATIC");
-			removeActor = new TextButtonActor().createTextButton(Color.PINK, "REMOVE");
-			
-			verilogEditorActor.addListener(new VerilogEditorChangeListener());
-			schematicActor.addListener(new SchematicChangeListener());
-			removeActor.addListener(new RemoveChangeListener());
-			
-			int windowHeight = WorldEditorController.getCurrentController().getWindowHeight();
-			
-			int actorHeight = 50;
-			int actorWidth = 100;
-
-			Table table = new Table();
-			table.setSize(actorWidth, windowHeight);
-			table.setPosition(50, 0);
-			table.right().top();
-			
-			table.add(verilogEditorActor).width(actorWidth).height(actorHeight);
-			table.row();
-			table.add(schematicActor).width(actorWidth).height(actorHeight);
-			table.row();
-			table.add(removeActor).width(actorWidth).height(actorHeight);
-
-			
-			stage.addActor(table);
+		stage = new Stage();
+	
+		verilogEditorActor = new TextButtonActor().createTextButton(Color.RED, "VERILOG\nEDITOR");
+		schematicActor = new TextButtonActor().createTextButton(Color.ORANGE, "SCHEMATIC");
+		removeActor = new TextButtonActor().createTextButton(Color.PINK, "REMOVE");
+		
+		verilogEditorActor.addListener(new VerilogEditorChangeListener());
+		schematicActor.addListener(new SchematicChangeListener());
+		removeActor.addListener(new RemoveChangeListener());
+		
+		int windowHeight = WorldEditorController.getCurrentController().getWindowHeight();
+		
+		int actorHeight = 50;
+		int actorWidth = 100;
+	
+		Table table = new Table();
+		table.setSize(actorWidth, windowHeight);
+		table.setPosition(50, 0);
+		table.right().top();
+		
+		table.add(verilogEditorActor).width(actorWidth).height(actorHeight);
+		table.row();
+		table.add(schematicActor).width(actorWidth).height(actorHeight);
+		table.row();
+		table.add(removeActor).width(actorWidth).height(actorHeight);
+	
+		
+		stage.addActor(table);
 			
 		
 	}
