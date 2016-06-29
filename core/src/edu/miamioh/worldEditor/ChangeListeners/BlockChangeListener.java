@@ -26,4 +26,5 @@ public class BlockChangeListener extends ChangeListener {
 		WorldEditorController.getCurrentController().updateInputMultiplexer();
 
 	}
+	
 }

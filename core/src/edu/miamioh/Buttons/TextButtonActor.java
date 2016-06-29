@@ -21,7 +21,7 @@ public class TextButtonActor {
 			
 		skin.add("white", new Texture(pixmap));
 
-		BitmapFont bfont=new BitmapFont();
+		BitmapFont bfont = new BitmapFont();
 		skin.add("default", bfont);
 
 		TextButtonStyle buttonStyle = new TextButtonStyle();

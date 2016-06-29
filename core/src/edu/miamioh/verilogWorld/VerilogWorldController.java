@@ -31,8 +31,6 @@ public class VerilogWorldController {
 	private Configuration defaultConfig;
 
 	private static VerilogWorldController controller;
-
-	private static VerilogWorldType state;
 	
 	private Level currentLevel;
 	private WorldSimulator sim;
@@ -71,17 +69,15 @@ public class VerilogWorldController {
 		sim = new WorldSimulator(compiler.getRootModuleSimulator());
 		//TODO This needs to be set to the main menu controller.
 		//state = VerilogWorld.WORLD_SIMULATOR;
-		state = VerilogWorldType.WORLD_EDITOR;
 		
 	}
 
-	public void setState(VerilogWorldType newState)      {state = newState;}
 	
 	public Configuration getDefaultConfig()              {return this.defaultConfig;}
-	public VerilogWorldType getState()                   {return state;}
 	public static VerilogWorldController getController() {return controller;}
 	public Level getLevel() 		                     {return this.currentLevel;}
 	public WorldSimulator getSim() 	                     {return this.sim;}
 	public Parse getCompiler()		                     {return this.compiler;}
 	public String getRootPath() 	                     {return this.rootPath;}
+
 }

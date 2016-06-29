@@ -8,8 +8,8 @@
 package edu.miamioh.verilogWorld;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Screen;
 
+import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.Level.Level;
 import edu.miamioh.Screens.ChallengesScreen;
 import edu.miamioh.Screens.MainMenuScreen;
@@ -18,6 +18,8 @@ import edu.miamioh.schematicRenderer.SchematicRendererScreen;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.RootModuleSimulator;
 import edu.miamioh.verilogEditor.RunEditor;
+import edu.miamioh.worldConfiguration.ConfigurationController;
+import edu.miamioh.worldConfiguration.ConfigurationScreen;
 import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.WorldEditorScreen;
 import edu.miamioh.worldSimulator.WorldSimulatorController;
@@ -38,6 +40,9 @@ public class VerilogWorldMain extends Game {
 	private WorldEditorScreen worldEditorScreen;
 	private WorldSimulatorScreen worldSimulatorScreen;
 
+	private ConfigurationScreen configScreen;
+	private ConfigurationController configController;
+	
 	private MainMenuScreen mainMenuScreen;
 	private PlayScreen playScreen;
 	private ChallengesScreen challengesScreen;
@@ -70,9 +75,21 @@ public class VerilogWorldMain extends Game {
 		schematicRendererScreen = new SchematicRendererScreen();
 				
 		mainMenuScreen = new MainMenuScreen(getVerilogWorldMain());
-		this.setScreen(mainMenuScreen);
+
+		//setConfigurationScreen();
 		
-		//this.setScreen(worldEditorScreen);
+		setMainMenuScreen();
+		
+	}
+	
+	public void setConfigurationScreen() {
+		
+		Configuration defaultConfig = VerilogWorldController.getController().getDefaultConfig();
+		
+		configController = new ConfigurationController(defaultConfig);
+		configScreen = new ConfigurationScreen();
+		
+		this.setScreen(configScreen);
 	}
 		
 	public void setWorldEditorScreen() {

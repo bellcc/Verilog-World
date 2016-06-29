@@ -96,6 +96,8 @@ public class WorldSimulatorScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		
+		System.out.println("Keycode: " + controller.getKeyPressed());
+		
 		camera.update();
 		renderer.setProjectionMatrix(camera.combined);
 		
