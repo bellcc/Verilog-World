@@ -54,7 +54,7 @@ public class WorldSimulatorController {
 		currentLevel = new Level();
 	}
 	
-	public WorldSimulatorController(Configuration config) {
+	public WorldSimulatorController(Configuration config, Level level) {
 
 		this();
 		
@@ -71,7 +71,9 @@ public class WorldSimulatorController {
 		stepHeight = config.getStepHeight();
 		
 		bufferWidth = config.getBufferWidth();
-		bufferHeight= config.getBufferHeight();		
+		bufferHeight= config.getBufferHeight();
+		
+		this.currentLevel = level;
 
 	}
 	

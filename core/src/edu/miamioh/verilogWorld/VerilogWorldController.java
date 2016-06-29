@@ -74,8 +74,10 @@ public class VerilogWorldController {
 
 	
 	public Configuration getDefaultConfig()              {return this.defaultConfig;}
+	public void setDefaultConfig(Configuration config)   {this.defaultConfig = config;}
 	public static VerilogWorldController getController() {return controller;}
 	public Level getLevel() 		                     {return this.currentLevel;}
+	public void setLevel(Level level)                    {this.currentLevel = level;}
 	public WorldSimulator getSim() 	                     {return this.sim;}
 	public Parse getCompiler()		                     {return this.compiler;}
 	public String getRootPath() 	                     {return this.rootPath;}

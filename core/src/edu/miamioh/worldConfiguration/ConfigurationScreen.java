@@ -1,6 +1,7 @@
 package edu.miamioh.worldConfiguration;
 
 import edu.miamioh.Buttons.LabelActor;
+import edu.miamioh.Buttons.TextButtonActor;
 import edu.miamioh.Buttons.TextFieldActor;
 import edu.miamioh.Configuration.Configuration;
 
@@ -13,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
@@ -52,6 +54,9 @@ public class ConfigurationScreen implements Screen {
 	private TextField bufferWidthTextField;
 	private TextField bufferHeightTextField;
 	
+	private TextButton backButton;
+	private TextButton nextButton;
+	
 	private int worldWidth;
 	private int worldHeight;
 	
@@ -71,12 +76,7 @@ public class ConfigurationScreen implements Screen {
 	public void show() {
 		
 		currentScreen = this;
-		
-		//spriteBatch = new SpriteBatch();
-		//Texture texture = new Texture(Gdx.files.internal("images/circuit_1.png"));
-		//sprite = new Sprite(texture);
-		//sprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		
+
 		updateWorld(ConfigurationController.getController().getDefaultConfig());
 		constructStage();
 	}
@@ -86,16 +86,7 @@ public class ConfigurationScreen implements Screen {
 		
 		Gdx.gl.glClearColor(255, 255, 255, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		//spriteBatch.begin();
-		//sprite.draw(spriteBatch);
-		//spriteBatch.end();
-		
-		//renderer.begin(ShapeType.Filled);
-		//renderer.setColor(Color.valueOf("#FDCB65"));
-		//renderer.rect();
-		//renderer.end();
-		
+
 		this.stage.act(Gdx.graphics.getDeltaTime());
 		this.stage.draw();
 	}
@@ -177,16 +168,30 @@ public class ConfigurationScreen implements Screen {
 		
 		bufferWidthTextField = new TextFieldActor().createTextField();
 		bufferHeightTextField = new TextFieldActor().createTextField();
+
+		windowWidthTextField.setText(String.valueOf(this.windowWidth));
+		windowHeightTextField.setText(String.valueOf(this.windowHeight));
 		
-		//Pixmap texture = new Pixmap(1, 1, Format.RGB565);
-		//texture.setColor(Color.GREEN);
-		//Pixmap texture = new Pixmap(Gdx.files.internal("images/circuit_1.png"));
-		//texture.setColor(Color.CLEAR);
-		//texture.fill();
+		worldWidthTextField.setText(String.valueOf(this.worldWidth));
+		worldHeightTextField.setText(String.valueOf(this.worldHeight));
+		
+		gridWidthTextField.setText(String.valueOf(this.gridWidth));
+		gridHeightTextField.setText(String.valueOf(this.gridHeight));
+		
+		bufferWidthTextField.setText(String.valueOf(this.bufferWidth));
+		bufferHeightTextField.setText(String.valueOf(this.bufferHeight));
+		
+		stepWidthTextField.setText(String.valueOf(this.stepWidth));
+		stepHeightTextField.setText(String.valueOf(this.stepHeight));
+		
+		backButton = new TextButtonActor().createTextButton(Color.RED, "BACK");
+		nextButton = new TextButtonActor().createTextButton(Color.BLUE, "NEXT");
+		
+		backButton.addListener(new BackChangeListener());
+		nextButton.addListener(new NextChangeListener());
 		
 		Table table = new Table();
 		table.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		//table.setSize(600, 600);
 		table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/circuit_2.png")))));
 		table.center();
 		
@@ -225,6 +230,10 @@ public class ConfigurationScreen implements Screen {
 		table.add(stepHeightTextField).width(150).height(40);
 		table.row();
 		
+		table.add(backButton).width(150).height(50);
+		table.add(nextButton).width(150).height(50);
+		table.row();
+		
 		this.stage.addActor(table);	
 
 		Gdx.input.setInputProcessor(stage);
@@ -247,6 +256,28 @@ public class ConfigurationScreen implements Screen {
 		this.stepWidth = config.getStepWidth();
 		this.stepHeight = config.getStepHeight();
 		
+	}
+	
+	public Configuration getConfiguration() {
+		
+		Configuration config = new Configuration();
+		
+		config.setWindowWidth(Integer.parseInt(windowWidthTextField.getText()));
+		config.setWindowHeight(Integer.parseInt(windowHeightTextField.getText()));
+		
+		config.setWorldWidth(Integer.parseInt(worldWidthTextField.getText()));
+		config.setWorldHeight(Integer.parseInt(worldHeightTextField.getText()));
+		
+		config.setGridWidth(Integer.parseInt(gridWidthTextField.getText()));
+		config.setGridHeight(Integer.parseInt(gridHeightTextField.getText()));
+		
+		config.setBufferWidth(Integer.parseInt(bufferWidthTextField.getText()));
+		config.setBufferHeight(Integer.parseInt(bufferHeightTextField.getText()));
+		
+		config.setStepWidth(Integer.parseInt(stepWidthTextField.getText()));
+		config.setStepHeight(Integer.parseInt(stepHeightTextField.getText()));
+		
+		return config;
 	}
 	
 	public Stage getStage() {

@@ -66,20 +66,9 @@ public class VerilogWorldMain extends Game {
 		this.sim = verilogWorldController.getSim().getRootModuleSimulator();
 		this.compiler = verilogWorldController.getCompiler();
 
-		worldEditorController = new WorldEditorController(verilogWorldController.getDefaultConfig(), new Level());
-		worldSimulatorController = new WorldSimulatorController(verilogWorldController.getDefaultConfig());
-		
-		worldEditorScreen = new WorldEditorScreen(worldEditorController);
-		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
+		schematicRendererScreen = new SchematicRendererScreen();	
 
-		schematicRendererScreen = new SchematicRendererScreen();
-				
-		mainMenuScreen = new MainMenuScreen(getVerilogWorldMain());
-
-		//setConfigurationScreen();
-		
 		setMainMenuScreen();
-		
 	}
 	
 	public void setConfigurationScreen() {
@@ -93,10 +82,24 @@ public class VerilogWorldMain extends Game {
 	}
 		
 	public void setWorldEditorScreen() {
+		
+		Configuration defaultConfig = verilogWorldController.getDefaultConfig();
+		Level level = verilogWorldController.getLevel();
+		
+		worldEditorController = new WorldEditorController(defaultConfig, level);
+		worldEditorScreen = new WorldEditorScreen(worldEditorController);
+		
 		this.setScreen(worldEditorScreen);
 	}
 	
 	public void setWorldSimulatorScreen() {
+		
+		Configuration defaultConfig = verilogWorldController.getDefaultConfig();
+		Level level = verilogWorldController.getLevel();
+		
+		worldSimulatorController = new WorldSimulatorController(defaultConfig, level);
+		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
+		
 		this.setScreen(worldSimulatorScreen);
 	}
 
