@@ -31,10 +31,7 @@ import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
 
 public class SimVisitor extends Verilog2001BaseVisitor<Value>
 {
-	private boolean							is_sequential_sim_cycle;
-	private boolean							resetLineHigh;
-	private int								cycle_time;
-
+	private static RootModuleSimulator		sim;
 											/*
 											 * These two things are used to tell
 											 * what kind of always block we are in.
@@ -53,6 +50,8 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 	private int								new_val_idx;
 	private int								old_val_idx;
 	
+	private boolean 						processedCond;
+	
 	private int 							state;
 	public final static int 				STEADY = 0;
 	public final static int					NOT_STEADY = 1;
@@ -65,10 +64,6 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 	{
 		this.is_combinational = false;
 		this.is_sequential = false;
-		this.resetLineHigh = true; // Active-low reset line
-
-		this.is_sequential_sim_cycle = false;
-		this.cycle_time = 0;
 
 		this.new_val_idx = 0;
 		this.old_val_idx = 1;
@@ -80,6 +75,8 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		this.hash_vars = module.getHash_vars();
 		
 		this.state = SimVisitor.STEADY;
+		
+		this.processedCond = false;
 	}
 
 	/* --------------------------------------------------------------------------
@@ -98,105 +95,22 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		new_val_idx = old_val_idx;
 		old_val_idx = (new_val_idx == 1) ? 0 : 1;
 	}
-
-	public void clean_sim_cycle()
-	{
-		if (is_sequential_sim_cycle)
-		{
-			/* Makes sure the sequential registers keep value and catches
-			 * inferred latches */
-			for (int i = 0; i < vars_list.size(); i++)
-			{
-				vars_list.get(i).seqUpdate(cycle_time, new_val_idx, old_val_idx);
-			}
-		}
-		this.is_sequential_sim_cycle = false;
-	}
 	
-	public void toggleResetLine() {
-		
-		resetLineHigh = !resetLineHigh;
-		
-		int resetValue = 0;
-		if(resetLineHigh) resetValue = 1;
-		
-		
-		// Update root module clock
-		ParseRegWire wire = module.getHash_vars().get("rst");
-		if (wire != null) {
-			wire.setValue(new_val_idx, resetValue, is_sequential || !resetLineHigh);
-			wire.setValue(old_val_idx, resetValue, is_sequential || !resetLineHigh);
-		}
-		
-		// Update clock in all other modules
-		for (ModuleInstance sub : this.subModules_list) {
-			wire = sub.getHash_vars().get("rst");
-			
-			if (wire != null) {
-				wire.setValue(new_val_idx, resetValue, is_sequential || !resetLineHigh);
-				wire.setValue(old_val_idx, resetValue, is_sequential || !resetLineHigh);
-			}
-		}
-	}
-	
-	// Only called for root module
-	public void toggleSequClock() {
-		
-		/* toggle between sequential sims and combinational sims */
-		is_sequential_sim_cycle = !is_sequential_sim_cycle;
-		processed = false;
-		
-		// Pass the clock signal
-		int clockValue = 0;
-		if (is_sequential_sim_cycle) {clockValue = 1;}
-		
-		// Update root module clock
-		ParseRegWire wire = module.getHash_vars().get("clk");
-		if (wire != null) {
-			wire.setValue(new_val_idx, clockValue, is_sequential || !resetLineHigh);
-			wire.setValue(old_val_idx, clockValue, is_sequential || !resetLineHigh);
-		}
-		
-		// Update clock in all other modules
-		for (ModuleInstance sub : this.subModules_list) {
-			wire = sub.getHash_vars().get("clk");
-			
-			if (wire != null) {
-				wire.setValue(new_val_idx, clockValue, is_sequential || !resetLineHigh);
-				wire.setValue(old_val_idx, clockValue, is_sequential || !resetLineHigh);
-			}
-		}
-	}
-	
-	// The update flag tells the simulator if the given
-	// wire has already been updated for a sequential clock cycle.
-	public void resetSequUpdateFlag() {
-		
-		// Reset wires in root module
-		for(ParseRegWire wire : module.getVars_list()) {
-			wire.resetUpdateFlag();
-		}
-		
-		// Reset wires in all other modules
-		for (ModuleInstance sub : this.subModules_list) {
-			for(ParseRegWire wire : sub.getVars_list()) {
-				wire.resetUpdateFlag();
-			}
-		}
-	}
-	
-	// Updates sim information from parent module into child module
-	public void syncSimInfo(SimVisitor visitor) {
-		
-		this.new_val_idx = visitor.new_val_idx;
-		this.old_val_idx = visitor.old_val_idx;
-		this.is_sequential_sim_cycle = visitor.is_sequential_sim_cycle;
-	}
-	
-	public int getNewIndex() {return this.new_val_idx;}
-	public int getOldIndex() {return this.old_val_idx;}
 	public void setState(int state) {this.state = state;}
 	public int getState() {return this.state;}
+	public static void setSim(RootModuleSimulator sim)	{SimVisitor.sim = sim;}
+	
+	public void setNewIndex(int index) 	{this.new_val_idx = index;}
+	public void setOldIndex(int index) 	{this.old_val_idx = index;}
+	public int getNewIndex()			{return this.new_val_idx;}
+	public int getOldIndex()			{return this.old_val_idx;}
+	
+	public boolean isInSequ()			{return this.is_sequential;}
+	public boolean isInComb()			{return this.is_combinational;}
+	
+	public void setCondProcess(boolean state)	{this.processedCond = state;}
+	
+	
 
 	/* --------------------------------------------------------------------------
 	 * -----------
@@ -208,12 +122,11 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 	 * --------------------------------------------------------------------
 	 * ------------ */
 	Verilog2001Parser.StatementContext test;
-	private boolean processed = false;
 	@Override
 	public Value visitConditional_statement(
 			Verilog2001Parser.Conditional_statementContext ctx)
 	{
-		if (!this.is_sequential_sim_cycle || !processed) {
+		if (!sim.isSequCycle() || !processedCond) {
 			test = null;
 			for (int i = 0; i < ctx.statement().size(); i++)
 			{
@@ -221,7 +134,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 				{
 					/* ELSE statment */
 					test = ctx.statement(i);
-					processed = true;
+					processedCond = true;
 					visit(ctx.statement(i));
 					break;
 				}
@@ -229,7 +142,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 				{
 					/* IF - this if condition is true, then evaluate statement */
 					test = ctx.statement(i);
-					processed = true;
+					processedCond = true;
 					visit(ctx.statement(i));
 					break;
 				}
@@ -355,7 +268,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		Value left = visit(ctx.variable_lvalue());
 		Value right = visit(ctx.expression());
 		
-		/* Only store on simulate cycles */
+		/* Only store if we are in a sequential always block */
 		if (!is_sequential)
 		{
 			System.out.println("ERROR: Non Blocking Statement in a combinational block");
@@ -363,7 +276,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		}
 
 		/* Update the data structure with the right value */
-		if (this.is_sequential_sim_cycle || !this.resetLineHigh) {
+		if (sim.isSequCycle() || !sim.getResetLine()) {
 			left.setVar(new_val_idx, right.asInt(), is_sequential);
 		}
 
@@ -780,11 +693,11 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 			// Set their values equal to eachother
 			targetWire.setValue(new_val_idx, 
 								inWire.getValue(old_val_idx), 
-								is_sequential || !resetLineHigh);
+								is_sequential || sim.getResetLine());
 		}
 		
 		// Simulate new module
-		visitor.syncSimInfo(this); // Must syncronize old and new value indicies
+		sim.syncSimInfo(this); // Must syncronize old and new value indicies
 		visitor.visit(targetModule.getParseTree());
 		
 		// Connect output of that module to the required wires
@@ -806,7 +719,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 			// Set their values equal to eachother
 			targetWire.setValue(new_val_idx, 
 								outWire.getValue(old_val_idx), 
-								is_sequential || !resetLineHigh);
+								is_sequential || sim.getResetLine());
 		}
 		
 		// Propagate state changes in sub modules to the super module

@@ -20,12 +20,6 @@ public class Level {
 		blockList = new ArrayList<Block>();
 	}
 	
-	public Level(ArrayList<Block> blockList) {
-		
-		this.blockList = blockList;
-
-	}
-	
 	public void addBlock(Block block) {
 		
 		blockList.add(block);

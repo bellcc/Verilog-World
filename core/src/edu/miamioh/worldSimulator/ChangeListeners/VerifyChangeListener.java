@@ -5,13 +5,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import edu.miamioh.verilogWorld.VerilogWorldController;
 
-public class StopChangeListener extends ChangeListener {
+public class VerifyChangeListener  extends ChangeListener {
 
 	@Override
-	public void changed(ChangeEvent arg0, Actor arg1) {
+	public void changed(ChangeEvent event, Actor actor) {
 
-		VerilogWorldController.getController().getSim().setShouldRun(false);
+		System.out.println("Verify Change Listener");
+		
+		VerilogWorldController.getController().getSim().updateModules();
 	}
-
-	
 }

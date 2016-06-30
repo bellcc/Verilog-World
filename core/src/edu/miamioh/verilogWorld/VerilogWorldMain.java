@@ -66,6 +66,12 @@ public class VerilogWorldMain extends Game {
 		this.sim = verilogWorldController.getSim().getRootModuleSimulator();
 		this.compiler = verilogWorldController.getCompiler();
 
+//		worldEditorController = new WorldEditorController(verilogWorldController.getDefaultConfig(), 
+//														  verilogWorldController.getCurrentLevel());
+//		worldSimulatorController = new WorldSimulatorController(verilogWorldController.getDefaultConfig());
+//		
+//		worldEditorScreen = new WorldEditorScreen(worldEditorController);
+//		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
 		schematicRendererScreen = new SchematicRendererScreen();	
 
 		setMainMenuScreen();
