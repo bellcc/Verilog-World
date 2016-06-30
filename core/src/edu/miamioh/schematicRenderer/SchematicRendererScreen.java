@@ -1,14 +1,8 @@
 package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import edu.miamioh.Buttons.TextButtonActor;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
@@ -16,13 +10,21 @@ import org.antlr.v4.runtime.tree.ParseTree;
  */
 public class SchematicRendererScreen implements Screen {
 
+    private static SchematicRendererScreen schematicRendererScreen;
     private SchematicRenderer schematic;
-    private Stage stage;
+    private SchematicRendererController controller = SchematicRendererController.getCurrentController();
+//    private Stage schematicStage;
+    private int windowWidth;
+    private int windowHeight;
 
     /**
      * Constructor for SchematicRendererMain.
      */
-    public SchematicRendererScreen(){schematic = new SchematicRenderer();}
+    public SchematicRendererScreen(){
+        schematic = new SchematicRenderer();
+        schematicRendererScreen = this;
+        schematic.setSchematicScreen(schematicRendererScreen);
+    }
 
     public void setRoot_tree(ParseTree root_tree){
         schematic.setRoot_tree(root_tree);
@@ -66,25 +68,10 @@ public class SchematicRendererScreen implements Screen {
 
     @Override
     public void show() {
-        //Set the Renderer for SchematicRenderer
-        ShapeRenderer renderer = new ShapeRenderer();
+
         if (schematic.getRoot_tree() == null) throw new AssertionError();
-        schematic.setRenderer(renderer);
 
-        //Create the Back button
-        stage = new Stage();
-        schematic.setStage(stage);
-        TextButton butt = new TextButtonActor().createTextButton(Color.BLUE, "Back");
-        int buttonWidth = 100;
-        int buttonHeight = 40;
-        int win_width = Gdx.graphics.getWidth();
-        int win_height = Gdx.graphics.getHeight();
-        butt.setPosition(win_width - buttonWidth, win_height - buttonHeight);
-        butt.setSize(buttonWidth, buttonHeight);
-        butt.addListener(new edu.miamioh.schematicRenderer.BackChangeListener());
-        stage.addActor(butt);
-
-        Gdx.input.setInputProcessor(stage);
+        controller.updateInputProcessor();
     }
 
     /**
@@ -93,13 +80,7 @@ public class SchematicRendererScreen implements Screen {
      */
     @Override
     public void render(float arg0) {
-        Gdx.gl.glClearColor(255, 255, 255, 255);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        schematic.render();
-
-        stage.act(Gdx.graphics.getDeltaTime());
-        stage.draw();
+        schematic.refresh();
     }
 
     /**
@@ -112,6 +93,34 @@ public class SchematicRendererScreen implements Screen {
     @Override
     public void resize(int width, int height) {
 
+        controller.setWindowWidth(width);
+        controller.setWindowHeight(height);
+        windowWidth = controller.getWindowWidth();
+        windowHeight = controller.getWindowHeight();
+
+        schematic.refresh();
+
+//        updateWorldParameters();
+//
+//        controller.resetMultiplexer();
+
+        controller.updateInputProcessor();
+    }
+
+    static SchematicRendererScreen getScreen(){
+        return schematicRendererScreen;
+    }
+
+    Stage getSchematicStage(){
+        return schematic.getSchematicStage();
+    }
+
+    int getWindowWidth(){
+        return this.windowWidth;
+    }
+
+    int getWindowHeight(){
+        return this.windowHeight;
     }
 
     /**

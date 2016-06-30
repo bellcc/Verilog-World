@@ -52,6 +52,6 @@ public final class Constants {
 	public final int bottomEdge = leftEdge;
 	public final int topEdge = WINDOW_HEIGHT - bottomEdge;
 	public static boolean frame = false;
-	public static int scaleFactor = 40;
+	public static int scaleFactor = 80;
 
 }
