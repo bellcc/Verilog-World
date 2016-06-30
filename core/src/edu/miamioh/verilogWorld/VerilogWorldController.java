@@ -58,11 +58,11 @@ public class VerilogWorldController {
 	public void init() {
 
 		//If using Eclipse...
-//		this.rootPath = System.getProperty("user.dir") + "/../";
+		this.rootPath = System.getProperty("user.dir") + "/../";
 
 		//If using IntelliJ...
-		this.rootPath = System.getProperty("user.dir");
-		this.rootPath = rootPath.substring(0, rootPath.substring(0, rootPath.lastIndexOf("/")).lastIndexOf("/") ) + "/";
+//		this.rootPath = System.getProperty("user.dir");
+//		this.rootPath = rootPath.substring(0, rootPath.substring(0, rootPath.lastIndexOf("/")).lastIndexOf("/") ) + "/";
 //		System.out.println(rootPath);
 
 		controller = this;
