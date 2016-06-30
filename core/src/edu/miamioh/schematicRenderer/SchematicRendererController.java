@@ -33,9 +33,7 @@ public class SchematicRendererController {
         updateConfig();
     }
 
-    void updateInputProcessor() {
-
-        Stage schematicStage = SchematicRendererScreen.getScreen().getSchematicStage();
+    void updateInputProcessor(Stage schematicStage) {
 
 //        resetMultiplexer();
 //

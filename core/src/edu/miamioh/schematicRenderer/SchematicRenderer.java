@@ -64,10 +64,10 @@ class SchematicRenderer implements Disposable {
 //    void setSchematicScreen(SchematicRendererScreen screen){
 //        this.schematicScreen = screen;
 //    }
-
-    Stage getSchematicStage(){
-        return this.schematicStage;
-    }
+//
+//    Stage getSchematicStage(){
+//        return this.schematicStage;
+//    }
 
     private void resetStage(){
         schematicStage = new Stage();
@@ -80,6 +80,7 @@ class SchematicRenderer implements Disposable {
         butt.setSize(buttonWidth, buttonHeight);
         butt.addListener(new edu.miamioh.schematicRenderer.BackChangeListener());
         schematicStage.addActor(butt);
+        controller.updateInputProcessor(schematicStage);
     }
 
     void refresh(){
@@ -579,11 +580,11 @@ class SchematicRenderer implements Disposable {
 
         int xm = (x1 + x2) / 2;
 
-        this.renderer.begin(ShapeRenderer.ShapeType.Line);
+        this.renderer.begin(ShapeRenderer.ShapeType.Filled);
         this.renderer.setColor(color);
-        renderer.line(x1, y1, xm, y1);
-        renderer.line(xm, y1, xm, y2);
-        renderer.line(xm, y2, x2, y2);
+        renderer.rectLine(x1, y1, xm, y1, scaleFactor / 20);
+        renderer.rectLine(xm, y1, xm, y2, scaleFactor / 20);
+        renderer.rectLine(xm, y2, x2, y2, scaleFactor / 20);
         this.renderer.end();
 
     }
@@ -662,8 +663,8 @@ class SchematicRenderer implements Disposable {
     }
 
     private int getYAdj(int row, int inTopY){
-        int ydiff = inTopY - bottomEdge;
-        return row * (ydiff / l1Gates) + bottomEdge;
+        float ydiff = inTopY - bottomEdge;
+        return (int)(row * (ydiff / l1Gates) + bottomEdge);
     }
 
     /**

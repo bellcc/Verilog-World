@@ -2,7 +2,7 @@ package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+//import com.badlogic.gdx.scenes.scene2d.Stage;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
@@ -12,7 +12,7 @@ public class SchematicRendererScreen implements Screen {
 
     private static SchematicRendererScreen schematicRendererScreen;
     private SchematicRenderer schematic;
-    private SchematicRendererController controller = SchematicRendererController.getCurrentController();
+//    private SchematicRendererController controller = SchematicRendererController.getCurrentController();
 
     /**
      * Constructor for SchematicRendererMain.
@@ -56,8 +56,6 @@ public class SchematicRendererScreen implements Screen {
 
         if (schematic.getRoot_tree() == null) throw new AssertionError();
 
-        controller.updateInputProcessor();
-
     }
 
     /**
@@ -78,29 +76,17 @@ public class SchematicRendererScreen implements Screen {
      */
     @Override
     public void resize(int width, int height) {
-
-//        controller.setWorldWidth(width);
-//        controller.setWorldHeight(height);
-//        windowWidth = controller.getWorldWidth();
-//        windowHeight = controller.getWorldHeight();
-
         schematic.refresh();
-
-//        updateWorldParameters();
-//
-//        controller.resetMultiplexer();
-
-        controller.updateInputProcessor();
     }
 
     static SchematicRendererScreen getScreen(){
         return schematicRendererScreen;
     }
 
-    Stage getSchematicStage(){
-        return schematic.getSchematicStage();
-    }
-
+//    Stage getSchematicStage(){
+//        return schematic.getSchematicStage();
+//    }
+//
 //    int getWindowWidth(){
 //        return this.windowWidth;
 //    }
