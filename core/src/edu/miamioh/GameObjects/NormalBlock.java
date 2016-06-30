@@ -97,10 +97,9 @@ public abstract class NormalBlock extends Block {
 	}
 	
 	public void makeUniqueFile() {
-		
+
 		String modulePath = VerilogWorldController.getController().getRootPath() + "core/assets/modules/";
-//		String modulePath = "/home/pheonix/GitHub/Verilog-World/core/assets/modules/";
-		
+
 		String template = type.toString() + ".v";
 		String pathToTemplate = modulePath + "templates/" + template;
 		File templateFile = new File(pathToTemplate);
