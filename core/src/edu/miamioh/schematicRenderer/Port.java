@@ -1,5 +1,6 @@
 package edu.miamioh.schematicRenderer;
 
+import com.badlogic.gdx.graphics.Color;
 import edu.miamioh.util.Constants;
 
 import java.util.ArrayList;
@@ -16,7 +17,8 @@ class Port {
     private String id = "";
     private int level = 0;
     private int cx = 0, cy = 0;
-    private float r, g, b, a;
+//    private float r, g, b, a;
+    private Color color;
 
     /**
      * Port constructor. Takes a Port Type, Port ID, and Port Level and
@@ -29,64 +31,69 @@ class Port {
      */
     Port(GateType type, String id, int level) {
 
-        float r, g, b, a = 255;
+//        float r, g, b, a = 255;
 
         switch (type) {
 
             case INPUT:
                 this.type = type;
                 this.id = id;
-                r = 0;
-                g = 0;
-                b = 0;
-                setColor(r, g, b, a);
+//                r = 0;
+//                g = 0;
+//                b = 0;
+                setColor(Color.GRAY);
                 break;
 
             case OUTPUT:
                 this.type = type;
                 this.id = id;
                 this.level = level;
-                r = 0;
-                g = 0;
-                b = 0;
-                setColor(r, g, b, a);
+//                r = 0;
+//                g = 0;
+//                b = 0;
+                setColor(Color.GRAY);
                 break;
 
             default:
                 this.type = BLANK;
                 this.id = "INVALID_ASSIGNMENT";
-                r = 255;
-                g = 255;
-                b = 255;
-                setColor(r, g, b, a);
+//                r = 255;
+//                g = 255;
+//                b = 255;
+                setColor(Color.GRAY);
                 break;
 
         }
 
     }
 
-    private void setColor(float r, float g, float b, float a){
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
+    private void setColor(Color color){
+//        this.r = r;
+//        this.g = g;
+//        this.b = b;
+//        this.a = a;
+        this.color = color;
     }
 
-    float getR(){
-        return this.r;
+    Color getColor(){
+        return this.color;
     }
 
-    float getG(){
-        return this.g;
-    }
-
-    float getB(){
-        return this.b;
-    }
-
-    float getA(){
-        return this.a;
-    }
+//    float getR(){
+//        return this.r;
+//    }
+//
+//    float getG(){
+//        return this.g;
+//    }
+//
+//    float getB(){
+//        return this.b;
+//    }
+//
+//    float getA(){
+//        return this.a;
+//    }
 
     /**
      * Gets the Type of the Port.

@@ -16,12 +16,22 @@ public class WorldSimulatorInputProcessor implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
-		return false;
+
+		if(keycode != 19 && keycode != 20 && keycode != 21 && keycode != 22) {
+			WorldSimulatorController.getController().setKeyPressed(keycode);
+		}
+		
+		return true;
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
 		
+		if(keycode != 19 && keycode != 20 && keycode != 21 && keycode != 22) {
+			WorldSimulatorController.getController().setKeyPressed(-1);
+			return true;
+		}
+				
 		int worldX = WorldSimulatorScreen.getScreen().getWorldX();
 		int worldY = WorldSimulatorScreen.getScreen().getWorldY();
 				

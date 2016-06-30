@@ -7,6 +7,7 @@ import java.util.TimerTask;
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.GameObjects.NormalBlock;
 import edu.miamioh.simulator.ModuleInstance;
+
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.ParseRegWire;
 import edu.miamioh.simulator.RootModuleInstance;
@@ -93,6 +94,7 @@ public class WorldSimulator {
 	}
 	
 	public void executeCycle() {
+		System.out.printf("Cycle\n");
 		
 		if (compiler.isCompiled()) {
 			

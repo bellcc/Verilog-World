@@ -9,9 +9,11 @@ import edu.miamioh.verilogWorld.VerilogWorldController;
 public class VerifyChangeListener extends ChangeListener{
 	
 	private VerilogWorldController worldController;
+	private Level level;
 	
 	public VerifyChangeListener() {
 		worldController = VerilogWorldController.getController();
+		level = worldController.getLevel();
 	}
 
 	@Override
@@ -19,6 +21,7 @@ public class VerifyChangeListener extends ChangeListener{
 		
 		System.out.println("Verify Change Listener");
 		
+		worldController.getSim().setBlockList(level.getBlockList());
 		worldController.getSim().updateModules();
 	}
 

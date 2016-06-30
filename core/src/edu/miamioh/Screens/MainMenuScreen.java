@@ -5,9 +5,7 @@
  */
 
 package edu.miamioh.Screens;
-
  
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -25,7 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import edu.miamioh.verilogWorld.VerilogWorldMain;
@@ -36,7 +33,10 @@ public class MainMenuScreen implements Screen {
 	private SpriteBatch batch2;
 	private Sprite sprite;
 	private BitmapFont font;
-
+	private int buttonWidth;
+	private int buttonHeight;
+	
+	
     protected Stage stage;
     private Viewport viewport;
     private OrthographicCamera camera;
@@ -56,7 +56,7 @@ public class MainMenuScreen implements Screen {
 		
 	    batch = new SpriteBatch();
 	    camera = new OrthographicCamera();
-	    viewport = new FitViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(), camera);
+	    viewport = new FitViewport(Gdx.graphics.getHeight(),Gdx.graphics.getHeight(), camera);
 	    viewport.apply();
 
 	    camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
@@ -64,7 +64,7 @@ public class MainMenuScreen implements Screen {
         
         //sets up a background image for the menu
         batch2 = new SpriteBatch();
-        Texture backTex = new Texture(Gdx.files.internal("World.png"));
+        Texture backTex = new Texture(Gdx.files.internal("images/World.png"));
         sprite = new Sprite(backTex);
         sprite.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         
@@ -112,13 +112,17 @@ public class MainMenuScreen implements Screen {
 	            }
 	        });
 
-	        //Add buttons to table
-	        mainTable.add(playButton);
-	        mainTable.row();
-	        mainTable.add(optionsButton);
-	        mainTable.row();
-	        mainTable.add(exitButton);
+	        buttonHeight = Gdx.graphics.getHeight()/7;
+	        buttonWidth = viewport.getScreenWidth() - viewport.getScreenWidth()/4;
 	        
+	        //Add buttons to table
+	        mainTable.add(playButton).height(buttonHeight).width(buttonWidth);
+	        mainTable.row();
+	        mainTable.add(optionsButton).height(buttonHeight).width((2*buttonWidth)/3);
+	        mainTable.row();
+	        mainTable.add(exitButton).height(buttonHeight).width(buttonWidth/3);
+	        
+	        //Add the table to the stage
 	        stage.addActor(mainTable);
 	    }
 
@@ -173,15 +177,14 @@ public class MainMenuScreen implements Screen {
         	skinE.add("default", font);
     		
         	//adds an image texture to the skin of each button
-    		skinPg.add("textColor", new Texture(Gdx.files.internal("play game.png")));
-    		skinO.add("textColor", new Texture(Gdx.files.internal("options.png")));
-    		skinE.add("textColor", new Texture(Gdx.files.internal("exit.png")));
+    		skinPg.add("textColor", new Texture(Gdx.files.internal("images/play game.png")));
+    		skinO.add("textColor", new Texture(Gdx.files.internal("images/options.png")));
+    		skinE.add("textColor", new Texture(Gdx.files.internal("images/exit.png")));
 
     		//This sets up a style for each button
     		TextButtonStyle buttonStylePg = new TextButtonStyle();
     		buttonStylePg.up = skinPg.newDrawable("textColor", Color.WHITE);
     		buttonStylePg.down = skinPg.newDrawable("textColor", Color.DARK_GRAY);
-    		buttonStylePg.checked = skinPg.newDrawable("textColor", Color.WHITE);
     		buttonStylePg.over = skinPg.newDrawable("textColor", Color.LIGHT_GRAY);
     		buttonStylePg.font = skinPg.getFont("default");
     		skinPg.add("default", buttonStylePg);
@@ -189,7 +192,6 @@ public class MainMenuScreen implements Screen {
     		TextButtonStyle buttonStyleO = new TextButtonStyle();
     		buttonStyleO.up = skinO.newDrawable("textColor", Color.WHITE);
     		buttonStyleO.down = skinO.newDrawable("textColor", Color.DARK_GRAY);
-    		buttonStyleO.checked = skinO.newDrawable("textColor", Color.WHITE);
     		buttonStyleO.over = skinO.newDrawable("textColor", Color.LIGHT_GRAY);
     		buttonStyleO.font = skinO.getFont("default");
     		skinO.add("default", buttonStyleO);
@@ -197,7 +199,6 @@ public class MainMenuScreen implements Screen {
     		TextButtonStyle buttonStyleE = new TextButtonStyle();
     		buttonStyleE.up = skinE.newDrawable("textColor", Color.WHITE);
     		buttonStyleE.down = skinE.newDrawable("textColor", Color.DARK_GRAY);
-    		buttonStyleE.checked = skinE.newDrawable("textColor", Color.WHITE);
     		buttonStyleE.over = skinE.newDrawable("textColor", Color.LIGHT_GRAY);
     		buttonStyleE.font = skinE.getFont("default");
     		skinE.add("default", buttonStyleE);

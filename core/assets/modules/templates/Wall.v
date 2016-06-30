@@ -17,5 +17,4 @@ module Wall(clk, rst, color);
 			colorWire <= colorWire + 5;
 		end
 	end
-
 endmodule

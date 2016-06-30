@@ -78,7 +78,7 @@ public abstract class NormalBlock extends Block {
 			wire.setValue(1, port.getValue(), false);
 		}
 	}
-	
+
 	public abstract void updateProperties();
 	
 	public ModuleWrapper compile() {
