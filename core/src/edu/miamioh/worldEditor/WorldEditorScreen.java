@@ -89,7 +89,7 @@ public class WorldEditorScreen implements Screen {
 		homeStage = new HomeStage().getStage();		
 		blockStage = new BlockStage().getStage();
 		blockSelectedStage = new BlockSelectedStage().getStage();
-		//toolStage = new ToolStage().getStage();
+		//toolStage = new ToolStage().getSchematicStage();
 		simulatorStage = new SimulatorStage().getStage();		
 	}
 	
@@ -503,7 +503,7 @@ public class WorldEditorScreen implements Screen {
 		optionStage = new OptionStage().getStage();
 		homeStage = new HomeStage().getStage();
 		blockStage = new BlockStage().getStage();
-		//toolStage = new ToolStage().getStage();
+		//toolStage = new ToolStage().getSchematicStage();
 		simulatorStage = new SimulatorStage().getStage();
 
 		controller.updateInputMultiplexer();
