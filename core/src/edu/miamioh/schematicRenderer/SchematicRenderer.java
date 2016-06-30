@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Disposable;
 import edu.miamioh.Buttons.TextButtonActor;
-import edu.miamioh.util.Constants;
 import edu.miamioh.verilogWorld.VerilogWorldController;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -20,7 +19,9 @@ import java.util.Stack;
 import static edu.miamioh.schematicRenderer.GateType.INPUT;
 import static edu.miamioh.schematicRenderer.GateType.OUTPUT;
 import static edu.miamioh.schematicRenderer.GateType.REG;
-import static edu.miamioh.util.Constants.*;
+import static edu.miamioh.schematicRenderer.SchematicRendererController.frame;
+import static edu.miamioh.schematicRenderer.SchematicRendererController.gateSize;
+import static edu.miamioh.schematicRenderer.SchematicRendererController.scaleFactor;
 
 /**
  * Created by bdshaffer73.
@@ -29,31 +30,22 @@ class SchematicRenderer implements Disposable {
 
     private ArrayList<Gate> gates = new ArrayList<>();
     private ArrayList<Port> ports = new ArrayList<>();
-    private Constants constants = new Constants();
+    private SchematicRendererController controller;
     private ShapeRenderer renderer;
     private Stage schematicStage;
     private SchematicRendererScreen schematicScreen;
     private ParseTree root_tree;
 
     private int maxLevel = 0;
-    private int l1Gates = 0, inCount = 0;
+    private int l1Gates = 0;//inCount = 0
     private boolean compiled = false;
-
-//    /**
-//     * The Schematic Renderer recieves a
-//     */
-//    SchematicRenderer(Screen screen, ParseTree root_tree, ShapeRenderer renderer){
-////        this.screen = screen;
-//        this.root_tree = root_tree;
-////        this.schematicStage = new Stage();
-//        this.renderer = renderer;
-//    }
 
     /**
      * This constructor expects the root_tree and renderer to be set before rendering.
      */
     SchematicRenderer() {
 
+        controller = SchematicRendererController.getCurrentController();
     }
 
     /**
@@ -72,25 +64,9 @@ class SchematicRenderer implements Disposable {
         return this.root_tree;
     }
 
-//    /**
-//     * Sets the renderer to a valid ShapeRenderer.
-//     * @param renderer A valid ShapeRenderer.
-//     */
-//    void setRenderer(ShapeRenderer renderer){
-//        this.renderer = renderer;
-//    }
-
     void setSchematicScreen(SchematicRendererScreen screen){
         this.schematicScreen = screen;
     }
-
-//    /**
-//     * Sets the schematicStage to a valid Stage.
-//     * @param schematicStage A valid Stage.
-//     */
-//    void setSchematicStage(Stage schematicStage){
-//        this.schematicStage = schematicStage;
-//    }
 
     Stage getSchematicStage(){
         return this.schematicStage;
@@ -114,14 +90,6 @@ class SchematicRenderer implements Disposable {
         resetStage();
         render();
     }
-
-//    /**
-//     * Gets the ShapeRenderer in use by this schematic.
-//     * @return The active ShapeRenderer.
-//     */
-//    ShapeRenderer getRenderer(){
-//        return this.renderer;
-//    }
 
     /**
      * Gets the status of the schematic.
@@ -273,26 +241,22 @@ class SchematicRenderer implements Disposable {
 
         renderer = new ShapeRenderer();
 
-//        renderer.begin(ShapeRenderer.ShapeType.Filled);
-//        renderer.setColor(Color.BLUE);
-//        renderer.rect(0, 0, 200, 200);
-//        renderer.end();
-
-        int cxAxis = WINDOW_HEIGHT / 2; /* Axis of the window
+        int cxAxis = SchematicRendererController.getCurrentController().getWorldHeight() / 2; /* Axis of the window
         where y = total height / 2 */
-        int cyAxis = WINDOW_WIDTH / 2; /* Axis of the window where
+        int cyAxis = SchematicRendererController.getCurrentController().getWorldWidth() / 2; /* Axis of the window
+        where
         x = total width / 2 */
 
-//        constants.frame = true;
+//        frame = true;
 
         //Template
-        if (Constants.frame) {
+        if (frame) {
         	renderer.begin(ShapeRenderer.ShapeType.Line);
             renderer.setColor(Color.BLUE);
-            renderer.line(constants.leftEdge, cxAxis, constants.rightEdge, cxAxis);
-            renderer.line(cyAxis, constants.bottomEdge, cyAxis, constants.topEdge);
-            renderer.rect(constants.leftEdge, constants.bottomEdge, constants.rightEdge - constants.leftEdge,
-                    constants.topEdge - constants.bottomEdge);//Draw a box to show the edges of the schematic.
+            renderer.line(controller.leftEdge, cxAxis, controller.rightEdge, cxAxis);
+            renderer.line(cyAxis, controller.bottomEdge, cyAxis, controller.topEdge);
+            renderer.rect(controller.leftEdge, controller.bottomEdge, controller.rightEdge - controller.leftEdge,
+                    controller.topEdge - controller.bottomEdge);//Draw a box to show the edges of the schematic.
             renderer.end();
         }
 
@@ -311,8 +275,6 @@ class SchematicRenderer implements Disposable {
 
         //Render Gates and Ports
         {
-//            this.renderer.begin(ShapeRenderer.ShapeType.Filled);
-//            this.renderer.setColor(Color.BLACK);
             GateRenderer grenderer = new GateRenderer(this.renderer);
 
             int totalOuts = 0;
@@ -363,17 +325,13 @@ class SchematicRenderer implements Disposable {
             //Assume 1 extra gate horizontally as the OUTPUT level.
             if(numOfGatesVert > numOfGatesHoriz + 1){
                 scaleFactor = (int)(height / gateSize / numOfGatesVert);
-//                scaleFactor = 40;
             } else {
                 scaleFactor = (int)(width / gateSize / numOfGatesHoriz);
-//                scaleFactor = 40;
             }
 
             Label nametag;
             BitmapFont bfont = new BitmapFont();
             Label.LabelStyle style = new Label.LabelStyle(bfont, Color.BLACK);
-//            nametag = new Label("", style);
-//            nametag.setFontScale(1.5f);
             int nx, ny, inTopY = 0, l1TopY = 0;
 
             //Place the gates by their level, scaled gateSize and level multiplicity.
@@ -385,14 +343,13 @@ class SchematicRenderer implements Disposable {
 
                     tempP.setCX(getXCenter(0));
                     tempP.setCY(getYCenter(i - totalOuts));
-                    inCount++;
+//                    inCount++;
                     inTopY = (tempP.getCY() > inTopY)? tempP.getCY() : inTopY;
 
                     //Add a nametag to the gate
                     nx = tempP.getRX();
                     ny = tempP.getRY();
                     nametag = new Label(tempP.getID(), style);
-//                    nametag.setText(tempP.getID());
                     nametag.setPosition(nx, ny);
                     schematicStage.addActor(nametag);
 
@@ -437,7 +394,6 @@ class SchematicRenderer implements Disposable {
                             nx = tempG.getRX();
                             ny = tempG.getRY();
                             nametag = new Label(tempG.getID(), style);
-//                        nametag.setText(tempG.getID());
                             nametag.setPosition(nx, ny);
                             schematicStage.addActor(nametag);
 
@@ -463,7 +419,6 @@ class SchematicRenderer implements Disposable {
                     nx = tempP.getRX();
                     ny = tempP.getRY();
                     nametag = new Label(tempP.getID(), style);
-//                    nametag.setText(tempP.getID());
                     nametag.setPosition(nx, ny);
                     schematicStage.addActor(nametag);
 
@@ -678,14 +633,14 @@ class SchematicRenderer implements Disposable {
 
     private int getXCenter(int level) {
 
-        return constants.leftEdge + gateSize * scaleFactor / 2 + level *
+        return controller.leftEdge + gateSize * scaleFactor / 2 + level *
                 gateSize * scaleFactor * 2;
 
     }
 
     private int getYCenter(int row) {
 
-        return  constants.bottomEdge + gateSize * scaleFactor / 2 + row *
+        return  controller.bottomEdge + gateSize * scaleFactor / 2 + row *
                 gateSize * scaleFactor * 2;
 
     }
@@ -694,7 +649,6 @@ class SchematicRenderer implements Disposable {
      * All inputs must have coordinates or else this will error out.
      *
      * @param inputs Of the gate.
-//     * @param row Of the gate.
      * @return New y coordinate of the gate.
      */
     private int getYCenter(ArrayList<String> inputs){
@@ -715,8 +669,8 @@ class SchematicRenderer implements Disposable {
     }
 
     private int getYAdj(int row, int inTopY){
-        int ydiff = inTopY - constants.bottomEdge;
-        return row * (ydiff / l1Gates) + constants.bottomEdge;
+        int ydiff = inTopY - controller.bottomEdge;
+        return row * (ydiff / l1Gates) + controller.bottomEdge;
     }
 
     /**

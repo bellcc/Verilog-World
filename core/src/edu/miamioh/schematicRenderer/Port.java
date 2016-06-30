@@ -1,11 +1,12 @@
 package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.graphics.Color;
-import edu.miamioh.util.Constants;
 
 import java.util.ArrayList;
 
 import static edu.miamioh.schematicRenderer.GateType.BLANK;
+import static edu.miamioh.schematicRenderer.SchematicRendererController.gateSize;
+import static edu.miamioh.schematicRenderer.SchematicRendererController.scaleFactor;
 
 /**
  * Created by shaffebd.
@@ -169,11 +170,11 @@ class Port {
     private void setRX() {
         switch (this.getType()){
             case INPUT:
-                this.rx = cx - Constants.gateSize * Constants.scaleFactor / 2;
+                this.rx = cx - gateSize * scaleFactor / 2;
                 break;
 
             case OUTPUT:
-                this.rx = cx - Constants.gateSize * Constants.scaleFactor / 4;
+                this.rx = cx - gateSize * scaleFactor / 4;
                 break;
 
             default:
@@ -217,7 +218,7 @@ class Port {
      * Sets the Reference y of this port.
      */
     private void setRY() {
-        this.ry = cy - Constants.gateSize * Constants.scaleFactor / 4;
+        this.ry = cy - gateSize * scaleFactor / 4;
     }
 
     /**
@@ -230,10 +231,10 @@ class Port {
         switch (this.getType()) {
 
             case INPUT:
-                return this.getCX() + Constants.gateSize * Constants.scaleFactor / 2;
+                return this.getCX() + gateSize * scaleFactor / 2;
 
             case OUTPUT:
-                return this.getCX() - Constants.gateSize * Constants.scaleFactor / 2;
+                return this.getCX() - gateSize * scaleFactor / 2;
 
             default:
                 return 0;

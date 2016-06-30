@@ -13,7 +13,6 @@ public class SchematicRendererScreen implements Screen {
     private static SchematicRendererScreen schematicRendererScreen;
     private SchematicRenderer schematic;
     private SchematicRendererController controller = SchematicRendererController.getCurrentController();
-//    private Stage schematicStage;
     private int windowWidth;
     private int windowHeight;
 
@@ -61,9 +60,11 @@ public class SchematicRendererScreen implements Screen {
         if(schematic.getRoot_tree() != null){
             schematic.clearData();
             schematic.getData();
-        } else {
-            System.out.println("The root_tree has not been set or has not been created.");
         }
+        schematic.refresh();
+//        else {
+//            System.out.println("The root_tree has not been set or has not been created.");
+//        }
     }
 
     @Override
@@ -72,6 +73,7 @@ public class SchematicRendererScreen implements Screen {
         if (schematic.getRoot_tree() == null) throw new AssertionError();
 
         controller.updateInputProcessor();
+
     }
 
     /**
@@ -93,10 +95,10 @@ public class SchematicRendererScreen implements Screen {
     @Override
     public void resize(int width, int height) {
 
-        controller.setWindowWidth(width);
-        controller.setWindowHeight(height);
-        windowWidth = controller.getWindowWidth();
-        windowHeight = controller.getWindowHeight();
+        controller.setWorldWidth(width);
+        controller.setWorldHeight(height);
+        windowWidth = controller.getWorldWidth();
+        windowHeight = controller.getWorldHeight();
 
         schematic.refresh();
 

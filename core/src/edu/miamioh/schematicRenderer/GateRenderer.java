@@ -3,9 +3,9 @@ package edu.miamioh.schematicRenderer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import static edu.miamioh.util.Constants.gateSize;
-import static edu.miamioh.util.Constants.scaleFactor;
-import static edu.miamioh.util.Constants.frame;
+import static edu.miamioh.schematicRenderer.SchematicRendererController.frame;
+import static edu.miamioh.schematicRenderer.SchematicRendererController.gateSize;
+import static edu.miamioh.schematicRenderer.SchematicRendererController.scaleFactor;
 
 /**
  * Created by shaffebd.
@@ -198,7 +198,7 @@ class GateRenderer {
 
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         renderer.setColor(color);
-        float rx = cx + gateSize * scaleFactor / 2;
+//        float rx = cx + gateSize * scaleFactor / 2;
         float lx = cx - gateSize * scaleFactor / 2;
         float by = cy - gateSize * scaleFactor / 2;
         float ty = cy + gateSize * scaleFactor / 2;
