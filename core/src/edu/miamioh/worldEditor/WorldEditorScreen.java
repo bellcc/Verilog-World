@@ -7,6 +7,7 @@
 
 package edu.miamioh.worldEditor;
 
+import java.awt.Component;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
