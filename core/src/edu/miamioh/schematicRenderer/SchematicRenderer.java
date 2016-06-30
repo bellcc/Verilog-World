@@ -36,7 +36,7 @@ class SchematicRenderer implements Disposable {
     private ParseTree root_tree;
 
     private int maxLevel = 0;
-    int l1Gates = 0, inCount = 0;
+    private int l1Gates = 0, inCount = 0;
     private boolean compiled = false;
 
 //    /**
@@ -362,10 +362,10 @@ class SchematicRenderer implements Disposable {
 
             //Assume 1 extra gate horizontally as the OUTPUT level.
             if(numOfGatesVert > numOfGatesHoriz + 1){
-                scaleFactor = (int)(height / constants.gateSize / numOfGatesVert);
+                scaleFactor = (int)(height / gateSize / numOfGatesVert);
 //                scaleFactor = 40;
             } else {
-                scaleFactor = (int)(width / constants.gateSize / numOfGatesHoriz);
+                scaleFactor = (int)(width / gateSize / numOfGatesHoriz);
 //                scaleFactor = 40;
             }
 
