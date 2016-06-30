@@ -268,7 +268,7 @@ public class SimVisitor extends Verilog2001BaseVisitor<Value>
 		Value left = visit(ctx.variable_lvalue());
 		Value right = visit(ctx.expression());
 		
-		/* Only store on simulate cycles */
+		/* Only store if we are in a sequential always block */
 		if (!is_sequential)
 		{
 			System.out.println("ERROR: Non Blocking Statement in a combinational block");

@@ -55,11 +55,13 @@ public abstract class NormalBlock extends Block {
 		
 		// Connect module clock and reset inputs to global clock and reset ports
 		if(ports.contains("clk")) {
-			module.addPort(new ModulePort("clk", clock, true));
+			ParseRegWire wire = module.getModule().getHash_vars().get("clk");
+			module.addPort(new ModulePort("clk", clock, wire, true));
 		}
 		
 		if(ports.contains("rst")) {
-			ModulePort resetPort = new ModulePort("rst", reset, true);
+			ParseRegWire wire = module.getModule().getHash_vars().get("rst");
+			ModulePort resetPort = new ModulePort("rst", reset, wire, true);
 			resetPort.setValue(1); // Active-low
 			module.addPort(resetPort);
 		}

@@ -32,11 +32,12 @@ public class WorldSimulator {
 		this.blocks = new ArrayList<>();
 		this.compiler = VerilogWorldController.getController().getCompiler();
 		this.sim = sim;
-		this.freq = 1;
+		this.freq = 100;
 		this.shouldRun = false;
 		
-		this.clock = new ModulePort();
-		this.reset = new ModulePort();
+		this.clock = new ModulePort("Clock");
+		this.reset = new ModulePort("Reset");
+		reset.setValue(1); // Active low reset line
 		
 		// Construct timer to run the simulator at a certain frequency
 		Timer tmr = new Timer();
@@ -52,13 +53,26 @@ public class WorldSimulator {
 								1000 / freq);
 	}
 	
-	public void executeCycle() {
+	public void resetWorldSim() {
 		
 		if (compiler.isCompiled()) {
 			
-			System.out.printf("Cycle\n");
+			System.out.println("Reset!");
 			
-			// Simulate combination logic blocks
+			// Update reset line
+			toggleResetLine();
+			
+			// Pass new reset line value to blocks and simulate block communication
+//			for(Block block : blocks) {
+//				
+//				if (block instanceof NormalBlock) {
+//					NormalBlock normBlock = (NormalBlock)block;
+//					
+//					normBlock.updatePortValues();
+//				}
+//			}
+			
+			// Simulate sequenctial blocks and update properties
 			for(Block block : blocks) {
 				
 				if (block instanceof NormalBlock) {
@@ -66,22 +80,48 @@ public class WorldSimulator {
 					
 					//Simulate
 					sim.updateTargetBlock(normBlock);
-					sim.simComb();
+					sim.resetSimulation();
+					
+					// Update
+					normBlock.updateProperties();
 				}
 			}
+			
+			// Update clock
+			toggleResetLine();
+		}
+	}
+	
+	public void executeCycle() {
+		
+		if (compiler.isCompiled()) {
+			
+			System.out.printf("Cycle\n");
+			
+			// Simulate combination logic blocks
+//			for(Block block : blocks) {
+//				
+//				if (block instanceof NormalBlock) {
+//					NormalBlock normBlock = (NormalBlock)block;
+//					
+//					//Simulate
+//					sim.updateTargetBlock(normBlock);
+//					sim.simComb();
+//				}
+//			}
 			
 			// Update clock
 			toggleSequClock();
 			
 			// Simulate block communication
-			for(Block block : blocks) {
-				
-				if (block instanceof NormalBlock) {
-					NormalBlock normBlock = (NormalBlock)block;
-					
-					normBlock.updatePortValues();
-				}
-			}
+//			for(Block block : blocks) {
+//				
+//				if (block instanceof NormalBlock) {
+//					NormalBlock normBlock = (NormalBlock)block;
+//					
+//					normBlock.updatePortValues();
+//				}
+//			}
 			
 			// Simulate sequenctial blocks and update properties
 			for(Block block : blocks) {
@@ -92,7 +132,7 @@ public class WorldSimulator {
 					//Simulate
 					sim.updateTargetBlock(normBlock);
 					sim.simSequ();
-					sim.clean_sim_cycle();
+					//sim.clean_sim_cycle();
 					
 					// Update
 					normBlock.updateProperties();
@@ -102,6 +142,13 @@ public class WorldSimulator {
 			// Update clock
 			toggleSequClock();
 		}
+	}
+	
+	public void toggleResetLine() {
+		
+		sim.setResetLine(!sim.getResetLine());
+		int newValue = reset.getValue() == 1 ? 0 : 1;
+		reset.setValue(newValue);
 	}
 	
 	public void toggleSequClock() {
@@ -115,15 +162,6 @@ public class WorldSimulator {
 		/* toggle between sequential sims and combinational sims */
 		sim.setIsSequCycle(!sim.isSequCycle());
 		visitor.setCondProcess(false); // Reset conditional processed flag
-		
-		// Send the new clock signal to all blocks
-//		for(Block block : blocks) {
-//			if (block instanceof NormalBlock) {
-//				NormalBlock normBlock = (NormalBlock)block;
-//				
-//				ModulePort modClock = normBlock.getModuleWrapper().getPortsHash().get("clk");
-//			}
-//		}
 	}
 	
 //	public void sendClockSignal() {

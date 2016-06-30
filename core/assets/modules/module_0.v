@@ -2,7 +2,7 @@ module Wall(clk, rst, color);
 	output [23:0]color;
 	input clk, rst;
 	
-	reg colorWire;
+	reg [23:0]colorWire;
 	
 	assign color = colorWire;
 	

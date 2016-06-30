@@ -12,12 +12,12 @@ public class RootModuleSimulator {
 	private RootModuleInstance 	root_module;
 	
 	private boolean				is_sequential_sim_cycle;
-	private boolean				resetLineHigh;
+	private boolean				resetLineHigh; // This is an active low line
 	
 	public RootModuleSimulator(Parse compiler) {
 		this.compiler = compiler;
 		
-		this.resetLineHigh = true; // Active-low reset line
+		this.resetLineHigh = true; // Active-low
 		this.is_sequential_sim_cycle = false;
 	}
 	
@@ -33,32 +33,6 @@ public class RootModuleSimulator {
 			}
 		}
 		this.is_sequential_sim_cycle = false;
-	}
-	
-	public void toggleResetLine() {
-		
-		resetLineHigh = !resetLineHigh;
-		
-		int resetValue = 0;
-		if(resetLineHigh) resetValue = 1;
-		
-		
-		// Update root module clock
-		ParseRegWire wire = root_module.getHash_vars().get("rst");
-		if (wire != null) {
-			wire.setValue(visitor.getNewIndex(), resetValue, visitor.isInSequ() || !resetLineHigh);
-			wire.setValue(visitor.getOldIndex(), resetValue, visitor.isInSequ() || !resetLineHigh);
-		}
-		
-		// Update clock in all other modules
-		for (ModuleInstance sub : root_module.getSubModulesList()) {
-			wire = sub.getHash_vars().get("rst");
-			
-			if (wire != null) {
-				wire.setValue(visitor.getNewIndex(), resetValue, visitor.isInSequ() || !resetLineHigh);
-				wire.setValue(visitor.getOldIndex(), resetValue, visitor.isInSequ() || !resetLineHigh);
-			}
-		}
 	}
 	
 	// The update flag tells the simulator if the given
@@ -168,10 +142,9 @@ public class RootModuleSimulator {
 	// Bring reset line high and simulate circuit until steady
 	public void resetSimulation() {
 		
-		toggleResetLine(); // Turn on
-		simComb(); // Simulate until steady
+		simSequ(); // Simulate until steady
+		
 		resetSequUpdateFlag();
-		toggleResetLine(); // Turn off
 
 		displayResults();
 	}
