@@ -2,6 +2,7 @@ package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import edu.miamioh.verilogWorld.VerilogWorldController;
 
 /**
  * Created by shaffebd.
@@ -12,27 +13,24 @@ public class SchematicRendererController {
 
     private int worldWidth;
     private int worldHeight;
+    private int windowWidth;
+    private int windowHeight;
 
     //Constants
-    final int leftEdge = worldWidth / 20;
-    final int rightEdge = worldWidth - leftEdge;
-    final int bottomEdge = leftEdge;
-    final int topEdge = worldHeight - bottomEdge;
-    static final int gateSize = 1;
+    //Set by the world dimensions
+    static int leftEdge;
+    static int rightEdge;
+    static int bottomEdge;
+    static int topEdge;
+
+    //Set by the schematic
+    static float gateSize = 1;
+    static float scaleFactor = 80;
     static boolean frame = false;
-    static int scaleFactor = 80;
 
     public SchematicRendererController() {
-
         currentController = this;
-//        paused = false;
-//
-//        inputProcessor = new WorldEditorInputProcessor();
-//        multiplexer = new InputMultiplexer();
-//
-//        selection = ToolBarSelection.NONE;
-//        blockSelection = BlockSelectionType.NONE;
-//        blockID = 0;
+        updateConfig();
     }
 
     void updateInputProcessor() {
@@ -72,24 +70,43 @@ public class SchematicRendererController {
 
     }
 
+    void updateConfig(){
+        worldWidth = VerilogWorldController.getController().getDefaultConfig().getWindowWidth();
+        worldHeight = VerilogWorldController.getController().getDefaultConfig().getWindowHeight();
+        windowWidth = Gdx.graphics.getWidth();
+        windowHeight = Gdx.graphics.getHeight();
+        leftEdge = (int)((float)worldWidth / 20f);
+        rightEdge = worldWidth - leftEdge;
+        bottomEdge = leftEdge;
+        topEdge = worldHeight - bottomEdge;
+    }
+
     public static SchematicRendererController getCurrentController() {
 
         return currentController;
     }
 
     public int getWorldWidth() {
-        return worldWidth;
+        return this.worldWidth;
     }
 
-    public void setWorldWidth(int windowWidth) {
-        this.worldWidth = windowWidth;
+    public int getWindowWidth(){
+        return this.windowWidth;
     }
+
+//    public void setWorldWidth(int windowWidth) {
+//        this.worldWidth = windowWidth;
+//    }
 
     public int getWorldHeight() {
         return worldHeight;
     }
 
-    public void setWorldHeight(int windowHeight) {
-        this.worldHeight = windowHeight;
+    public int getWindowHeight(){
+        return this.windowHeight;
     }
+
+//    public void setWorldHeight(int windowHeight) {
+//        this.worldHeight = windowHeight;
+//    }
 }

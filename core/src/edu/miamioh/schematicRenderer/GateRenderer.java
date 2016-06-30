@@ -13,7 +13,6 @@ import static edu.miamioh.schematicRenderer.SchematicRendererController.scaleFac
 class GateRenderer {
 
     private ShapeRenderer renderer;
-//    Color color;
 
     /**
      * Default constructor

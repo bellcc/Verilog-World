@@ -170,11 +170,11 @@ class Port {
     private void setRX() {
         switch (this.getType()){
             case INPUT:
-                this.rx = cx - gateSize * scaleFactor / 2;
+                this.rx = (int)(cx - gateSize * scaleFactor / 2);
                 break;
 
             case OUTPUT:
-                this.rx = cx - gateSize * scaleFactor / 4;
+                this.rx = (int)(cx - gateSize * scaleFactor / 4);
                 break;
 
             default:
@@ -218,7 +218,7 @@ class Port {
      * Sets the Reference y of this port.
      */
     private void setRY() {
-        this.ry = cy - gateSize * scaleFactor / 4;
+        this.ry = (int)(cy - gateSize * scaleFactor / 4);
     }
 
     /**
@@ -231,10 +231,10 @@ class Port {
         switch (this.getType()) {
 
             case INPUT:
-                return this.getCX() + gateSize * scaleFactor / 2;
+                return (int)(this.getCX() + gateSize * scaleFactor / 2);
 
             case OUTPUT:
-                return this.getCX() - gateSize * scaleFactor / 2;
+                return (int)(this.getCX() - gateSize * scaleFactor / 2);
 
             default:
                 return 0;

@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Disposable;
 import edu.miamioh.Buttons.TextButtonActor;
-import edu.miamioh.verilogWorld.VerilogWorldController;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
@@ -19,9 +18,7 @@ import java.util.Stack;
 import static edu.miamioh.schematicRenderer.GateType.INPUT;
 import static edu.miamioh.schematicRenderer.GateType.OUTPUT;
 import static edu.miamioh.schematicRenderer.GateType.REG;
-import static edu.miamioh.schematicRenderer.SchematicRendererController.frame;
-import static edu.miamioh.schematicRenderer.SchematicRendererController.gateSize;
-import static edu.miamioh.schematicRenderer.SchematicRendererController.scaleFactor;
+import static edu.miamioh.schematicRenderer.SchematicRendererController.*;
 
 /**
  * Created by bdshaffer73.
@@ -33,7 +30,7 @@ class SchematicRenderer implements Disposable {
     private SchematicRendererController controller;
     private ShapeRenderer renderer;
     private Stage schematicStage;
-    private SchematicRendererScreen schematicScreen;
+//    private SchematicRendererScreen schematicScreen;
     private ParseTree root_tree;
 
     private int maxLevel = 0;
@@ -64,9 +61,9 @@ class SchematicRenderer implements Disposable {
         return this.root_tree;
     }
 
-    void setSchematicScreen(SchematicRendererScreen screen){
-        this.schematicScreen = screen;
-    }
+//    void setSchematicScreen(SchematicRendererScreen screen){
+//        this.schematicScreen = screen;
+//    }
 
     Stage getSchematicStage(){
         return this.schematicStage;
@@ -77,8 +74,8 @@ class SchematicRenderer implements Disposable {
         TextButton butt = new TextButtonActor().createTextButton(Color.BLUE, "Back");
         int buttonWidth = 100;
         int buttonHeight = 40;
-        int w = schematicScreen.getWindowWidth();
-        int h = schematicScreen.getWindowHeight();
+        int w = controller.getWindowWidth();
+        int h = controller.getWindowHeight();
         butt.setPosition(w - buttonWidth, h - buttonHeight);
         butt.setSize(buttonWidth, buttonHeight);
         butt.addListener(new edu.miamioh.schematicRenderer.BackChangeListener());
@@ -86,7 +83,6 @@ class SchematicRenderer implements Disposable {
     }
 
     void refresh(){
-
         resetStage();
         render();
     }
@@ -253,10 +249,9 @@ class SchematicRenderer implements Disposable {
         if (frame) {
         	renderer.begin(ShapeRenderer.ShapeType.Line);
             renderer.setColor(Color.BLUE);
-            renderer.line(controller.leftEdge, cxAxis, controller.rightEdge, cxAxis);
-            renderer.line(cyAxis, controller.bottomEdge, cyAxis, controller.topEdge);
-            renderer.rect(controller.leftEdge, controller.bottomEdge, controller.rightEdge - controller.leftEdge,
-                    controller.topEdge - controller.bottomEdge);//Draw a box to show the edges of the schematic.
+            renderer.line(leftEdge, cxAxis, rightEdge, cxAxis);
+            renderer.line(cyAxis, bottomEdge, cyAxis, topEdge);
+            renderer.rect(leftEdge, bottomEdge, rightEdge - leftEdge, topEdge - bottomEdge);//Draw a box to show the edges of the schematic.
             renderer.end();
         }
 
@@ -316,11 +311,9 @@ class SchematicRenderer implements Disposable {
                     totalIns++;
             }
 
-            float width = VerilogWorldController.getController().getDefaultConfig().getWindowWidth();
-//            int width = Gdx.graphics.getWidth();
-            float height = VerilogWorldController.getController().getDefaultConfig().getWindowHeight();
-//            int height = Gdx.graphics.getHeight();
-//            System.out.println(width + ", " + height);
+            controller.updateConfig();
+            float height = controller.getWorldHeight();
+            float width = controller.getWorldWidth();
 
             //Assume 1 extra gate horizontally as the OUTPUT level.
             if(numOfGatesVert > numOfGatesHoriz + 1){
@@ -600,7 +593,7 @@ class SchematicRenderer implements Disposable {
         int clkx = clk.getPortX();
         int clky = clk.getPortY();
 
-        int dy = cy - gateSize * scaleFactor / 2;
+        int dy = (int)(cy - gateSize * scaleFactor / 2);
 
         drawSquareLine(clkx, clky, cx, dy, Color.BLUE);
     }
@@ -633,15 +626,15 @@ class SchematicRenderer implements Disposable {
 
     private int getXCenter(int level) {
 
-        return controller.leftEdge + gateSize * scaleFactor / 2 + level *
-                gateSize * scaleFactor * 2;
+        return (int)(leftEdge + gateSize * scaleFactor / 2 + level *
+                gateSize * scaleFactor * 2);
 
     }
 
     private int getYCenter(int row) {
 
-        return  controller.bottomEdge + gateSize * scaleFactor / 2 + row *
-                gateSize * scaleFactor * 2;
+        return  (int)(bottomEdge + gateSize * scaleFactor / 2 + row *
+                gateSize * scaleFactor * 2);
 
     }
 
@@ -669,8 +662,8 @@ class SchematicRenderer implements Disposable {
     }
 
     private int getYAdj(int row, int inTopY){
-        int ydiff = inTopY - controller.bottomEdge;
-        return row * (ydiff / l1Gates) + controller.bottomEdge;
+        int ydiff = inTopY - bottomEdge;
+        return row * (ydiff / l1Gates) + bottomEdge;
     }
 
     /**

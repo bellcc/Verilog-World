@@ -162,7 +162,7 @@ public class MainMenuScreen implements Screen {
         optionsButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {	 
-            	VerilogWorldMain.getVerilogWorldMain().setOptionScreen();	 
+//            	VerilogWorldMain.getVerilogWorldMain().setOptionScreen();
             }
         });
         
