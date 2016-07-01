@@ -100,8 +100,8 @@ public class OptionScreen implements Screen {
         buttonWidth = viewport.getScreenWidth() - viewport.getScreenWidth()/4;
         
         //Add buttons to table
-        mainTable.add(clickMeButton).height(buttonHeight).width(buttonWidth);
-        mainTable.row();
+        //mainTable.add(clickMeButton).height(buttonHeight).width(buttonWidth);
+        //mainTable.row();
         mainTable.add(backButton).height(buttonHeight).width(buttonWidth);
         
         clickedListeners();
@@ -159,9 +159,7 @@ public class OptionScreen implements Screen {
         clickMeButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {	            	
-            	String describe = "YOU CLICKED ON A BUTTON ONLY BECAUSE IT SAID \"CLICK ME!\". "
-            			+ "YOU SHOULD NOT HAVE DONE THAT! YOUR PET POLAR BEAR IS NOW PROPERTY "
-            			+ "OF THE UNITED STATES AIR FORCE. \n\nGOOD JOB!";
+            	String describe = "";
     			textArea = new TextArea(describe, textSkin); 
     			
             	textArea.setDisabled(true);
