@@ -2,7 +2,7 @@ package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+//import com.badlogic.gdx.scenes.scene2d.Stage;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
@@ -12,10 +12,7 @@ public class SchematicRendererScreen implements Screen {
 
     private static SchematicRendererScreen schematicRendererScreen;
     private SchematicRenderer schematic;
-    private SchematicRendererController controller = SchematicRendererController.getCurrentController();
-//    private Stage schematicStage;
-    private int windowWidth;
-    private int windowHeight;
+//    private SchematicRendererController controller = SchematicRendererController.getCurrentController();
 
     /**
      * Constructor for SchematicRendererMain.
@@ -23,7 +20,7 @@ public class SchematicRendererScreen implements Screen {
     public SchematicRendererScreen(){
         schematic = new SchematicRenderer();
         schematicRendererScreen = this;
-        schematic.setSchematicScreen(schematicRendererScreen);
+//        schematic.setSchematicScreen(schematicRendererScreen);
     }
 
     public void setRoot_tree(ParseTree root_tree){
@@ -34,20 +31,6 @@ public class SchematicRendererScreen implements Screen {
             System.out.println("The root_tree has successfully been set.");
         }
     }
-
-//    public ParseTree getRoot_tree(){
-//        return schematic.getRoot_tree();
-//    }
-//
-//    private void setRenderer(){schematic.setRenderer(this.renderer);}
-//
-//    /**
-//     * Gets the active schematic.
-//     * @return The active schematic.
-//     */
-//    public SchematicRenderer getSchematic(){
-//        return this.schematic;
-//    }
 
     /**
      * Gets the compilation status of the schematic.
@@ -61,9 +44,11 @@ public class SchematicRendererScreen implements Screen {
         if(schematic.getRoot_tree() != null){
             schematic.clearData();
             schematic.getData();
-        } else {
-            System.out.println("The root_tree has not been set or has not been created.");
         }
+//        schematic.refresh();
+//        else {
+//            System.out.println("The root_tree has not been set or has not been created.");
+//        }
     }
 
     @Override
@@ -71,7 +56,6 @@ public class SchematicRendererScreen implements Screen {
 
         if (schematic.getRoot_tree() == null) throw new AssertionError();
 
-        controller.updateInputProcessor();
     }
 
     /**
@@ -92,36 +76,24 @@ public class SchematicRendererScreen implements Screen {
      */
     @Override
     public void resize(int width, int height) {
-
-        controller.setWindowWidth(width);
-        controller.setWindowHeight(height);
-        windowWidth = controller.getWindowWidth();
-        windowHeight = controller.getWindowHeight();
-
         schematic.refresh();
-
-//        updateWorldParameters();
-//
-//        controller.resetMultiplexer();
-
-        controller.updateInputProcessor();
     }
 
     static SchematicRendererScreen getScreen(){
         return schematicRendererScreen;
     }
 
-    Stage getSchematicStage(){
-        return schematic.getSchematicStage();
-    }
-
-    int getWindowWidth(){
-        return this.windowWidth;
-    }
-
-    int getWindowHeight(){
-        return this.windowHeight;
-    }
+//    Stage getSchematicStage(){
+//        return schematic.getSchematicStage();
+//    }
+//
+//    int getWindowWidth(){
+//        return this.windowWidth;
+//    }
+//
+//    int getWindowHeight(){
+//        return this.windowHeight;
+//    }
 
     /**
      * Called when the {@link Application} is paused, usually when it's not active or visible on screen. An Application is also

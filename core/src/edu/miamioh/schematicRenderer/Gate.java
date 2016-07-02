@@ -1,11 +1,12 @@
 package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.graphics.Color;
-import edu.miamioh.util.Constants;
 
 import java.util.ArrayList;
 
 import static edu.miamioh.schematicRenderer.GateType.*;
+import static edu.miamioh.schematicRenderer.SchematicRendererController.gateSize;
+import static edu.miamioh.schematicRenderer.SchematicRendererController.scaleFactor;
 
 /**
  * This class describes all gates, including ports.
@@ -13,6 +14,7 @@ import static edu.miamioh.schematicRenderer.GateType.*;
  */
 class Gate {
 
+//    private SchematicRendererController controller = SchematicRendererController.getCurrentController();
     private GateType type;
     private String id = "";
     private ArrayList<String> inputs = new ArrayList<>();
@@ -21,7 +23,7 @@ class Gate {
 //    private float r = 0, g = 0, b = 0, a = 0;
     private ArrayList<Integer> inputYCoords = new ArrayList<>();
     private ArrayList<Integer> inputXCoords = new ArrayList<>();
-    private float scaledGS = Constants.gateSize * Constants.scaleFactor;
+    private float scaledGS;
     private Color color = Color.BLACK;
 
     /**
@@ -36,6 +38,8 @@ class Gate {
      *              scaled gate widths, center to center.
      */
     Gate(GateType type, String id, int level) {
+
+        updateSGS();
 
         switch (type) {
 
@@ -148,7 +152,13 @@ class Gate {
         }
     }
 
+    private void updateSGS(){
+        scaledGS = gateSize * scaleFactor;
+    }
+
     private void setInputXCoords() {
+
+        updateSGS();
 
         switch (this.getType()) {
 
@@ -186,6 +196,8 @@ class Gate {
     }
 
     private void setInputYCoords() {
+
+        updateSGS();
 
         float y;
         float space;
@@ -319,7 +331,7 @@ class Gate {
      */
     int getRX(){return this.rx;}
 
-    void setRX(){
+    private void setRX(){
         switch (this.getType()) {
             case XOR:
             case XNOR:
@@ -374,7 +386,7 @@ class Gate {
         return this.ry;
     }
 
-    void setRY(){
+    private void setRY(){
         switch (this.getType()){
             case NOT:
             case WIRE:
