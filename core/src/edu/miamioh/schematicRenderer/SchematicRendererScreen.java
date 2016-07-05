@@ -2,7 +2,7 @@ package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Screen;
-//import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
@@ -83,9 +83,9 @@ public class SchematicRendererScreen implements Screen {
         return schematicRendererScreen;
     }
 
-//    Stage getSchematicStage(){
-//        return schematic.getSchematicStage();
-//    }
+    Stage getSchematicStage(){
+        return schematic.getSchematicStage();
+    }
 //
 //    int getWindowWidth(){
 //        return this.windowWidth;
