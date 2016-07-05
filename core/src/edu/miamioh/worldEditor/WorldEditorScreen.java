@@ -19,11 +19,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import edu.miamioh.GameObjects.Block;
+import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.worldEditor.Stages.BlockSelectedStage;
 import edu.miamioh.worldEditor.Stages.BlockStage;
 import edu.miamioh.worldEditor.Stages.HomeStage;
 import edu.miamioh.worldEditor.Stages.OptionStage;
 import edu.miamioh.worldEditor.Stages.SimulatorStage;
+import edu.miamioh.worldEditor.Stages.ToolStage;
 import edu.miamioh.worldEditor.types.Point;
 
 public class WorldEditorScreen implements Screen {
@@ -70,7 +72,7 @@ public class WorldEditorScreen implements Screen {
 	
 	@Override
 	public void show() {
-		
+			
 		updateWorldParameters();
 		controller.setToolBarSelection(ToolBarSelection.NONE);
 		
@@ -89,14 +91,14 @@ public class WorldEditorScreen implements Screen {
 		homeStage = new HomeStage().getStage();		
 		blockStage = new BlockStage().getStage();
 		blockSelectedStage = new BlockSelectedStage().getStage();
-		//toolStage = new ToolStage().getStage();
-		simulatorStage = new SimulatorStage().getStage();		
+		toolStage = new ToolStage().getStage();
+		simulatorStage = new SimulatorStage().getStage();
 	}
 	
-	private void updateWorldParameters() {
+	public void updateWorldParameters() {
 				
-		windowWidth = controller.getWindowWidth();
-		windowHeight = controller.getWindowHeight();
+		windowWidth = VerilogWorldController.WINDOW_WIDTH;
+		windowHeight = VerilogWorldController.WINDOW_HEIGHT;
 		
 		worldWidth = controller.getWorldWidth();
 		worldHeight = controller.getWorldHeight();
@@ -119,8 +121,6 @@ public class WorldEditorScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		renderWorld();
-		//renderErrorHUD();
-		//renderBlockHighlight(new Block(10, 10, Color.PINK));
 		
 		renderSelector();
 		renderToolBar();
@@ -137,6 +137,10 @@ public class WorldEditorScreen implements Screen {
 		
 		int width = worldWidth * gridWidth;
 		int height = worldHeight * gridHeight;
+		
+		if(width == 0 || height == 0) {
+			return;
+		}
 
 		renderer.begin(ShapeType.Line);
 		renderer.setColor(Color.LIGHT_GRAY);
@@ -259,6 +263,11 @@ public class WorldEditorScreen implements Screen {
 				blockStage.draw();
 				break;
 				
+			case TOOLS:
+				toolStage.act(Gdx.graphics.getDeltaTime());
+				toolStage.draw();
+				break;
+				
 			case BLOCK_SELECTED:
 				blockSelectedStage.act(Gdx.graphics.getDeltaTime());
 				blockSelectedStage.draw();
@@ -360,7 +369,7 @@ public class WorldEditorScreen implements Screen {
 		int worldWidth = controller.getWorldWidth();
 		int gridWidth = controller.getGridWidth();
 		int bufferWidth = controller.getBufferWidth();
-		int windowWidth = controller.getWindowWidth();
+		int windowWidth = VerilogWorldController.WINDOW_WIDTH;
 		int width = worldWidth * gridWidth;
 		
 		if(hasIrregularWidth()) {
@@ -417,7 +426,7 @@ public class WorldEditorScreen implements Screen {
 		int worldHeight = controller.getWorldHeight();		
 		int gridHeight = controller.getGridHeight();
 		int bufferHeight = controller.getBufferHeight();
-		int windowHeight = controller.getWindowHeight();
+		int windowHeight = VerilogWorldController.WINDOW_HEIGHT;
 		int height = worldHeight * gridHeight;
 		
 		if(hasIrregularHeight()) {
@@ -464,7 +473,7 @@ public class WorldEditorScreen implements Screen {
 		
 		int worldHeight = controller.getWorldHeight();		
 		int gridHeight = controller.getGridHeight();
-		int windowHeight = controller.getWindowHeight();
+		int windowHeight = VerilogWorldController.WINDOW_HEIGHT;
 		int height = worldHeight * gridHeight;
 
 		return height < windowHeight;
@@ -483,7 +492,7 @@ public class WorldEditorScreen implements Screen {
 		
 		int worldWidth = controller.getWorldWidth();		
 		int gridWidth = controller.getGridWidth();
-		int windowWidth = controller.getWindowWidth();
+		int windowWidth = VerilogWorldController.WINDOW_WIDTH;
 		int width = worldWidth * gridWidth;
 
 		return width < windowWidth;
@@ -493,8 +502,8 @@ public class WorldEditorScreen implements Screen {
 	@Override
 	public void resize(int width, int height) {
 
-		controller.setWindowWidth(width);
-		controller.setWindowHeight(height);
+		VerilogWorldController.WINDOW_WIDTH = width;
+		VerilogWorldController.WINDOW_HEIGHT = height;
 		
 		updateWorldParameters();
 		
@@ -503,7 +512,7 @@ public class WorldEditorScreen implements Screen {
 		optionStage = new OptionStage().getStage();
 		homeStage = new HomeStage().getStage();
 		blockStage = new BlockStage().getStage();
-		//toolStage = new ToolStage().getStage();
+		toolStage = new ToolStage().getStage();
 		simulatorStage = new SimulatorStage().getStage();
 
 		controller.updateInputMultiplexer();

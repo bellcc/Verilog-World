@@ -14,12 +14,13 @@ import edu.miamioh.Level.Level;
 import edu.miamioh.Screens.ChallengesScreen;
 import edu.miamioh.Screens.MainMenuScreen;
 import edu.miamioh.Screens.PlayScreen;
+import edu.miamioh.projectDirectory.ProjectDirectoryScreen;
 import edu.miamioh.schematicRenderer.SchematicRendererScreen;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.RootModuleSimulator;
 import edu.miamioh.verilogEditor.RunEditor;
-import edu.miamioh.worldConfiguration.ConfigurationController;
 import edu.miamioh.worldConfiguration.ConfigurationScreen;
+import edu.miamioh.worldConfiguration.DirectoryScreen;
 import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.WorldEditorScreen;
 import edu.miamioh.worldSimulator.WorldSimulatorController;
@@ -41,7 +42,6 @@ public class VerilogWorldMain extends Game {
 	private WorldSimulatorScreen worldSimulatorScreen;
 
 	private ConfigurationScreen configScreen;
-	private ConfigurationController configController;
 	
 	private MainMenuScreen mainMenuScreen;
 	private PlayScreen playScreen;
@@ -67,35 +67,42 @@ public class VerilogWorldMain extends Game {
 		this.compiler = verilogWorldController.getCompiler();
 
 		schematicRendererScreen = new SchematicRendererScreen();	
-
+		
 		setMainMenuScreen();
+		//setDirectoryScreen();
+	
+		//this.setScreen(new ProjectDirectoryScreen());
+		//this.setScreen(new ConfigurationScreen(VerilogWorldController.getController().getDefaultConfig()));
+		
+		//setWorldEditorScreen(new Level());
 	}
 	
-	public void setConfigurationScreen() {
+	public void setDirectoryScreen() {
+		
+		this.setScreen(new DirectoryScreen());
+	}
+	
+	public void setConfigurationScreen(Level level) {
 		
 		Configuration defaultConfig = VerilogWorldController.getController().getDefaultConfig();
+		level.setConfig(defaultConfig);
 		
-		configController = new ConfigurationController(defaultConfig);
-		configScreen = new ConfigurationScreen();
+		configScreen = new ConfigurationScreen(level);
 		
 		this.setScreen(configScreen);
 	}
 		
-	public void setWorldEditorScreen() {
-		
-		Configuration defaultConfig = verilogWorldController.getDefaultConfig();
-		Level level = verilogWorldController.getLevel();
-		
-		worldEditorController = new WorldEditorController(defaultConfig, level);
+	public void setWorldEditorScreen(Level level) {
+
+		worldEditorController = new WorldEditorController(level);
 		worldEditorScreen = new WorldEditorScreen(worldEditorController);
 		
 		this.setScreen(worldEditorScreen);
 	}
 	
-	public void setWorldSimulatorScreen() {
+	public void setWorldSimulatorScreen(Level level) {
 		
 		Configuration defaultConfig = verilogWorldController.getDefaultConfig();
-		Level level = verilogWorldController.getLevel();
 		
 		worldSimulatorController = new WorldSimulatorController(defaultConfig, level);
 		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);

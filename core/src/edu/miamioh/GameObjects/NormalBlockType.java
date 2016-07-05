@@ -4,5 +4,5 @@ public enum NormalBlockType {
 	
 	Blank,
 	Wall,
-	Scooter
+	Scooter;
 }

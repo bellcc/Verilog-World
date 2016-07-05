@@ -11,6 +11,8 @@ package edu.miamioh.worldEditor;
 
 import com.badlogic.gdx.InputProcessor;
 
+import edu.miamioh.verilogWorld.VerilogWorldController;
+
 public class WorldEditorInputProcessor implements InputProcessor{
 
 	private boolean clicked = false;
@@ -144,7 +146,7 @@ public class WorldEditorInputProcessor implements InputProcessor{
 		int gridWidth = WorldEditorController.getCurrentController().getGridWidth();
 		int worldSize = worldWidth * gridWidth;
 		
-		int windowWidth = WorldEditorController.getCurrentController().getWindowWidth();
+		int windowWidth = VerilogWorldController.WINDOW_WIDTH;
 		int bufferWidth = WorldEditorController.getCurrentController().getBufferWidth();
 		
 		int toolBarWidth = WorldEditorScreen.getScreen().getToolBarWidth();
@@ -163,7 +165,7 @@ public class WorldEditorInputProcessor implements InputProcessor{
 		int gridHeight = WorldEditorController.getCurrentController().getGridHeight();
 		int worldSize = worldHeight * gridHeight;
 		
-		int windowHeight = WorldEditorController.getCurrentController().getWindowHeight();
+		int windowHeight = VerilogWorldController.WINDOW_HEIGHT;
 		int bufferHeight = WorldEditorController.getCurrentController().getBufferHeight();
 		
 		if(posY < (worldSize - windowHeight) + (2 * bufferHeight)) {

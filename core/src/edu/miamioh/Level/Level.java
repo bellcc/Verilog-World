@@ -7,17 +7,28 @@
 
 package edu.miamioh.Level;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.GameObjects.Block;
 
 public class Level {
 	
+	private File project;
+	
 	private ArrayList<Block> blockList;
+	private Configuration config;
 
 	public Level() {
 		
 		blockList = new ArrayList<Block>();
+		config = new Configuration();
+	}
+	
+	public Level(Configuration config) {
+		this();
+		this.config = config;
 	}
 	
 	public Level(ArrayList<Block> blockList) {
@@ -81,4 +92,21 @@ public class Level {
 	public ArrayList<Block> getBlockList() {
 		return blockList;
 	}
+	
+	public void setConfig(Configuration config) {
+		this.config = config;
+	}
+	
+	public Configuration getConfig() {
+		return this.config;
+	}
+	
+	public void setProject(File file) {
+		this.project = file;
+	}
+	
+	public File getProject() {
+		return this.project;
+	}
+	
 }

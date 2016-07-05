@@ -9,6 +9,7 @@ package edu.miamioh.worldSimulator;
 
 import com.badlogic.gdx.InputProcessor;
 
+import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.worldSimulator.WorldSimulatorController;
 import edu.miamioh.worldSimulator.WorldSimulatorScreen;
 
@@ -137,7 +138,7 @@ public class WorldSimulatorInputProcessor implements InputProcessor {
 		int gridWidth = WorldSimulatorController.getController().getGridWidth();
 		int worldSize = worldWidth * gridWidth;
 		
-		int windowWidth = WorldSimulatorController.getController().getWindowWidth();
+		int windowWidth = VerilogWorldController.WINDOW_WIDTH;
 		int bufferWidth = WorldSimulatorController.getController().getBufferWidth();
 		
 		int toolBarWidth = WorldSimulatorScreen.getScreen().getToolBarWidth();
@@ -155,7 +156,7 @@ public class WorldSimulatorInputProcessor implements InputProcessor {
 		int gridHeight = WorldSimulatorController.getController().getGridHeight();
 		int worldSize = worldHeight * gridHeight;
 		
-		int windowHeight = WorldSimulatorController.getController().getWindowHeight();
+		int windowHeight = VerilogWorldController.WINDOW_HEIGHT;
 		int bufferHeight = WorldSimulatorController.getController().getBufferHeight();
 		
 		if(posY < (worldSize - windowHeight) + (2 * bufferHeight)) {

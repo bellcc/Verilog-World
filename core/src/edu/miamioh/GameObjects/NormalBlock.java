@@ -82,6 +82,7 @@ public abstract class NormalBlock extends Block {
 	}
 	
 	public void setType(NormalBlockType type) 	{this.type = type;}
+	public NormalBlockType getType()            {return type;}
 	public String getSourceFile() 				{return this.sourceFile;}
 	public ModuleWrapper getModuleWrapper() 	{return this.module;}
 }

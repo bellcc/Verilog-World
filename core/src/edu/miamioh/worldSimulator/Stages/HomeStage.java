@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import edu.miamioh.Buttons.TextButtonActor;
+import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.worldSimulator.WorldSimulatorController;
 import edu.miamioh.worldSimulator.ChangeListeners.BackChangeListener;
 
@@ -28,7 +29,7 @@ public class HomeStage {
 		// is located at edu.miamioh.worldEditor.ChangeListeners.
 		backActor.addListener(new BackChangeListener());
 		
-		int windowHeight = WorldSimulatorController.getController().getWindowHeight();
+		int windowHeight = VerilogWorldController.WINDOW_WIDTH;
 		
 		int actorHeight = 50;
 		int actorWidth = 100;

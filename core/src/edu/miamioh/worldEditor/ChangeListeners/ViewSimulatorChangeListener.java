@@ -7,7 +7,6 @@ import edu.miamioh.Level.Level;
 import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
 import edu.miamioh.worldEditor.WorldEditorController;
-import edu.miamioh.worldSimulator.WorldSimulatorController;
 
 public class ViewSimulatorChangeListener extends ChangeListener {
 
@@ -21,7 +20,8 @@ public class ViewSimulatorChangeListener extends ChangeListener {
 		Level currentLevel = WorldEditorController.getCurrentController().getCurrentLevel();
 		VerilogWorldController.getController().setLevel(currentLevel);
 		
-		VerilogWorldMain.getVerilogWorldMain().setWorldSimulatorScreen();
+		Level level = WorldEditorController.getCurrentController().getCurrentLevel();
+		VerilogWorldMain.getVerilogWorldMain().setWorldSimulatorScreen(level);
 
 	}
 

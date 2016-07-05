@@ -60,4 +60,8 @@ public class SpecialBlock extends Block{
 	public void setType(SpecialBlockType type) {
 		this.type = type;
 	}
+	
+	public SpecialBlockType getType() {
+		return type;
+	}
 }

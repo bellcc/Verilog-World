@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import edu.miamioh.Level.Level;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
  
 public class PlayScreen implements Screen {
@@ -121,14 +122,14 @@ public class PlayScreen implements Screen {
 	        sandboxButton.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	VerilogWorldMain.getVerilogWorldMain().setConfigurationScreen();            	
+	            	VerilogWorldMain.getVerilogWorldMain().setWorldEditorScreen(new Level());
 	            }
 	        });
 	        
 	        backButton.addListener(new ClickListener(){
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	VerilogWorldMain.getVerilogWorldMain().setMainMenuScreen();	            	
+	            	VerilogWorldMain.getVerilogWorldMain().setMainMenuScreen();
 	            }
 	        });
 

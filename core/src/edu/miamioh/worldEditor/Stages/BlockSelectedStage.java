@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import edu.miamioh.Buttons.TextButtonActor;
+import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.ChangeListeners.RemoveChangeListener;
 import edu.miamioh.worldEditor.ChangeListeners.SchematicChangeListener;
@@ -31,7 +32,7 @@ public class BlockSelectedStage {
 		schematicActor.addListener(new SchematicChangeListener());
 		removeActor.addListener(new RemoveChangeListener());
 		
-		int windowHeight = WorldEditorController.getCurrentController().getWindowHeight();
+		int windowHeight = VerilogWorldController.WINDOW_HEIGHT;
 		
 		int actorHeight = 50;
 		int actorWidth = 100;

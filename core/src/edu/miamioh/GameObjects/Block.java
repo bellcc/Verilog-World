@@ -61,7 +61,7 @@ public abstract class Block {
 	public int getColumn() {
 		return column;
 	}
-	
+		
 	public static void setRootSim(RootModuleSimulator sim) {rootSim = sim;}
 	public static RootModuleSimulator getRootSim() {return rootSim;}
 
