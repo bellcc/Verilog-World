@@ -1,0 +1,2 @@
+module Scooter(color);
+endmodule

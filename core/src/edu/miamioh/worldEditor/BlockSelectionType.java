@@ -4,8 +4,8 @@ public enum BlockSelectionType {
 	
 	NONE,
 	Block_Blank,
-	Block_Clock,
-	Block_Reset,
 	Block_Wall,
-	
+	Block_Led,
+	Block_Scooter,
+	Block_Controller;
 }

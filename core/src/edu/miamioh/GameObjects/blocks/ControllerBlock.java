@@ -8,12 +8,12 @@ import edu.miamioh.GameObjects.NormalBlockType;
 import edu.miamioh.simulator.ParseRegWire;
 import edu.miamioh.simulator.RootModuleInstance;
 
-public class WallBlock extends NormalBlock {
+public class ControllerBlock extends NormalBlock {
 	
-	public static Color COLOR = new Color(0.6f, 0.6f, 0.6f, 1.0f);
+	public static Color COLOR = new Color(0.0f, 0.0f, 0.8f, 1.0f);
 	
-	public WallBlock(int row, int column) {
-		super(NormalBlockType.Wall, row, column);
+	public ControllerBlock(int row, int column) {
+		super(NormalBlockType.Controller, row, column);
 	}
 
 	@Override
