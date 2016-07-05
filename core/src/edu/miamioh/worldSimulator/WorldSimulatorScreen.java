@@ -232,7 +232,7 @@ public class WorldSimulatorScreen implements Screen {
 		controller.resetMultiplexer();
 		
 		optionStage = new OptionStage().getStage();
-		//homeStage = new HomeStage().getStage();
+		//homeStage = new HomeStage().getSchematicStage();
 		simulatorStage = new SimulatorStage().getStage();
 
 		controller.updateInputMultiplexer();

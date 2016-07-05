@@ -4,5 +4,7 @@ public enum NormalBlockType {
 	
 	Blank,
 	Wall,
-	Scooter;
+	Controller,
+	Scooter,
+	Led;
 }

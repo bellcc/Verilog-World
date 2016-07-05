@@ -1,11 +1,12 @@
 package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.graphics.Color;
-import edu.miamioh.util.Constants;
 
 import java.util.ArrayList;
 
 import static edu.miamioh.schematicRenderer.GateType.*;
+import static edu.miamioh.schematicRenderer.SchematicRendererController.gateSize;
+import static edu.miamioh.schematicRenderer.SchematicRendererController.scaleFactor;
 
 /**
  * This class describes all gates, including ports.
@@ -13,15 +14,16 @@ import static edu.miamioh.schematicRenderer.GateType.*;
  */
 class Gate {
 
+//    private SchematicRendererController controller = SchematicRendererController.getCurrentController();
     private GateType type;
     private String id = "";
     private ArrayList<String> inputs = new ArrayList<>();
     private int level = 0;
-    private int cx = 0, cy = 0;
+    private int cx = 0, cy = 0, rx = 0, ry = 0;
 //    private float r = 0, g = 0, b = 0, a = 0;
     private ArrayList<Integer> inputYCoords = new ArrayList<>();
     private ArrayList<Integer> inputXCoords = new ArrayList<>();
-    private int scaledGS = Constants.gateSize * Constants.scaleFactor;
+    private float scaledGS;
     private Color color = Color.BLACK;
 
     /**
@@ -36,6 +38,8 @@ class Gate {
      *              scaled gate widths, center to center.
      */
     Gate(GateType type, String id, int level) {
+
+        updateSGS();
 
         switch (type) {
 
@@ -148,19 +152,25 @@ class Gate {
         }
     }
 
+    private void updateSGS(){
+        scaledGS = gateSize * scaleFactor;
+    }
+
     private void setInputXCoords() {
+
+        updateSGS();
 
         switch (this.getType()) {
 
             case AND:
             case NAND:
                 for (int i = 0; i < this.getNumOfInputs(); i++) {
-                    inputXCoords.add(this.cx - scaledGS / 2);
+                    inputXCoords.add((int)(this.cx - scaledGS / 2));
                 }
                 break;
 
             case NOT:
-                inputXCoords.add(this.cx - scaledGS / 2);
+                inputXCoords.add((int)(this.cx - scaledGS / 2));
                 break;
 
             case OR:
@@ -168,17 +178,17 @@ class Gate {
             case XOR:
             case XNOR:
                 for (int i = 0; i < this.getNumOfInputs(); i++) {
-                    inputXCoords.add(this.cx - scaledGS / 2);
+                    inputXCoords.add((int)(this.cx - scaledGS / 2));
                 }
                 break;
 
             case WIRE:
             case REG:
-                inputXCoords.add(this.cx - scaledGS / 2);
+                inputXCoords.add((int)(this.cx - scaledGS / 2));
                 break;
 
             default:
-                inputXCoords.add(this.cx - scaledGS / 2);
+                inputXCoords.add((int)(this.cx - scaledGS / 2));
                 break;
 
         }
@@ -187,7 +197,11 @@ class Gate {
 
     private void setInputYCoords() {
 
-        int y;
+        updateSGS();
+
+        float y;
+        float space;
+        float inputs;
 
         switch (this.getType()) {
 
@@ -195,8 +209,11 @@ class Gate {
             case NAND:
                 for (int i = 1; i <= this.getNumOfInputs(); i++) {
 
-                    y = this.cy - scaledGS / 2 - scaledGS / (this.getNumOfInputs() * 2) + (int) ((i / (float) this.getNumOfInputs()) * (scaledGS)); //casting inspired by Connor
-                    inputYCoords.add(y);
+                    inputs = this.getNumOfInputs();
+                    space = scaledGS / inputs;
+                    y = this.cy - scaledGS / 2 - space / 2; //Start at the bottom corner minus half a space (to offset)
+                    y += i * space; //Add height depending on the input
+                    inputYCoords.add((int)y); //Add the coordinate to the list of heights
 
                 }
                 break;
@@ -211,8 +228,11 @@ class Gate {
             case XNOR:
                 for (int i = 1; i <= this.getNumOfInputs(); i++) {
 
-                    y = this.cy - scaledGS / 2 - scaledGS / (this.getNumOfInputs() * 2) + (int) ((i / (float) this.getNumOfInputs()) * (scaledGS)); //casting inspired by Connor
-                    inputYCoords.add(y);
+                    inputs = this.getNumOfInputs();
+                    space = scaledGS / inputs;
+                    y = this.cy - scaledGS / 2 - space / 2; //Start at the bottom corner minus half a space (to offset)
+                    y += i * space; //Add height depending on the input
+                    inputYCoords.add((int)y); //Add the coordinate to the list of heights
 
                 }
                 break;
@@ -301,7 +321,36 @@ class Gate {
 
         this.cx = cx;
         setInputXCoords();
+        setRX();
 
+    }
+
+    /**
+     * Gets the Reference x coord of this gate.
+     * @return
+     */
+    int getRX(){return this.rx;}
+
+    private void setRX(){
+        switch (this.getType()) {
+            case XOR:
+            case XNOR:
+                this.rx = (int)(cx - scaledGS / 4);
+
+            case NOT:
+            case AND:
+            case NAND:
+            case OR:
+            case NOR:
+            case WIRE:
+            case REG:
+                this.rx = (int)(cx - scaledGS / 2);
+                break;
+
+            default:
+                this.rx = cx;
+                break;
+        }
     }
 
     /**
@@ -325,7 +374,40 @@ class Gate {
 
         this.cy = cy;
         setInputYCoords();
+        setRY();
 
+    }
+
+    /**
+     * Gets the Reference y coord of this gate
+     * @return
+     */
+    int getRY(){
+        return this.ry;
+    }
+
+    private void setRY(){
+        switch (this.getType()){
+            case NOT:
+            case WIRE:
+                this.ry = (int)(cy - scaledGS / 4);
+                break;
+
+            case AND:
+            case NAND:
+            case OR:
+            case NOR:
+            case REG:
+            case XOR:
+            case XNOR:
+                this.ry = (int)(cy - scaledGS / 2);
+                break;
+
+            default:
+                this.ry = cy;
+                break;
+
+        }
     }
 
     /**
@@ -359,7 +441,7 @@ class Gate {
                 if (name[0].equals("IN"))
                     return inputXCoords.get(portNum);
                 else
-                    return this.getCX() + scaledGS / 2;
+                    return (int)(this.getCX() + scaledGS / 2);
 
             case OR:
             case NOR:
@@ -368,26 +450,26 @@ class Gate {
                 if (name[0].equals("IN"))
                     return inputXCoords.get(portNum);
                 else
-                    return this.getCX() + scaledGS / 2;
+                    return (int)(this.getCX() + scaledGS / 2);
 
             case NOT:
                 if (name[0].equals("IN"))
                     return inputXCoords.get(0);
                 else
-                    return this.getCX() + scaledGS / 2;
+                    return (int)(this.getCX() + scaledGS / 2);
 
             case WIRE:
             case REG:
                 if (name[0].equals("IN"))
                     return inputXCoords.get(0);
                 else
-                    return this.getCX() + scaledGS / 2;
+                    return (int)(this.getCX() + scaledGS / 2);
 
             default:
                 if (name[0].equals("IN"))
                     return inputXCoords.get(0);
                 else
-                    return this.getCX() + scaledGS / 2;
+                    return (int)(this.getCX() + scaledGS / 2);
 
         }
 

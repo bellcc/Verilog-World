@@ -4,70 +4,61 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import edu.miamioh.Buttons.TextButtonActor;
+import edu.miamioh.GameObjects.blocks.BlankBlock;
+import edu.miamioh.GameObjects.blocks.ControllerBlock;
+import edu.miamioh.GameObjects.blocks.LedBlock;
+import edu.miamioh.GameObjects.blocks.ScooterBlock;
+import edu.miamioh.GameObjects.blocks.WallBlock;
 import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.ChangeListeners.BlankBlockChangeListener;
-import edu.miamioh.worldEditor.ChangeListeners.ClockBlockChangeListener;
-import edu.miamioh.worldEditor.ChangeListeners.ResetBlockChangeListener;
+import edu.miamioh.worldEditor.ChangeListeners.ControllerBlockChangeListener;
+import edu.miamioh.worldEditor.ChangeListeners.LedBlockChangeListener;
+import edu.miamioh.worldEditor.ChangeListeners.ScooterBlockChangeListener;
 import edu.miamioh.worldEditor.ChangeListeners.WallBlockChangeListener;
 
 public class BlockStage {
 
 	private Stage stage;
+	private Table table;
 	
-	private Actor blankActor;
-	private Actor clockActor;
-	private Actor resetActor;
-	private Actor wallActor;
+	private int actorHeight = 50;
+	private int actorWidth = 100;
 	
 	public BlockStage() {
 		
 		stage = new Stage();
+		table = new Table();
 		
-		// Construct the text button actors. This can be 
-		// configured to add pictures to the buttons instead 
-		// of a color.
-		blankActor = new TextButtonActor().createTextButton(Color.RED, "BLANK\nBLOCK");
-		clockActor = new TextButtonActor().createTextButton(Color.PINK, "CLOCK\nBLOCK");
-		resetActor = new TextButtonActor().createTextButton(Color.YELLOW, "RESET\nBLOCK");
-		wallActor = new TextButtonActor().createTextButton(Color.ORANGE, "WALL\nBLOCK");
-		
-		// Add the appropriate change listener to the actor which 
-		// is located at edu.miamioh.worldEditor.ChangeListeners.
-		blankActor.addListener(new BlankBlockChangeListener());
-		clockActor.addListener(new ClockBlockChangeListener());
-		resetActor.addListener(new ResetBlockChangeListener());
-		wallActor.addListener(new WallBlockChangeListener());
-		
+		actorHeight = 50;
+		actorWidth = 100;
 		int windowHeight = WorldEditorController.getCurrentController().getWindowHeight();
-		
-		int actorHeight = 50;
-		int actorWidth = 100;
-		
-		// Add the actors to a table which is right justified 
-		// and expands along the height of the window. If an 
-		// actor needs to be added then follow the format down 
-		// below for adding an actor to the table.
-		Table table = new Table();
 		table.setSize(actorWidth, windowHeight);
 		table.setPosition(50, 0);
 		table.right().top();
 		
-		table.add(blankActor).width(actorWidth).height(actorHeight);
-		table.row();
-		table.add(clockActor).width(actorWidth).height(actorHeight);
-		table.row();
-		table.add(resetActor).width(actorWidth).height(actorHeight);
-		table.row();
-		table.add(wallActor).width(actorWidth).height(actorHeight);
+		addButton(BlankBlock.COLOR, "BLANK", new BlankBlockChangeListener());
+		addButton(WallBlock.COLOR, "WALL", new WallBlockChangeListener());
+		addButton(ControllerBlock.COLOR, "CONTROLLER", new ControllerBlockChangeListener());
+		addButton(ScooterBlock.COLOR, "SCOOTER", new ScooterBlockChangeListener());
+		addButton(LedBlock.COLOR, "LED", new LedBlockChangeListener());
 		
 		stage.addActor(table);
+	}
+	
+	private void addButton(Color color, String type, ChangeListener listener) {
 		
+		Actor actor = new TextButtonActor().createTextButton(color, type + "\nBLOCK");
+		
+		actor.addListener(listener);
+		
+		table.row();
+		table.add(actor).width(actorWidth).height(actorHeight);
 	}
 	
 	public Stage getStage() {
 		return stage;
 	}
-	
 }

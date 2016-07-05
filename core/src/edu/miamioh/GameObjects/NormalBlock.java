@@ -5,6 +5,11 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
 
+import edu.miamioh.GameObjects.blocks.BlankBlock;
+import edu.miamioh.GameObjects.blocks.ControllerBlock;
+import edu.miamioh.GameObjects.blocks.LedBlock;
+import edu.miamioh.GameObjects.blocks.ScooterBlock;
+import edu.miamioh.GameObjects.blocks.WallBlock;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.ParseRegWire;
 import edu.miamioh.simulator.RootModuleInstance;
@@ -36,11 +41,20 @@ public abstract class NormalBlock extends Block {
 		
 		// Set color according to type
 		switch(type) {
+		case Blank:
+			setColor(BlankBlock.COLOR);
+			break;
 		case Wall:
-			setColor(Color.GRAY);
+			setColor(WallBlock.COLOR);
+			break;
+		case Controller:
+			setColor(ControllerBlock.COLOR);
 			break;
 		case Scooter:
-			setColor(Color.BLUE);
+			setColor(ScooterBlock.COLOR);
+			break;
+		case Led:
+			setColor(LedBlock.COLOR);
 			break;
 		default:
 			setColor(Color.BLACK);
@@ -97,10 +111,9 @@ public abstract class NormalBlock extends Block {
 	}
 	
 	public void makeUniqueFile() {
-		
-		String modulePath = VerilogWorldController.getController().getRootPath() + "core/assets/modules/";
-//		String modulePath = "/home/pheonix/GitHub/Verilog-World/core/assets/modules/";
-		
+
+		String modulePath = VerilogWorldController.getController().getRootPath() + "/core/assets/modules/";
+
 		String template = type.toString() + ".v";
 		String pathToTemplate = modulePath + "templates/" + template;
 		File templateFile = new File(pathToTemplate);
