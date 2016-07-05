@@ -1,36 +1,27 @@
 package edu.miamioh.simulator;
 
-import org.antlr.v4.runtime.tree.*;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.List;
-
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.simulator.AntlrGen.Verilog2001Lexer;
 import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
-import edu.miamioh.util.DebugUtils;
-
-import javax.swing.JTextPane;
-
 import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.ParseTree;
+
+import javax.swing.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 public class Parse {
 	
+//	public int RESET = 0;
+//	public int RUN = 1;
 	private String					rootPath;
 	private JTextPane 				errorText;
-	
 	private boolean 				is_compiled;
 	private boolean 				is_no_parse_errors;
-	
 	private RootModuleSimulator 	sim;
-	
-	public int RESET = 0;
-	public int RUN = 1;
 	
 	public Parse() throws Exception {
 		this(null, null);
@@ -90,7 +81,7 @@ public class Parse {
 		return root_module;
 	}
 	
-	public void reportParseError(String message) {
+	void reportParseError(String message) {
 		
 		String old_text = errorText.getText();
 		errorText.setText(old_text + "\n" + message);
@@ -98,13 +89,13 @@ public class Parse {
 		this.setIs_no_parse_errors(false);
 	}
 	
-	public void reportParseInfo(String message) {
+	void reportParseInfo(String message) {
 		
 		String old_text = errorText.getText();
 		errorText.setText(old_text + "\n" + message);
 	}
 	
-	public ParseTree loadParseTreeFromFile(String moduleName) {
+	ParseTree loadParseTreeFromFile(String moduleName) {
 		
 		if (!is_no_parse_errors) {
 			this.reportParseInfo("\n");
@@ -130,22 +121,23 @@ public class Parse {
 
 		parser.removeErrorListeners();
 		parser.addErrorListener(new VerboseListenerE());
-		ParseTree result_tree = parser.module_declaration();
 		
 		/*
 		 * For debugging
 		 */
 		//DebugUtils.printParseTree(result_tree, parser);
 		
-		return result_tree;
+		return parser.module_declaration();
 	}
 	
-	public JTextPane getErrorText() 					{ return this.errorText;}
-	public void setIs_no_parse_errors(Boolean value) 	{this.is_no_parse_errors = value;}
+	JTextPane getErrorText() 					{ return this.errorText;}
+	private void setIs_no_parse_errors(Boolean value) 	{this.is_no_parse_errors = value;}
 	public Boolean isCompiled() 						{ return is_compiled;}
 	
-	public class VerboseListenerE extends BaseErrorListener
-	{ 
+	public RootModuleSimulator getRootModuleSimulator() {return sim;}
+	
+	private class VerboseListenerE extends BaseErrorListener
+	{
 		@Override
 		public void syntaxError(
 				Recognizer<?, ?> recognizer,
@@ -170,6 +162,4 @@ public class Parse {
 			is_no_parse_errors = false;
 		}
 	}
-	
-	public RootModuleSimulator getRootModuleSimulator() {return sim;}
 }
