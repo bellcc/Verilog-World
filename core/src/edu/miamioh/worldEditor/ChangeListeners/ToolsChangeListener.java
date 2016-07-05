@@ -3,7 +3,7 @@ package edu.miamioh.worldEditor.ChangeListeners;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import edu.miamioh.worldEditor.ToolBarSelection;
+import edu.miamioh.worldEditor.ToolBarSelectionType;
 import edu.miamioh.worldEditor.WorldEditorController;
 
 public class ToolsChangeListener extends ChangeListener {
@@ -13,12 +13,12 @@ public class ToolsChangeListener extends ChangeListener {
 		
 		System.out.println("Tools Change Listener");
 		
-		ToolBarSelection selection = WorldEditorController.getCurrentController().getToolBarSelection();
+		ToolBarSelectionType selection = WorldEditorController.getCurrentController().getToolBarSelection();
 		
-		if(selection == ToolBarSelection.TOOLS) {
-			selection = ToolBarSelection.NONE;
+		if(selection == ToolBarSelectionType.TOOLS) {
+			selection = ToolBarSelectionType.NONE;
 		}else {
-			selection = ToolBarSelection.TOOLS;
+			selection = ToolBarSelectionType.TOOLS;
 		}
 		
 		WorldEditorController.getCurrentController().setToolBarSelection(selection);

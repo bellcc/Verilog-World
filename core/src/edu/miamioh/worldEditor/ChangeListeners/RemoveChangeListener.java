@@ -3,7 +3,7 @@ package edu.miamioh.worldEditor.ChangeListeners;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import edu.miamioh.worldEditor.ToolBarSelection;
+import edu.miamioh.worldEditor.ToolBarSelectionType;
 import edu.miamioh.worldEditor.WorldEditorController;
 
 public class RemoveChangeListener extends ChangeListener {
@@ -17,7 +17,7 @@ public class RemoveChangeListener extends ChangeListener {
 		int column = WorldEditorController.getCurrentController().getSelectedColumn();
 		
 		WorldEditorController.getCurrentController().getCurrentLevel().removeBlock(row, column);
-		WorldEditorController.getCurrentController().setToolBarSelection(ToolBarSelection.NONE);
+		WorldEditorController.getCurrentController().setToolBarSelection(ToolBarSelectionType.NONE);
 	}
 
 }

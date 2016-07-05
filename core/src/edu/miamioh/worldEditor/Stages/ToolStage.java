@@ -8,8 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import edu.miamioh.Buttons.TextButtonActor;
 import edu.miamioh.worldEditor.WorldEditorController;
-import edu.miamioh.worldEditor.ChangeListeners.VerifyChangeListener;
-import edu.miamioh.worldEditor.ChangeListeners.ViewSimulatorChangeListener;
 
 public class ToolStage {
 

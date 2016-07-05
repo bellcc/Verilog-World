@@ -32,7 +32,7 @@ public class WorldEditorController {
 	
 	private Level currentLevel;
 	
-	private ToolBarSelection selection;
+	private ToolBarSelectionType selection;
 	private int selectedRow;
 	private int selectedColumn;
 	
@@ -65,7 +65,7 @@ public class WorldEditorController {
 		inputProcessor = new WorldEditorInputProcessor();
 		multiplexer = new InputMultiplexer();
 		
-		selection = ToolBarSelection.NONE;
+		selection = ToolBarSelectionType.NONE;
 		blockSelection = BlockSelectionType.NONE;
 		blockID = 0;
 	}
@@ -127,8 +127,6 @@ public class WorldEditorController {
 		Stage homeStage = WorldEditorScreen.getScreen().getHomeStage();
 		Stage blockStage = WorldEditorScreen.getScreen().getBlockStage();
 		Stage blockSelectedStage = WorldEditorScreen.getScreen().getBlockSelectedStage();
-		//Stage toolStage = WorldEditorScreen.getScreen().getToolStage();
-		Stage simulatorStage = WorldEditorScreen.getScreen().getSimulatorStage();
 
 		resetMultiplexer();
 		
@@ -147,11 +145,7 @@ public class WorldEditorController {
 			case BLOCK_SELECTED:
 				multiplexer.addProcessor(blockSelectedStage);
 				break;
-				
-			case SIMULATOR:
-				multiplexer.addProcessor(simulatorStage);
-				break;
-				
+
 			default:
 				break;
 			
@@ -169,17 +163,12 @@ public class WorldEditorController {
 		Stage homeStage = WorldEditorScreen.getScreen().getHomeStage();
 		Stage blockStage = WorldEditorScreen.getScreen().getBlockStage();
 		Stage blockSelectedStage = WorldEditorScreen.getScreen().getBlockSelectedStage();
-		//Stage toolStage = WorldEditorScreen.getScreen().getToolStage();
-		Stage simulatorStage = WorldEditorScreen.getScreen().getSimulatorStage();
 		
 		multiplexer.removeProcessor(inputProcessor);
 		multiplexer.removeProcessor(optionStage);
 		multiplexer.removeProcessor(homeStage);
 		multiplexer.removeProcessor(blockStage);
 		multiplexer.removeProcessor(blockSelectedStage);
-		//multiplexer.removeProcessor(toolStage);
-		multiplexer.removeProcessor(simulatorStage);
-		
 	}
 
 	/**
@@ -193,10 +182,10 @@ public class WorldEditorController {
 		
 		if(isBlock) {
 
-			if(selection == ToolBarSelection.BLOCK_SELECTED) {
-				selection = ToolBarSelection.NONE;
+			if(selection == ToolBarSelectionType.BLOCK_SELECTED) {
+				selection = ToolBarSelectionType.NONE;
 			}else {
-				selection = ToolBarSelection.BLOCK_SELECTED;
+				selection = ToolBarSelectionType.BLOCK_SELECTED;
 				resetMultiplexer();
 				updateInputMultiplexer();
 				
@@ -207,7 +196,7 @@ public class WorldEditorController {
 			return;
 		}
 		
-		if (selection == ToolBarSelection.BLOCK) {
+		if (selection == ToolBarSelectionType.BLOCK) {
 						
 			switch(blockSelection) {
 			
@@ -344,11 +333,11 @@ public class WorldEditorController {
 		return this.blockID;
 	}
 	
-	public ToolBarSelection getToolBarSelection() {
+	public ToolBarSelectionType getToolBarSelection() {
 		return selection;
 	}
 	
-	public void setToolBarSelection(ToolBarSelection selection) {
+	public void setToolBarSelection(ToolBarSelectionType selection) {
 		this.selection = selection;
 	}
 	

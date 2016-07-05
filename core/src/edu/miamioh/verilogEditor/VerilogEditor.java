@@ -69,6 +69,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	private long startTime;
 	private long totalFocusTime;
 	private boolean isFirstSimCycle;
+	
+	private JFrame errorWindow;
 
 //	/**
 //	 * @param args
@@ -89,6 +91,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	}
 
 	public VerilogEditor(RootModuleSimulator sim, Parse compiler, String rootPath, String filePath) {
+		
 		// Create the window
 		super("Verilog Text Editor: " + filePath);
 
@@ -245,14 +248,6 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		cErrorArea.weightx = 1;
 		cErrorArea.weighty = 1;
 		lowerArea.add(errorArea, cErrorArea);
-		/*
-		GridBagConstraints cAnimationPanel = new GridBagConstraints();
-		cAnimationPanel.gridx = 2;
-		cAnimationPanel.gridy = 1;
-		cAnimationPanel.weightx = 0.1;
-		cAnimationPanel.weighty = 1;
-		lowerArea.add(animationPanel, cAnimationPanel);
-		*/
 		splitPane.add(upperArea, JSplitPane.LEFT, 1);
 		splitPane.add(lowerArea, JSplitPane.RIGHT, 2);
 
@@ -263,7 +258,6 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		JMenu fileMenu = new JMenu("File");
 		JMenu editMenu = new JMenu("Edit");
 		JMenu simulationMenu = new JMenu("Simulation");
-		//JMenu headerMenu = new JMenu("Template");
 
 		JMenuItem saveMenuItem = new JMenuItem("Save");
 		saveMenuItem.setAccelerator(KeyStroke.getKeyStroke('S', InputEvent.CTRL_MASK));
@@ -272,11 +266,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		JMenuItem verifyMenuItem = new JMenuItem("Verify");
 		verifyMenuItem.setAccelerator(KeyStroke.getKeyStroke('R', InputEvent.CTRL_MASK));
 		verifyMenuItem.addActionListener(this);
-		/*
-		 * JMenuItem uploadMenuItem = new JMenuItem("Upload");
-		 * uploadMenuItem.setAccelerator(KeyStroke.getKeyStroke('U',
-		 * InputEvent.CTRL_MASK)); uploadMenuItem.addActionListener(this);
-		 */
+
 		JMenuItem exitMenuItem = new JMenuItem("Exit");
 		exitMenuItem.setAccelerator(KeyStroke.getKeyStroke('E', InputEvent.CTRL_MASK));
 		exitMenuItem.addActionListener(this);
@@ -300,21 +290,11 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		JMenuItem resetMenuItem = new JMenuItem("Reset Simulation");
 		resetMenuItem.setAccelerator(KeyStroke.getKeyStroke('R', InputEvent.CTRL_MASK));
 		resetMenuItem.addActionListener(this);
-		/*
-		JMenuItem comboHeaderMenuItem = new JMenuItem("Combinational");
-		comboHeaderMenuItem.setAccelerator(KeyStroke.getKeyStroke('1', InputEvent.CTRL_MASK));
-		comboHeaderMenuItem.addActionListener(this);
 
-		JMenuItem seqHeaderMenuItem = new JMenuItem("Sequential");
-		seqHeaderMenuItem.setAccelerator(KeyStroke.getKeyStroke('2', InputEvent.CTRL_MASK));
-		seqHeaderMenuItem.addActionListener(this);
-		 */
 		menubar.add(fileMenu);
 		menubar.add(editMenu);
 		menubar.add(simulationMenu);
-		//menubar.add(headerMenu);
 		fileMenu.add(verifyMenuItem);
-		// fileMenu.add(uploadMenuItem);
 		fileMenu.addSeparator();
 		fileMenu.add(saveMenuItem);
 		fileMenu.addSeparator();
@@ -324,11 +304,6 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		editMenu.add(sarMenuItem);
 		simulationMenu.add(simulateMenuItem);
 		simulationMenu.add(resetMenuItem);
-		//headerMenu.add(comboHeaderMenuItem);
-		//headerMenu.add(seqHeaderMenuItem);
-
-		/* Initialize the Parser */
-		//Compiler = new Parse(errorText, rootPath);
 		
 		this.Compiler = compiler;
 		this.sim = sim;
@@ -351,25 +326,6 @@ public class VerilogEditor extends JFrame implements ActionListener {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-
-				// this block of code is for debug
-				/*
-				 * System.out.println("code text: "); for(int i = 0; i <
-				 * codeText.getText().toCharArray().length; i++){
-				 * if(codeText.getText().toCharArray()[i] == 0xA)
-				 * System.out.print("N"); else
-				 * if(codeText.getText().toCharArray()[i] == 0xD)
-				 * System.out.print("R"); else System.out.print("a");
-				 * System.out.print((int)codeText.getText().toCharArray()[i] +
-				 * "\t"); } System.out.println(); System.out.println(
-				 * "file content: "); for(int i = 0; i <
-				 * fileContent.toCharArray().length; i++){
-				 * if(fileContent.toCharArray()[i] == 0xA)
-				 * System.out.print("N"); else if(fileContent.toCharArray()[i]
-				 * == 0xD) System.out.print("R"); else System.out.print("a");
-				 * System.out.print((int)fileContent.toCharArray()[i] + "\t"); }
-				 * System.out.println();
-				 */
 
 				if (codeText.getText().equals(fileContent)) {
 					totalFocusTime += (System.currentTimeMillis() - startTime) / 1000;
@@ -483,12 +439,6 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		});
 		toolBar.add(verifyButton);
 
-		// JButton uploadButton = makeToolBarButton("upload","Upload","Upload");
-		// uploadButton.addActionListener(new ActionListener() {
-		//
-		// @Override public void actionPerformed(ActionEvent e) {
-		// uploadButtonFunction(); } }); toolBar.add(uploadButton);
-
 		JButton undoButton = makeToolBarButton("undo", "Undo", "Undo");
 		undoButton.addActionListener(new ActionListener() {
 			@Override
@@ -541,67 +491,6 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			}
 		});
 		toolBar.add(schematicRenderButton);
-		
-		/*
-		toolBar.add(new JLabel("Internal Sensors: "));
-		MaskFormatter formatterInternal = null;
-		try {
-			formatterInternal = new MaskFormatter("########");
-		} catch (ParseException e1) {
-			e1.printStackTrace();
-		}
-		formatterInternal.setValidCharacters("10");
-		formatterInternal.setPlaceholderCharacter('0');
-		
-		simulateInput = new JFormattedTextField(formatterInternal);
-		simulateInput.setColumns(8);
-		simulateInput.addCaretListener(new CaretListener() {
-			public void caretUpdate(CaretEvent e) {
-				String tempStr = "";
-				tempStr = simulateInput.getText();
-//				if (tempStr.length() != 8) {
-//					tempStr = animationPanel.getInternalSignal();
-//				}
-//				animationPanel.setStates(tempStr);
-			}
-		});
-		toolBar.add(simulateInput);
-		*/
-		
-		/*
-		toolBar.add(new JLabel("General Sensors(6~0): "));
-		MaskFormatter formatterGeneral = null;
-		try {
-			formatterGeneral = new MaskFormatter("####");
-		} catch (ParseException e1) {
-			e1.printStackTrace();
-		}
-		formatterGeneral.setValidCharacters("10");
-		formatterGeneral.setPlaceholderCharacter('0');
-		generalSensorInput0 = new JFormattedTextField(formatterGeneral);
-		generalSensorInput1 = new JFormattedTextField(formatterGeneral);
-		generalSensorInput2 = new JFormattedTextField(formatterGeneral);
-		generalSensorInput3 = new JFormattedTextField(formatterGeneral);
-		generalSensorInput4 = new JFormattedTextField(formatterGeneral);
-		generalSensorInput5 = new JFormattedTextField(formatterGeneral);
-		generalSensorInput6 = new JFormattedTextField(formatterGeneral);
-
-		generalSensorInput0.setColumns(4);
-		generalSensorInput1.setColumns(4);
-		generalSensorInput2.setColumns(4);
-		generalSensorInput3.setColumns(4);
-		generalSensorInput4.setColumns(4);
-		generalSensorInput5.setColumns(4);
-		generalSensorInput6.setColumns(4);
-
-		toolBar.add(generalSensorInput6);
-		toolBar.add(generalSensorInput5);
-		toolBar.add(generalSensorInput4);
-		toolBar.add(generalSensorInput3);
-		toolBar.add(generalSensorInput2);
-		toolBar.add(generalSensorInput1);
-		toolBar.add(generalSensorInput0);
-		*/
 	}
 	
 	@Override

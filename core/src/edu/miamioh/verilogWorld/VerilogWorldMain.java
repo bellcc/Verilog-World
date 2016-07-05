@@ -10,6 +10,8 @@ package edu.miamioh.verilogWorld;
 import com.badlogic.gdx.Game;
 
 import edu.miamioh.Configuration.Configuration;
+import edu.miamioh.ErrorWindow.ErrorInstance;
+import edu.miamioh.ErrorWindow.ErrorReportingWindow;
 import edu.miamioh.Level.Level;
 import edu.miamioh.Screens.ChallengesScreen;
 import edu.miamioh.Screens.MainMenuScreen;
@@ -53,6 +55,7 @@ public class VerilogWorldMain extends Game {
 		
 	private String	VERILOG_WORLD_DEVELOPMENT	= "VERILOG_WORLD_DEVELOPMENT";
 	
+	private ErrorReportingWindow errorWindow;
 	private RootModuleSimulator sim;
 	private Parse compiler;
 	
@@ -65,6 +68,7 @@ public class VerilogWorldMain extends Game {
 	public void create() {
 		
 		// Make controller and update the sim and compiler variables
+		errorWindow = new ErrorReportingWindow();
 		verilogWorldController = new VerilogWorldController();
 		this.sim = verilogWorldController.getSim().getRootModuleSimulator();
 		this.compiler = verilogWorldController.getCompiler();
@@ -80,6 +84,25 @@ public class VerilogWorldMain extends Game {
 		schematicRendererScreen = new SchematicRendererScreen();
 
 		setMainMenuScreen();
+		
+		ErrorInstance error0 = new ErrorInstance("Module_0", 1, 3);
+		error0.addError("<13, 5> Error parsing source file.");
+		error0.addError("Problem with the program. Exiting...");
+		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
+		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
+		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
+		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
+		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
+		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
+		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
+		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
+		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
+		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
+		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
+		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
+		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
+		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
+		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().display();
 	}
 	
 	public void setConfigurationScreen() {
@@ -132,6 +155,8 @@ public class VerilogWorldMain extends Game {
 		challengesScreen = new ChallengesScreen(getVerilogWorldMain());
 		this.setScreen(challengesScreen);
 	}
+	
+	public ErrorReportingWindow getErrorWindow() {return this.errorWindow;}
 
 	public void launchVerilogEditor(String fileName){
 		/*String pathToJar = getRootPath() + "/VerilogEditor.jar";
