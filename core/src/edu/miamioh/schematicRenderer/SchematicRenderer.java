@@ -65,9 +65,9 @@ class SchematicRenderer implements Disposable {
 //        this.schematicScreen = screen;
 //    }
 //
-//    Stage getSchematicStage(){
-//        return this.schematicStage;
-//    }
+    Stage getSchematicStage(){
+        return this.schematicStage;
+    }
 
     private void resetStage(){
         schematicStage = new Stage();
@@ -276,6 +276,7 @@ class SchematicRenderer implements Disposable {
             int totalOuts = 0;
             int totalIns = 0;
             int skips = 0;
+            l1Gates = 0;
             int numOfGatesHoriz = 0;
             int numOfGatesVert = 0;
 
@@ -295,11 +296,12 @@ class SchematicRenderer implements Disposable {
             //Count the number of Gates vertically on the first level. The first level should set
             // the vertical height because every other level must fit within it.
             numOfGatesHoriz = (maxLevel + 1 > numOfGatesHoriz)? maxLevel + 1 : numOfGatesHoriz;
-            for (int i = 0; i < gates.size(); i++) {
+            for (int i = 0; i < gates.size(); i++){
                 tempG = gates.get(i);
-                if(tempG.getLevel() == 1)
-                    numOfGatesVert = (i - skips > numOfGatesVert)? i - skips : numOfGatesVert;
-                else
+                if(tempG.getLevel() == 1) {
+                    numOfGatesVert = (i - skips > numOfGatesVert) ? i - skips : numOfGatesVert;
+                    l1Gates++;
+                } else
                     skips++;
             }
 
@@ -319,14 +321,22 @@ class SchematicRenderer implements Disposable {
             //Assume 1 extra gate horizontally as the OUTPUT level.
             if(numOfGatesVert > numOfGatesHoriz + 1){
                 scaleFactor = (int)(height / gateSize / numOfGatesVert);
+//                System.out.println(height + " h, " + scaleFactor);
+//                scaleFactor = 40;
             } else {
                 scaleFactor = (int)(width / gateSize / numOfGatesHoriz);
+//                System.out.println(width + " w, " + scaleFactor);
+//                scaleFactor = 40;
             }
+
+            //If the calculated scalefactor is too small, make it 40.
+            scaleFactor = (scaleFactor > 40)? scaleFactor : 40;
 
             Label nametag;
             BitmapFont bfont = new BitmapFont();
             Label.LabelStyle style = new Label.LabelStyle(bfont, Color.BLACK);
-            int nx, ny, inTopY = 0, l1TopY = 0;
+            int nx, ny, inTopY = 0;
+//                    , l1TopY = 0;
 
             //Place the gates by their level, scaled gateSize and level multiplicity.
             //Set coordinates of INPUT Ports.
@@ -352,10 +362,10 @@ class SchematicRenderer implements Disposable {
             }
 
             //Set coordinates of Gates.
-            boolean attempt;
-            do {
-                l1Gates = 0;
-                attempt = false;
+//            boolean attempt;
+//            do {
+//                l1Gates = 0;
+//                attempt = false;
                 skips = 0;
                 for (int p = 1; p <= maxLevel; p++) {
                     for (int i = 0; i < gates.size(); i++) {
@@ -368,19 +378,20 @@ class SchematicRenderer implements Disposable {
                             //Change the algorithm for setting the cy of Gates so that the first
                             // Level spreads out the following ones.
                             if (p == 1) {
-                                if(!attempt) {
-                                    //If an attempt to place the first level hasn't been made...
-                                    //Place the first Level stacked evenly
-                                    tempG.setCY(getYCenter(i - skips));
-                                    l1TopY = (tempG.getCY() > l1TopY) ? tempG.getCY() : l1TopY; //Get the top l1 y
-                                    l1Gates++; //Count the number of gates in l1
-                                    attempt = true; //Mark that an attempt has been made
-                                } else {
-                                    //If stacking evenly wasn't spread out enough, spread them as high as the inputs.
-                                    tempG.setCY(getYAdj(i - skips, inTopY));
-                                    l1TopY = (tempG.getCY() > l1TopY)? tempG.getCY() : l1TopY;
-                                }
-
+//                                if(!attempt) {
+//                                    //If an attempt to place the first level hasn't been made...
+//                                    //Place the first Level stacked evenly
+//                                    tempG.setCY(getYCenter(i - skips));
+//                                    l1TopY = (tempG.getCY() > l1TopY) ? tempG.getCY() : l1TopY; //Get the top l1 y
+//                                    l1Gates++; //Count the number of gates in l1
+//                                    attempt = true; //Mark that an attempt has been made
+//                                } else {
+//                                    //If stacking evenly wasn't spread out enough, spread them as high as the inputs.
+//                                    tempG.setCY(getYAdj(i - skips, inTopY));
+//                                    l1TopY = (tempG.getCY() > l1TopY)? tempG.getCY() : l1TopY;
+//                                }
+                                //Spread out l1 across the whole height
+                                tempG.setCY(getYAdj(i - skips));
                             } else //Place following levels by the average height of their inputs.
                                 tempG.setCY(getYCenter(tempG.getInputs()));
 
@@ -396,7 +407,7 @@ class SchematicRenderer implements Disposable {
                     }
                     skips = 0;
                 }
-            } while ((l1TopY < inTopY || !attempt) && l1Gates > 1);
+//            } while ((l1TopY < inTopY || !attempt) && l1Gates > 1);
 
             //Set coordinates of OUTPUT Ports.
             for (Port port : ports) {
@@ -662,8 +673,8 @@ class SchematicRenderer implements Disposable {
         return avgY;
     }
 
-    private int getYAdj(int row, int inTopY){
-        float ydiff = inTopY - bottomEdge;
+    private int getYAdj(int row){
+        float ydiff = topEdge - bottomEdge;
         return (int)(row * (ydiff / l1Gates) + bottomEdge);
     }
 

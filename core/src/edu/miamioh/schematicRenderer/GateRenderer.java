@@ -1,7 +1,17 @@
 package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.BSpline;
+import com.badlogic.gdx.math.Path;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Array;
+import edu.miamioh.verilogWorld.VerilogWorldMain;
 
 import static edu.miamioh.schematicRenderer.SchematicRendererController.frame;
 import static edu.miamioh.schematicRenderer.SchematicRendererController.gateSize;
@@ -284,6 +294,21 @@ class GateRenderer {
      */
     private void drawOR(int cx, int cy, Color color) {
 
+//        //Get the stage
+//        Stage stage = SchematicRendererScreen.getScreen().getSchematicStage();
+//
+//        //Set up the pixmap and texture
+//        Vector2 point1 = new Vector2();
+//        Table mainTable = new Table();
+//        Texture texture;
+//        Image image;
+//        Path<Vector2> path;
+//        float segments = 10000;
+//        //Start a new pixmap
+//        int scaledGS = (int)(gateSize * scaleFactor);
+//        Pixmap pixmap = new Pixmap(scaledGS, scaledGS, Pixmap.Format.RGBA8888);
+//        pixmap.setColor(color);
+
         renderer.begin(ShapeRenderer.ShapeType.Line);
         renderer.setColor(color);
         float lx = cx - gateSize * scaleFactor / 2;
@@ -292,7 +317,43 @@ class GateRenderer {
         float by = cy - gateSize * scaleFactor / 2;
         float ty = cy + gateSize * scaleFactor / 2;
         float curveFactor = scaleFactor / 6;
-
+//        float tcx = cx + curveFactor;
+//        float tcy = cy + curveFactor;
+//        float bcx = tcx;
+//        float bcy = cy - curveFactor;
+//
+//        Vector2[] topCurve = {new Vector2(lx, ty), new Vector2(tcx, tcy), new Vector2(rx, cy)};
+//        Vector2[] bottomCurve = {new Vector2(lx, by), new Vector2(bcx, bcy), new Vector2(rx, cy)};
+//        Vector2[] sideCurve = {new Vector2(lx, by), new Vector2(lxrc, cy), new Vector2(lx, ty)};
+//
+//        //draw the path
+//        path = new BSpline<>();
+//        ((BSpline<Vector2>)path).set(topCurve, 3, false);
+//        float t;
+//        for(int i = 0; i <= segments; i++){
+//            t = i / segments;
+//            path.valueAt(point1, t);
+//            pixmap.drawPixel((int)point1.x, (int)point1.y);
+//        }
+//
+//        Array<Vector2> queue = new Array<Vector2>(Vector2.class);
+//        Color tempColor = new Color();
+//        Vector2 point;
+//        queue.add(new Vector2(cx, cy));
+//
+//        while (queue.size > 0){
+//            point = queue.pop();
+//
+//            if (tempColor.set(pixmap.getPixel((int)point.x, (int)point.y)).a == 0){
+//                pixmap.drawPixel((int)point.x, (int)point.y);
+//                queue.add(new Vector2((int)point.x+1, (int)point.y));
+//                queue.add(new Vector2((int)point.x-1, (int)point.y));
+//                queue.add(new Vector2((int)point.x, (int)point.y+1));
+//                queue.add(new Vector2((int)point.x, (int)point.y-1));
+//            }
+//        }
+//
+//
         //top curve
 //        int ex = (lx + rx) / 2;
 //        int eyt = (ty + cy) / 2;
@@ -313,6 +374,11 @@ class GateRenderer {
         renderer.curve(lx, by, lxrc, cy - gateSize * scaleFactor / 3, lxrc, cy + gateSize *
                 scaleFactor / 3, lx, ty, 1000);
 
+//        texture = new Texture(pixmap);
+//        image = new Image(texture);
+//        image.setPosition(cx, cy);
+//        stage.addActor(image);
+//
         renderer.end();
         if (frame) frame(cx, cy);
     }

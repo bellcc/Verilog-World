@@ -1,13 +1,13 @@
 module controller(clk, rst, bar_0, bar_1, bar_2, bar_3, bar_4, bar_5, bar_6);
 	input clk;
 	input rst;
-	output [23:0]bar_0;
-	output [23:0]bar_1;
-	output [23:0]bar_2;
-	output [23:0]bar_3;
-	output [23:0]bar_4;
-	output [23:0]bar_5;
-	output [23:0]bar_6;
+	output bar_0;
+	output bar_1;
+	output bar_2;
+	output bar_3;
+	output bar_4;
+	output bar_5;
+	output bar_6;
 	
 	reg [3:0]data;
 	
@@ -23,10 +23,11 @@ module controller(clk, rst, bar_0, bar_1, bar_2, bar_3, bar_4, bar_5, bar_6);
 		end
 	end
 	
-	assign bar_0 = (((~data[0]) & (data[1])) & (c ^ d)) | (((~data[0]) & (~data[1])) & (~data[3])) | (((~data[0]) & (~data[1])) & data[2]);
-	assign bar_1 = 0;
-	assign bar_2 = 0;
-	assign bar_3 = 0;
+//	assign bar_0 = (((~data[0]) & (data[1])) & (c ^ d)) | (((~data[0]) & (~data[1])) & (~data[3])) | (((~data[0]) & (~data[1])) & data[2]);
+	assign bar_0 = ~data[1] & ~data[2] & ~data[3] | ~data[0] & data[1] & (data[2] ^ data[3]) | ~data[0] & ~data[1] ~data[2];
+	assign bar_1 = ~data[0] & data[1] | ~data[1] & ~data[2] | ~data[0] & ~data[1] & data[2] & data[3];
+	assign bar_2 = data[0] ^ data[1] & ~data[2] | ~data[0] & data[1] & ~data[3] | ~data[0] & ~data[1] & data[2] & data[3];
+	assign bar_3 = ;
 	assign bar_4 = 0;
 	assign bar_5 = 0;
 	assign bar_6 = 0;
