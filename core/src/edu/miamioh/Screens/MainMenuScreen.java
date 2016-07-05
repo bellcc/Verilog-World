@@ -26,7 +26,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import edu.miamioh.verilogWorld.VerilogWorldMain;
- 
+
 public class MainMenuScreen implements Screen {
 	
 	private SpriteBatch batch;
@@ -37,17 +37,25 @@ public class MainMenuScreen implements Screen {
 	private int buttonHeight;
 	
 	
-    protected Stage stage;
+    private Stage stage;
     private Viewport viewport;
     private OrthographicCamera camera;
-    protected Skin skinPg;
-    protected Skin skinO;
-    protected Skin skinE;
+    private Skin skinPg;
+    private Skin skinO;
+    private Skin skinE;
+    private TextButton playButton;
+    private TextButton optionsButton;
+    private TextButton exitButton;
     
-    public MainMenuScreen(VerilogWorldMain vwm)
-    {
+    public MainMenuScreen(VerilogWorldMain vwm) {
     	
+    }
+
+    @Override
+    public void show() {
+       
     	font = new BitmapFont();
+    	
     	skinPg = new Skin();
     	skinO = new Skin();
     	skinE = new Skin();
@@ -71,139 +79,132 @@ public class MainMenuScreen implements Screen {
         stage = new Stage(viewport, batch);
 
         Gdx.input.setInputProcessor(stage);
-	    }
+    	
+    	//This sets up a table to add the buttons to
+    	Table mainTable = new Table();
+        mainTable.setFillParent(true);
+        mainTable.center();
 
+        //Creates buttons
+        playButton = new TextButton("", skinPg);
+        optionsButton = new TextButton("", skinO);
+        exitButton = new TextButton("", skinE);
 
-	    @Override
-	    public void show() {
-	       
-	    	//This sets up a table to add the buttons to
-	    	Table mainTable = new Table();
-	        mainTable.setFillParent(true);
-	        mainTable.center();
+        clickedListeners();
 
-	        //Creates buttons
-	        TextButton playButton = new TextButton("", skinPg);
-	        TextButton optionsButton = new TextButton("", skinO);
-	        TextButton exitButton = new TextButton("", skinE);
+        buttonHeight = Gdx.graphics.getHeight()/7;
+        buttonWidth = viewport.getScreenWidth() - viewport.getScreenWidth()/4;
+        
+        //Add buttons to table
+        mainTable.add(playButton).height(buttonHeight).width(buttonWidth);
+        mainTable.row();
+        mainTable.add(optionsButton).height(buttonHeight).width((2*buttonWidth)/3);
+        mainTable.row();
+        mainTable.add(exitButton).height(buttonHeight).width(buttonWidth/3);
+        
+        //Add the table to the stage
+        stage.addActor(mainTable);
+    }
 
-	        //Click listeners for each of the buttons
-	        playButton.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {	            	
-	            	//g.setScreen(new PlayScreen(g));
-	            	VerilogWorldMain.getVerilogWorldMain().setPlayScreen();	 
-	            	//System.out.println("Main Menu Click Listener");
+    @Override
+    public void render(float delta) {
+        Gdx.gl.glClearColor((float)0/255, (float)0/255, (float)0/255, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-	            }
-	        });
-	        
-	        optionsButton.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {	 
-	            	System.out.println("Options Click Listener");
-	            }
-	        });
-	        
-	        exitButton.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {
-	                Gdx.app.exit();
-	            }
-	        });
+        stage.act();
+        
+        batch2.begin();
+        sprite.draw(batch2);
+        batch2.end();
+        
+        stage.draw();
+    }
 
-	        buttonHeight = Gdx.graphics.getHeight()/6;
-	        buttonWidth = viewport.getScreenWidth() - viewport.getScreenWidth()/4;
-	        
-	        //Add buttons to table
-	        mainTable.add(playButton).height(buttonHeight).width(buttonWidth);
-	        mainTable.row();
-	        mainTable.add(optionsButton).height(buttonHeight).width((2*buttonWidth)/3);
-	        mainTable.row();
-	        mainTable.add(exitButton).height(buttonHeight).width(buttonWidth/3);
-	        
-	        stage.addActor(mainTable);
-	    }
+    @Override
+    public void resize(int width, int height) {
+    	viewport.update(width, height);
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+        camera.update();
+    }
 
-	    @Override
-	    public void render(float delta) {
-	        Gdx.gl.glClearColor((float)0/255, (float)0/255, (float)0/255, 1);
-	        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    @Override
+    public void pause() {
 
-	        stage.act();
-	        
-	        batch2.begin();
-	        sprite.draw(batch2);
-	        batch2.end();
-	        
-	        stage.draw();
-	    }
+    }
 
-	    @Override
-	    public void resize(int width, int height) {
-	    	//stage.setViewport(new FitViewport(width, height, camera));
-	    	viewport.update(width, height);
-	        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
-	        camera.update();
-	    }
+    @Override
+    public void resume() {
 
-	    @Override
-	    public void pause() {
+    }
 
-	    }
+    @Override
+    public void hide() {
 
-	    @Override
-	    public void resume() {
+    }
 
-	    }
+    @Override
+    public void dispose() {
+        skinPg.dispose();
+        skinO.dispose();
+        skinE.dispose();
+        stage.dispose();
+    }
+    
+    public void clickedListeners() {
+        //Click listeners for each of the buttons
+        playButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {	            	
+            	VerilogWorldMain.getVerilogWorldMain().setPlayScreen();	 
+            }
+        });
+        
+        optionsButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {	 
+//            	VerilogWorldMain.getVerilogWorldMain().setOptionScreen();
+            }
+        });
+        
+        exitButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+            }
+        });
+    }
+    
+	public void buttonStyles(){
+    	skinPg.add("default", font);
+    	skinO.add("default", font);
+    	skinE.add("default", font);
+		
+    	//adds an image texture to the skin of each button
+		skinPg.add("textColor", new Texture(Gdx.files.internal("images/play game.png")));
+		skinO.add("textColor", new Texture(Gdx.files.internal("images/options.png")));
+		skinE.add("textColor", new Texture(Gdx.files.internal("images/exit.png")));
 
-	    @Override
-	    public void hide() {
-
-	    }
-
-	    @Override
-	    public void dispose() {
-	        skinPg.dispose();
-	        skinO.dispose();
-	        skinE.dispose();
-	        stage.dispose();
-	    }
-	    
-    	public void buttonStyles(){
-        	skinPg.add("default", font);
-        	skinO.add("default", font);
-        	skinE.add("default", font);
-    		
-        	//adds an image texture to the skin of each button
-    		skinPg.add("textColor", new Texture(Gdx.files.internal("images/play game.png")));
-    		skinO.add("textColor", new Texture(Gdx.files.internal("images/options.png")));
-    		skinE.add("textColor", new Texture(Gdx.files.internal("images/exit.png")));
-
-    		//This sets up a style for each button
-    		TextButtonStyle buttonStylePg = new TextButtonStyle();
-    		buttonStylePg.up = skinPg.newDrawable("textColor", Color.WHITE);
-    		buttonStylePg.down = skinPg.newDrawable("textColor", Color.DARK_GRAY);
-    		buttonStylePg.checked = skinPg.newDrawable("textColor", Color.WHITE);
-    		buttonStylePg.over = skinPg.newDrawable("textColor", Color.LIGHT_GRAY);
-    		buttonStylePg.font = skinPg.getFont("default");
-    		skinPg.add("default", buttonStylePg);
-    		
-    		TextButtonStyle buttonStyleO = new TextButtonStyle();
-    		buttonStyleO.up = skinO.newDrawable("textColor", Color.WHITE);
-    		buttonStyleO.down = skinO.newDrawable("textColor", Color.DARK_GRAY);
-    		buttonStyleO.checked = skinO.newDrawable("textColor", Color.WHITE);
-    		buttonStyleO.over = skinO.newDrawable("textColor", Color.LIGHT_GRAY);
-    		buttonStyleO.font = skinO.getFont("default");
-    		skinO.add("default", buttonStyleO);
-    		
-    		TextButtonStyle buttonStyleE = new TextButtonStyle();
-    		buttonStyleE.up = skinE.newDrawable("textColor", Color.WHITE);
-    		buttonStyleE.down = skinE.newDrawable("textColor", Color.DARK_GRAY);
-    		buttonStyleE.checked = skinE.newDrawable("textColor", Color.WHITE);
-    		buttonStyleE.over = skinE.newDrawable("textColor", Color.LIGHT_GRAY);
-    		buttonStyleE.font = skinE.getFont("default");
-    		skinE.add("default", buttonStyleE);
-    	}
+		//This sets up a style for each button
+		TextButtonStyle buttonStylePg = new TextButtonStyle();
+		buttonStylePg.up = skinPg.newDrawable("textColor", Color.WHITE);
+		buttonStylePg.down = skinPg.newDrawable("textColor", Color.DARK_GRAY);
+		buttonStylePg.over = skinPg.newDrawable("textColor", Color.LIGHT_GRAY);
+		buttonStylePg.font = skinPg.getFont("default");
+		skinPg.add("default", buttonStylePg);
+		
+		TextButtonStyle buttonStyleO = new TextButtonStyle();
+		buttonStyleO.up = skinO.newDrawable("textColor", Color.WHITE);
+		buttonStyleO.down = skinO.newDrawable("textColor", Color.DARK_GRAY);
+		buttonStyleO.over = skinO.newDrawable("textColor", Color.LIGHT_GRAY);
+		buttonStyleO.font = skinO.getFont("default");
+		skinO.add("default", buttonStyleO);
+		
+		TextButtonStyle buttonStyleE = new TextButtonStyle();
+		buttonStyleE.up = skinE.newDrawable("textColor", Color.WHITE);
+		buttonStyleE.down = skinE.newDrawable("textColor", Color.DARK_GRAY);
+		buttonStyleE.over = skinE.newDrawable("textColor", Color.LIGHT_GRAY);
+		buttonStyleE.font = skinE.getFont("default");
+		skinE.add("default", buttonStyleE);
+	}
 
 }

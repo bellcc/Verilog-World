@@ -7,13 +7,17 @@
 
 package edu.miamioh.Screens;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -30,76 +34,47 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
  
 public class ChallengesScreen implements Screen {
-	
+		
 	private SpriteBatch batch;
+	private SpriteBatch batch2;
+	private Sprite sprite;
 	private BitmapFont font;
-    protected Stage stage;
+    private static Stage stage;
     private Viewport viewport;
     private OrthographicCamera camera;
     
-    private TextButton l1Button;
-    private TextButton l2Button;
-    private TextButton l3Button;
-    private TextButton l4Button;
-    private TextButton l5Button;
-    private TextButton l6Button;
-    private TextButton l7Button;
-    private TextButton l8Button;
-    private TextButton l9Button;
-    private TextButton l10Button;
-    private TextButton l11Button;
-    private TextButton l12Button;
     private TextButton backButton;
     private TextButton im1Button;
     private TextButton im2Button;
     private TextButton im3Button;
-    private TextButton nextButton;
+    private static TextButton nextButton;
     
-    private TextButtonStyle buttonStyleL1;
-    private TextButtonStyle buttonStyleL2;
-    private TextButtonStyle buttonStyleL3;
-    private TextButtonStyle buttonStyleL4;
-    private TextButtonStyle buttonStyleL5;
-    private TextButtonStyle buttonStyleL6;
-    private TextButtonStyle buttonStyleL7;
-    private TextButtonStyle buttonStyleL8;
-    private TextButtonStyle buttonStyleL9;
-    private TextButtonStyle buttonStyleL10;
-    private TextButtonStyle buttonStyleL11;
-    private TextButtonStyle buttonStyleL12;
     private TextButtonStyle buttonStyleB;
     private TextButtonStyle buttonStyleIm;
     private TextButtonStyle buttonStyleN;
 
-    protected Skin skinL1;
-    protected Skin skinL2;
-    protected Skin skinL3;
-    protected Skin skinL4;
-    protected Skin skinL5;
-    protected Skin skinL6;
-    protected Skin skinL7;
-    protected Skin skinL8;
-    protected Skin skinL9;
-    protected Skin skinL10;
-    protected Skin skinL11;
-    protected Skin skinL12;
-    protected Skin skinB;
-    protected Skin skinIm1;
-    protected Skin skinIm2;
-    protected Skin skinIm3;
-    protected Skin textSkin;
-    protected Skin skinN;
+    private Skin skinB;
+    private Skin skinIm1;
+    private Skin skinIm2;
+    private Skin skinIm3;
+    private static Skin textSkin;
+    private Skin skinN;
     
-    private TextArea textArea;
-    private boolean textActorCheck;
+    private static TextArea textArea;
+    private static boolean textActorCheck;
+    private static int textAreaY;
+    private static int textAreaX;
+   
+    private ArrayList<TextButton> levelArray;
+    private static ArrayList<String> levelDescription;
+    private ArrayList<TextButton> tutorialArray;
+    private static ArrayList<String> tutorialDescription;
 
-    private int buttonHeight;
-    private int buttonWidth;
-    private int level;
+    private static int buttonHeight;
+    private static int buttonWidth;
     private static boolean challenges;
     private static boolean tutorials;
-    private int tutorial;
-    private String text;
+    private static int index;
     
     private Table mainTable;
         
@@ -108,842 +83,431 @@ public class ChallengesScreen implements Screen {
     }
     
     public ChallengesScreen(VerilogWorldMain vwm) {
-    	    	
-    	font = new BitmapFont();
-		
-    	skinL1 = new Skin();
-    	skinL2 = new Skin();
-    	skinL3 = new Skin();
-    	skinL4 = new Skin();
-    	skinL5 = new Skin();
-    	skinL6 = new Skin();
-    	skinL7 = new Skin();
-    	skinL8 = new Skin();
-    	skinL9 = new Skin();
-    	skinL10 = new Skin();
-    	skinL11 = new Skin();
-    	skinL12 = new Skin();
-    	skinB = new Skin();
-    	skinIm1 = new Skin();
-    	skinIm2 = new Skin();
-    	skinIm3 = new Skin();
-    	skinN = new Skin();
-    	
-    	textSkin = new Skin(Gdx.files.internal ("uiskin.json"));
+   	   
+    }  
 
-    	buttonSetUp();
-    	
+
+	@Override
+	public void show() {
+
+		font = new BitmapFont();    	
+			
+		if(getChallenges()) {
+			levelArray = new ArrayList<TextButton>();
+			levelDescription = new ArrayList<String>();
+		}
+		else if(getTutorials()) {
+			tutorialArray = new ArrayList<TextButton>();
+			tutorialDescription = new ArrayList<String>();
+		}
+	    	
+    	skinB = new Skin();
+	   	skinIm1 = new Skin();
+	   	skinIm2 = new Skin();
+	   	skinIm3 = new Skin();
+	   	skinN = new Skin();
+	    	
+	   	textSkin = new Skin(Gdx.files.internal ("uiskin.json"));
+
+    	buttonStyle(skinB, buttonStyleB);
+    	buttonStyle(skinIm1, buttonStyleIm);
+    	buttonStyle(skinIm2, buttonStyleIm);
+    	buttonStyle(skinIm3, buttonStyleIm);
+    	buttonStyle(skinN, buttonStyleN);
+	    	
 	    batch = new SpriteBatch();
 	    camera = new OrthographicCamera();
-	    viewport = new FitViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(), camera);
+	    viewport = new FitViewport(Gdx.graphics.getHeight(),Gdx.graphics.getHeight(), camera);
 	    viewport.apply();
 
 	    camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
-        
+	        
         stage = new Stage(viewport, batch);
+	        
+        //sets up a background image for the menu
+	    batch2 = new SpriteBatch();
+	    Texture backTex = new Texture(Gdx.files.internal("images/circuit_3.png"));
+	    sprite = new Sprite(backTex);
+	    sprite.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
-        Gdx.input.setInputProcessor(stage);
+	    Gdx.input.setInputProcessor(stage);
+	       
+	    /* This is required to remove the old textArea actor before a new one is added.
+	     * If this was not used, then when clicking on one of the levels for the first
+	     * time, there will be an error because the program will try to remove the textArea
+	     * actor when there is no textArea actor currently present to remove.
+	     */
+	    textActorCheck = false;	    	
+	    	
+	    //This sets up a table to add the buttons to
+	   	mainTable = new Table();
+	   	
+	   	buttonHeight = (3 * viewport.getScreenHeight())/40;
+	    buttonWidth = viewport.getScreenWidth()/5;
+	        
+	    backButton = new TextButton("BACK", skinB);
+	    im1Button = new TextButton("IMPORT", skinIm1);
+	    im2Button = new TextButton("IMPORT", skinIm2);
+	    im3Button = new TextButton("IMPORT", skinIm3);
+	    nextButton = new TextButton("NEXT", skinN);
+	        
+
+	    if(getChallenges()) {
+	    	addLevelTest();
+		        
+		   	for(int i = 0; i < levelArray.size(); i++){
+		   		mainTable.add(levelArray.get(i)).height(buttonHeight).width(buttonWidth);
+		   		mainTable.row();
+		   	}
+	    }
+	    else if(getTutorials()) {
+	    	addTutorialTest();
+		        
+		    for(int i = 0; i < tutorialArray.size(); i++){
+		    	mainTable.add(tutorialArray.get(i)).height(buttonHeight).width(buttonWidth);
+		    	mainTable.row();
+		   	}
+	    }
+	        
+	    mainTable.left();
+  
+	    backButton.setHeight(buttonHeight);
+	    backButton.setWidth(buttonWidth);
+	    im1Button.setHeight(buttonHeight);
+        im1Button.setWidth(buttonWidth);
+        im2Button.setHeight(buttonHeight);
+        im2Button.setWidth(buttonWidth);
+        im3Button.setHeight(buttonHeight);
+        im3Button.setWidth(buttonWidth);
+        nextButton.setHeight(buttonHeight);
+        nextButton.setWidth(buttonWidth);
         
-       
-        /* This is required to remove the old textArea actor before a new one is added.
-         * If this was not used, then when clicking on one of the levels for the first
-         * time, there will be an error because the program will try to remove the textArea
-         * actor when there is no textArea actor currently present to remove.
-         */
-        textActorCheck = false;
-	   
+        
+        backButton.setPosition(0, 0);
+        im1Button.setPosition(0, ((7 * Gdx.graphics.getHeight())/8) + 20);
+        im2Button.setPosition(buttonWidth * 2, ((7 * Gdx.graphics.getHeight())/8) + 20);
+        im3Button.setPosition(buttonWidth * 4, ((7 * Gdx.graphics.getHeight())/8) + 20);
+        nextButton.setPosition(Gdx.graphics.getWidth() - buttonWidth, 0);
+        
+        Skin scrollSkin = new Skin(Gdx.files.internal("uiskin.json"));
+        
+        final Table table = new Table();
+        
+        final ScrollPane scroller = new ScrollPane(mainTable, scrollSkin);	        
+        scroller.setScrollingDisabled(true, false);
+        scroller.setFadeScrollBars(false);
+        scroller.setOverscroll(false, false);
+        
+        table.setFillParent(true);
+        table.add(scroller).width(buttonWidth + 20).height(buttonHeight * 10);
+        table.left();
+        
+        stage.addActor(backButton);
+        stage.addActor(im1Button);
+        stage.addActor(im2Button);
+        stage.addActor(im3Button);
+        stage.addActor(table);
+        	       	        
+        textAreaY = viewport.getScreenHeight()/8;
+        textAreaX = (3 * viewport.getScreenWidth())/10;
+        
+        clickedListeners();
     }
 
+    @Override
+    public void render(float delta) {
+        Gdx.gl.glClearColor((float)0/255, (float)0/255, (float)0/255, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-	    @Override
-	    public void show() {
-	       
-	    	//This sets up a table to add the buttons to
-	    	mainTable = new Table();
+        stage.act();
+        
+        batch2.begin();
+        sprite.draw(batch2);
+        batch2.end();
+        
+        stage.draw();
+    }
 
-	        //Creates buttons
-	        l1Button = new TextButton("", skinL1);
-	        l2Button = new TextButton("", skinL2);
-	        l3Button = new TextButton("", skinL3);
-	        l4Button = new TextButton("", skinL4);
-	        l5Button = new TextButton("", skinL5);
-	        l6Button = new TextButton("", skinL6);
-	        l7Button = new TextButton("", skinL7);
-	        l8Button = new TextButton("", skinL8);
-	        l9Button = new TextButton("", skinL9);
-	        l10Button = new TextButton("", skinL10);
-	        l11Button = new TextButton("", skinL11);
-	        l12Button = new TextButton("", skinL12);
-	        backButton = new TextButton("", skinB);
-	        im1Button = new TextButton("", skinIm1);
-	        im2Button = new TextButton("", skinIm2);
-	        im3Button = new TextButton("", skinIm3);
-	        nextButton = new TextButton("", skinN);
+    @Override
+    public void resize(int width, int height) {
+    	viewport.update(width, height);
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+        camera.update();
+    }
 
-	        buttonHeight = (Gdx.graphics.getHeight() - (Gdx.graphics.getHeight()/4))/10;
-	        buttonWidth = Gdx.graphics.getWidth()/5;
-	        
+    @Override
+    public void pause() {
 
-	        //Add buttons to table
-	        mainTable.add(l1Button).height(buttonHeight).width(buttonWidth);
-	        mainTable.row();
-	        mainTable.add(l2Button).height(buttonHeight).width(buttonWidth);
-	        mainTable.row();
-	        mainTable.add(l3Button).height(buttonHeight).width(buttonWidth);
-	        mainTable.row();
-	        mainTable.add(l4Button).height(buttonHeight).width(buttonWidth);
-	        mainTable.row();
-	        mainTable.add(l5Button).height(buttonHeight).width(buttonWidth);
-	        mainTable.row();
-	        mainTable.add(l6Button).height(buttonHeight).width(buttonWidth);
-	        mainTable.row();
-	        mainTable.add(l7Button).height(buttonHeight).width(buttonWidth);
-	        mainTable.row();
-	        mainTable.add(l8Button).height(buttonHeight).width(buttonWidth);
-	        mainTable.row();
-	        mainTable.add(l9Button).height(buttonHeight).width(buttonWidth);
-	        mainTable.row();
-	        mainTable.add(l10Button).height(buttonHeight).width(buttonWidth);
-	        mainTable.row();
-	        mainTable.add(l11Button).height(buttonHeight).width(buttonWidth);
-	        mainTable.row();
-	        mainTable.add(l12Button).height(buttonHeight).width(buttonWidth);
+    }
 
-	        mainTable.left();
-  
-	        backButton.setHeight(buttonHeight);
-	        backButton.setWidth(buttonWidth);
-	        im1Button.setHeight(buttonHeight);
-	        im1Button.setWidth(buttonWidth);
-	        im2Button.setHeight(buttonHeight);
-	        im2Button.setWidth(buttonWidth);
-	        im3Button.setHeight(buttonHeight);
-	        im3Button.setWidth(buttonWidth);
-	        nextButton.setHeight(buttonHeight);
-	        nextButton.setWidth(buttonWidth);
-	        
-	        
-	        backButton.setPosition(0, 0);
-	        im1Button.setPosition(0, ((7 * Gdx.graphics.getHeight())/8) + 20);
-	        im2Button.setPosition(buttonWidth * 2, ((7 * Gdx.graphics.getHeight())/8) + 20);
-	        im3Button.setPosition(buttonWidth * 4, ((7 * Gdx.graphics.getHeight())/8) + 20);
-	        nextButton.setPosition(Gdx.graphics.getWidth() - buttonWidth, 0);
-	        
-	        Skin scrollSkin = new Skin(Gdx.files.internal("uiskin.json"));
-	        
-	        final Table table = new Table();
-	        
-	        final ScrollPane scroller = new ScrollPane(mainTable, scrollSkin);	        
-	        scroller.setScrollingDisabled(true, false);
-	        scroller.setFadeScrollBars(false);
-	        scroller.setOverscroll(false, false);
+    @Override
+    public void resume() {
 
-	       
-	        //table.setWidth(buttonWidth + 20);
-	        //table.setHeight(buttonHeight*10);
-	        //table.setPosition(0, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
-	        
-	        table.setFillParent(true);
-	        table.add(scroller).width(buttonWidth + 20).height(buttonHeight * 10);
-	        table.left();
-	        
-	        stage.addActor(backButton);
-	        stage.addActor(im1Button);
-	        stage.addActor(im2Button);
-	        stage.addActor(im3Button);
-	        stage.addActor(table);
-	        	        
-	        clickedListeners();
-	    }
+    }
 
-	    @Override
-	    public void render(float delta) {
-	        Gdx.gl.glClearColor((float)0/255, (float)0/255, (float)0/255, 1);
-	        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    @Override
+    public void hide() {
 
-	        stage.act();	        
-	        stage.draw();
-	    }
+    }
 
-	    @Override
-	    public void resize(int width, int height) {
-	    	//stage.setViewport(new StretchViewport(width, height));
-	        //mainTable.left();
-	    	viewport.update(width, height);
-	        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
-	        camera.update();
-	    }
-
-	    @Override
-	    public void pause() {
-
-	    }
-
-	    @Override
-	    public void resume() {
-
-	    }
-
-	    @Override
-	    public void hide() {
-
-	    }
-
-	    @Override
-	    public void dispose() {
-	        
-	    	skinL1.dispose();
-	        skinL2.dispose();
-	        skinL3.dispose();
-	        skinL4.dispose();
-	        skinL5.dispose();
-	        skinL6.dispose();
-	        skinL7.dispose();
-	        skinL8.dispose();
-	        skinL9.dispose();
-	        skinL10.dispose();
-	        skinL11.dispose();
-	        skinL12.dispose();
-	        skinB.dispose();
-	        skinIm1.dispose();
-	        skinIm2.dispose();
-	        skinIm3.dispose();
-	        skinN.dispose();
-	        stage.dispose();
-	    }
-	    
-	    public void buttonSetUp(){
-	    	
-	    	System.out.println(getChallenges());
-	    	
-	    	if(getChallenges()){
-		    	buttonStyle(skinL1, buttonStyleL1, "level 1.png");
-		    	buttonStyle(skinL2, buttonStyleL2, "level 2.png");
-		    	buttonStyle(skinL3, buttonStyleL3, "level 3.png");
-		    	buttonStyle(skinL4, buttonStyleL4, "level 4.png");
-		    	buttonStyle(skinL5, buttonStyleL5, "level 5.png");
-		    	buttonStyle(skinL6, buttonStyleL6, "level 6.png");
-		    	buttonStyle(skinL7, buttonStyleL7, "level 7.png");
-		    	buttonStyle(skinL8, buttonStyleL8, "level 8.png");
-		    	buttonStyle(skinL9, buttonStyleL9, "level 9.png");
-		    	buttonStyle(skinL10, buttonStyleL10, "level 10.png");
-		    	buttonStyle(skinL11, buttonStyleL11, "level 11.png");
-		    	buttonStyle(skinL12, buttonStyleL12, "level 12.png");
+    @Override
+    public void dispose() {
+        
+        skinB.dispose();
+        skinIm1.dispose();
+        skinIm2.dispose();
+        skinIm3.dispose();
+        skinN.dispose();
+        stage.dispose();
+    }	    
+    
+    /*This method sets up the click and change listeners for every button displayed on the screen*/
+    public void clickedListeners(){
+        
+    	if(getChallenges()){
+	    	for(int i = 0; i < levelArray.size(); i++) {
+	    		levelArray.get(i).addListener(new LevelChangeListener(i));
 	    	}
-	    	else if(getTutorials()){
-		    	buttonStyle(skinL1, buttonStyleL1, "tutorial 1.png");
-		    	buttonStyle(skinL2, buttonStyleL2, "tutorial 2.png");
-		    	buttonStyle(skinL3, buttonStyleL3, "tutorial 3.png");
-		    	buttonStyle(skinL4, buttonStyleL4, "tutorial 4.png");
-		    	buttonStyle(skinL5, buttonStyleL5, "tutorial 5.png");
-		    	buttonStyle(skinL6, buttonStyleL6, "tutorial 6.png");
-		    	buttonStyle(skinL7, buttonStyleL7, "tutorial 7.png");
-		    	buttonStyle(skinL8, buttonStyleL8, "tutorial 8.png");
-		    	buttonStyle(skinL9, buttonStyleL9, "tutorial 9.png");
-		    	buttonStyle(skinL10, buttonStyleL10, "tutorial 10.png");
-		    	buttonStyle(skinL11, buttonStyleL11, "tutorial 11.png");
-		    	buttonStyle(skinL12, buttonStyleL12, "tutorial 12.png");
+    	}
+    	else if(getTutorials()){
+	    	for(int i = 0; i < tutorialArray.size(); i++) {
+	    		tutorialArray.get(i).addListener(new LevelChangeListener(i));
 	    	}
-	    	
-	    	
-	    	
-	    	buttonStyle(skinB, buttonStyleB, "back.png");
-	    	buttonStyle(skinIm1, buttonStyleIm, "import.png");
-	    	buttonStyle(skinIm2, buttonStyleIm, "import.png");
-	    	buttonStyle(skinIm3, buttonStyleIm, "import.png");
-	    	buttonStyle(skinN, buttonStyleN, "next.png");
-
-			
-	    }
-	    
-	    public void buttonStyle(Skin skin, TextButtonStyle buttonStyle, String imgName){
-	    	
-	    	
-	    	skin.add("default", font);
+    	}
+        
+        backButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+            	VerilogWorldMain.getVerilogWorldMain().setPlayScreen();	            	
+            }
+        });
+        
+        im1Button.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+            	System.out.println("import Click Listener");
+            	if(textActorCheck) {
+        			textArea.remove();
+        			nextButton.remove();
+            	}
+            }
+        });
+        
+        im2Button.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+            	System.out.println("import Click Listener");
+            	if(textActorCheck) {
+        			textArea.remove();
+        			nextButton.remove();
+            	}
+            }
+        });
+        
+        im3Button.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+            	System.out.println("import Click Listener");
+            	if(textActorCheck) {
+        			textArea.remove();
+        			nextButton.remove();
+            	}
+            }
+        });
+        
+        nextButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+            	
+            	if(getChallenges()){
+    	        	for(int i = 0; i < levelArray.size(); i++) {
+    	        		if(levelArray.indexOf(levelArray.get(index)) == levelArray.indexOf(levelArray.get(i))){
+    	        			System.out.println("Play Level " + (index+1));
+    	        		}
+    	        	}
+            	}
+            	else if(getTutorials()){
+    	        	for(int i = 0; i < tutorialArray.size(); i++) {
+    	        		if(tutorialArray.indexOf(tutorialArray.get(index)) == tutorialArray.indexOf(tutorialArray.get(i))){
+    	        			System.out.println("Play Tutorial " + (index+1));
+    	        		}
+    	        	}
+            	}
+            }
+        });
+    }
+    
+    /*creates a button style the buttons*/
+    public void buttonStyle(Skin skin, TextButtonStyle buttonStyle){
+    	
+    	
+    	skin.add("default", font);
+	
+		Pixmap pixmap = new Pixmap((int)Gdx.graphics.getWidth()/4,(int)Gdx.graphics.getHeight()/10, Pixmap.Format.RGB888);
+		pixmap.setColor(Color.WHITE);
+		pixmap.drawRectangle(0, 0, pixmap.getWidth(), pixmap.getHeight());
+		pixmap.setColor(Color.DARK_GRAY);
+		pixmap.fillRectangle(1, 1, pixmap.getWidth() - 2, pixmap.getHeight() - 2);
+    	
+    	//adds an image texture to the skin of each button
+		//skin.add("textColor", new Texture(Gdx.files.internal("images/" + imgName)));
 		
-	    	//adds an image texture to the skin of each button
-			skin.add("textColor", new Texture(Gdx.files.internal("images/" + imgName)));
-			
-	    	//This sets up a style for each button
-			buttonStyle = new TextButtonStyle();
-			buttonStyle.up = skin.newDrawable("textColor", Color.WHITE);
-			buttonStyle.down = skin.newDrawable("textColor", Color.DARK_GRAY);
-			buttonStyle.checked = skin.newDrawable("textColor", Color.WHITE);
-			buttonStyle.over = skin.newDrawable("textColor", Color.LIGHT_GRAY);
-			buttonStyle.font = skin.getFont("default");
-			skin.add("default", buttonStyle);
-			
-	    }
-	    
-	    public void clickedListeners(){
-	    	//Click listeners for each of the buttons
-	        l1Button.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {	            	
-	            	if(textActorCheck) {
-	        			textArea.remove();
-	        			nextButton.remove();
-	            	}
-	            	
-	            	if(getChallenges()){
-		            	text = "LEVEL 01\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	level = 1;
-	            	}
-	            	else if(getTutorials()){
-		            	text = "Tutorial 01\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	tutorial = 1;
-	            	}
-	            	
-	            	textArea = new TextArea(text, textSkin);
-	            	textArea.setDisabled(true);
-	            	textArea.setWidth(buttonWidth * 3);
-	            	textArea.setHeight(buttonHeight*10);
-	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
-	        		stage.addActor(textArea);
-	        		textActorCheck = true;
-	        		
-	        		stage.addActor(nextButton);
-	            }
-	        });
-	        
-	        l2Button.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {	 
-	            	if(textActorCheck) {
-	        			textArea.remove();
-	        			nextButton.remove();
-	            	}
-	            	
-	            	if(getChallenges()){
-		            	text = "LEVEL 02\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	level = 2;
-	            	}
-	            	else if(getTutorials()){
-		            	text = "Tutorial 02\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	tutorial = 2;
-	            	}
-	            	
-	            	textArea = new TextArea(text, textSkin);
-	            	textArea.setDisabled(true);
-	            	textArea.setWidth(buttonWidth * 3);
-	            	textArea.setHeight(buttonHeight*10);
-	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
-	        		stage.addActor(textArea);
-	        		textActorCheck = true;
-	        		
-	        		stage.addActor(nextButton);
-	            }
-	        });
-	        
-	        l3Button.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck) {
-	        			textArea.remove();
-	        			nextButton.remove();
-	            	}
-	            	
-	            	if(getChallenges()){
-		            	text = "LEVEL 03\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	level = 3;
-	            	}
-	            	else if(getTutorials()){
-		            	text = "Tutorial 03\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	tutorial = 3;
-	            	}
-	            	
-	            	textArea = new TextArea(text, textSkin);
-	            	textArea.setDisabled(true);
-	            	textArea.setWidth(buttonWidth * 3);
-	            	textArea.setHeight(buttonHeight*10);
-	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
-	        		stage.addActor(textArea);
-	        		textActorCheck = true;
-	        		
-	        		stage.addActor(nextButton);
-	            }
-	        });
-	        
-	        l4Button.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck) {
-	        			textArea.remove();
-	        			nextButton.remove();
-	            	}
-	        		
-	            	if(getChallenges()){
-		            	text = "LEVEL 04\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	level = 4;
-	            	}
-	            	else if(getTutorials()){
-		            	text = "Tutorial 04\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	tutorial = 4;
-	            	}
-	            	
-	            	textArea = new TextArea(text, textSkin);
-	            	textArea.setDisabled(true);
-	            	textArea.setWidth(buttonWidth * 3);
-	            	textArea.setHeight(buttonHeight*10);
-	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
-	        		stage.addActor(textArea);
-	        		textActorCheck = true;
-	        		
-	        		stage.addActor(nextButton);
-	            }
-	        });
-	        
-	        l5Button.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck) {
-	        			textArea.remove();
-	        			nextButton.remove();
-	            	}
-	        	
-	            	if(getChallenges()){
-		            	text = "LEVEL 05\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	level = 5;
-	            	}
-	            	else if(getTutorials()){
-		            	text = "Tutorial 05\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	tutorial = 5;
-	            	}
-	            	
-	            	textArea = new TextArea(text, textSkin);
-	            	textArea.setDisabled(true);
-	            	textArea.setWidth(buttonWidth * 3);
-	            	textArea.setHeight(buttonHeight*10);
-	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
-	        		stage.addActor(textArea);
-	        		textActorCheck = true;
-	        		
-	        		stage.addActor(nextButton);
-	            }
-	        });
-	        
-	        l6Button.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck) {
-	        			textArea.remove();
-	        			nextButton.remove();
-	            	}
-	        		
-	            	if(getChallenges()){
-		            	text = "LEVEL 06\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	level = 6;
-	            	}
-	            	else if(getTutorials()){
-		            	text = "Tutorial 06\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	tutorial = 6;
-	            	}
-	            	
-	            	textArea = new TextArea(text, textSkin);
-	            	textArea.setDisabled(true);
-	            	textArea.setWidth(buttonWidth * 3);
-	            	textArea.setHeight(buttonHeight*10);
-	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
-	        		stage.addActor(textArea);
-	        		textActorCheck = true;
-	        		
-	        		stage.addActor(nextButton);
-	            }
-	        });
-	        
-	        l7Button.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck) {
-	        			textArea.remove();
-	        			nextButton.remove();
-	            	}
-	        		
-	            	if(getChallenges()){
-		            	text = "LEVEL 07\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	level = 7;
-	            	}
-	            	else if(getTutorials()){
-		            	text = "Tutorial 07\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	tutorial = 7;
-	            	}
-	            	
-	            	textArea = new TextArea(text, textSkin);
-	            	textArea.setDisabled(true);
-	            	textArea.setWidth(buttonWidth * 3);
-	            	textArea.setHeight(buttonHeight*10);
-	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
-	        		stage.addActor(textArea);
-	        		textActorCheck = true;
-	        		
-	        		stage.addActor(nextButton);
-	            }
-	        });
-	        
-	        l8Button.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck) {
-	        			textArea.remove();
-	        			nextButton.remove();
-	            	}
-	        		
-	            	if(getChallenges()){
-		            	text = "LEVEL 08\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	level = 8;
-	            	}
-	            	else if(getTutorials()){
-		            	text = "Tutorial 08\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	tutorial = 8;
-	            	}
-	            	
-	            	textArea = new TextArea(text, textSkin);
-	            	textArea.setDisabled(true);
-	            	textArea.setWidth(buttonWidth * 3);
-	            	textArea.setHeight(buttonHeight*10);
-	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
-	        		stage.addActor(textArea);
-	        		textActorCheck = true;
-	        		
-	        		stage.addActor(nextButton);
-	            }
-	        });
-	        
-	        l9Button.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck) {
-	        			textArea.remove();
-	        			nextButton.remove();
-	            	}
-	        		
-	            	if(getChallenges()){
-		            	text = "LEVEL 09\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	level = 9;
-	            	}
-	            	else if(getTutorials()){
-		            	text = "Tutorial 09\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	tutorial = 9;
-	            	}
-	            	
-	            	textArea = new TextArea(text, textSkin);
-	            	textArea.setDisabled(true);
-	            	textArea.setWidth(buttonWidth * 3);
-	            	textArea.setHeight(buttonHeight*10);
-	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
-	        		stage.addActor(textArea);
-	        		textActorCheck = true;
-	        		
-	        		stage.addActor(nextButton);
-	            }
-	        });
-	        
-	        l10Button.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck) {
-	        			textArea.remove();
-	        			nextButton.remove();
-	            	}
-	        		
-	            	if(getChallenges()){
-		            	text = "LEVEL 10\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	level = 10;
-	            	}
-	            	else if(getTutorials()){
-		            	text = "Tutorial 10\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	tutorial = 10;
-	            	}
-	            	
-	            	textArea = new TextArea(text, textSkin);
-	            	textArea.setDisabled(true);
-	            	textArea.setWidth(buttonWidth * 3);
-	            	textArea.setHeight(buttonHeight*10);
-	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
-	        		stage.addActor(textArea);
-	        		textActorCheck = true;
-	        		
-	        		stage.addActor(nextButton);
-	            }
-	        });
-	        l11Button.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck) {
-	        			textArea.remove();
-	        			nextButton.remove();
-	            	}
-	        		
-	            	if(getChallenges()){
-		            	text = "LEVEL 11\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	level = 11;
-	            	}
-	            	else if(getTutorials()){
-		            	text = "Tutorial 11\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	tutorial = 11;
-	            	}
-	            	
-	            	textArea = new TextArea(text, textSkin);
-	            	textArea.setDisabled(true);
-	            	textArea.setWidth(buttonWidth * 3);
-	            	textArea.setHeight(buttonHeight*10);
-	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
-	        		stage.addActor(textArea);
-	        		textActorCheck = true;
-	        		
-	        		stage.addActor(nextButton);
-	            }
-	        });
-	        l12Button.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {
-	            	if(textActorCheck) {
-	        			textArea.remove();
-	        			nextButton.remove();
-	            	}
-	        		
-	            	if(getChallenges()){
-		            	text = "LEVEL 12\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	level = 12;
-	            	}
-	            	else if(getTutorials()){
-		            	text = "Tutorial 12\n\n"
-		        				+ "This is a rather large and important string that "
-		        				+ "describes this level and everything about it. I will "
-		        				+ "continue to write write write. Done";
-		            	tutorial = 12;
-	            	}
-	            	
-	            	textArea = new TextArea(text, textSkin);
-	            	textArea.setDisabled(true);
-	            	textArea.setWidth(buttonWidth * 3);
-	            	textArea.setHeight(buttonHeight*10);
-	    	        textArea.setPosition((buttonWidth / 2) + buttonWidth, (Gdx.graphics.getHeight()- (buttonHeight*10))/2);
-	        		stage.addActor(textArea);
-	        		textActorCheck = true;
-	        		
-	        		stage.addActor(nextButton);
-	            }
-	        });
-	        
-	        backButton.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {
-	            	VerilogWorldMain.getVerilogWorldMain().setPlayScreen();	            	
-	            }
-	        });
-	        
-	        im1Button.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {
-	            	System.out.println("import Click Listener");
-	            	if(textActorCheck) {
-	        			textArea.remove();
-	        			nextButton.remove();
-	            	}
-	            }
-	        });
-	        
-	        im2Button.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {
-	            	System.out.println("import Click Listener");
-	            	if(textActorCheck) {
-	        			textArea.remove();
-	        			nextButton.remove();
-	            	}
-	            }
-	        });
-	        
-	        im3Button.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {
-	            	System.out.println("import Click Listener");
-	            	if(textActorCheck) {
-	        			textArea.remove();
-	        			nextButton.remove();
-	            	}
-	            }
-	        });
-	        
-	        nextButton.addListener(new ClickListener(){
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {
-	            	
-	            	if(getChallenges()){
-	            	
-		            	switch(level){
-		            	
-			            	case 1:
-				            	System.out.println("Play Level 1");
-				            	break;
-			            	case 2:
-				            	System.out.println("Play Level 2");
-				            	break;
-			            	case 3:
-				            	System.out.println("Play Level 3");
-				            	break;
-			            	case 4:
-				            	System.out.println("Play Level 4");
-				            	break;
-			            	case 5:
-				            	System.out.println("Play Level 5");
-				            	break;
-			            	case 6:
-				            	System.out.println("Play Level 6");
-				            	break;
-			            	case 7:
-				            	System.out.println("Play Level 7");
-				            	break;
-			            	case 8:
-				            	System.out.println("Play Level 8");
-				            	break;
-			            	case 9:
-				            	System.out.println("Play Level 9");
-				            	break;
-			            	case 10:
-				            	System.out.println("Play Level 10");
-				            	break;
-			            	case 11:
-				            	System.out.println("Play Level 11");
-				            	break;
-			            	case 12:
-				            	System.out.println("Play Level 12");
-				            	break;
-		            	
-		            	}
-	            	}
-	            	else if(getTutorials()){
-		            	
-	            		switch(tutorial){
-		            	
-			            	case 1:
-				            	System.out.println("Tutorial 1");
-				            	break;
-			            	case 2:
-				            	System.out.println("Tutorial 2");
-				            	break;
-			            	case 3:
-				            	System.out.println("Tutorial 3");
-				            	break;
-			            	case 4:
-				            	System.out.println("Tutorial 4");
-				            	break;
-			            	case 5:
-				            	System.out.println("Tutorial 5");
-				            	break;
-			            	case 6:
-				            	System.out.println("Tutorial 6");
-				            	break;
-			            	case 7:
-				            	System.out.println("Tutorial 7");
-				            	break;
-			            	case 8:
-				            	System.out.println("Tutorial 8");
-				            	break;
-			            	case 9:
-				            	System.out.println("Tutorial 9");
-				            	break;
-			            	case 10:
-				            	System.out.println("Tutorial 10");
-				            	break;
-			            	case 11:
-				            	System.out.println("Tutorial 11");
-				            	break;
-			            	case 12:
-				            	System.out.println("Tutorial 12");
-				            	break;
-	            	
-	            		}
-	            	}
-	            }
-	        });
-	    }
-	    
-	    public void setTutorials(boolean tutorials) {
-	    	ChallengesScreen.tutorials = tutorials;
-	    }
-	    
-	    public void setChallenges(boolean challenges) {
-	    	ChallengesScreen.challenges = challenges;
-	    }
-	    
-	    public static boolean getTutorials() {
-	    	return tutorials;
-	    }
-	    
-	    public static boolean getChallenges() {
-	    	return challenges;
-	    }
+		skin.add("textColor", new Texture(pixmap));
+
+		
+    	//This sets up a style for each button
+		buttonStyle = new TextButtonStyle();
+		buttonStyle.up = skin.newDrawable("textColor", Color.WHITE);
+		buttonStyle.down = skin.newDrawable("textColor", Color.GRAY);
+		buttonStyle.over = skin.newDrawable("textColor", Color.CYAN);
+		buttonStyle.font = skin.getFont("default");
+		skin.add("default", buttonStyle);
+		
+    }
+    
+    /*adds a level button to the level menu*/
+    public void addLevel(String buttonText, String description, Skin skin, TextButtonStyle style) {
+    	buttonStyle(skin, style);
+    	TextButton button = new TextButton(buttonText, skin);
+    	levelDescription.add(description);
+    	levelArray.add(button);
+    }
+    
+    /*adds a tutorial button to the tutorial menu*/
+    public void addTutorial(String buttonText, String description, Skin skin, TextButtonStyle style) {
+    	buttonStyle(skin, style);
+    	TextButton button = new TextButton(buttonText, skin);
+    	tutorialDescription.add(description);
+    	tutorialArray.add(button);	    		
+    }
+    	  
+    
+    /*This method is called from the LevelChangeListener class.
+     *The index is the value of "i" that is used to loop through
+     *the levels and add them to the menu*/
+    public static void listen(int index) {
+    	
+    	ChallengesScreen.index = index;
+    	
+    	if(textActorCheck) {
+			textArea.remove();
+			nextButton.remove();
+    	}  	
+    	
+    	if(getChallenges()) {
+        	for(int j = 0; j < levelDescription.size(); j++) {
+        		if(levelDescription.indexOf(levelDescription.get(index)) == levelDescription.indexOf(levelDescription.get(j))){
+	            	String describe = "level " + (index+1) + "\n\n" + levelDescription.get(j);
+        			textArea = new TextArea(describe, textSkin);    	
+       			}
+       		}
+    	}
+    	else if(getTutorials()) {
+        	for(int j = 0; j < tutorialDescription.size(); j++) {
+        		if(tutorialDescription.indexOf(tutorialDescription.get(index)) == tutorialDescription.indexOf(tutorialDescription.get(j))){
+	            	String describe = "tutorial " + (index+1) + "\n\n" + tutorialDescription.get(j);
+        			textArea = new TextArea(describe, textSkin);    	
+       			}
+       		}
+    	}
+    		            		    	
+    	textArea.setDisabled(true);
+    	textArea.setWidth(buttonWidth * 3);
+    	textArea.setHeight(buttonHeight*10);
+        textArea.setPosition(textAreaX, textAreaY);
+		stage.addActor(textArea);
+		textActorCheck = true;
+		
+		stage.addActor(nextButton);
+		
+    }
+    
+    
+    /*The setters and getters for tutorials and challenges are 
+     *Used to determine whether the tutorial or challenges button was click
+     *on the play screen */
+    public void setTutorials(boolean tutorials) {
+    	ChallengesScreen.tutorials = tutorials;
+    }
+    
+    public void setChallenges(boolean challenges) {
+    	ChallengesScreen.challenges = challenges;
+    }
+    
+    public static boolean getTutorials() {
+    	return tutorials;
+    }
+    
+    public static boolean getChallenges() {
+    	return challenges;
+    }    
+    
+    public void addLevelTest() {
+    	
+        Skin skinTest1 = new Skin();
+        Skin skinTest2 = new Skin();
+        Skin skinTest3 = new Skin();
+        Skin skinTest4 = new Skin();
+        Skin skinTest5 = new Skin();
+        Skin skinTest6 = new Skin();
+        Skin skinTest7 = new Skin();
+        Skin skinTest8 = new Skin();
+        Skin skinTest9 = new Skin();
+        Skin skinTest10 = new Skin();
+        Skin skinTest11 = new Skin();
+        Skin skinTest12 = new Skin();
+        Skin skinTest13 = new Skin();
+        Skin skinTest14 = new Skin();
+        Skin skinTest15 = new Skin();
+
+        
+        TextButtonStyle textButtonStyle = new TextButtonStyle();
+        
+        addLevel("LEVEL 1", "testing 1st level description", skinTest1, textButtonStyle);
+        addLevel("LEVEL 2", "testing 2nd level description", skinTest2, textButtonStyle);
+        addLevel("LEVEL 3", "testing 3rd level description", skinTest3, textButtonStyle);
+        addLevel("LEVEL 4", "testing 4th level description", skinTest4, textButtonStyle);
+        addLevel("LEVEL 5", "testing 5th level description", skinTest5, textButtonStyle);
+        addLevel("LEVEL 6", "testing 6th level description", skinTest6, textButtonStyle);
+        addLevel("LEVEL 7", "testing 7th level description", skinTest7, textButtonStyle);
+        addLevel("LEVEL 8", "testing 8th level description", skinTest8, textButtonStyle);
+        addLevel("LEVEL 9", "testing 9th level description", skinTest9, textButtonStyle);
+        addLevel("LEVEL 10", "testing 10th level description", skinTest10, textButtonStyle);
+        addLevel("LEVEL 11", "testing 11th level description", skinTest11, textButtonStyle);
+        addLevel("LEVEL 12", "testing 12th level description", skinTest12, textButtonStyle);
+        addLevel("LEVEL 13", "testing 13th level description", skinTest13, textButtonStyle);
+        addLevel("LEVEL 14", "testing 14th level description", skinTest14, textButtonStyle);
+        addLevel("LEVEL 15", "testing 15th level description", skinTest15, textButtonStyle);
+
+        
+    }
+    
+    public void addTutorialTest() {
+        
+        Skin skinTest1 = new Skin();
+        Skin skinTest2 = new Skin();
+        Skin skinTest3 = new Skin();
+        Skin skinTest4 = new Skin();
+        Skin skinTest5 = new Skin();
+        Skin skinTest6 = new Skin();
+        Skin skinTest7 = new Skin();
+        Skin skinTest8 = new Skin();
+        Skin skinTest9 = new Skin();
+        Skin skinTest10 = new Skin();
+        
+        TextButtonStyle textButtonStyle = new TextButtonStyle();
+    	
+        addTutorial("TUTORIAL 1", "testing 1st tutorial description", skinTest1, textButtonStyle);
+        addTutorial("TUTORIAL 2", "testing 2nd tutorial description", skinTest2, textButtonStyle);
+        addTutorial("TUTORIAL 3", "testing 3rd tutorial description", skinTest3, textButtonStyle);
+        addTutorial("TUTORIAL 4", "testing 4th tutorial description", skinTest4, textButtonStyle);
+        addTutorial("TUTORIAL 5", "testing 5th tutorial description", skinTest5, textButtonStyle);
+        addTutorial("TUTORIAL 6", "testing 6th tutorial description", skinTest6, textButtonStyle);
+        addTutorial("TUTORIAL 7", "testing 7th tutorial description", skinTest7, textButtonStyle);
+        addTutorial("TUTORIAL 8", "testing 8th tutorial description", skinTest8, textButtonStyle);
+        addTutorial("TUTORIAL 9", "testing 9th tutorial description", skinTest9, textButtonStyle);
+        addTutorial("TUTORIAL 10", "testing 10th tutorial description", skinTest10, textButtonStyle);
+    }
 }
 

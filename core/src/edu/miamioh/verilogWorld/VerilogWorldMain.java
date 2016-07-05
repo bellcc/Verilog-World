@@ -14,7 +14,7 @@ import edu.miamioh.Level.Level;
 import edu.miamioh.Screens.ChallengesScreen;
 import edu.miamioh.Screens.MainMenuScreen;
 import edu.miamioh.Screens.PlayScreen;
-import edu.miamioh.projectDirectory.ProjectDirectoryScreen;
+import edu.miamioh.schematicRenderer.SchematicRendererController;
 import edu.miamioh.schematicRenderer.SchematicRendererScreen;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.RootModuleSimulator;
@@ -46,6 +46,8 @@ public class VerilogWorldMain extends Game {
 	private MainMenuScreen mainMenuScreen;
 	private PlayScreen playScreen;
 	private ChallengesScreen challengesScreen;
+
+	private SchematicRendererController schematicRendererController;
 	private SchematicRendererScreen schematicRendererScreen;
 		
 	private String	VERILOG_WORLD_DEVELOPMENT	= "VERILOG_WORLD_DEVELOPMENT";
@@ -68,13 +70,17 @@ public class VerilogWorldMain extends Game {
 
 		schematicRendererScreen = new SchematicRendererScreen();	
 		
+//		worldEditorController = new WorldEditorController(verilogWorldController.getDefaultConfig(), 
+//														  verilogWorldController.getCurrentLevel());
+//		worldSimulatorController = new WorldSimulatorController(verilogWorldController.getDefaultConfig());
+//		
+//		worldEditorScreen = new WorldEditorScreen(worldEditorController);
+//		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
+
+		schematicRendererController = new SchematicRendererController();
+		schematicRendererScreen = new SchematicRendererScreen();
+
 		setMainMenuScreen();
-		//setDirectoryScreen();
-	
-		//this.setScreen(new ProjectDirectoryScreen());
-		//this.setScreen(new ConfigurationScreen(VerilogWorldController.getController().getDefaultConfig()));
-		
-		//setWorldEditorScreen(new Level());
 	}
 	
 	public void setDirectoryScreen() {

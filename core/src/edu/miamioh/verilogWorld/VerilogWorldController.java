@@ -23,9 +23,9 @@ import javax.swing.JTextPane;
 
 import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.Configuration.ConfigurationParser;
-
 import edu.miamioh.Level.Level;
 import edu.miamioh.simulator.Parse;
+import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldSimulator.WorldSimulator;
 
 public class VerilogWorldController {
@@ -64,8 +64,11 @@ public class VerilogWorldController {
 	}
 
 	public void init() {
-				
-		this.rootPath = System.getProperty("user.dir") + "/../";
+		
+		this.rootPath = System.getProperty("user.dir");
+
+		//If using IntelliJ...
+//		this.rootPath = rootPath.substring(0, rootPath.substring(0, rootPath.lastIndexOf("/")).lastIndexOf("/") ) + "/";
 
 		controller = this;
 		currentLevel = new Level();
@@ -75,6 +78,7 @@ public class VerilogWorldController {
 			e.printStackTrace();
 		}
 		sim = new WorldSimulator(compiler.getRootModuleSimulator());
+		sim.setBlockList(currentLevel.getBlockList());
 		//TODO This needs to be set to the main menu controller.
 		//state = VerilogWorld.WORLD_SIMULATOR;
 		
@@ -90,5 +94,5 @@ public class VerilogWorldController {
 	public String getRootPath() 	                     {return this.rootPath;}
 	public void setLevelPath(File path)                  {this.levelPath = path;}
 	public File getLevelPath()                           {return this.levelPath;}
-	
+	public Level getCurrentLevel() 						 {return this.currentLevel;}
 }

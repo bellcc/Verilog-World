@@ -28,7 +28,6 @@ import org.w3c.dom.NodeList;
 
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.GameObjects.NormalBlock;
-import edu.miamioh.GameObjects.SpecialBlock;
 import edu.miamioh.GameObjects.blocks.BlankBlock;
 import edu.miamioh.GameObjects.blocks.WallBlock;
 import edu.miamioh.Level.Level;

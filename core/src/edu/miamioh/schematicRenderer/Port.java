@@ -1,11 +1,12 @@
 package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.graphics.Color;
-import edu.miamioh.util.Constants;
 
 import java.util.ArrayList;
 
 import static edu.miamioh.schematicRenderer.GateType.BLANK;
+import static edu.miamioh.schematicRenderer.SchematicRendererController.gateSize;
+import static edu.miamioh.schematicRenderer.SchematicRendererController.scaleFactor;
 
 /**
  * Created by shaffebd.
@@ -16,7 +17,7 @@ class Port {
     private ArrayList<String> inputs = new ArrayList<>();
     private String id = "";
     private int level = 0;
-    private int cx = 0, cy = 0;
+    private int cx = 0, cy = 0, rx = 0, ry = 0;
 //    private float r, g, b, a;
     private Color color;
 
@@ -151,7 +152,35 @@ class Port {
     void setCX(int cx) {
 
         this.cx = cx;
+        this.setRX();
 
+    }
+
+    /**
+     * Gets the Reference (bottom left) x value of this port.
+     * @return
+     */
+    int getRX() {
+        return this.rx;
+    }
+
+    /**
+     * Sets the Reference x of this port.
+     */
+    private void setRX() {
+        switch (this.getType()){
+            case INPUT:
+                this.rx = (int)(cx - gateSize * scaleFactor / 2);
+                break;
+
+            case OUTPUT:
+                this.rx = (int)(cx - gateSize * scaleFactor / 4);
+                break;
+
+            default:
+                this.rx = cx;
+                break;
+        }
     }
 
     /**
@@ -173,7 +202,23 @@ class Port {
     void setCY(int cy) {
 
         this.cy = cy;
+        this.setRY();
 
+    }
+
+    /**
+     * Gets the Reference y of this port.
+     * @return
+     */
+    int getRY() {
+        return this.ry;
+    }
+
+    /**
+     * Sets the Reference y of this port.
+     */
+    private void setRY() {
+        this.ry = (int)(cy - gateSize * scaleFactor / 4);
     }
 
     /**
@@ -186,10 +231,10 @@ class Port {
         switch (this.getType()) {
 
             case INPUT:
-                return this.getCX() + Constants.gateSize * Constants.scaleFactor / 2;
+                return (int)(this.getCX() + gateSize * scaleFactor / 2);
 
             case OUTPUT:
-                return this.getCX() - Constants.gateSize * Constants.scaleFactor / 2;
+                return (int)(this.getCX() - gateSize * scaleFactor / 2);
 
             default:
                 return 0;

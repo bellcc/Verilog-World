@@ -12,6 +12,7 @@ import edu.miamioh.worldSimulator.ChangeListeners.BackChangeListener;
 import edu.miamioh.worldSimulator.ChangeListeners.ResetChangeListener;
 import edu.miamioh.worldSimulator.ChangeListeners.StartChangeListener;
 import edu.miamioh.worldSimulator.ChangeListeners.StopChangeListener;
+import edu.miamioh.worldSimulator.ChangeListeners.VerifyChangeListener;
 
 public class SimulatorStage {
 
@@ -19,6 +20,7 @@ public class SimulatorStage {
 	
 	private Actor startActor;
 	private Actor stopActor;
+	private Actor verifyActor;
 	private Actor resetActor;
 	
 	public SimulatorStage() {
@@ -30,12 +32,14 @@ public class SimulatorStage {
 		// of a color.
 		startActor = new TextButtonActor().createTextButton(Color.RED, "START");
 		stopActor = new TextButtonActor().createTextButton(Color.BLUE, "STOP");
+		verifyActor = new TextButtonActor().createTextButton(Color.PINK, "VERIFY");
 		resetActor = new TextButtonActor().createTextButton(Color.YELLOW, "RESET");
 		
 		// Add the appropriate change listener to the actor which 
 		// is located at edu.miamioh.worldEditor.ChangeListeners.
 		startActor.addListener(new StartChangeListener());
 		stopActor.addListener(new StopChangeListener());
+		verifyActor.addListener(new VerifyChangeListener());
 		resetActor.addListener(new ResetChangeListener());
 		
 		int windowHeight = VerilogWorldController.WINDOW_HEIGHT;
@@ -55,6 +59,8 @@ public class SimulatorStage {
 		table.add(startActor).width(actorWidth).height(actorHeight);
 		table.row();
 		table.add(stopActor).width(actorWidth).height(actorHeight);
+		table.row();
+		table.add(verifyActor).width(actorWidth).height(actorHeight);
 		table.row();
 		table.add(resetActor).width(actorWidth).height(actorHeight);
 		

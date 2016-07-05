@@ -15,8 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.GameObjects.blocks.BlankBlock;
-import edu.miamioh.GameObjects.blocks.ClockBlock;
-import edu.miamioh.GameObjects.blocks.ResetBlock;
+import edu.miamioh.GameObjects.blocks.ControllerBlock;
+import edu.miamioh.GameObjects.blocks.LedBlock;
+import edu.miamioh.GameObjects.blocks.ScooterBlock;
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.GameObjects.blocks.WallBlock;
 import edu.miamioh.Level.Level;
@@ -149,7 +150,7 @@ public class WorldEditorController {
 		
 		bufferWidth = config.getBufferWidth();
 		bufferHeight= config.getBufferHeight();
-		
+
 	}
 	
 	public void updateInputMultiplexer() {		
@@ -249,14 +250,17 @@ public class WorldEditorController {
 				case Block_Blank:
 					currentLevel.addBlock(new BlankBlock(row, column));
 					break;
-				case Block_Clock:
-					currentLevel.addBlock(new ClockBlock(row, column));
-					break;
-				case Block_Reset:
-					currentLevel.addBlock(new ResetBlock(row, column));
-					break;
 				case Block_Wall:
 					currentLevel.addBlock(new WallBlock(row, column));
+					break;
+				case Block_Controller:
+					currentLevel.addBlock(new ControllerBlock(row, column));
+					break;
+				case Block_Scooter:
+					currentLevel.addBlock(new ScooterBlock(row, column));
+					break;
+				case Block_Led:
+					currentLevel.addBlock(new LedBlock(row, column));
 					break;
 				default:
 					break;
