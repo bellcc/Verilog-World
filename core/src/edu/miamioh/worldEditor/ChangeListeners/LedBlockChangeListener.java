@@ -6,15 +6,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import edu.miamioh.worldEditor.BlockSelectionType;
 import edu.miamioh.worldEditor.WorldEditorController;
 
-public class ClockBlockChangeListener extends ChangeListener {
+public class LedBlockChangeListener extends ChangeListener {
 
 	@Override
-	public void changed(ChangeEvent arg0, Actor arg1) {
-		
-		System.out.println("Clock Block Change Listener");
-		
-		WorldEditorController.getCurrentController().toggleBlockSelection(BlockSelectionType.Block_Clock);
+	public void changed(ChangeEvent event, Actor actor) {
 
+		System.out.println("Led Block Change Listener");
+		
+		WorldEditorController.getCurrentController().toggleBlockSelection(BlockSelectionType.Block_Led);
 	}
+
 	
 }
