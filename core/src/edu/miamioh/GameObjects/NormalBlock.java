@@ -118,12 +118,15 @@ public abstract class NormalBlock extends Block {
 	public void makeUniqueFile() {
 
 		String template = type.toString() + ".v";
-//		String pathToTemplate = Gdx.files.internal("../core/assets/modules/templates/" + template).file().getAbsolutePath();
-		String pathToTemplate = Gdx.files.internal("modules/templates/" + template).file().getAbsolutePath();
+		String pathToTemplate = Gdx.files.internal("../core/assets/modules/templates/" + template).file().getAbsolutePath();
+		//Just for Ben
+//		String pathToTemplate = VerilogWorldController.getController().getRootPath() +
+//				"/core/assets/modules/templates/" + template;
 		File templateFile = new File(pathToTemplate);
 		
 		String uniqueName = "module" + this.getID() + ".v";
-		String pathToUnique = WorldEditorController.getCurrentController().getCurrentLevel().getProject() + "/modules/" + uniqueName;
+		String pathToUnique = WorldEditorController.getCurrentController().getCurrentLevel().getProject().getPath() +
+				"/modules/" + uniqueName;
 		File uniqueFile = new File(pathToUnique);
 		
 		FileTools.copyFile(templateFile, uniqueFile);
