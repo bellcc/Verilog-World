@@ -68,7 +68,7 @@ public class VerilogWorldController {
 		this.rootPath = System.getProperty("user.dir");
 
 		//If using IntelliJ...
-		this.rootPath = rootPath.substring(0, rootPath.substring(0, rootPath.lastIndexOf("/")).lastIndexOf("/") ) + "/";
+//		this.rootPath = rootPath.substring(0, rootPath.substring(0, rootPath.lastIndexOf("/")).lastIndexOf("/") ) + "/";
 
 		controller = this;
 		currentLevel = new Level();

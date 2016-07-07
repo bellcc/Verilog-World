@@ -119,14 +119,10 @@ public abstract class NormalBlock extends Block {
 
 		String template = type.toString() + ".v";
 		String pathToTemplate = Gdx.files.internal("../core/assets/modules/templates/" + template).file().getAbsolutePath();
-		//Just for Ben
-//		String pathToTemplate = VerilogWorldController.getController().getRootPath() +
-//				"/core/assets/modules/templates/" + template;
 		File templateFile = new File(pathToTemplate);
 		
 		String uniqueName = "module" + this.getID() + ".v";
-		String pathToUnique = WorldEditorController.getCurrentController().getCurrentLevel().getProject().getPath() +
-				"/modules/" + uniqueName;
+		String pathToUnique = WorldEditorController.getCurrentController().getCurrentLevel().getProject().getPath() + "/modules/" + uniqueName;
 		File uniqueFile = new File(pathToUnique);
 		
 		FileTools.copyFile(templateFile, uniqueFile);
