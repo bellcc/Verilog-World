@@ -118,7 +118,8 @@ public abstract class NormalBlock extends Block {
 	public void makeUniqueFile() {
 
 		String template = type.toString() + ".v";
-		String pathToTemplate = Gdx.files.internal("../core/assets/modules/templates/" + template).file().getAbsolutePath();
+//		String pathToTemplate = Gdx.files.internal("../core/assets/modules/templates/" + template).file().getAbsolutePath();
+		String pathToTemplate = Gdx.files.internal("modules/templates/" + template).file().getAbsolutePath();
 		File templateFile = new File(pathToTemplate);
 		
 		String uniqueName = "module" + this.getID() + ".v";

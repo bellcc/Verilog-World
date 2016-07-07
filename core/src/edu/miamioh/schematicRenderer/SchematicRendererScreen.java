@@ -12,12 +12,12 @@ public class SchematicRendererScreen implements Screen {
 
     private static SchematicRendererScreen schematicRendererScreen;
     private SchematicRenderer schematic;
-//    private SchematicRendererController controller = SchematicRendererController.getCurrentController();
 
     /**
      * Constructor for SchematicRendererMain.
      */
     public SchematicRendererScreen(){
+        new SchematicRendererController();
         schematic = new SchematicRenderer();
         schematicRendererScreen = this;
 //        schematic.setSchematicScreen(schematicRendererScreen);
@@ -83,9 +83,9 @@ public class SchematicRendererScreen implements Screen {
         return schematicRendererScreen;
     }
 
-    Stage getSchematicStage(){
-        return schematic.getSchematicStage();
-    }
+//    Stage getSchematicStage(){
+//        return schematic.getSchematicStage();
+//    }
 //
 //    int getWindowWidth(){
 //        return this.windowWidth;
