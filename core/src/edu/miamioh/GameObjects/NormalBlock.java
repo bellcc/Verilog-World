@@ -3,6 +3,7 @@ package edu.miamioh.GameObjects;
 import java.io.File;
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 
 import edu.miamioh.GameObjects.blocks.BlankBlock;
@@ -27,7 +28,9 @@ public abstract class NormalBlock extends Block {
 	private ModuleWrapper module;
 	private NormalBlockType type;
 	
-	public NormalBlock(NormalBlockType type, int row, int column) {
+	public NormalBlock(NormalBlockType type, int row, int column, int id) {
+			
+		this.setID(id);
 		
 		if(compiler == null) {
 			compiler = VerilogWorldController.getController().getSim().getCompiler();
@@ -41,23 +44,25 @@ public abstract class NormalBlock extends Block {
 		
 		// Set color according to type
 		switch(type) {
-		case Blank:
-			setColor(BlankBlock.COLOR);
-			break;
-		case Wall:
-			setColor(WallBlock.COLOR);
-			break;
-		case Controller:
-			setColor(ControllerBlock.COLOR);
-			break;
-		case Scooter:
-			setColor(ScooterBlock.COLOR);
-			break;
-		case Led:
-			setColor(LedBlock.COLOR);
-			break;
-		default:
-			setColor(Color.BLACK);
+		
+			case Blank:
+				setColor(BlankBlock.COLOR);
+				break;
+			case Wall:
+				setColor(WallBlock.COLOR);
+				break;
+			case Controller:
+				setColor(ControllerBlock.COLOR);
+				break;
+			case Scooter:
+				setColor(ScooterBlock.COLOR);
+				break;
+			case Led:
+				setColor(LedBlock.COLOR);
+				break;
+			default:
+				setColor(Color.BLACK);
+			
 		}
 		
 		makeUniqueFile();
@@ -112,15 +117,12 @@ public abstract class NormalBlock extends Block {
 	
 	public void makeUniqueFile() {
 
-		//Modify this.
-		String modulePath = VerilogWorldController.getController().getRootPath() + "/core/assets/modules/";
-
 		String template = type.toString() + ".v";
-		String pathToTemplate = modulePath + "templates/" + template;
+		String pathToTemplate = Gdx.files.internal("../core/assets/modules/templates/" + template).file().getAbsolutePath();
 		File templateFile = new File(pathToTemplate);
 		
-		String uniqueName = "module_" + WorldEditorController.getCurrentController().getUniqueBlockID() + ".v";
-		String pathToUnique = modulePath + uniqueName;
+		String uniqueName = "module" + this.getID() + ".v";
+		String pathToUnique = WorldEditorController.getCurrentController().getCurrentLevel().getProject() + "/modules/" + uniqueName;
 		File uniqueFile = new File(pathToUnique);
 		
 		FileTools.copyFile(templateFile, uniqueFile);

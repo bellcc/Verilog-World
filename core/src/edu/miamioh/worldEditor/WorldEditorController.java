@@ -19,6 +19,7 @@ import edu.miamioh.GameObjects.blocks.ControllerBlock;
 import edu.miamioh.GameObjects.blocks.LedBlock;
 import edu.miamioh.GameObjects.blocks.ScooterBlock;
 import edu.miamioh.GameObjects.Block;
+import edu.miamioh.GameObjects.NormalBlock;
 import edu.miamioh.GameObjects.blocks.WallBlock;
 import edu.miamioh.Level.Level;
 import edu.miamioh.verilogWorld.VerilogWorldController;
@@ -246,25 +247,32 @@ public class WorldEditorController {
 		if (selection == ToolBarSelection.BLOCK) {
 						
 			switch(blockSelection) {
-			
+						
 				case Block_Blank:
-					currentLevel.addBlock(new BlankBlock(row, column));
+					int id = new edu.miamioh.util.UniqueNumber().generateID(WorldEditorController.getCurrentController().getCurrentLevel().getBlockList(), 0, WorldEditorController.getCurrentController().getWorldWidth() * WorldEditorController.getCurrentController().getWorldHeight());
+					currentLevel.addBlock(new BlankBlock(row, column, id));
 					break;
 				case Block_Wall:
-					currentLevel.addBlock(new WallBlock(row, column));
+					id = new edu.miamioh.util.UniqueNumber().generateID(WorldEditorController.getCurrentController().getCurrentLevel().getBlockList(), 0, WorldEditorController.getCurrentController().getWorldWidth() * WorldEditorController.getCurrentController().getWorldHeight());
+					currentLevel.addBlock(new WallBlock(row, column, id));
 					break;
 				case Block_Controller:
-					currentLevel.addBlock(new ControllerBlock(row, column));
+					id = new edu.miamioh.util.UniqueNumber().generateID(WorldEditorController.getCurrentController().getCurrentLevel().getBlockList(), 0, WorldEditorController.getCurrentController().getWorldWidth() * WorldEditorController.getCurrentController().getWorldHeight());
+					currentLevel.addBlock(new ControllerBlock(row, column, id));
 					break;
 				case Block_Scooter:
-					currentLevel.addBlock(new ScooterBlock(row, column));
+					id = new edu.miamioh.util.UniqueNumber().generateID(WorldEditorController.getCurrentController().getCurrentLevel().getBlockList(), 0, WorldEditorController.getCurrentController().getWorldWidth() * WorldEditorController.getCurrentController().getWorldHeight());
+					currentLevel.addBlock(new ScooterBlock(row, column, id));
 					break;
 				case Block_Led:
-					currentLevel.addBlock(new LedBlock(row, column));
+					id = new edu.miamioh.util.UniqueNumber().generateID(WorldEditorController.getCurrentController().getCurrentLevel().getBlockList(), 0, WorldEditorController.getCurrentController().getWorldWidth() * WorldEditorController.getCurrentController().getWorldHeight());
+					currentLevel.addBlock(new LedBlock(row, column, id));
 					break;
 				default:
 					break;
 			}
+			
+			//System.out.println(currentLevel.getBlockList().get(currentLevel.getBlockList().size() - 1).getID());
 			
 			++blockID;
 		}

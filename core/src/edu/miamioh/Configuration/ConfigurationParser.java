@@ -29,8 +29,12 @@ import org.w3c.dom.NodeList;
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.GameObjects.NormalBlock;
 import edu.miamioh.GameObjects.blocks.BlankBlock;
+import edu.miamioh.GameObjects.blocks.ControllerBlock;
+import edu.miamioh.GameObjects.blocks.LedBlock;
+import edu.miamioh.GameObjects.blocks.ScooterBlock;
 import edu.miamioh.GameObjects.blocks.WallBlock;
 import edu.miamioh.Level.Level;
+import edu.miamioh.worldEditor.WorldEditorController;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
@@ -94,12 +98,36 @@ public class ConfigurationParser {
 					
 					int row = Integer.parseInt(blockElement.getElementsByTagName("row").item(0).getTextContent());
 					int column = Integer.parseInt(blockElement.getElementsByTagName("column").item(0).getTextContent());
+					int id = Integer.parseInt(blockElement.getElementsByTagName("id").item(0).getTextContent());
 					String type = blockElement.getElementsByTagName("type").item(0).getTextContent();
 					
-					if(type.equals("Blank")) {
-						level.addBlock(new BlankBlock(row, column));
-					}else if(type.equals("Wall")) {
-						level.addBlock(new WallBlock(row, column));
+					switch (type) {
+					
+						case "Blank":
+							level.addBlock(new BlankBlock(row, column, id));
+							level.getBlock(row, column).setID(id);
+							break;
+							
+						case "Wall":
+							level.addBlock(new WallBlock(row, column, id));
+							level.getBlock(row, column).setID(id);
+							break;
+							
+						case "Controller":
+							level.addBlock(new ControllerBlock(row, column, id));
+							level.getBlock(row, column).setID(id);
+							break;
+							
+						case "Scooter":
+							level.addBlock(new ScooterBlock(row, column, id));
+							level.getBlock(row, column).setID(id);
+							break;
+							
+						case "Led":
+							level.addBlock(new LedBlock(row, column, id));
+							level.getBlock(row, column).setID(id);
+							break;
+							
 					}
 					
 				}
@@ -189,6 +217,10 @@ public class ConfigurationParser {
 				
 				Element element = doc.createElement("block");
 				rootElement.appendChild(element);
+				
+				Element id = doc.createElement("id");
+				id.setTextContent(String.valueOf(blockList.get(i).getID()));
+				element.appendChild(id);
 				
 				Element row = doc.createElement("row");
 				row.setTextContent(String.valueOf(blockList.get(i).getRow()));

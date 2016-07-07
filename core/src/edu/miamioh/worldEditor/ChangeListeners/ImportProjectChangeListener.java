@@ -30,8 +30,13 @@ public class ImportProjectChangeListener extends ChangeListener {
 			
 			System.out.println(chooser.getSelectedFile());
 			
+			Level level = new Level();
+			level.setProject(new File(chooser.getSelectedFile().getAbsolutePath() + "/"));
+			WorldEditorController.getCurrentController().setCurrentLevel(level);
+			
 			ConfigurationParser parser = new ConfigurationParser();
-			Level level = parser.getConfiguration(new File(chooser.getSelectedFile().getAbsolutePath() + "/world.xml"));
+			level = parser.getConfiguration(new File(chooser.getSelectedFile().getAbsolutePath() + "/world.xml"));
+			level.setProject(new File(chooser.getSelectedFile().getAbsolutePath() + "/"));
 			
 			WorldEditorController.getCurrentController().setCurrentLevel(level);
 			WorldEditorController.getCurrentController().updateWorld(level);

@@ -12,8 +12,8 @@ public class WallBlock extends NormalBlock {
 	
 	public static Color COLOR = new Color(0.6f, 0.6f, 0.6f, 1.0f);
 	
-	public WallBlock(int row, int column) {
-		super(NormalBlockType.Wall, row, column);
+	public WallBlock(int row, int column, int id) {
+		super(NormalBlockType.Wall, row, column, id);
 	}
 
 	@Override
