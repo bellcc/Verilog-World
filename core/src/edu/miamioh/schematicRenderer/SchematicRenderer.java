@@ -213,14 +213,14 @@ class SchematicRenderer implements Disposable {
     public void render(Stage schematicStage) {
 
         //Set the background color to white.
-        Gdx.gl.glClearColor(255, 255, 255, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+//        Gdx.gl.glClearColor(255, 255, 255, 1);
+//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         renderer = new ShapeRenderer();
 
-        int cxAxis = SchematicRendererController.getCurrentController().getWorldHeight() / 2; /* Axis of the window
+        int cxAxis = SchematicRendererController.getCurrentController().getWindowHeight() / 2; /* Axis of the window
         where y = total height / 2 */
-        int cyAxis = SchematicRendererController.getCurrentController().getWorldWidth() / 2; /* Axis of the window
+        int cyAxis = SchematicRendererController.getCurrentController().getWindowWidth() / 2; /* Axis of the window
         where
         x = total width / 2 */
 
@@ -240,8 +240,8 @@ class SchematicRenderer implements Disposable {
         this.schematicStage = schematicStage;
         renderHelper();
 
-        schematicStage.act(Gdx.graphics.getDeltaTime());
-        schematicStage.draw();
+//        schematicStage.act(Gdx.graphics.getDeltaTime());
+//        schematicStage.draw();
     }
 
     // Private methods to get things done
@@ -295,9 +295,8 @@ class SchematicRenderer implements Disposable {
                     totalIns++;
             }
 
-            controller.updateConfig();
-            float height = controller.getWorldHeight();
-            float width = controller.getWorldWidth();
+            float height = controller.getWindowHeight();
+            float width = controller.getWindowWidth();
 
             //Assume 1 extra gate horizontally as the OUTPUT level.
             if(numOfGatesVert > numOfGatesHoriz + 1){
@@ -305,14 +304,14 @@ class SchematicRenderer implements Disposable {
 //                System.out.println(height + " h, " + scaleFactor);
 //                scaleFactor = 40;
             } else {
-                scaleFactor = (int)(width / gateSize / numOfGatesHoriz);
+                scaleFactor = (int)(width / gateSize / (numOfGatesHoriz * 2 + 1));
 //                System.out.println(width + " w, " + scaleFactor);
 //                scaleFactor = 40;
             }
-            controller.updateConfig();
 
             //If the calculated scalefactor is too small, make it 40.
-            scaleFactor = (scaleFactor > 40)? scaleFactor : 40;
+            scaleFactor = (scaleFactor > 100)? 100 : scaleFactor;
+            scaleFactor = (scaleFactor < 10)? 10 : scaleFactor;
 
             Label nametag;
             BitmapFont bfont = new BitmapFont();
@@ -619,10 +618,8 @@ class SchematicRenderer implements Disposable {
     }
 
     private int getXCenter(int level) {
-
         return (int)(leftEdge + gateSize * scaleFactor / 2 + level *
                 gateSize * scaleFactor * 2);
-
     }
 
     private int getYCenter(int row) {
