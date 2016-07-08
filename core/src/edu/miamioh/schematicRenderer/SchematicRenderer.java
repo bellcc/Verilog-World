@@ -309,7 +309,7 @@ class SchematicRenderer implements Disposable {
 //                scaleFactor = 40;
             }
 
-            //If the calculated scalefactor is too small, make it 40.
+            //If the calculated scalefactor is too big or too small, limit it.
             scaleFactor = (scaleFactor > 100)? 100 : scaleFactor;
             scaleFactor = (scaleFactor < 20)? 20 : scaleFactor;
 
