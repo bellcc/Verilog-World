@@ -311,7 +311,7 @@ class SchematicRenderer implements Disposable {
 
             //If the calculated scalefactor is too small, make it 40.
             scaleFactor = (scaleFactor > 100)? 100 : scaleFactor;
-            scaleFactor = (scaleFactor < 10)? 10 : scaleFactor;
+            scaleFactor = (scaleFactor < 20)? 20 : scaleFactor;
 
             Label nametag;
             BitmapFont bfont = new BitmapFont();
