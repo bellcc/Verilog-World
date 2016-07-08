@@ -21,8 +21,8 @@ import javax.swing.border.LineBorder;
 
 public class ErrorReportingWindow extends JFrame {
 	
-	public static final int WIDTH = 600;
-	public static final int HEIGHT = 800;
+	public static final int WIDTH = 400;
+	public static final int HEIGHT = 600;
 	
 	private int ERROR_WIDTH;
 	
@@ -39,8 +39,10 @@ public class ErrorReportingWindow extends JFrame {
 		 */
 		this.setTitle("Error Window");
 		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		this.setResizable(false);
 		
 		GridBagLayout layout = new GridBagLayout();
+		
 		GridBagConstraints cons = new GridBagConstraints();
 		this.setLayout(layout);
 		
@@ -73,6 +75,7 @@ public class ErrorReportingWindow extends JFrame {
 		panel = new JPanel();
 		panel.setBackground(new Color(0.8f, 0.8f, 0.8f, 1.0f));
 		panel.setLayout(new GridBagLayout());
+		panel.setBorder(new EmptyBorder(new Insets(5, 0, 5, 0)));
 		errorCons = new GridBagConstraints();
 		
 		/*
@@ -95,7 +98,7 @@ public class ErrorReportingWindow extends JFrame {
 	
 	public void addError(ErrorInstance error) {
 		
-		error.setPreferredSize(new Dimension(ERROR_WIDTH, 130));
+		error.setPreferredSize(new Dimension(ERROR_WIDTH, 150));
 		error.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
 		
 		errorCons.gridx = 0;

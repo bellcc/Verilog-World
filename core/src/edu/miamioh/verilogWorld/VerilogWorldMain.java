@@ -89,19 +89,19 @@ public class VerilogWorldMain extends Game {
 		error0.addError("<13, 5> Error parsing source file.");
 		error0.addError("Problem with the program. Exiting...");
 		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
-		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
-		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
-		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
-		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
-		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
-		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
-		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
-		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
-		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
-		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
-		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
-		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
-		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
+//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
+//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
+//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
+//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
+//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
+//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
+//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
+//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
+//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
+//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
+//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
+//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
+//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
 		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().display();
 	}
 	
