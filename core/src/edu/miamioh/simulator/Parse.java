@@ -38,9 +38,10 @@ public class Parse {
 	
 	public RootModuleInstance compileFileForGame(String fileName) throws IOException {
 		
-		//errorText.setText("Compiling " + fileName + "...");
+		errorText.setText("Compiling " + fileName + "...");
 
-		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(rootPath + "/core/assets/modules/" + fileName));
+		//ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(rootPath + "/core/assets/modules/" + fileName));
+		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream("/home/clark/Desktop/asdf/modules/module208.v"));
 		Verilog2001Lexer lexer = new Verilog2001Lexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		Verilog2001Parser parser = new Verilog2001Parser(tokens);
@@ -62,7 +63,8 @@ public class Parse {
 		
 		errorText.setText("Compiling " + fileName + "...");
 
-		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(rootPath + "core/assets/modules/" + fileName));
+//		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(rootPath + "core/assets/modules/" + fileName));
+		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream("/home/clark/Desktop/asdf/modules/module208.v"));
 		Verilog2001Lexer lexer = new Verilog2001Lexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		Verilog2001Parser parser = new Verilog2001Parser(tokens);
@@ -162,4 +164,5 @@ public class Parse {
 			is_no_parse_errors = false;
 		}
 	}
+	
 }

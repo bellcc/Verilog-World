@@ -81,6 +81,7 @@ public class VerilogWorldMain extends Game {
 		schematicRendererScreen = new SchematicRendererScreen();
 
 		setMainMenuScreen();
+		
 	}
 	
 	public void setDirectoryScreen() {

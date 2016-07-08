@@ -91,6 +91,7 @@ public class VerilogWorldController {
 	public void setLevel(Level level)                    {this.currentLevel = level;}
 	public WorldSimulator getSim() 	                     {return this.sim;}
 	public Parse getCompiler()		                     {return this.compiler;}
+	public void setRootPath(String rootPath)             {this.rootPath = rootPath;}               
 	public String getRootPath() 	                     {return this.rootPath;}
 	public void setLevelPath(File path)                  {this.levelPath = path;}
 	public File getLevelPath()                           {return this.levelPath;}

@@ -76,17 +76,17 @@ public class VerilogEditor extends JFrame implements ActionListener {
 //	 *            opened, the exact top-level path of the game files, and the
 //	 *            Level Number (eg. Lv0).
 //	 */
-	public static void main(String[] args) throws IOException {
-		String fileName = "SevenSeg.v";
-		String rootPath = System.getProperty("user.dir") + "//..//";
-		String filePath = rootPath + "core/assets/modules/" + fileName;
-		Parse compiler = new Parse(new JTextPane(), rootPath);
-		RootModuleSimulator sim = compiler.getRootModuleSimulator();
-		
-		compiler.compileFileForGame(fileName);
-		
-		new VerilogEditor(sim, compiler, rootPath, filePath);
-	}
+//	public static void main(String[] args) throws IOException {
+//		String fileName = "SevenSeg.v";
+//		String rootPath = System.getProperty("user.dir") + "//..//";
+//		String filePath = rootPath + "core/assets/modules/" + fileName;
+//		Parse compiler = new Parse(new JTextPane(), rootPath);
+//		RootModuleSimulator sim = compiler.getRootModuleSimulator();
+//		
+//		compiler.compileFileForGame(fileName);
+//		
+//		new VerilogEditor(sim, compiler, rootPath, filePath);
+//	}
 
 	public VerilogEditor(RootModuleSimulator sim, Parse compiler, String rootPath, String filePath) {
 		// Create the window
@@ -175,6 +175,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		// verilogFiles = new File(pathOfEditorJar + "VerilogFiles/" + name +
 		// ".v");
 		verilogFiles = new File(filePath);
+		System.out.println(filePath);
 		if (!verilogFiles.exists()) {
 			try {
 				verilogFiles.createNewFile();

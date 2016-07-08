@@ -7,7 +7,6 @@
 
 package edu.miamioh.worldEditor;
 
-import java.awt.Component;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
@@ -60,10 +59,13 @@ public class WorldEditorScreen implements Screen {
 	private Stage toolStage;
 	private Stage simulatorStage;
 	
+	private boolean connectMode;
+	
 	private final int TOOLBAR_WIDTH = 150;
 	
 	public WorldEditorScreen() {
 		screen = this;
+		connectMode = false;
 	}
 	
 	public WorldEditorScreen(WorldEditorController controller) {
@@ -124,9 +126,46 @@ public class WorldEditorScreen implements Screen {
 		
 		renderWorld();
 		
+		if(controller.getToolBarSelection() == ToolBarSelection.BLOCK_SELECTED) {
+			renderSelectedBlock();
+		}
+		
+		if(connectMode) {
+			
+			int row = controller.getSelectedRow();
+			int column = controller.getSelectedColumn();
+			
+			renderConnectMode(controller.getCurrentLevel().getBlock(row, column));
+		}
+		
 		renderSelector();
 		renderToolBar();
+		
+	}
+	
+	private void renderSelectedBlock() {
+		
+		int row = controller.getSelectedRow();
+		int column = controller.getSelectedColumn();
+		Color color = controller.getCurrentLevel().getBlock(row, column).getColor();
 
+		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
+	    Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+	    
+	    renderer.begin(ShapeType.Filled);
+	    renderer.setColor(color);
+	    renderer.rect(column * gridWidth, row * gridWidth, gridWidth, gridHeight);
+	    renderer.end();
+	    
+	    int bufferX = gridWidth / 5;
+	    int bufferY = gridHeight / 5;
+	    
+	    //Redraw the selected element.
+	    renderer.begin(ShapeType.Filled);
+	    renderer.setColor(new Color(255,255,255,.8f));
+	    renderer.rect((column * gridHeight) + bufferY, (row * gridWidth) + bufferX, gridWidth - (bufferX * 2), gridHeight - (bufferY * 2));
+	    renderer.end();
+		
 	}
 	
 	private void renderWorld() {
@@ -287,12 +326,32 @@ public class WorldEditorScreen implements Screen {
 	
 	}
 	
-	private void renderErrorHUD() {
+	private void renderConnectMode(Block block) {
+				
+		Color selectedColor = block.getColor();
+		ArrayList<Block> blockList = controller.getCurrentLevel().getBlockList();
 		
+		for(int i=0;i<blockList.size();i++) {
 		
+			boolean connected = false;
+			
+			renderer.begin(ShapeType.Filled);
+			if(connected) {
+				renderer.setColor(selectedColor);
+			}else {
+				renderer.setColor(blockList.get(i).getColor());
+			}
+			renderer.rect(blockList.get(i).getColumn() * gridWidth, blockList.get(i).getRow() * gridHeight, gridWidth, gridHeight);
+			renderer.end();
+			
+		}
+		
+		renderSelectedBlock();
+		
+		//Render selection key.
 		
 	}
-	
+
 	private void renderBlockHighlight(Block block) {
 		
 		//Shade the grid.
@@ -312,29 +371,6 @@ public class WorldEditorScreen implements Screen {
 	    renderer.setColor(block.getColor());
 	    renderer.rect(block.getColumn() * gridWidth, block.getRow() * gridHeight, gridWidth, gridHeight);
 	    renderer.end();
-	    
-	    //Center the block in the screen.
-	    
-	    //Modify worldX and worldY
-	    if(!hasIrregularWidth()) {
-	    	
-	    	int column = block.getColumn();
-	    	worldX = (column * gridWidth) - ((windowWidth - TOOLBAR_WIDTH)/2);
-	    	
-	    }
-	    
-	    if(!hasIrregularHeight()) {
-	    	
-	    	int row = block.getRow();
-	    	worldY = (row * gridHeight) - ((windowHeight - TOOLBAR_WIDTH)/2);
-	    	
-	    }
-	    
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
-	    
-		camera.setToOrtho(false, w, h);
-	    camera.translate(0, 0);
 		
 	}
 	
@@ -570,7 +606,7 @@ public class WorldEditorScreen implements Screen {
 	public Stage getToolStage() {
 		return toolStage;
 	}
-	
+	 
 	public Stage getSimulatorStage() {
 		return simulatorStage;
 	}
@@ -593,6 +629,14 @@ public class WorldEditorScreen implements Screen {
 	
 	public int getToolBarWidth() {
 		return TOOLBAR_WIDTH;
+	}
+	
+	public void setConnectMode(boolean connectMode) {
+		this.connectMode = connectMode;
+	}
+	
+	public boolean getConnectMode() {
+		return this.connectMode;
 	}
 	
 }

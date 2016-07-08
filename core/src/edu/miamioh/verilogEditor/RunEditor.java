@@ -19,8 +19,9 @@ public class RunEditor implements Runnable {
 		@Override
 		public void run() {
 			String rootPath = VerilogWorldController.getController().getRootPath();
-			String filePath = rootPath + "/core/assets/modules/" + fileName;
-
+			//String filePath = rootPath + "/core/assets/modules/" + fileName;
+			String filePath = rootPath + "/" + fileName;
+			
 			new VerilogEditor(sim, compiler, rootPath, filePath);
 		}
 }

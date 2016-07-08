@@ -9,11 +9,14 @@
 
 package edu.miamioh.worldEditor;
 
+import java.io.File;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import edu.miamioh.Configuration.Configuration;
+import edu.miamioh.Configuration.ConfigurationParser;
 import edu.miamioh.GameObjects.blocks.BlankBlock;
 import edu.miamioh.GameObjects.blocks.ControllerBlock;
 import edu.miamioh.GameObjects.blocks.LedBlock;
@@ -227,8 +230,17 @@ public class WorldEditorController {
 	public void gridPressed(int row, int column) {
 				
 		boolean isBlock = currentLevel.isBlock(row, column);
+		boolean connectMode = WorldEditorScreen.getScreen().getConnectMode();
 		
 		if(isBlock) {
+			
+			if(connectMode) {
+				
+				System.out.println("Connect block at (" + selectedRow + ", " + selectedColumn + ") with (" + row + ", " + column + ").");
+				
+				WorldEditorScreen.getScreen().setConnectMode(false);
+				
+			}
 
 			if(selection == ToolBarSelection.BLOCK_SELECTED) {
 				selection = ToolBarSelection.NONE;
@@ -276,6 +288,35 @@ public class WorldEditorController {
 			
 			++blockID;
 		}
+		
+	}
+	
+	public boolean changesMade() {
+		
+		if(currentLevel.getProject() == null) {
+			return false;
+		}
+				
+		Level otherLevel = new ConfigurationParser().getConfiguration(new File(currentLevel.getProject() + "/world.xml"));
+
+		if(currentLevel.compareTo(otherLevel) != 0) {
+			return true;
+		}
+		
+		return false;
+		
+	}
+	
+	public void saveLevel() {
+		
+		File file = WorldEditorController.getCurrentController().getCurrentLevel().getProject();
+		Level level = currentLevel;
+		
+		File tempFile = new File(file.getPath() + "/modules/");
+		tempFile.mkdirs();
+		
+		ConfigurationParser parser = new ConfigurationParser();
+		parser.createWorld(level, new File(file.getPath() + "/world.xml"));
 		
 	}
 	
