@@ -19,6 +19,7 @@ public class RunEditor implements Runnable {
 
 		@Override
 		public void run() {
+
 			String rootPath = WorldEditorController.getCurrentController().getCurrentLevel().getProject().getAbsolutePath();
 			String filePath = rootPath + "/modules/" + fileName;
 

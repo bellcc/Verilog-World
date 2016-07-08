@@ -77,6 +77,7 @@ public class VerilogWorldMain extends Game {
 //		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
 
 		setMainMenuScreen();
+		
 	}
 	
 	public void setDirectoryScreen() {

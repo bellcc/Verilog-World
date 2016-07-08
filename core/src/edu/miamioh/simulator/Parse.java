@@ -41,7 +41,6 @@ public class Parse {
 	
 	public RootModuleInstance compileFileForGame(String fileName) throws IOException {
 
-//		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(rootPath + "/core/assets/modules/" + fileName));
 		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(WorldEditorController.getCurrentController
 				().getCurrentLevel().getProject().getPath() + "/modules/" + fileName));
 		Verilog2001Lexer lexer = new Verilog2001Lexer(input);
@@ -63,7 +62,8 @@ public class Parse {
 	
 	public RootModuleInstance compileFileForEditor(String fileName) throws IOException {
 		
-//		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(rootPath + "core/assets/modules/" + fileName));
+		errorText.setText("Compiling " + fileName + "...");
+
 		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(WorldEditorController.getCurrentController
 				().getCurrentLevel().getProject().getAbsolutePath() + "/modules/" + fileName));
 		Verilog2001Lexer lexer = new Verilog2001Lexer(input);
@@ -165,4 +165,5 @@ public class Parse {
 			is_no_parse_errors = false;
 		}
 	}
+	
 }

@@ -181,6 +181,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		// verilogFiles = new File(pathOfEditorJar + "VerilogFiles/" + name +
 		// ".v");
 		verilogFiles = new File(filePath);
+		System.out.println(filePath);
 		if (!verilogFiles.exists()) {
 			try {
 				verilogFiles.createNewFile();
