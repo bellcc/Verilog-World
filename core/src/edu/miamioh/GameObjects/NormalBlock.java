@@ -122,7 +122,7 @@ public abstract class NormalBlock extends Block {
 		File templateFile = new File(pathToTemplate);
 		
 		String uniqueName = "module" + this.getID() + ".v";
-		String pathToUnique = WorldEditorController.getCurrentController().getCurrentLevel().getProject() + "/modules/" + uniqueName;
+		String pathToUnique = WorldEditorController.getCurrentController().getCurrentLevel().getProject().getPath() + "/modules/" + uniqueName;
 		File uniqueFile = new File(pathToUnique);
 		
 		if(!uniqueFile.exists()) {

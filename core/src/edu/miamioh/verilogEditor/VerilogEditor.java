@@ -45,7 +45,6 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	// public static final int LOCAL_PORT = 32151;
 	// public static final int TYPE_USAGE_EDITOR = 3;
 
-	
 	private static final int MINWIDTH = 1000;
 	private static final int MINHEIGHT = 1000;
 
@@ -55,13 +54,17 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	private IntegerRangeDocumentFilter filterOne;
 	
 	// static String level_number;
+	
 	public File verilogFiles;
-	//private AnimationPanel animationPanel;
-	//JFormattedTextField generalSensorInput1, generalSensorInput2, generalSensorInput3,
-	//	generalSensorInput4, generalSensorInput5, generalSensorInput6, generalSensorInput0;
-	JFormattedTextField simulateInput, generalSensorInput1, generalSensorInput2, generalSensorInput3,
-		generalSensorInput4, generalSensorInput5, generalSensorInput6, generalSensorInput0;
-	private String newLine;
+	
+	private String filePath;
+	private String fileName;
+	
+//	private AnimationPanel animationPanel;
+//	JFormattedTextField simulateInput, generalSensorInput1, generalSensorInput2, generalSensorInput3,
+//		generalSensorInput4, generalSensorInput5, generalSensorInput6, generalSensorInput0;
+	
+//	private String newLine;
 	
 	private Parse 				Compiler;
 	private RootModuleSimulator sim;
@@ -88,30 +91,31 @@ public class VerilogEditor extends JFrame implements ActionListener {
 //		new VerilogEditor(sim, compiler, rootPath, filePath);
 //	}
 
-	public VerilogEditor(RootModuleSimulator sim, Parse compiler, String rootPath, String filePath) {
+	public VerilogEditor(RootModuleSimulator sim, Parse compiler, String rootPath, String filePath, String fileName) {
+		
 		// Create the window
 		super("Verilog Text Editor: " + filePath);
-
 		this.setMinimumSize(new Dimension(MINWIDTH, MINHEIGHT));
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
 		Locale.setDefault(Locale.ENGLISH);
+
+		this.filePath = filePath;
+		this.fileName = fileName;
 
 		// if (System.getProperty("os.name").startsWith("Mac"))
 		// newLine = "\n";
 		// else
-		newLine = "\n";
+//		newLine = "\n";
 
 		checkDir(filePath);
 
 		// set the location the window will appear on the screen
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-
 		JPanel contentPane = new JPanel();
 		contentPane.setLayout(new GridBagLayout());
 		this.setContentPane(contentPane);
 
-		// below is the tool bar code
+		// tool bar
 		JToolBar toolBar = new JToolBar("Still draggable");
 		toolBar.setFloatable(false);
 		toolBar.setRollover(true);
@@ -125,10 +129,9 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		addButtons(toolBar);
 		toolBar.setBorder(BorderFactory.createEtchedBorder());
 
-		// below is the split panel code
+		// split panel code
 		final JSplitPane splitPane = new JSplitPane();
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-
 		splitPane.setDividerSize(2);
 		splitPane.setPreferredSize(new Dimension(600, 550));
 		splitPane.setContinuousLayout(true);
@@ -150,24 +153,27 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		cSplitPane.weightx = 1;
 		cSplitPane.weighty = 1;
 		contentPane.add(splitPane, cSplitPane);
-
 		codeText = new MyTextPane();
 		setTabs(codeText, 8);
 		Font font1 = new Font("Consolas", Font.PLAIN, 16);
 		codeText.setFont(font1);
+		
 		// line number
 		codeText.setBorder(new LineNumberBorder());
 
 		// non-editable text panel
 		filterOne = new IntegerRangeDocumentFilter(codeText);
 		((AbstractDocument) codeText.getDocument()).setDocumentFilter(filterOne);
-		// for keywords highlight
+		
+		// highlight keywords
 		codeText.getDocument().addDocumentListener(new SyntaxHighlighter(codeText));
+		
 		// something strange with the JTextPane's new line character.
 		// For more information see here:
 		// http://docs.oracle.com/javase/7/docs/api/javax/swing/text/DefaultEditorKit.html
-		codeText.getDocument().putProperty(DefaultEditorKit.EndOfLineStringProperty, newLine);
-		// for undo and redo
+		codeText.getDocument().putProperty(DefaultEditorKit.EndOfLineStringProperty, "\n");
+		
+		// undo and redo
 		myUndoManager1 = new MyUndo1();
 		codeText.getDocument().addUndoableEditListener(myUndoManager1);
 
@@ -191,7 +197,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 				if ((temp = br.readLine()) != null)
 					line = temp;
 				while ((temp = br.readLine()) != null)
-					line = line + newLine + temp;
+					line = line + "\n" + temp;
 				Document docCode = codeText.getDocument();
 				docCode.insertString(0, line, null);
 				myUndoManager1.discardAllEdits();
@@ -345,7 +351,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 					if ((temp = br.readLine()) != null)
 						fileContent = temp;
 					while ((temp = br.readLine()) != null) {
-						fileContent = fileContent + newLine + temp;
+						fileContent = fileContent + "\n" + temp;
 					}
 					br.close();
 					reader.close();
@@ -643,9 +649,9 @@ public class VerilogEditor extends JFrame implements ActionListener {
 
 		try {
 			FileWriter out = new FileWriter(verilogFiles);
-			out.write(codeText.getText() + newLine);
+			out.write(codeText.getText() + "\n");
 			out.close();
-			errorText.setText("Saving complete.");
+			errorText.setText(errorText.getText() + "\nSaving complete.");
 		} catch (Exception e1) {
 			System.out.println(e1);
 		}
@@ -660,17 +666,18 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			out.write(codeText.getText());
 			out.close();
 
-			String fileName = sim.getRootModuleInstance().getName() + ".v";
 			/* print out what we're compiling */
-			errorText.setText("Compiling " + fileName);
+			errorText.setText(errorText.getText() + "\nCompiling " + fileName);
 
 			// parse the base file 
+			Compiler.setErrorText(errorText);
 			Compiler.compileFileForEditor(fileName);
 			
 			// Reset sim and let user know we are done
 			if (Compiler.isCompiled()) {
 				errorText.setText(errorText.getText() + "\nCompiling done!");
-				errorText.setText(errorText.getText() + "\n");
+			} else {
+				errorText.setText(errorText.getText() + "\nCompiling failed.");
 			}
 		} catch (Exception e1) {
 			System.out.println(e1);
@@ -698,7 +705,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			if ((temp = br.readLine()) != null)
 				fileContent = temp;
 			while ((temp = br.readLine()) != null) {
-				fileContent = fileContent + newLine + temp;
+				fileContent = fileContent + "\n" + temp;
 			}
 			br.close();
 			reader.close();
@@ -773,8 +780,8 @@ public class VerilogEditor extends JFrame implements ActionListener {
 		if (Compiler.isCompiled()) {
 			sim.sim_cycle();
 		} else {
-			errorText.setText(
-					"The Verilog code has not been successfully compiled yet.  Please click the check mark above and/or fix Verilog errors.");
+			errorText.setText(errorText.getText() + 
+					"\nThe Verilog code has not been successfully compiled yet.\nPlease click the check mark above and/or fix Verilog errors.");
 		}
 	}
 	
@@ -782,7 +789,7 @@ public class VerilogEditor extends JFrame implements ActionListener {
 	public void resetButtonFunction() {
 		
 		// print out to text pane
-		errorText.setText("Reseting simulation...");
+		errorText.setText(errorText.getText() + "\nReseting simulation...");
 
 		if (Compiler.isCompiled()) {
 			sim.resetSimulation();
@@ -799,11 +806,11 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			VerilogWorldMain.getVerilogWorldMain().getSchematicRendererScreen().compile();
 //			VerilogWorldMain.getVerilogWorldMain().getSchematicRendererScreen().compile();//Compile a second time due
 //			 to a bug
-			errorText.setText("The Verilog code has been converted to schematic code. Please exit" +
+			errorText.setText(errorText.getText() + "\nThe Verilog code has been converted to schematic code.\nPlease exit" +
 					" the editor to view the schematic.");
 		} else {
-			errorText.setText(
-					"The Verilog code has not been successfully compiled yet.  Please click the check mark above and/or fix Verilog errors.");
+			errorText.setText(errorText.getText() + 
+					"\nThe Verilog code has not been successfully compiled yet.\nPlease click the check mark above and/or fix Verilog errors.");
 		}
 	}
 	/*

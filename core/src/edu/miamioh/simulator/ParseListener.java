@@ -616,20 +616,20 @@ public class ParseListener extends Verilog2001BaseListener
 		String moduleName = ctx.getChild(0).getText();
 		String instanceName = ctx.getChild(1).getChild(0).getChild(0).getText();
 		ParseTree newTree = null;
-		
-		// Make a new tree if necessary
-		if (!subTreesHash.containsKey(moduleName)) {
-			try {
-				newTree = Compiler.loadParseTreeFromFile(moduleName);
-				subTrees.add(newTree);
-				subTreesHash.put(moduleName, newTree);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		else {
+//
+//		// Make a new tree if necessary
+//		if (!subTreesHash.containsKey(moduleName)) {
+//			try {
+//				newTree = Compiler.loadParseTreeFromFile(moduleName);
+//				subTrees.add(newTree);
+//				subTreesHash.put(moduleName, newTree);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		else {
 			newTree = subTreesHash.get(moduleName);
-		}
+//		}
 		
 		// Create the new module instance
 		if (newTree != null) {

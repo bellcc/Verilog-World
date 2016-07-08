@@ -3,6 +3,9 @@ package edu.miamioh.simulator;
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.simulator.AntlrGen.Verilog2001Lexer;
 import edu.miamioh.simulator.AntlrGen.Verilog2001Parser;
+import edu.miamioh.verilogEditor.VerilogEditor;
+import edu.miamioh.verilogWorld.VerilogWorldController;
+import edu.miamioh.worldEditor.WorldEditorController;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -37,11 +40,9 @@ public class Parse {
 	}
 	
 	public RootModuleInstance compileFileForGame(String fileName) throws IOException {
-		
-		errorText.setText("Compiling " + fileName + "...");
 
-		//ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(rootPath + "/core/assets/modules/" + fileName));
-		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream("/home/clark/Desktop/asdf/modules/module208.v"));
+		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(WorldEditorController.getCurrentController
+				().getCurrentLevel().getProject().getPath() + "/modules/" + fileName));
 		Verilog2001Lexer lexer = new Verilog2001Lexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		Verilog2001Parser parser = new Verilog2001Parser(tokens);
@@ -50,9 +51,9 @@ public class Parse {
 
 		is_no_parse_errors = true;
 
-		ParseTree root_tree = parser.module_declaration();
+		ParseTree root_tree = parser.module_declaration(); //Parse the file
 		String name = fileName.substring(0, fileName.length() - 2); // Removes .v file ending
-		RootModuleInstance root_module = new RootModuleInstance(parser, this, sim, root_tree, name);
+		RootModuleInstance root_module = new RootModuleInstance(parser, this, sim, root_tree, name); //Compile the file
 
 		is_compiled = is_no_parse_errors;
 		
@@ -63,8 +64,8 @@ public class Parse {
 		
 		errorText.setText("Compiling " + fileName + "...");
 
-//		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(rootPath + "core/assets/modules/" + fileName));
-		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream("/home/clark/Desktop/asdf/modules/module208.v"));
+		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(WorldEditorController.getCurrentController
+				().getCurrentLevel().getProject().getAbsolutePath() + "/modules/" + fileName));
 		Verilog2001Lexer lexer = new Verilog2001Lexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		Verilog2001Parser parser = new Verilog2001Parser(tokens);
@@ -73,10 +74,9 @@ public class Parse {
 
 		is_no_parse_errors = true;
 
-		
-		ParseTree root_tree = parser.module_declaration();
+		ParseTree root_tree = parser.module_declaration(); //Parse the file
 		String name = fileName.substring(0, fileName.length() - 2); // Removes .v file ending
-		RootModuleInstance root_module = new RootModuleInstance(parser, this, sim, root_tree, name);
+		RootModuleInstance root_module = new RootModuleInstance(parser, this, sim, root_tree, name); //Compile the file
 
 		is_compiled = is_no_parse_errors;
 		
@@ -97,42 +97,43 @@ public class Parse {
 		errorText.setText(old_text + "\n" + message);
 	}
 	
-	ParseTree loadParseTreeFromFile(String moduleName) {
-		
-		if (!is_no_parse_errors) {
-			this.reportParseInfo("\n");
-		}
-		this.reportParseInfo("Compiling " + moduleName + ".v...");
-		
-		ANTLRInputStream input = null;
-		try {
-			String newModulePath = rootPath + "core/bin/modules/" + moduleName + ".v";
-			input = new ANTLRInputStream(new FileInputStream(newModulePath));
-		} catch (FileNotFoundException e) {
-			this.reportParseError("Source file '" + moduleName + ".v' not found in modules directory.");
-			return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		Verilog2001Lexer lexer = new Verilog2001Lexer(input);
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		Verilog2001Parser parser = new Verilog2001Parser(tokens);
-
-		is_no_parse_errors = true;
-
-		parser.removeErrorListeners();
-		parser.addErrorListener(new VerboseListenerE());
-		
-		/*
-		 * For debugging
-		 */
-		//DebugUtils.printParseTree(result_tree, parser);
-		
-		return parser.module_declaration();
-	}
+//	ParseTree loadParseTreeFromFile(String moduleName) {
+//
+//		if (!is_no_parse_errors) {
+//			this.reportParseInfo("\n");
+//		}
+//		this.reportParseInfo("Compiling " + moduleName + ".v...");
+//
+//		ANTLRInputStream input = null;
+//		try {
+//			String newModulePath = rootPath + "core/bin/modules/" + moduleName + ".v";
+//			input = new ANTLRInputStream(new FileInputStream(newModulePath));
+//		} catch (FileNotFoundException e) {
+//			this.reportParseError("Source file '" + moduleName + ".v' not found in modules directory.");
+//			return null;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//		Verilog2001Lexer lexer = new Verilog2001Lexer(input);
+//		CommonTokenStream tokens = new CommonTokenStream(lexer);
+//		Verilog2001Parser parser = new Verilog2001Parser(tokens);
+//
+//		is_no_parse_errors = true;
+//
+//		parser.removeErrorListeners();
+//		parser.addErrorListener(new VerboseListenerE());
+//
+//		/*
+//		 * For debugging
+//		 */
+//		//DebugUtils.printParseTree(result_tree, parser);
+//
+//		return parser.module_declaration();
+//	}
 	
 	JTextPane getErrorText() 					{ return this.errorText;}
+	public void setErrorText(JTextPane errorText) 		{ this.errorText = errorText;}
 	private void setIs_no_parse_errors(Boolean value) 	{this.is_no_parse_errors = value;}
 	public Boolean isCompiled() 						{ return is_compiled;}
 	
@@ -159,7 +160,7 @@ public class Parse {
 			 */
 			//System.out.println("Error at line " + line + ":" + charPositionInLine + " at " + offendingSymbol + ": " + msg);
 			old_text = errorText.getText();
-			errorText.setText(old_text + "\nError at line " + line + ":" + charPositionInLine + " at " + offendingSymbol + ": " + msg);
+			errorText.setText(old_text + "\nError at line " + line + ":" + charPositionInLine + " at " + offendingSymbol + ": " + msg + "");
 			/* flag found parse error */
 			is_no_parse_errors = false;
 		}

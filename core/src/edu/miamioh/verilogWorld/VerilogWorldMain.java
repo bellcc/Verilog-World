@@ -47,7 +47,6 @@ public class VerilogWorldMain extends Game {
 	private PlayScreen playScreen;
 	private ChallengesScreen challengesScreen;
 
-	private SchematicRendererController schematicRendererController;
 	private SchematicRendererScreen schematicRendererScreen;
 		
 	private String	VERILOG_WORLD_DEVELOPMENT	= "VERILOG_WORLD_DEVELOPMENT";
@@ -68,17 +67,14 @@ public class VerilogWorldMain extends Game {
 		this.sim = verilogWorldController.getSim().getRootModuleSimulator();
 		this.compiler = verilogWorldController.getCompiler();
 
-		schematicRendererScreen = new SchematicRendererScreen();	
-		
+		schematicRendererScreen = new SchematicRendererScreen();
+
 //		worldEditorController = new WorldEditorController(verilogWorldController.getDefaultConfig(), 
 //														  verilogWorldController.getCurrentLevel());
 //		worldSimulatorController = new WorldSimulatorController(verilogWorldController.getDefaultConfig());
 //		
 //		worldEditorScreen = new WorldEditorScreen(worldEditorController);
 //		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
-
-		schematicRendererController = new SchematicRendererController();
-		schematicRendererScreen = new SchematicRendererScreen();
 
 		setMainMenuScreen();
 		
