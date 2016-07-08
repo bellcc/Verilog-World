@@ -2,7 +2,13 @@ package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+
+import edu.miamioh.Buttons.TextButtonActor;
+import edu.miamioh.worldSimulator.ChangeListeners.BackChangeListener;
+
 import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
@@ -12,12 +18,15 @@ public class SchematicRendererScreen implements Screen {
 
     private static SchematicRendererScreen schematicRendererScreen;
     private SchematicRenderer schematic;
+    private SchematicRendererController controller;
+    private Stage schematicStage;
+    private TextButton butt;
 
     /**
      * Constructor for SchematicRendererMain.
      */
     public SchematicRendererScreen(){
-        new SchematicRendererController();
+        controller = new SchematicRendererController();
         schematic = new SchematicRenderer();
         schematicRendererScreen = this;
 //        schematic.setSchematicScreen(schematicRendererScreen);
@@ -53,6 +62,18 @@ public class SchematicRendererScreen implements Screen {
 
     @Override
     public void show() {
+    	
+        schematicStage = new Stage();
+        butt = new TextButtonActor().createTextButton(Color.BLUE, "Back");
+        int buttonWidth = 100;
+        int buttonHeight = 40;
+        int w = controller.getWindowWidth();
+        int h = controller.getWindowHeight();
+        butt.setPosition(w - buttonWidth, h - buttonHeight);
+        butt.setSize(buttonWidth, buttonHeight);
+        butt.addListener(new BackChangeListener());
+        schematicStage.addActor(butt);
+        controller.updateInputProcessor(schematicStage);
 
         if (schematic.getRoot_tree() == null) throw new AssertionError();
 
@@ -64,7 +85,12 @@ public class SchematicRendererScreen implements Screen {
      */
     @Override
     public void render(float arg0) {
-        schematic.refresh();
+    	int buttonWidth = 100;
+        int buttonHeight = 40;
+        int w = controller.getWindowWidth();
+        int h = controller.getWindowHeight();
+        butt.setPosition(w - buttonWidth, h - buttonHeight);
+        schematic.render(schematicStage);
     }
 
     /**
@@ -76,7 +102,6 @@ public class SchematicRendererScreen implements Screen {
      */
     @Override
     public void resize(int width, int height) {
-        schematic.refresh();
     }
 
     static SchematicRendererScreen getScreen(){

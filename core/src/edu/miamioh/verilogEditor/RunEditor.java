@@ -3,6 +3,7 @@ package edu.miamioh.verilogEditor;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.RootModuleSimulator;
 import edu.miamioh.verilogWorld.VerilogWorldController;
+import edu.miamioh.worldEditor.WorldEditorController;
 
 public class RunEditor implements Runnable {
 	
@@ -18,9 +19,9 @@ public class RunEditor implements Runnable {
 
 		@Override
 		public void run() {
-			String rootPath = VerilogWorldController.getController().getRootPath();
-			String filePath = rootPath + "/core/assets/modules/" + fileName;
+			String rootPath = WorldEditorController.getCurrentController().getCurrentLevel().getProject().getAbsolutePath();
+			String filePath = rootPath + "/modules/" + fileName;
 
-			new VerilogEditor(sim, compiler, rootPath, filePath);
+			new VerilogEditor(sim, compiler, rootPath, filePath, fileName);
 		}
 }

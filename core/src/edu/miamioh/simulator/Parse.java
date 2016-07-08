@@ -63,11 +63,9 @@ public class Parse {
 	
 	public RootModuleInstance compileFileForEditor(String fileName) throws IOException {
 		
-		errorText.setText("Compiling " + fileName + "...");
-
 //		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(rootPath + "core/assets/modules/" + fileName));
 		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(WorldEditorController.getCurrentController
-				().getCurrentLevel().getProject().getPath() + "/module/" + fileName));
+				().getCurrentLevel().getProject().getAbsolutePath() + "/modules/" + fileName));
 		Verilog2001Lexer lexer = new Verilog2001Lexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		Verilog2001Parser parser = new Verilog2001Parser(tokens);
@@ -135,6 +133,7 @@ public class Parse {
 //	}
 	
 	JTextPane getErrorText() 					{ return this.errorText;}
+	public void setErrorText(JTextPane errorText) 		{ this.errorText = errorText;}
 	private void setIs_no_parse_errors(Boolean value) 	{this.is_no_parse_errors = value;}
 	public Boolean isCompiled() 						{ return is_compiled;}
 	
@@ -161,7 +160,7 @@ public class Parse {
 			 */
 			//System.out.println("Error at line " + line + ":" + charPositionInLine + " at " + offendingSymbol + ": " + msg);
 			old_text = errorText.getText();
-			errorText.setText(old_text + "\nError at line " + line + ":" + charPositionInLine + " at " + offendingSymbol + ": " + msg);
+			errorText.setText(old_text + "\nError at line " + line + ":" + charPositionInLine + " at " + offendingSymbol + ": " + msg + "");
 			/* flag found parse error */
 			is_no_parse_errors = false;
 		}

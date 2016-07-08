@@ -10,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Disposable;
 import edu.miamioh.Buttons.TextButtonActor;
+import edu.miamioh.worldSimulator.ChangeListeners.BackChangeListener;
+
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
@@ -65,28 +67,6 @@ class SchematicRenderer implements Disposable {
 //        this.schematicScreen = screen;
 //    }
 //
-    Stage getSchematicStage(){
-        return this.schematicStage;
-    }
-
-    private void resetStage(){
-        schematicStage = new Stage();
-        TextButton butt = new TextButtonActor().createTextButton(Color.BLUE, "Back");
-        int buttonWidth = 100;
-        int buttonHeight = 40;
-        int w = controller.getWindowWidth();
-        int h = controller.getWindowHeight();
-        butt.setPosition(w - buttonWidth, h - buttonHeight);
-        butt.setSize(buttonWidth, buttonHeight);
-        butt.addListener(new edu.miamioh.schematicRenderer.BackChangeListener());
-        schematicStage.addActor(butt);
-        controller.updateInputProcessor(schematicStage);
-    }
-
-    void refresh(){
-        resetStage();
-        render();
-    }
 
     /**
      * Gets the status of the schematic.
@@ -230,7 +210,7 @@ class SchematicRenderer implements Disposable {
     /**
      * Begins the actual rendering process.
      */
-    public void render() {
+    public void render(Stage schematicStage) {
 
         //Set the background color to white.
         Gdx.gl.glClearColor(255, 255, 255, 1);
@@ -257,6 +237,7 @@ class SchematicRenderer implements Disposable {
         }
 
         //Actual drawing
+        this.schematicStage = schematicStage;
         renderHelper();
 
         schematicStage.act(Gdx.graphics.getDeltaTime());
@@ -328,6 +309,7 @@ class SchematicRenderer implements Disposable {
 //                System.out.println(width + " w, " + scaleFactor);
 //                scaleFactor = 40;
             }
+            controller.updateConfig();
 
             //If the calculated scalefactor is too small, make it 40.
             scaleFactor = (scaleFactor > 40)? scaleFactor : 40;

@@ -73,7 +73,7 @@ public class SchematicRendererController {
         worldHeight = VerilogWorldController.WINDOW_HEIGHT;
         windowWidth = Gdx.graphics.getWidth();
         windowHeight = Gdx.graphics.getHeight();
-        leftEdge = (int)((float)worldWidth / 20f);
+        leftEdge = (int) (gateSize * scaleFactor / 2);
         rightEdge = worldWidth - leftEdge;
         bottomEdge = leftEdge;
         topEdge = worldHeight - bottomEdge;
