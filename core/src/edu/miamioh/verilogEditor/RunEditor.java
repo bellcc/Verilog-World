@@ -2,7 +2,6 @@ package edu.miamioh.verilogEditor;
 
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.RootModuleSimulator;
-import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.worldEditor.WorldEditorController;
 
 public class RunEditor implements Runnable {
