@@ -14,6 +14,7 @@ import edu.miamioh.Level.Level;
 import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.WorldEditorScreen;
+import edu.miamioh.worldSimulator.WorldSimulator;
 
 public class ImportProjectChangeListener extends ChangeListener {
 
@@ -65,13 +66,15 @@ public class ImportProjectChangeListener extends ChangeListener {
 			level.setProject(new File(chooser.getSelectedFile().getAbsolutePath() + "/"));
 			
 			String rootPath = level.getProject().getAbsolutePath();
-			System.out.println("FUCK THIS: " + rootPath);
 			VerilogWorldController.getController().setRootPath(rootPath);
 			
 			WorldEditorController.getCurrentController().setCurrentLevel(level);
 			WorldEditorController.getCurrentController().updateWorld(level);
 			WorldEditorScreen.getScreen().updateWorldParameters();
 						
+			WorldSimulator sim = VerilogWorldController.getController().getSim();
+			sim.updateBlocks(level.getBlockList());
+			sim.updateModules();
 		}
 	}
 

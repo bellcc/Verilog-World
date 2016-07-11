@@ -10,6 +10,7 @@
 package edu.miamioh.worldEditor;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -22,8 +23,10 @@ import edu.miamioh.GameObjects.blocks.ControllerBlock;
 import edu.miamioh.GameObjects.blocks.LedBlock;
 import edu.miamioh.GameObjects.blocks.ScooterBlock;
 import edu.miamioh.GameObjects.Block;
+import edu.miamioh.GameObjects.NormalBlock;
 import edu.miamioh.GameObjects.blocks.WallBlock;
 import edu.miamioh.Level.Level;
+import edu.miamioh.simulator.ParseRegWire;
 import edu.miamioh.verilogWorld.VerilogWorldController;
 
 public class WorldEditorController {
@@ -222,6 +225,20 @@ public class WorldEditorController {
 				
 				System.out.println("Connect block at (" + selectedRow + ", " + selectedColumn + ") with (" + row + ", " + column + ").");
 				
+				NormalBlock selectedBlock = (NormalBlock)currentLevel.getBlock(selectedRow, selectedColumn);
+				VerilogWorldController.getController().getSim().getRootModuleSimulator().updateTargetBlock(selectedBlock);
+				ArrayList<String> list = selectedBlock.getRootSim().getRootModuleInstance().getPorts_list();
+
+				for(int i=0;i<list.size();i++) {
+					
+					System.out.println(list.get(i).toString());
+					
+				}
+				
+				//NormalBlock selectedBlock = (NormalBlock)currentLevel.getBlock(selectedRow, selectedColumn);
+				//NormalBlock targetBlock = (NormalBlock)currentLevel.getBlock(row, column);
+				//connectBlocks(selectedBlock targetBlock, , );
+				
 				WorldEditorScreen.getScreen().setConnectMode(false);
 				
 			}
@@ -272,6 +289,11 @@ public class WorldEditorController {
 			
 			++blockID;
 		}
+		
+	}
+	
+	public void connectBlocks(NormalBlock selectedBlock, NormalBlock targetBlock, 
+							  String selectedWire, String targetWire) {
 		
 	}
 	
