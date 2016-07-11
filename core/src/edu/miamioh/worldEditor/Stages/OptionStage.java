@@ -16,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import edu.miamioh.Buttons.TextButtonActor;
 import edu.miamioh.verilogWorld.VerilogWorldController;
-import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.ChangeListeners.BlockChangeListener;
 import edu.miamioh.worldEditor.ChangeListeners.HomeChangeListener;
 import edu.miamioh.worldEditor.ChangeListeners.SimulatorChangeListener;

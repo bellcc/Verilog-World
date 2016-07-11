@@ -1,3 +1,11 @@
+
+/**
+ * @author Clark Bell
+ * @date   7-11-2016
+ * @info   The back change listener for the world configuration 
+ *         screen that takes you back to the play screen.
+ */
+
 package edu.miamioh.worldConfiguration;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;

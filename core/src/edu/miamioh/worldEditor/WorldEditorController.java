@@ -10,6 +10,7 @@
 package edu.miamioh.worldEditor;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -97,21 +98,6 @@ public class WorldEditorController {
 		
 		bufferWidth = config.getBufferWidth();
 		bufferHeight = config.getBufferHeight();
-	}
-	
-	private void resetParameters() {
-		
-		worldWidth = 0;
-		worldHeight = 0;
-		
-		gridWidth = 0;
-		gridHeight = 0;
-		
-		stepWidth = 0;
-		stepHeight = 0;
-		
-		bufferWidth = 0;
-		bufferHeight = 0;
 	}
 	
 	public void initWorld() {
@@ -232,6 +218,20 @@ public class WorldEditorController {
 			if(connectMode) {
 				
 				System.out.println("Connect block at (" + selectedRow + ", " + selectedColumn + ") with (" + row + ", " + column + ").");
+				
+				NormalBlock selectedBlock = (NormalBlock)currentLevel.getBlock(selectedRow, selectedColumn);
+				VerilogWorldController.getController().getSim().getRootModuleSimulator().updateTargetBlock(selectedBlock);
+				ArrayList<String> list = selectedBlock.getRootSim().getRootModuleInstance().getPorts_list();
+
+				for(int i=0;i<list.size();i++) {
+					
+					System.out.println(list.get(i).toString());
+					
+				}
+				
+				//NormalBlock selectedBlock = (NormalBlock)currentLevel.getBlock(selectedRow, selectedColumn);
+				//NormalBlock targetBlock = (NormalBlock)currentLevel.getBlock(row, column);
+				//connectBlocks(selectedBlock targetBlock, , );
 				
 				WorldEditorScreen.getScreen().setConnectMode(false);
 				

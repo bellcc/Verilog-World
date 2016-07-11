@@ -1,3 +1,11 @@
+
+/**
+ * @author Clark Bell
+ * @date   7-11-2016
+ * @info   The configuration screen that defines all 
+ *         of the world parameter variables.
+ */
+
 package edu.miamioh.worldConfiguration;
 
 import edu.miamioh.Buttons.LabelActor;

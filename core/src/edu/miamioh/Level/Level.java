@@ -1,8 +1,9 @@
 
 /**
- * @author Chris Bell
+ * @author Clark Bell
  * @date   6-2-2016
- * @info   
+ * @info   This class is the framework for a level which is 
+ *         all of the information that is contained within the world.
  */
 
 package edu.miamioh.Level;
@@ -36,6 +37,13 @@ public class Level implements Comparable<Level>{
 		blockList.add(block);
 	}
 	
+	/**
+	 * This method will remove a block at a specific row and column. 
+	 * If the removal is not successful then nothing will happen.
+	 * 
+	 * @param row The row of the desired block to be removed.
+	 * @param column The column of the desired block to be removed.
+	 */
 	public void removeBlock(int row, int column) {
 		
 		for(int i=0;i<blockList.size();i++) {
@@ -51,6 +59,12 @@ public class Level implements Comparable<Level>{
 
 	}
 	
+	/**
+	 * This method will determine if the object at a specific location is a block.
+	 * @param row The row of the desired object.
+	 * @param column The column of the desired object.
+	 * @return Returns true if the object is a block and false in every other case.
+	 */
 	public boolean isBlock(int row, int column) {
 		
 		for(int i=0;i<blockList.size();i++) {
@@ -66,6 +80,17 @@ public class Level implements Comparable<Level>{
 		return false;
 	}
 
+	/**
+	 * This method will retrieve the block object that is 
+	 * defined by it's row and column.
+	 * 
+	 * @param  row The row of the desired block.
+	 * @param  column The column of the desired block.
+	 * 
+	 * @return The block at the row and column specified 
+	 *         in the parameters. This method will return 
+	 *         null if that block does not exist.
+	 */
 	public Block getBlock(int row, int column) {
 		
 		for(int i=0;i<blockList.size();i++) {
@@ -85,6 +110,8 @@ public class Level implements Comparable<Level>{
 	
 	@Override
 	/**
+	 * This method compares two level objects and determines if they are equivalent.
+	 * 
 	 * @return Returns 0 if the they are equal and a non-zero integer if not.
 	 */
 	public int compareTo(Level otherLevel) {

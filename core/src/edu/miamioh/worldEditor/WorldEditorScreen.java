@@ -2,7 +2,8 @@
 /**
  * @author Clark Bell
  * @date   06-16-2016
- * @info   
+ * @info   This is the screen that is seen when you are 
+ *         creating or editing a new verilog world.
  */
 
 package edu.miamioh.worldEditor;
@@ -134,7 +135,6 @@ public class WorldEditorScreen implements Screen {
 			renderConnectMode(controller.getCurrentLevel().getBlock(row, column));
 		}
 		
-		renderSelector();
 		renderToolBar();
 		
 	}
@@ -178,6 +178,8 @@ public class WorldEditorScreen implements Screen {
 		if(width == 0 || height == 0) {
 			return;
 		}
+		
+		renderSelector();
 
 		renderer.begin(ShapeType.Line);
 		renderer.setColor(Color.LIGHT_GRAY);
@@ -340,28 +342,6 @@ public class WorldEditorScreen implements Screen {
 		renderSelectedBlock();
 		
 		//Render selection key.
-		
-	}
-
-	private void renderBlockHighlight(Block block) {
-		
-		//Shade the grid.
-		int width = windowWidth * worldWidth;
-		int height = windowHeight * worldHeight;
-		
-		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
-	    Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-	    
-	    renderer.begin(ShapeType.Filled);
-	    renderer.setColor(new Color(255,255,255,.8f));
-	    renderer.rect(-1, 0, width, height);
-	    renderer.end();
-	    
-	    //Redraw the selected element.
-	    renderer.begin(ShapeType.Filled);
-	    renderer.setColor(block.getColor());
-	    renderer.rect(block.getColumn() * gridWidth, block.getRow() * gridHeight, gridWidth, gridHeight);
-	    renderer.end();
 		
 	}
 	

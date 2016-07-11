@@ -9,7 +9,6 @@ import edu.miamioh.simulator.RootModuleSimulator;
 import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
 import edu.miamioh.worldEditor.WorldEditorController;
-import edu.miamioh.worldSimulator.WorldSimulator;
 
 public class VerilogEditorChangeListener extends ChangeListener {
 	

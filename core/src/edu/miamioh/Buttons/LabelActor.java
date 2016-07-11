@@ -1,3 +1,14 @@
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+/**
+ * @author Clark Bell
+ * @date   7-11-2016
+ * @info   This is the basic framework for a label actor that
+ *         is added to a stage using the libgdx game development
+ *         library.
+ */
+
 package edu.miamioh.Buttons;
 
 import com.badlogic.gdx.graphics.Color;
@@ -10,7 +21,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 public class LabelActor {
-	
+
+	/**
+	 * This method will create and return a label actor that can
+	 * be added to a stage using libgdx.
+	 * 
+	 * @param  text The default text that will be in the label.
+	 * @param  backgroundColor The background color of the label.
+	 * @param  fontColor The color of the text (font color) in the
+	 *         label.
+	 * 
+	 * @return The label actor created based on the specifications
+	 *         of the parameters.
+	 */
 	public Label createLabel(String text, Color backgroundColor, Color fontColor) {
 		
 		Skin skin = new Skin();

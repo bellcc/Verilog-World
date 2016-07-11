@@ -1,6 +1,6 @@
 
 /**
- * @author Chris Bell
+ * @author Clark Bell
  * @date   6-3-2016
  * @info   This class is used to define the default 
  *         or non-default configurations for the Verilog 
@@ -110,7 +110,5 @@ public class Configuration {
 				+ bufferHeight + ", gridWidth=" + gridWidth + ", gridHeight=" + gridHeight + ", stepWidth=" + stepWidth
 				+ ", stepHeight=" + stepHeight + "]";
 	}
-	
-	
 	
 }

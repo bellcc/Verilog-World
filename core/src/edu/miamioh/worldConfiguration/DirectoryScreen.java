@@ -1,3 +1,12 @@
+
+/**
+ * @author Clark Bell
+ * @date   7-11-2016
+ * @info   The screen that appears when you create a new project. 
+ *         This has the fields for selecting the project name and 
+ *         the project directory.
+ */
+
 package edu.miamioh.worldConfiguration;
 
 import java.io.File;
