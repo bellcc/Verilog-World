@@ -85,11 +85,17 @@ public class VerilogWorldMain extends Game {
 
 		setMainMenuScreen();
 		
-		ErrorInstance error0 = new ErrorInstance("Module_0", 1, 3);
-		error0.addError("<13, 5> Error parsing source file.");
-		error0.addError("Problem with the program. Exiting...");
-		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
-//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
+		ErrorInstance error0 = new ErrorInstance("Wall Block", 3, 7);
+		error0.addError("0 <13, 5> Error parsing source file.");
+		error0.addError("1 Problem with the program. Exiting...");
+		error0.addError("2 <13, 5> Error parsing source file.");
+		error0.addError("3 Problem with the program. Exiting...");
+		error0.addError("4 <13, 5> Error parsing source file.");
+		error0.addError("5 Problem with the program. Exiting...");
+		error0.addError("6 <13, 5> Error parsing source file.");
+		error0.addError("7 Problem with the program. Exiting...");
+		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(error0);
+		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Controller Block", 2, 1));
 //		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
 //		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
 //		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));

@@ -13,6 +13,6 @@ public class ExpandActionListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println(error.moduleName);
+		error.displayFullMessage();
 	}
 }
