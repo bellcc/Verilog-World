@@ -2,6 +2,7 @@ package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+
 import static edu.miamioh.schematicRenderer.SchematicRendererController.frame;
 import static edu.miamioh.schematicRenderer.SchematicRendererController.gateSize;
 import static edu.miamioh.schematicRenderer.SchematicRendererController.scaleFactor;

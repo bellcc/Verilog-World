@@ -2,7 +2,9 @@
 /**
  * @author Chris Bell
  * @date   6-2-2016
- * @info   
+ * @info   This is the most basic version of the block object 
+ *         that can be placed in the world. Every block has a 
+ *         row, column, color and id.
  */
 
 package edu.miamioh.GameObjects;
@@ -10,13 +12,11 @@ package edu.miamioh.GameObjects;
 import com.badlogic.gdx.graphics.Color;
 
 import edu.miamioh.simulator.RootModuleSimulator;
-import edu.miamioh.worldEditor.WorldEditorController;
 
 public abstract class Block {
 
 	private static RootModuleSimulator rootSim;
 	
-	//Modifiable variables.
 	private Color color;
 	private int row;
 	private int column;

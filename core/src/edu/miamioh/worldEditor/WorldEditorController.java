@@ -22,7 +22,6 @@ import edu.miamioh.GameObjects.blocks.ControllerBlock;
 import edu.miamioh.GameObjects.blocks.LedBlock;
 import edu.miamioh.GameObjects.blocks.ScooterBlock;
 import edu.miamioh.GameObjects.Block;
-import edu.miamioh.GameObjects.NormalBlock;
 import edu.miamioh.GameObjects.blocks.WallBlock;
 import edu.miamioh.Level.Level;
 import edu.miamioh.verilogWorld.VerilogWorldController;
@@ -94,21 +93,6 @@ public class WorldEditorController {
 		
 		bufferWidth = config.getBufferWidth();
 		bufferHeight = config.getBufferHeight();
-	}
-	
-	private void resetParameters() {
-		
-		worldWidth = 0;
-		worldHeight = 0;
-		
-		gridWidth = 0;
-		gridHeight = 0;
-		
-		stepWidth = 0;
-		stepHeight = 0;
-		
-		bufferWidth = 0;
-		bufferHeight = 0;
 	}
 	
 	public void initWorld() {

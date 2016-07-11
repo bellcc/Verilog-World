@@ -1,3 +1,11 @@
+
+/**
+ * @author Clark Bell
+ * @date   7-11-2016
+ * @info   This is the basic framework for a text button actor
+ *         that will be added to a stage using the libgdx library.
+ */
+
 package edu.miamioh.Buttons;
 
 import com.badlogic.gdx.graphics.Color;
@@ -11,6 +19,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
 public class TextButtonActor {
 
+	/**
+	 * This method will create a text button actor with a text and
+	 * a specified background color. This can be easily modified
+	 * to use an image as the background using a texture and pixmap.
+	 * 
+	 * @param color The background color of the text button actor.
+	 * @param text The text in the button actor.
+	 * 
+	 * @return
+	 */
 	public TextButton createTextButton(Color color, String text) {
 
 		Skin skin = new Skin();
