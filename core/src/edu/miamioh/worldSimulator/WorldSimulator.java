@@ -193,6 +193,13 @@ public class WorldSimulator {
 //		}
 //	}
 	
+	public void updateBlocks(ArrayList<Block> blocks) {
+		
+		for(Block block : blocks) {
+			this.blocks.add(block);
+		}
+	}
+	
 	public void updateModules() {
 		
 		// Clear module list so it can be remade with new modules

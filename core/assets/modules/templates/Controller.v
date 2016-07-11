@@ -11,7 +11,7 @@ module Controller(clk, rst, bar_0, bar_1, bar_2, bar_3, bar_4, bar_5, bar_6);
 	
 	reg [3:0]data;
 	
-	always @(posedge clk and negedge rst);
+	always @(posedge clk or negedge rst);
 	begin
 		if (rst == 0)
 		begin
