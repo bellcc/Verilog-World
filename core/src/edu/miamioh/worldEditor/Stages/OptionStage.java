@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import edu.miamioh.Buttons.TextButtonActor;
+import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.ChangeListeners.BlockChangeListener;
 import edu.miamioh.worldEditor.ChangeListeners.HomeChangeListener;
@@ -49,7 +50,7 @@ public class OptionStage {
 		toolActor.addListener(new ToolsChangeListener());
 		simulatorActor.addListener(new SimulatorChangeListener());
 		
-		int windowHeight = WorldEditorController.getCurrentController().getWindowHeight();
+		int windowHeight = VerilogWorldController.WINDOW_HEIGHT;
 		
 		int actorCount = 4;
 		int actorHeight = windowHeight / actorCount;

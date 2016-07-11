@@ -10,6 +10,7 @@ package edu.miamioh.GameObjects;
 import com.badlogic.gdx.graphics.Color;
 
 import edu.miamioh.simulator.RootModuleSimulator;
+import edu.miamioh.worldEditor.WorldEditorController;
 
 public abstract class Block {
 
@@ -19,6 +20,7 @@ public abstract class Block {
 	private Color color;
 	private int row;
 	private int column;
+	private int id;
 	
 	public Block() {
 
@@ -29,6 +31,10 @@ public abstract class Block {
 
 		setRow(row);
 		setColumn(column);
+	}
+	
+	public Block(int id) {
+		this.id = id;
 	}
 	
 	public Block(int row, int column, Color color) {
@@ -62,6 +68,14 @@ public abstract class Block {
 		return column;
 	}
 	
+	public void setID(int id) {
+		this.id = id;
+	}
+	
+	public int getID() {
+		return this.id;
+	}
+		
 	public static void setRootSim(RootModuleSimulator sim) {rootSim = sim;}
 	public static RootModuleSimulator getRootSim() {return rootSim;}
 

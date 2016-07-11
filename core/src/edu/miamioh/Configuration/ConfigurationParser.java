@@ -12,12 +12,30 @@
 package edu.miamioh.Configuration;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.parsers.DocumentBuilder;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+
+import edu.miamioh.GameObjects.Block;
+import edu.miamioh.GameObjects.NormalBlock;
+import edu.miamioh.GameObjects.blocks.BlankBlock;
+import edu.miamioh.GameObjects.blocks.ControllerBlock;
+import edu.miamioh.GameObjects.blocks.LedBlock;
+import edu.miamioh.GameObjects.blocks.ScooterBlock;
+import edu.miamioh.GameObjects.blocks.WallBlock;
+import edu.miamioh.Level.Level;
+import edu.miamioh.worldEditor.WorldEditorController;
+
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
@@ -36,7 +54,7 @@ public class ConfigurationParser {
 	public Configuration getDefaultConfiguration() {
 		
 		File file = new File(defaultConfigurationPath);
-		Configuration config = getConfiguration(file);
+		Configuration config = getConfiguration(file).getConfig();
 	
 		return config;
 	}
@@ -54,8 +72,9 @@ public class ConfigurationParser {
 	 * @return The configuration details as defined by the 
 	 * parameter provided file.
 	 */
-	public Configuration getConfiguration(File file) {
+	public Level getConfiguration(File file) {
 		
+		Level level = new Level();
 		Configuration config = new Configuration();
 		
 		try {
@@ -69,16 +88,59 @@ public class ConfigurationParser {
 			NodeList worldList = doc.getElementsByTagName("world");
 			Node worldNode = worldList.item(0);
 			
+			NodeList blockList = worldNode.getChildNodes();
+
+			for(int i=0;i<blockList.getLength();i++) {
+								
+				if(blockList.item(i).getNodeName().equals("block")) {
+					
+					Element blockElement = (Element) blockList.item(i);
+					
+					int row = Integer.parseInt(blockElement.getElementsByTagName("row").item(0).getTextContent());
+					int column = Integer.parseInt(blockElement.getElementsByTagName("column").item(0).getTextContent());
+					int id = Integer.parseInt(blockElement.getElementsByTagName("id").item(0).getTextContent());
+					String type = blockElement.getElementsByTagName("type").item(0).getTextContent();
+					
+					switch (type) {
+					
+						case "Blank":
+							level.addBlock(new BlankBlock(row, column, id));
+							level.getBlock(row, column).setID(id);
+							break;
+							
+						case "Wall":
+							level.addBlock(new WallBlock(row, column, id));
+							level.getBlock(row, column).setID(id);
+							break;
+							
+						case "Controller":
+							level.addBlock(new ControllerBlock(row, column, id));
+							level.getBlock(row, column).setID(id);
+							break;
+							
+						case "Scooter":
+							level.addBlock(new ScooterBlock(row, column, id));
+							level.getBlock(row, column).setID(id);
+							break;
+							
+						case "Led":
+							level.addBlock(new LedBlock(row, column, id));
+							level.getBlock(row, column).setID(id);
+							break;
+							
+					}
+					
+				}
+				
+			}
+			
 			if(worldNode.getNodeType() == Node.ELEMENT_NODE) {
 				
 				Element worldElement = (Element) worldNode;
 				
 				String tempWorldWidth = worldElement.getElementsByTagName("world-width").item(0).getTextContent();
 				String tempWorldHeight = worldElement.getElementsByTagName("world-height").item(0).getTextContent();
-				
-				String tempWindowWidth = worldElement.getElementsByTagName("window-width").item(0).getTextContent();
-				String tempWindowHeight = worldElement.getElementsByTagName("window-height").item(0).getTextContent();
-				
+
 				String tempBufferWidth = worldElement.getElementsByTagName("buffer-width").item(0).getTextContent();
 				String tempBufferHeight = worldElement.getElementsByTagName("buffer-height").item(0).getTextContent();
 				
@@ -90,10 +152,7 @@ public class ConfigurationParser {
 				
 				int worldWidth = Integer.parseInt(tempWorldWidth);
 				int worldHeight = Integer.parseInt(tempWorldHeight);
-				
-				int windowWidth = Integer.parseInt(tempWindowWidth);
-				int windowHeight = Integer.parseInt(tempWindowHeight);
-				
+
 				int bufferWidth = Integer.parseInt(tempBufferWidth);
 				int bufferHeight = Integer.parseInt(tempBufferHeight);
 				
@@ -105,10 +164,7 @@ public class ConfigurationParser {
 				
 				config.setWorldWidth(worldWidth);
 				config.setWorldHeight(worldHeight);
-				
-				config.setWindowWidth(windowWidth);
-				config.setWindowHeight(windowHeight);
-				
+
 				config.setBufferWidth(bufferWidth);
 				config.setBufferHeight(bufferHeight);
 				
@@ -125,6 +181,87 @@ public class ConfigurationParser {
 			e.printStackTrace();
 		}
 		
-		return config;
+		level.setConfig(config);
+		
+		return level;
 	}
+	
+	public void createWorld(Level level, File file) {
+		
+		Configuration config = level.getConfig();
+		
+		try {
+			
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			
+			Document doc = docBuilder.newDocument();
+			Element rootElement = doc.createElement("world");
+			doc.appendChild(rootElement);
+
+			rootElement.appendChild(addElement(doc, "world-width", String.valueOf(config.getWorldWidth())));
+			rootElement.appendChild(addElement(doc, "world-height", String.valueOf(config.getWorldHeight())));
+
+			rootElement.appendChild(addElement(doc, "grid-width", String.valueOf(config.getGridWidth())));
+			rootElement.appendChild(addElement(doc, "grid-height", String.valueOf(config.getGridHeight())));
+			
+			rootElement.appendChild(addElement(doc, "step-width", String.valueOf(config.getStepWidth())));
+			rootElement.appendChild(addElement(doc, "step-height", String.valueOf(config.getStepHeight())));
+			
+			rootElement.appendChild(addElement(doc, "buffer-width", String.valueOf(config.getBufferWidth())));
+			rootElement.appendChild(addElement(doc, "buffer-height", String.valueOf(config.getBufferHeight())));
+			
+			ArrayList<Block> blockList = level.getBlockList();
+			
+			for(int i=0;i<blockList.size();i++) {
+				
+				Element element = doc.createElement("block");
+				rootElement.appendChild(element);
+				
+				Element id = doc.createElement("id");
+				id.setTextContent(String.valueOf(blockList.get(i).getID()));
+				element.appendChild(id);
+				
+				Element row = doc.createElement("row");
+				row.setTextContent(String.valueOf(blockList.get(i).getRow()));
+				element.appendChild(row);
+				
+				Element column = doc.createElement("column");
+				column.setTextContent(String.valueOf(blockList.get(i).getColumn()));
+				element.appendChild(column);
+				
+				NormalBlock block = (NormalBlock) blockList.get(i);				
+				Element type = doc.createElement("type");
+				type.setTextContent(block.getType().toString());
+				element.appendChild(type);
+				
+			}
+			
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(file);
+			
+			transformer.transform(source, result);
+			
+			System.out.println("File written.");
+			
+		
+		}catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+		}catch (TransformerException tfe) {
+			tfe.printStackTrace();
+		}
+	
+	}
+
+	private Element addElement(Document doc, String title, String text) {
+		
+		Element element = doc.createElement(title);
+		element.appendChild(doc.createTextNode(text));
+		
+		return element;
+		
+	}
+	
 }

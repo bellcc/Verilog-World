@@ -17,6 +17,8 @@
 package edu.miamioh.verilogWorld;
 
 
+import java.io.File;
+
 import javax.swing.JTextPane;
 
 import edu.miamioh.Configuration.Configuration;
@@ -28,9 +30,14 @@ import edu.miamioh.worldSimulator.WorldSimulator;
 
 public class VerilogWorldController {
 
-	private Configuration defaultConfig;
-
 	private static VerilogWorldController controller;
+	
+	public static int WINDOW_WIDTH = 600;
+	public static int WINDOW_HEIGHT = 600;
+	
+	private Configuration defaultConfig;
+	
+	private File levelPath;
 	
 	private Level currentLevel;
 	private WorldSimulator sim;
@@ -40,9 +47,10 @@ public class VerilogWorldController {
 
 	public VerilogWorldController() {
 		
+		init();
+		
 		ConfigurationParser parser = new ConfigurationParser();
 		defaultConfig = parser.getDefaultConfiguration();
-		init();
 	}
 	
 	/**
@@ -59,13 +67,8 @@ public class VerilogWorldController {
 		
 		this.rootPath = System.getProperty("user.dir");
 
-		//If using Eclipse...
-		//this.rootPath = System.getProperty("user.dir") + "/../";
-
 		//If using IntelliJ...
-//		this.rootPath = System.getProperty("user.dir");
 //		this.rootPath = rootPath.substring(0, rootPath.substring(0, rootPath.lastIndexOf("/")).lastIndexOf("/") ) + "/";
-//		System.out.println(rootPath);
 
 		controller = this;
 		currentLevel = new Level();
@@ -80,7 +83,6 @@ public class VerilogWorldController {
 		//state = VerilogWorld.WORLD_SIMULATOR;
 		
 	}
-
 	
 	public Configuration getDefaultConfig()              {return this.defaultConfig;}
 	public void setDefaultConfig(Configuration config)   {this.defaultConfig = config;}
@@ -89,6 +91,9 @@ public class VerilogWorldController {
 	public void setLevel(Level level)                    {this.currentLevel = level;}
 	public WorldSimulator getSim() 	                     {return this.sim;}
 	public Parse getCompiler()		                     {return this.compiler;}
+	public void setRootPath(String rootPath)             {this.rootPath = rootPath;}               
 	public String getRootPath() 	                     {return this.rootPath;}
+	public void setLevelPath(File path)                  {this.levelPath = path;}
+	public File getLevelPath()                           {return this.levelPath;}
 	public Level getCurrentLevel() 						 {return this.currentLevel;}
 }

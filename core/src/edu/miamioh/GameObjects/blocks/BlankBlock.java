@@ -9,8 +9,8 @@ public class BlankBlock extends NormalBlock {
 	
 	public static Color COLOR = new Color(0.2f, 0.2f, 0.2f, 1.0f);
 	
-	public BlankBlock(int row, int column) {
-		super(NormalBlockType.Blank, row, column);
+	public BlankBlock(int row, int column, int id) {
+		super(NormalBlockType.Blank, row, column, id);
 	}
 
 	@Override

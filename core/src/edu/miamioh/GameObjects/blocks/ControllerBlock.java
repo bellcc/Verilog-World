@@ -12,8 +12,8 @@ public class ControllerBlock extends NormalBlock {
 	
 	public static Color COLOR = new Color(0.0f, 0.0f, 0.8f, 1.0f);
 	
-	public ControllerBlock(int row, int column) {
-		super(NormalBlockType.Controller, row, column);
+	public ControllerBlock(int row, int column, int id) {
+		super(NormalBlockType.Controller, row, column, id);
 	}
 
 	@Override
