@@ -25,7 +25,10 @@ import edu.miamioh.GameObjects.Block;
 import edu.miamioh.GameObjects.NormalBlock;
 import edu.miamioh.GameObjects.blocks.WallBlock;
 import edu.miamioh.Level.Level;
+import edu.miamioh.simulator.ParseRegWire;
+import edu.miamioh.simulator.WireRoleType;
 import edu.miamioh.verilogWorld.VerilogWorldController;
+import edu.miamioh.worldSimulator.ModulePort;
 
 public class WorldEditorController {
 	
@@ -281,6 +284,31 @@ public class WorldEditorController {
 			++blockID;
 		}
 		
+	}
+	
+	public void connectBlocks(NormalBlock selectedBlock, NormalBlock targetBlock, 
+							  String selectedWireName, String targetWireName) {
+		
+		/*
+		 * Grab the wires
+		 */
+		ParseRegWire selectedWire = selectedBlock.getModuleWrapper().getModule().getHash_vars().get(selectedWireName);
+		ParseRegWire targetWire = targetBlock.getModuleWrapper().getModule().getHash_vars().get(targetWireName);
+		
+		/*
+		 * Find t
+		 */
+		boolean selectedIsInput = false;
+		boolean targetIsInput = false;
+		if(selectedWire.getRole() == WireRoleType.INPUT) {
+			selectedIsInput = true;
+		}
+		if(targetWire.getRole() == WireRoleType.INPUT) {
+			targetIsInput = true;
+		}
+		
+		ModulePort selectedPort = new ModulePort(selectedWireName, selectedIsInput);
+		targetBlock.getModuleWrapper().addPort(new ModulePort(targetWireName, selectedPort, targetWire, targetIsInput));
 	}
 	
 	public boolean changesMade() {

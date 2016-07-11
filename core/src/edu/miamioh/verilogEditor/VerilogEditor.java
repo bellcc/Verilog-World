@@ -93,8 +93,29 @@ public class VerilogEditor extends JFrame implements ActionListener {
 //		new VerilogEditor(sim, compiler, rootPath, filePath);
 //	}
 
+//	public VerilogEditor(RootModuleSimulator sim, Parse compiler, String rootPath, String filePath, String fileName) {
+//		
+//		this.fileName = fileName;
+//		try {
+//			compiler.compileFileForGame(fileName);
+//		} catch (IOException e) {
+//			System.err.println("Problem compiling source file.");
+//			e.printStackTrace();
+//			System.exit(1);
+//		}
+//		
+//		new VerilogEditor(sim, compiler, rootPath, filePath, fileName);
+//	}
+
 	public VerilogEditor(RootModuleSimulator sim, Parse compiler, String rootPath, String filePath, String fileName) {
+		// Create the window
+		super("Verilog Text Editor: " + filePath);
+		this.setMinimumSize(new Dimension(MINWIDTH, MINHEIGHT));
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		Locale.setDefault(Locale.ENGLISH);
 		
+		this.filePath = filePath;
+		this.fileName = fileName;
 		try {
 			compiler.compileFileForGame(fileName);
 		} catch (IOException e) {
@@ -102,19 +123,6 @@ public class VerilogEditor extends JFrame implements ActionListener {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		
-		new VerilogEditor(sim, compiler, rootPath, filePath);
-	}
-
-	public VerilogEditor(RootModuleSimulator sim, Parse compiler, String rootPath, String filePath) {
-		// Create the window
-		super("Verilog Text Editor: " + filePath);
-		this.setMinimumSize(new Dimension(MINWIDTH, MINHEIGHT));
-		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		Locale.setDefault(Locale.ENGLISH);
-
-		this.filePath = filePath;
-		this.fileName = fileName;
 
 		// if (System.getProperty("os.name").startsWith("Mac"))
 		// newLine = "\n";

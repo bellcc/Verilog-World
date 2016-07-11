@@ -36,8 +36,8 @@ public class WorldSimulator {
 		this.freq = 100;
 		this.shouldRun = false;
 		
-		this.clock = new ModulePort("Clock");
-		this.reset = new ModulePort("Reset");
+		this.clock = new ModulePort("Clock", false);
+		this.reset = new ModulePort("Reset", false);
 		reset.setValue(1); // Active low reset line
 		
 		// Construct timer to run the simulator at a certain frequency
