@@ -14,9 +14,6 @@ public class Configuration {
 	private int worldWidth;
 	private int worldHeight;
 
-	private int windowWidth;
-	private int windowHeight;
-	
 	private int bufferWidth;
 	private int bufferHeight;
 	
@@ -28,15 +25,13 @@ public class Configuration {
 	
 	public Configuration() {
 		
-		this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+		this(0, 0, 0, 0, 0, 0, 0, 0);
 	}
 	
-	public Configuration(int worldWidth, int worldHeight, int windowWidth, int windowHeight, int bufferWidth,
-			int bufferHeight, int gridWidth, int gridHeight, int stepWidth, int stepHeight) {
+	public Configuration(int worldWidth, int worldHeight, int bufferWidth, int bufferHeight, 
+			int gridWidth, int gridHeight, int stepWidth, int stepHeight) {
 		this.worldWidth = worldWidth;
 		this.worldHeight = worldHeight;
-		this.windowWidth = windowWidth;
-		this.windowHeight = windowHeight;
 		this.bufferWidth = bufferWidth;
 		this.bufferHeight = bufferHeight;
 		this.gridWidth = gridWidth;
@@ -59,22 +54,6 @@ public class Configuration {
 	
 	public void setWorldHeight(int worldHeight) {
 		this.worldHeight = worldHeight;
-	}
-	
-	public int getWindowWidth() {
-		return windowWidth;
-	}
-	
-	public void setWindowWidth(int windowWidth) {
-		this.windowWidth = windowWidth;
-	}
-	
-	public int getWindowHeight() {
-		return windowHeight;
-	}
-	
-	public void setWindowHeight(int windowHeight) {
-		this.windowHeight = windowHeight;
 	}
 	
 	public int getBufferWidth() {
@@ -127,8 +106,7 @@ public class Configuration {
 
 	@Override
 	public String toString() {
-		return "Configuration [worldWidth=" + worldWidth + ", worldHeight=" + worldHeight + ", windowWidth="
-				+ windowWidth + ", windowHeight=" + windowHeight + ", bufferWidth=" + bufferWidth + ", bufferHeight="
+		return "Configuration [worldWidth=" + worldWidth + ", worldHeight=" + worldHeight + ", bufferWidth=" + bufferWidth + ", bufferHeight="
 				+ bufferHeight + ", gridWidth=" + gridWidth + ", gridHeight=" + gridHeight + ", stepWidth=" + stepWidth
 				+ ", stepHeight=" + stepHeight + "]";
 	}

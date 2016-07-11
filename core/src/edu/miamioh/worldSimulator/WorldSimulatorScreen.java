@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import edu.miamioh.GameObjects.Block;
+import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.worldSimulator.Stages.HomeStage;
 import edu.miamioh.worldSimulator.Stages.OptionStage;
 import edu.miamioh.worldSimulator.Stages.SimulatorStage;
@@ -21,10 +22,7 @@ public class WorldSimulatorScreen implements Screen {
 	private static WorldSimulatorScreen screen;
 	
 	private WorldSimulatorController controller;
-	
-	private int windowWidth;
-	private int windowHeight;
-	
+
 	private int worldWidth;
 	private int worldHeight;
 	
@@ -79,10 +77,7 @@ public class WorldSimulatorScreen implements Screen {
 	}
 	
 	private void updateWorldParameters() {
-		
-		windowWidth = controller.getWindowWidth();
-		windowHeight = controller.getWindowHeight();
-		
+
 		worldWidth = controller.getWorldWidth();
 		worldHeight = controller.getWorldHeight();
 		
@@ -154,15 +149,15 @@ public class WorldSimulatorScreen implements Screen {
 		
 		translateX -= TOOLBAR_WIDTH;
 				
-		int windowWidthRange = windowWidth - TOOLBAR_WIDTH;
+		int windowWidthRange = VerilogWorldController.WINDOW_WIDTH - TOOLBAR_WIDTH;
 		
 		if(width < windowWidthRange) {
 			translateX = TOOLBAR_WIDTH + ((windowWidthRange / 2) - (width / 2));
 			translateX *= (-1);			
 		}
 		
-		if(height < windowHeight) {
-			translateY = ((windowHeight / 2) - (height / 2));
+		if(height < VerilogWorldController.WINDOW_HEIGHT) {
+			translateY = ((VerilogWorldController.WINDOW_HEIGHT / 2) - (height / 2));
 			translateY *= (-1);
 		}
 
@@ -224,8 +219,8 @@ public class WorldSimulatorScreen implements Screen {
 	@Override
 	public void resize(int width, int height) {
 
-		controller.setWindowWidth(width);
-		controller.setWindowHeight(height);
+		VerilogWorldController.WINDOW_WIDTH = width;
+		VerilogWorldController.WINDOW_HEIGHT = height;
 		
 		updateWorldParameters();
 		

@@ -4,6 +4,7 @@ import edu.miamioh.Buttons.LabelActor;
 import edu.miamioh.Buttons.TextButtonActor;
 import edu.miamioh.Buttons.TextFieldActor;
 import edu.miamioh.Configuration.Configuration;
+import edu.miamioh.Level.Level;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -26,10 +27,7 @@ public class ConfigurationScreen implements Screen {
 	
 	private Label worldWidthLabel;
 	private Label worldHeightLabel;
-	
-	private Label windowWidthLabel;
-	private Label windowHeightLabel;
-	
+
 	private Label gridWidthLabel;
 	private Label gridHeightLabel;
 	
@@ -41,10 +39,7 @@ public class ConfigurationScreen implements Screen {
 	
 	private TextField worldWidthTextField;
 	private TextField worldHeightTextField;
-	
-	private TextField windowWidthTextField;
-	private TextField windowHeightTextField;
-	
+
 	private TextField gridWidthTextField;
 	private TextField gridHeightTextField;
 	
@@ -59,10 +54,7 @@ public class ConfigurationScreen implements Screen {
 	
 	private int worldWidth;
 	private int worldHeight;
-	
-	private int windowWidth;
-	private int windowHeight;
-	
+
 	private int gridWidth;
 	private int gridHeight;
 	
@@ -72,12 +64,18 @@ public class ConfigurationScreen implements Screen {
 	private int stepWidth;
 	private int stepHeight;
 	
+	private Level newLevel;
+	
+	public ConfigurationScreen(Level level) {
+		
+		updateWorld(level.getConfig());
+		this.newLevel = level;
+	}
+	
 	@Override
 	public void show() {
 		
 		currentScreen = this;
-
-		updateWorld(ConfigurationController.getController().getDefaultConfig());
 		constructStage();
 	}
 	
@@ -121,9 +119,6 @@ public class ConfigurationScreen implements Screen {
 		
 		this.stage = new Stage();
 
-		windowWidthLabel = new LabelActor().createLabel("Window Width", Color.LIGHT_GRAY, Color.BLACK);
-		windowHeightLabel = new LabelActor().createLabel("Window Height", Color.LIGHT_GRAY, Color.BLACK);
-		
 		worldWidthLabel = new LabelActor().createLabel("World Width", Color.LIGHT_GRAY, Color.BLACK);
 		worldHeightLabel = new LabelActor().createLabel("World Height", Color.LIGHT_GRAY, Color.BLACK);
 		
@@ -136,9 +131,6 @@ public class ConfigurationScreen implements Screen {
 		stepWidthLabel = new LabelActor().createLabel("Step Width", Color.LIGHT_GRAY, Color.BLACK);
 		stepHeightLabel = new LabelActor().createLabel("Step Height", Color.LIGHT_GRAY, Color.BLACK);
 
-		windowWidthLabel.setAlignment(0);
-		windowHeightLabel.setAlignment(0);
-		
 		worldWidthLabel.setAlignment(0);
 		worldHeightLabel.setAlignment(0);
 		
@@ -150,16 +142,10 @@ public class ConfigurationScreen implements Screen {
 		
 		stepWidthLabel.setAlignment(0);
 		stepHeightLabel.setAlignment(0);
-		
-		windowWidthTextField = new TextFieldActor().createTextField();
-		windowHeightTextField = new TextFieldActor().createTextField();
-		
+
 		worldWidthTextField = new TextFieldActor().createTextField();
 		worldHeightTextField = new TextFieldActor().createTextField();
-		
-		windowWidthTextField = new TextFieldActor().createTextField();
-		windowHeightTextField = new TextFieldActor().createTextField();
-		
+
 		gridWidthTextField = new TextFieldActor().createTextField();
 		gridHeightTextField = new TextFieldActor().createTextField();
 		
@@ -169,9 +155,6 @@ public class ConfigurationScreen implements Screen {
 		bufferWidthTextField = new TextFieldActor().createTextField();
 		bufferHeightTextField = new TextFieldActor().createTextField();
 
-		windowWidthTextField.setText(String.valueOf(this.windowWidth));
-		windowHeightTextField.setText(String.valueOf(this.windowHeight));
-		
 		worldWidthTextField.setText(String.valueOf(this.worldWidth));
 		worldHeightTextField.setText(String.valueOf(this.worldHeight));
 		
@@ -194,14 +177,7 @@ public class ConfigurationScreen implements Screen {
 		table.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/circuit_2.png")))));
 		table.center();
-		
-		table.add(windowWidthLabel).width(150).height(50);
-		table.add(windowWidthTextField).width(150).height(40);
-		table.row();
-		table.add(windowHeightLabel).width(150).height(50);
-		table.add(windowHeightTextField).width(150).height(40);
-		table.row();
-		
+
 		table.add(worldWidthLabel).width(150).height(50);
 		table.add(worldWidthTextField).width(150).height(40);
 		table.row();
@@ -240,13 +216,10 @@ public class ConfigurationScreen implements Screen {
 	}
 	
 	public void updateWorld(Configuration config) {
-		
+
 		this.worldWidth = config.getWorldWidth();
 		this.worldHeight = config.getWorldHeight();
-		
-		this.windowWidth = config.getWindowWidth();
-		this.windowHeight = config.getWindowHeight();
-		
+
 		this.gridWidth = config.getGridWidth();
 		this.gridHeight = config.getGridHeight();
 		
@@ -258,13 +231,10 @@ public class ConfigurationScreen implements Screen {
 		
 	}
 	
-	public Configuration getConfiguration() {
-		
+	private Configuration getConfiguration() {
+
 		Configuration config = new Configuration();
-		
-		config.setWindowWidth(Integer.parseInt(windowWidthTextField.getText()));
-		config.setWindowHeight(Integer.parseInt(windowHeightTextField.getText()));
-		
+
 		config.setWorldWidth(Integer.parseInt(worldWidthTextField.getText()));
 		config.setWorldHeight(Integer.parseInt(worldHeightTextField.getText()));
 		
@@ -278,6 +248,14 @@ public class ConfigurationScreen implements Screen {
 		config.setStepHeight(Integer.parseInt(stepHeightTextField.getText()));
 		
 		return config;
+	}
+	
+	public Level getLevel() {
+		
+		Configuration config = getConfiguration();
+		newLevel.setConfig(config);
+		
+		return this.newLevel;
 	}
 	
 	public Stage getStage() {

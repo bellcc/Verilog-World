@@ -11,8 +11,8 @@ public class SchematicRendererController {
 
     private static SchematicRendererController currentController;
 
-    private int worldWidth;
-    private int worldHeight;
+//    private int worldWidth;
+//    private int worldHeight;
     private int windowWidth;
     private int windowHeight;
 
@@ -69,14 +69,16 @@ public class SchematicRendererController {
     }
 
     void updateConfig(){
-        worldWidth = VerilogWorldController.getController().getDefaultConfig().getWindowWidth();
-        worldHeight = VerilogWorldController.getController().getDefaultConfig().getWindowHeight();
-        windowWidth = Gdx.graphics.getWidth();
-        windowHeight = Gdx.graphics.getHeight();
-        leftEdge = (int)((float)worldWidth / 20f);
-        rightEdge = worldWidth - leftEdge;
+//        windowWidth = VerilogWorldController.WINDOW_WIDTH;
+//        windowHeight = VerilogWorldController.WINDOW_HEIGHT;
+    	windowWidth = Gdx.graphics.getWidth();
+    	windowHeight = Gdx.graphics.getHeight();
+//        worldWidth = Gdx.graphics.getWidth();
+//        worldHeight = Gdx.graphics.getHeight();
+        leftEdge = (int) (windowWidth / 20f);
+        rightEdge = windowWidth - leftEdge;
         bottomEdge = leftEdge;
-        topEdge = worldHeight - bottomEdge;
+        topEdge = windowHeight - bottomEdge;
     }
 
     public static SchematicRendererController getCurrentController() {
@@ -84,9 +86,9 @@ public class SchematicRendererController {
         return currentController;
     }
 
-    public int getWorldWidth() {
-        return this.worldWidth;
-    }
+//    public int getWorldWidth() {
+//        return this.worldWidth;
+//    }
 
     public int getWindowWidth(){
         return this.windowWidth;
@@ -96,9 +98,9 @@ public class SchematicRendererController {
 //        this.worldWidth = windowWidth;
 //    }
 
-    public int getWorldHeight() {
-        return worldHeight;
-    }
+//    public int getWorldHeight() {
+//        return worldHeight;
+//    }
 
     public int getWindowHeight(){
         return this.windowHeight;

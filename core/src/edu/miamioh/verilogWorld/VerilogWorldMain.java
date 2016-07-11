@@ -21,8 +21,8 @@ import edu.miamioh.schematicRenderer.SchematicRendererScreen;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.RootModuleSimulator;
 import edu.miamioh.verilogEditor.RunEditor;
-import edu.miamioh.worldConfiguration.ConfigurationController;
 import edu.miamioh.worldConfiguration.ConfigurationScreen;
+import edu.miamioh.worldConfiguration.DirectoryScreen;
 import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.WorldEditorScreen;
 import edu.miamioh.worldSimulator.WorldSimulatorController;
@@ -44,13 +44,11 @@ public class VerilogWorldMain extends Game {
 	private WorldSimulatorScreen worldSimulatorScreen;
 
 	private ConfigurationScreen configScreen;
-	private ConfigurationController configController;
 	
 	private MainMenuScreen mainMenuScreen;
 	private PlayScreen playScreen;
 	private ChallengesScreen challengesScreen;
 
-	private SchematicRendererController schematicRendererController;
 	private SchematicRendererScreen schematicRendererScreen;
 		
 	private String	VERILOG_WORLD_DEVELOPMENT	= "VERILOG_WORLD_DEVELOPMENT";
@@ -73,6 +71,8 @@ public class VerilogWorldMain extends Game {
 		this.sim = verilogWorldController.getSim().getRootModuleSimulator();
 		this.compiler = verilogWorldController.getCompiler();
 
+		schematicRendererScreen = new SchematicRendererScreen();
+
 //		worldEditorController = new WorldEditorController(verilogWorldController.getDefaultConfig(), 
 //														  verilogWorldController.getCurrentLevel());
 //		worldSimulatorController = new WorldSimulatorController(verilogWorldController.getDefaultConfig());
@@ -80,62 +80,47 @@ public class VerilogWorldMain extends Game {
 //		worldEditorScreen = new WorldEditorScreen(worldEditorController);
 //		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
 
-		schematicRendererController = new SchematicRendererController();
-		schematicRendererScreen = new SchematicRendererScreen();
-
 		setMainMenuScreen();
-		
-		ErrorInstance error0 = new ErrorInstance("Wall Block", 3, 7);
-		error0.addError("0 <13, 5> Error parsing source file.");
-		error0.addError("1 Problem with the program. Exiting...");
-		error0.addError("2 <13, 5> Error parsing source file.");
-		error0.addError("3 Problem with the program. Exiting...");
-		error0.addError("4 <13, 5> Error parsing source file.");
-		error0.addError("5 Problem with the program. Exiting...");
-		error0.addError("6 <13, 5> Error parsing source file.");
-		error0.addError("7 Problem with the program. Exiting...");
-		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(error0);
-		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Controller Block", 2, 1));
-//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
-//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
-//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
-//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
-//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
-//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
-//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
-//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
-//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
-//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
-//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_0", 1, 3));
-//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Module_1", 2, 1));
-		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().display();
+//		ErrorInstance error0 = new ErrorInstance("Wall Block", 3, 7);
+//		error0.addError("0 <13, 5> Error parsing source file.");
+//		error0.addError("1 Problem with the program. Exiting...");
+//		error0.addError("2 <13, 5> Error parsing source file.");
+//		error0.addError("3 Problem with the program. Exiting...");
+//		error0.addError("4 <13, 5> Error parsing source file.");
+//		error0.addError("5 Problem with the program. Exiting...");
+//		error0.addError("6 <13, 5> Error parsing source file.");
+//		error0.addError("7 Problem with the program. Exiting...");
+//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(error0);
+//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Controller Block", 2, 1));
+//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().display();
 	}
 	
-	public void setConfigurationScreen() {
+	public void setDirectoryScreen() {
+		
+		this.setScreen(new DirectoryScreen());
+	}
+	
+	public void setConfigurationScreen(Level level) {
 		
 		Configuration defaultConfig = VerilogWorldController.getController().getDefaultConfig();
+		level.setConfig(defaultConfig);
 		
-		configController = new ConfigurationController(defaultConfig);
-		configScreen = new ConfigurationScreen();
+		configScreen = new ConfigurationScreen(level);
 		
 		this.setScreen(configScreen);
 	}
 		
-	public void setWorldEditorScreen() {
-		
-		Configuration defaultConfig = verilogWorldController.getDefaultConfig();
-		Level level = verilogWorldController.getLevel();
-		
-		worldEditorController = new WorldEditorController(defaultConfig, level);
+	public void setWorldEditorScreen(Level level) {
+
+		worldEditorController = new WorldEditorController(level);
 		worldEditorScreen = new WorldEditorScreen(worldEditorController);
 		
 		this.setScreen(worldEditorScreen);
 	}
 	
-	public void setWorldSimulatorScreen() {
+	public void setWorldSimulatorScreen(Level level) {
 		
 		Configuration defaultConfig = verilogWorldController.getDefaultConfig();
-		Level level = verilogWorldController.getLevel();
 		
 		worldSimulatorController = new WorldSimulatorController(defaultConfig, level);
 		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);

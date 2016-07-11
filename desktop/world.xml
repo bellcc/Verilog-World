@@ -1,18 +1,1 @@
-<world>
-
-  <world-width>25</world-width>
-  <world-height>25</world-height>
-
-  <window-width>600</window-width>
-  <window-height>600</window-height>
-
-  <buffer-width>35</buffer-width>
-  <buffer-height>35</buffer-height>
-
-  <grid-width>25</grid-width>
-  <grid-height>25</grid-height>
-
-  <step-width>30</step-width>
-  <step-height>30</step-height>
-
-</world>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><world><world-width>25</world-width><world-height>25</world-height><grid-width>25</grid-width><grid-height>25</grid-height><step-width>30</step-width><step-height>30</step-height><buffer-width>35</buffer-width><buffer-height>35</buffer-height></world>

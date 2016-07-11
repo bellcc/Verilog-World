@@ -12,8 +12,8 @@ public class LedBlock extends NormalBlock {
 	
 	public static Color COLOR = new Color(1.0f, 0.4f, 0.4f, 1.0f);
 	
-	public LedBlock(int row, int column) {
-		super(NormalBlockType.Led, row, column);
+	public LedBlock(int row, int column, int id) {
+		super(NormalBlockType.Led, row, column, id);
 	}
 
 	@Override

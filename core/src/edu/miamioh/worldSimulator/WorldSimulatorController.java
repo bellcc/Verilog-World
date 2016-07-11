@@ -31,10 +31,7 @@ public class WorldSimulatorController {
 	
 	private int worldWidth;
 	private int worldHeight;
-	
-	private int windowWidth;
-	private int windowHeight;
-	
+
 	private int bufferWidth;
 	private int bufferHeight;
 	
@@ -58,10 +55,7 @@ public class WorldSimulatorController {
 	public WorldSimulatorController(Configuration config, Level level) {
 
 		this();
-		
-		windowWidth = config.getWindowWidth();
-		windowHeight = config.getWindowHeight();
-		
+
 		worldWidth = config.getWorldWidth();
 		worldHeight = config.getWorldHeight();
 		
@@ -147,22 +141,6 @@ public class WorldSimulatorController {
 
 	public void setWorldHeight(int worldHeight) {
 		this.worldHeight = worldHeight;
-	}
-
-	public int getWindowWidth() {
-		return windowWidth;
-	}
-
-	public void setWindowWidth(int windowWidth) {
-		this.windowWidth = windowWidth;
-	}
-
-	public int getWindowHeight() {
-		return windowHeight;
-	}
-
-	public void setWindowHeight(int windowHeight) {
-		this.windowHeight = windowHeight;
 	}
 
 	public int getBufferWidth() {

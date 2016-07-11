@@ -9,16 +9,20 @@
 
 package edu.miamioh.worldEditor;
 
+import java.io.File;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import edu.miamioh.Configuration.Configuration;
+import edu.miamioh.Configuration.ConfigurationParser;
 import edu.miamioh.GameObjects.blocks.BlankBlock;
 import edu.miamioh.GameObjects.blocks.ControllerBlock;
 import edu.miamioh.GameObjects.blocks.LedBlock;
 import edu.miamioh.GameObjects.blocks.ScooterBlock;
 import edu.miamioh.GameObjects.Block;
+import edu.miamioh.GameObjects.NormalBlock;
 import edu.miamioh.GameObjects.blocks.WallBlock;
 import edu.miamioh.Level.Level;
 import edu.miamioh.verilogWorld.VerilogWorldController;
@@ -40,10 +44,7 @@ public class WorldEditorController {
 
 	private int worldWidth;
 	private int worldHeight;
-	
-	private int windowWidth;
-	private int windowHeight;
-	
+
 	private int bufferWidth;
 	private int bufferHeight;
 	
@@ -58,7 +59,7 @@ public class WorldEditorController {
 	private boolean paused;
 	
 	public WorldEditorController() {
-		
+				
 		currentController = this;
 		paused = false;
 
@@ -70,19 +71,18 @@ public class WorldEditorController {
 		blockID = 0;
 	}
 	
-	public WorldEditorController(Configuration config, Level currentLevel) {
+	public WorldEditorController(Level level) {
 
 		this();
-		
-		updateParameters(config);
-		this.currentLevel = currentLevel;
+				
+		//resetParameters();
+		updateParameters(level.getConfig());		
+		this.currentLevel = level;
+			
 	}
 	
 	private void updateParameters(Configuration config) {
-		
-		windowWidth = config.getWindowWidth();
-		windowHeight = config.getWindowHeight();
-		
+
 		worldWidth = config.getWorldWidth();
 		worldHeight = config.getWorldHeight();
 		
@@ -96,6 +96,21 @@ public class WorldEditorController {
 		bufferHeight = config.getBufferHeight();
 	}
 	
+	private void resetParameters() {
+		
+		worldWidth = 0;
+		worldHeight = 0;
+		
+		gridWidth = 0;
+		gridHeight = 0;
+		
+		stepWidth = 0;
+		stepHeight = 0;
+		
+		bufferWidth = 0;
+		bufferHeight = 0;
+	}
+	
 	public void initWorld() {
 		
 		//currentLevel = VerilogWorldController.getController().getLevel();
@@ -104,10 +119,7 @@ public class WorldEditorController {
 		
 		setWorldWidth(config.getWorldWidth());
 		setWorldHeight(config.getWorldHeight());
-		
-		windowWidth = config.getWindowWidth();
-		windowHeight = config.getWindowHeight();
-		
+
 		worldWidth = config.getWorldWidth();
 		worldHeight = config.getWorldHeight();
 		
@@ -119,6 +131,30 @@ public class WorldEditorController {
 		
 		bufferWidth = config.getBufferWidth();
 		bufferHeight= config.getBufferHeight();
+		
+	}
+	
+	public void updateWorld(Level level) {
+		
+		this.currentLevel = level;
+		
+		Configuration config = level.getConfig();
+		
+		setWorldWidth(config.getWorldWidth());
+		setWorldHeight(config.getWorldHeight());
+
+		worldWidth = config.getWorldWidth();
+		worldHeight = config.getWorldHeight();
+		
+		gridWidth = config.getGridWidth();
+		gridHeight = config.getGridHeight();
+		
+		stepWidth = config.getStepWidth();
+		stepHeight = config.getStepHeight();
+		
+		bufferWidth = config.getBufferWidth();
+		bufferHeight= config.getBufferHeight();
+
 	}
 	
 	public void updateInputMultiplexer() {		
@@ -127,6 +163,7 @@ public class WorldEditorController {
 		Stage homeStage = WorldEditorScreen.getScreen().getHomeStage();
 		Stage blockStage = WorldEditorScreen.getScreen().getBlockStage();
 		Stage blockSelectedStage = WorldEditorScreen.getScreen().getBlockSelectedStage();
+		Stage toolStage = WorldEditorScreen.getScreen().getToolStage();
 
 		resetMultiplexer();
 		
@@ -140,6 +177,10 @@ public class WorldEditorController {
 				
 			case BLOCK:
 				multiplexer.addProcessor(blockStage);
+				break;
+				
+			case TOOLS:
+				multiplexer.addProcessor(toolStage);
 				break;
 				
 			case BLOCK_SELECTED:
@@ -163,12 +204,14 @@ public class WorldEditorController {
 		Stage homeStage = WorldEditorScreen.getScreen().getHomeStage();
 		Stage blockStage = WorldEditorScreen.getScreen().getBlockStage();
 		Stage blockSelectedStage = WorldEditorScreen.getScreen().getBlockSelectedStage();
+		Stage toolStage = WorldEditorScreen.getScreen().getToolStage();
 		
 		multiplexer.removeProcessor(inputProcessor);
 		multiplexer.removeProcessor(optionStage);
 		multiplexer.removeProcessor(homeStage);
 		multiplexer.removeProcessor(blockStage);
 		multiplexer.removeProcessor(blockSelectedStage);
+		multiplexer.removeProcessor(toolStage);
 	}
 
 	/**
@@ -179,8 +222,17 @@ public class WorldEditorController {
 	public void gridPressed(int row, int column) {
 				
 		boolean isBlock = currentLevel.isBlock(row, column);
+		boolean connectMode = WorldEditorScreen.getScreen().getConnectMode();
 		
 		if(isBlock) {
+			
+			if(connectMode) {
+				
+				System.out.println("Connect block at (" + selectedRow + ", " + selectedColumn + ") with (" + row + ", " + column + ").");
+				
+				WorldEditorScreen.getScreen().setConnectMode(false);
+				
+			}
 
 			if(selection == ToolBarSelectionType.BLOCK_SELECTED) {
 				selection = ToolBarSelectionType.NONE;
@@ -199,28 +251,64 @@ public class WorldEditorController {
 		if (selection == ToolBarSelectionType.BLOCK) {
 						
 			switch(blockSelection) {
-			
+						
 				case Block_Blank:
-					currentLevel.addBlock(new BlankBlock(row, column));
+					int id = new edu.miamioh.util.UniqueNumber().generateID(WorldEditorController.getCurrentController().getCurrentLevel().getBlockList(), 0, WorldEditorController.getCurrentController().getWorldWidth() * WorldEditorController.getCurrentController().getWorldHeight());
+					currentLevel.addBlock(new BlankBlock(row, column, id));
 					break;
 				case Block_Wall:
-					currentLevel.addBlock(new WallBlock(row, column));
+					id = new edu.miamioh.util.UniqueNumber().generateID(WorldEditorController.getCurrentController().getCurrentLevel().getBlockList(), 0, WorldEditorController.getCurrentController().getWorldWidth() * WorldEditorController.getCurrentController().getWorldHeight());
+					currentLevel.addBlock(new WallBlock(row, column, id));
 					break;
 				case Block_Controller:
-					currentLevel.addBlock(new ControllerBlock(row, column));
+					id = new edu.miamioh.util.UniqueNumber().generateID(WorldEditorController.getCurrentController().getCurrentLevel().getBlockList(), 0, WorldEditorController.getCurrentController().getWorldWidth() * WorldEditorController.getCurrentController().getWorldHeight());
+					currentLevel.addBlock(new ControllerBlock(row, column, id));
 					break;
 				case Block_Scooter:
-					currentLevel.addBlock(new ScooterBlock(row, column));
+					id = new edu.miamioh.util.UniqueNumber().generateID(WorldEditorController.getCurrentController().getCurrentLevel().getBlockList(), 0, WorldEditorController.getCurrentController().getWorldWidth() * WorldEditorController.getCurrentController().getWorldHeight());
+					currentLevel.addBlock(new ScooterBlock(row, column, id));
 					break;
 				case Block_Led:
-					currentLevel.addBlock(new LedBlock(row, column));
+					id = new edu.miamioh.util.UniqueNumber().generateID(WorldEditorController.getCurrentController().getCurrentLevel().getBlockList(), 0, WorldEditorController.getCurrentController().getWorldWidth() * WorldEditorController.getCurrentController().getWorldHeight());
+					currentLevel.addBlock(new LedBlock(row, column, id));
 					break;
 				default:
 					break;
 			}
 			
+			//System.out.println(currentLevel.getBlockList().get(currentLevel.getBlockList().size() - 1).getID());
+			
 			++blockID;
 		}
+		
+	}
+	
+	public boolean changesMade() {
+		
+		if(currentLevel.getProject() == null) {
+			return false;
+		}
+				
+		Level otherLevel = new ConfigurationParser().getConfiguration(new File(currentLevel.getProject() + "/world.xml"));
+
+		if(currentLevel.compareTo(otherLevel) != 0) {
+			return true;
+		}
+		
+		return false;
+		
+	}
+	
+	public void saveLevel() {
+		
+		File file = WorldEditorController.getCurrentController().getCurrentLevel().getProject();
+		Level level = currentLevel;
+		
+		File tempFile = new File(file.getPath() + "/modules/");
+		tempFile.mkdirs();
+		
+		ConfigurationParser parser = new ConfigurationParser();
+		parser.createWorld(level, new File(file.getPath() + "/world.xml"));
 		
 	}
 	
@@ -263,22 +351,6 @@ public class WorldEditorController {
 
 	public void setWorldHeight(int worldHeight) {
 		this.worldHeight = worldHeight;
-	}
-
-	public int getWindowWidth() {
-		return windowWidth;
-	}
-
-	public void setWindowWidth(int windowWidth) {
-		this.windowWidth = windowWidth;
-	}
-
-	public int getWindowHeight() {
-		return windowHeight;
-	}
-
-	public void setWindowHeight(int windowHeight) {
-		this.windowHeight = windowHeight;
 	}
 
 	public int getBufferWidth() {
@@ -363,6 +435,10 @@ public class WorldEditorController {
 	
 	public int getSelectedColumn() {
 		return selectedColumn;
+	}
+	
+	public void setCurrentLevel(Level level) {
+		this.currentLevel = level;
 	}
 
 }

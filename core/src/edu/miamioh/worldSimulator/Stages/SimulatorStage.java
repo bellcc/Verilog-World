@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import edu.miamioh.Buttons.TextButtonActor;
+import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.worldSimulator.WorldSimulatorController;
 import edu.miamioh.worldSimulator.ChangeListeners.BackChangeListener;
 import edu.miamioh.worldSimulator.ChangeListeners.ResetChangeListener;
@@ -41,7 +42,7 @@ public class SimulatorStage {
 		verifyActor.addListener(new VerifyChangeListener());
 		resetActor.addListener(new ResetChangeListener());
 		
-		int windowHeight = WorldSimulatorController.getController().getWindowHeight();
+		int windowHeight = VerilogWorldController.WINDOW_HEIGHT;
 		
 		int actorHeight = 50;
 		int actorWidth = 100;

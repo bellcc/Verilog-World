@@ -7,7 +7,6 @@
 
 package edu.miamioh.worldEditor;
 
-import java.awt.Component;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
@@ -20,10 +19,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import edu.miamioh.GameObjects.Block;
+import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.worldEditor.Stages.BlockSelectedStage;
 import edu.miamioh.worldEditor.Stages.BlockStage;
 import edu.miamioh.worldEditor.Stages.HomeStage;
 import edu.miamioh.worldEditor.Stages.OptionStage;
+import edu.miamioh.worldEditor.Stages.ToolStage;
 import edu.miamioh.worldEditor.types.Point;
 
 public class WorldEditorScreen implements Screen {
@@ -56,10 +57,13 @@ public class WorldEditorScreen implements Screen {
 	private Stage blockSelectedStage;
 	private Stage toolStage;
 	
+	private boolean connectMode;
+	
 	private final int TOOLBAR_WIDTH = 150;
 	
 	public WorldEditorScreen() {
 		screen = this;
+		connectMode = false;
 	}
 	
 	public WorldEditorScreen(WorldEditorController controller) {
@@ -69,7 +73,7 @@ public class WorldEditorScreen implements Screen {
 	
 	@Override
 	public void show() {
-		
+			
 		updateWorldParameters();
 		controller.setToolBarSelection(ToolBarSelectionType.NONE);
 		
@@ -87,13 +91,14 @@ public class WorldEditorScreen implements Screen {
 		optionStage = new OptionStage().getStage();
 		homeStage = new HomeStage().getStage();		
 		blockStage = new BlockStage().getStage();
-		blockSelectedStage = new BlockSelectedStage().getStage();	
+		blockSelectedStage = new BlockSelectedStage().getStage();
+		toolStage = new ToolStage().getStage();
 	}
 	
-	private void updateWorldParameters() {
+	public void updateWorldParameters() {
 				
-		windowWidth = controller.getWindowWidth();
-		windowHeight = controller.getWindowHeight();
+		windowWidth = VerilogWorldController.WINDOW_WIDTH;
+		windowHeight = VerilogWorldController.WINDOW_HEIGHT;
 		
 		worldWidth = controller.getWorldWidth();
 		worldHeight = controller.getWorldHeight();
@@ -116,12 +121,47 @@ public class WorldEditorScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		renderWorld();
-		//renderErrorHUD();
-		//renderBlockHighlight(new Block(10, 10, Color.PINK));
+		
+		if(controller.getToolBarSelection() == ToolBarSelectionType.BLOCK_SELECTED) {
+			renderSelectedBlock();
+		}
+		
+		if(connectMode) {
+			
+			int row = controller.getSelectedRow();
+			int column = controller.getSelectedColumn();
+			
+			renderConnectMode(controller.getCurrentLevel().getBlock(row, column));
+		}
 		
 		renderSelector();
 		renderToolBar();
+		
+	}
+	
+	private void renderSelectedBlock() {
+		
+		int row = controller.getSelectedRow();
+		int column = controller.getSelectedColumn();
+		Color color = controller.getCurrentLevel().getBlock(row, column).getColor();
 
+		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
+	    Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+	    
+	    renderer.begin(ShapeType.Filled);
+	    renderer.setColor(color);
+	    renderer.rect(column * gridWidth, row * gridWidth, gridWidth, gridHeight);
+	    renderer.end();
+	    
+	    int bufferX = gridWidth / 5;
+	    int bufferY = gridHeight / 5;
+	    
+	    //Redraw the selected element.
+	    renderer.begin(ShapeType.Filled);
+	    renderer.setColor(new Color(255,255,255,.8f));
+	    renderer.rect((column * gridHeight) + bufferY, (row * gridWidth) + bufferX, gridWidth - (bufferX * 2), gridHeight - (bufferY * 2));
+	    renderer.end();
+		
 	}
 	
 	private void renderWorld() {
@@ -134,6 +174,10 @@ public class WorldEditorScreen implements Screen {
 		
 		int width = worldWidth * gridWidth;
 		int height = worldHeight * gridHeight;
+		
+		if(width == 0 || height == 0) {
+			return;
+		}
 
 		renderer.begin(ShapeType.Line);
 		renderer.setColor(Color.LIGHT_GRAY);
@@ -256,6 +300,11 @@ public class WorldEditorScreen implements Screen {
 				blockStage.draw();
 				break;
 				
+			case TOOLS:
+				toolStage.act(Gdx.graphics.getDeltaTime());
+				toolStage.draw();
+				break;
+				
 			case BLOCK_SELECTED:
 				blockSelectedStage.act(Gdx.graphics.getDeltaTime());
 				blockSelectedStage.draw();
@@ -268,12 +317,32 @@ public class WorldEditorScreen implements Screen {
 	
 	}
 	
-	private void renderErrorHUD() {
+	private void renderConnectMode(Block block) {
+				
+		Color selectedColor = block.getColor();
+		ArrayList<Block> blockList = controller.getCurrentLevel().getBlockList();
 		
+		for(int i=0;i<blockList.size();i++) {
 		
+			boolean connected = false;
+			
+			renderer.begin(ShapeType.Filled);
+			if(connected) {
+				renderer.setColor(selectedColor);
+			}else {
+				renderer.setColor(blockList.get(i).getColor());
+			}
+			renderer.rect(blockList.get(i).getColumn() * gridWidth, blockList.get(i).getRow() * gridHeight, gridWidth, gridHeight);
+			renderer.end();
+			
+		}
+		
+		renderSelectedBlock();
+		
+		//Render selection key.
 		
 	}
-	
+
 	private void renderBlockHighlight(Block block) {
 		
 		//Shade the grid.
@@ -293,29 +362,6 @@ public class WorldEditorScreen implements Screen {
 	    renderer.setColor(block.getColor());
 	    renderer.rect(block.getColumn() * gridWidth, block.getRow() * gridHeight, gridWidth, gridHeight);
 	    renderer.end();
-	    
-	    //Center the block in the screen.
-	    
-	    //Modify worldX and worldY
-	    if(!hasIrregularWidth()) {
-	    	
-	    	int column = block.getColumn();
-	    	worldX = (column * gridWidth) - ((windowWidth - TOOLBAR_WIDTH)/2);
-	    	
-	    }
-	    
-	    if(!hasIrregularHeight()) {
-	    	
-	    	int row = block.getRow();
-	    	worldY = (row * gridHeight) - ((windowHeight - TOOLBAR_WIDTH)/2);
-	    	
-	    }
-	    
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
-	    
-		camera.setToOrtho(false, w, h);
-	    camera.translate(0, 0);
 		
 	}
 	
@@ -352,7 +398,7 @@ public class WorldEditorScreen implements Screen {
 		int worldWidth = controller.getWorldWidth();
 		int gridWidth = controller.getGridWidth();
 		int bufferWidth = controller.getBufferWidth();
-		int windowWidth = controller.getWindowWidth();
+		int windowWidth = VerilogWorldController.WINDOW_WIDTH;
 		int width = worldWidth * gridWidth;
 		
 		if(hasIrregularWidth()) {
@@ -409,7 +455,7 @@ public class WorldEditorScreen implements Screen {
 		int worldHeight = controller.getWorldHeight();		
 		int gridHeight = controller.getGridHeight();
 		int bufferHeight = controller.getBufferHeight();
-		int windowHeight = controller.getWindowHeight();
+		int windowHeight = VerilogWorldController.WINDOW_HEIGHT;
 		int height = worldHeight * gridHeight;
 		
 		if(hasIrregularHeight()) {
@@ -456,7 +502,7 @@ public class WorldEditorScreen implements Screen {
 		
 		int worldHeight = controller.getWorldHeight();		
 		int gridHeight = controller.getGridHeight();
-		int windowHeight = controller.getWindowHeight();
+		int windowHeight = VerilogWorldController.WINDOW_HEIGHT;
 		int height = worldHeight * gridHeight;
 
 		return height < windowHeight;
@@ -475,7 +521,7 @@ public class WorldEditorScreen implements Screen {
 		
 		int worldWidth = controller.getWorldWidth();		
 		int gridWidth = controller.getGridWidth();
-		int windowWidth = controller.getWindowWidth();
+		int windowWidth = VerilogWorldController.WINDOW_WIDTH;
 		int width = worldWidth * gridWidth;
 
 		return width < windowWidth;
@@ -485,8 +531,8 @@ public class WorldEditorScreen implements Screen {
 	@Override
 	public void resize(int width, int height) {
 
-		controller.setWindowWidth(width);
-		controller.setWindowHeight(height);
+		VerilogWorldController.WINDOW_WIDTH = width;
+		VerilogWorldController.WINDOW_HEIGHT = height;
 		
 		updateWorldParameters();
 		
@@ -495,6 +541,7 @@ public class WorldEditorScreen implements Screen {
 		optionStage = new OptionStage().getStage();
 		homeStage = new HomeStage().getStage();
 		blockStage = new BlockStage().getStage();
+		toolStage = new ToolStage().getStage();
 
 		controller.updateInputMultiplexer();
 	}
@@ -549,7 +596,6 @@ public class WorldEditorScreen implements Screen {
 		return toolStage;
 	}
 	
-	
 	public int getWorldX() {
 		return worldX;
 	}
@@ -568,6 +614,14 @@ public class WorldEditorScreen implements Screen {
 	
 	public int getToolBarWidth() {
 		return TOOLBAR_WIDTH;
+	}
+	
+	public void setConnectMode(boolean connectMode) {
+		this.connectMode = connectMode;
+	}
+	
+	public boolean getConnectMode() {
+		return this.connectMode;
 	}
 	
 }

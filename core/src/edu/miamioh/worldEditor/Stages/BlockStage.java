@@ -7,12 +7,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import edu.miamioh.Buttons.TextButtonActor;
+import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.GameObjects.blocks.BlankBlock;
 import edu.miamioh.GameObjects.blocks.ControllerBlock;
 import edu.miamioh.GameObjects.blocks.LedBlock;
 import edu.miamioh.GameObjects.blocks.ScooterBlock;
 import edu.miamioh.GameObjects.blocks.WallBlock;
-import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.ChangeListeners.BlankBlockChangeListener;
 import edu.miamioh.worldEditor.ChangeListeners.ControllerBlockChangeListener;
 import edu.miamioh.worldEditor.ChangeListeners.LedBlockChangeListener;
@@ -32,9 +32,8 @@ public class BlockStage {
 		stage = new Stage();
 		table = new Table();
 		
-		actorHeight = 50;
-		actorWidth = 100;
-		int windowHeight = WorldEditorController.getCurrentController().getWindowHeight();
+		int windowHeight = VerilogWorldController.WINDOW_HEIGHT;
+				
 		table.setSize(actorWidth, windowHeight);
 		table.setPosition(50, 0);
 		table.right().top();

@@ -21,9 +21,7 @@ public class SimulatorChangeListener extends ChangeListener {
 		Level currentLevel = WorldEditorController.getCurrentController().getCurrentLevel();
 		VerilogWorldController.getController().setLevel(currentLevel);
 		
-		VerilogWorldMain.getVerilogWorldMain().setWorldSimulatorScreen();
-		
-		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().display();
+		VerilogWorldMain.getVerilogWorldMain().setWorldSimulatorScreen(currentLevel);
 	}
 
 }
