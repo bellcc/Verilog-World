@@ -70,6 +70,9 @@ class Gate {
 //                r = 0;
 //                g = 255;
 //                b = 0;
+//                Color color = new Color();
+//                Color.rgba8888ToColor(color, Color.rgba8888(0, 255, 100, 255));
+//                setColor(color);
                 setColor(Color.GREEN);
                 break;
 
@@ -159,6 +162,7 @@ class Gate {
     private void setInputXCoords() {
 
         updateSGS();
+        inputXCoords.clear();
 
         switch (this.getType()) {
 
@@ -198,6 +202,7 @@ class Gate {
     private void setInputYCoords() {
 
         updateSGS();
+        inputYCoords.clear();
 
         float y;
         float space;
@@ -542,6 +547,12 @@ class Gate {
 
         return this.inputs;
 
+    }
+    
+    public String toString(){
+    	return String.format("ID: %s (%d,%d) inX's " + inputXCoords.toString() + 
+    			",%ninY's " + inputYCoords.toString() + ", inputs " + 
+    			inputs.toString(), getID(), getCX(), getCY());
     }
 
 }

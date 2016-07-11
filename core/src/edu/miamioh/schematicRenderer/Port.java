@@ -265,4 +265,8 @@ class Port {
         return this.inputs;
 
     }
+
+   	public String toString(){
+   		return String.format("ID: %s (%d,%d), inputs " + inputs.toString(), getID(), getCX(), getCY());
+    }
 }
