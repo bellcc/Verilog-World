@@ -1,6 +1,8 @@
 package edu.miamioh.worldSimulator;
 
+import edu.miamioh.GameObjects.Block;
 import edu.miamioh.simulator.ParseRegWire;
+import edu.miamioh.verilogWorld.VerilogWorldController;
 
 public class ModulePort {
 	
@@ -11,11 +13,30 @@ public class ModulePort {
 	private boolean isInput;
 	
 	public ModulePort() {
-		this("");
+		this("", false);
 	}
 	
-	public ModulePort(String name) {
-		this(name, null, null, false);
+	public ModulePort(String name, boolean isInput) {
+		this(name, null, null, isInput);
+	}
+	
+	/*
+	 * Adds a port for project from a file. The root module simulator must be set to the target block by
+	 * using the updateTargetBlock method.
+	 */
+	public ModulePort(String portName, boolean isInput, String wireName,
+					  Block targetBlock, String targetName, boolean targetIsInput, String targetWireName) throws InvalidModulePortException {
+		
+		if(!(isInput ^ targetIsInput)) {
+			throw new InvalidModulePortException("ModulePort usage error: Module ports' inInput values are the same.");
+		}
+		
+		this.name = portName;
+		this.isInput = isInput;
+		this.value = 0;
+		this.wire = VerilogWorldController.getController().getSim().getRootModuleSimulator().getRootModuleInstance().getHash_vars().get("wireName");
+		ParseRegWire targetWire = Block.getRootSim().getRootModuleInstance().getHash_vars().get(targetWireName);
+		this.target = new ModulePort(targetName, this, targetWire, targetIsInput);
 	}
 	
 	public ModulePort(String name, ModulePort target, ParseRegWire wireTarget, boolean isInput) {

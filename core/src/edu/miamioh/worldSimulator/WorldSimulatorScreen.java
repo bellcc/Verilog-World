@@ -100,7 +100,7 @@ public class WorldSimulatorScreen implements Screen {
 
 		renderWorld();
 		renderToolBar();
-
+		
 	}
 	
 	private void renderWorld() {

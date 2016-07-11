@@ -25,7 +25,6 @@ import edu.miamioh.worldEditor.Stages.BlockSelectedStage;
 import edu.miamioh.worldEditor.Stages.BlockStage;
 import edu.miamioh.worldEditor.Stages.HomeStage;
 import edu.miamioh.worldEditor.Stages.OptionStage;
-import edu.miamioh.worldEditor.Stages.SimulatorStage;
 import edu.miamioh.worldEditor.Stages.ToolStage;
 import edu.miamioh.worldEditor.types.Point;
 
@@ -58,7 +57,6 @@ public class WorldEditorScreen implements Screen {
 	private Stage blockStage;
 	private Stage blockSelectedStage;
 	private Stage toolStage;
-	private Stage simulatorStage;
 	
 	private boolean connectMode;
 	
@@ -78,7 +76,7 @@ public class WorldEditorScreen implements Screen {
 	public void show() {
 			
 		updateWorldParameters();
-		controller.setToolBarSelection(ToolBarSelection.NONE);
+		controller.setToolBarSelection(ToolBarSelectionType.NONE);
 		
 		renderer = new ShapeRenderer();
 		
@@ -96,8 +94,6 @@ public class WorldEditorScreen implements Screen {
 		blockStage = new BlockStage().getStage();
 		blockSelectedStage = new BlockSelectedStage().getStage();
 		toolStage = new ToolStage().getStage();
-		simulatorStage = new SimulatorStage().getStage();
-
 	}
 	
 	public void updateWorldParameters() {
@@ -127,7 +123,7 @@ public class WorldEditorScreen implements Screen {
 		
 		renderWorld();
 		
-		if(controller.getToolBarSelection() == ToolBarSelection.BLOCK_SELECTED) {
+		if(controller.getToolBarSelection() == ToolBarSelectionType.BLOCK_SELECTED) {
 			renderSelectedBlock();
 		}
 		
@@ -292,7 +288,7 @@ public class WorldEditorScreen implements Screen {
 		optionStage.act(Gdx.graphics.getDeltaTime());
 		optionStage.draw();
 		
-		ToolBarSelection selection = controller.getToolBarSelection();
+		ToolBarSelectionType selection = controller.getToolBarSelection();
 		
 		switch (selection) {
 		
@@ -314,11 +310,6 @@ public class WorldEditorScreen implements Screen {
 			case BLOCK_SELECTED:
 				blockSelectedStage.act(Gdx.graphics.getDeltaTime());
 				blockSelectedStage.draw();
-				break;
-				
-			case SIMULATOR:
-				simulatorStage.act(Gdx.graphics.getDeltaTime());
-				simulatorStage.draw();
 				break;
 				
 			default:
@@ -531,7 +522,6 @@ public class WorldEditorScreen implements Screen {
 		homeStage = new HomeStage().getStage();
 		blockStage = new BlockStage().getStage();
 		toolStage = new ToolStage().getStage();
-		simulatorStage = new SimulatorStage().getStage();
 
 		controller.updateInputMultiplexer();
 	}
@@ -560,7 +550,6 @@ public class WorldEditorScreen implements Screen {
 		homeStage.dispose();
 		blockStage.dispose();
 		toolStage.dispose();
-		simulatorStage.dispose();
 	}
 	
 	public static WorldEditorScreen getScreen() {
@@ -585,10 +574,6 @@ public class WorldEditorScreen implements Screen {
 	
 	public Stage getToolStage() {
 		return toolStage;
-	}
-	 
-	public Stage getSimulatorStage() {
-		return simulatorStage;
 	}
 	
 	public int getWorldX() {

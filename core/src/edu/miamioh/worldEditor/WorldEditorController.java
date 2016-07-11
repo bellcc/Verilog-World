@@ -27,7 +27,9 @@ import edu.miamioh.GameObjects.NormalBlock;
 import edu.miamioh.GameObjects.blocks.WallBlock;
 import edu.miamioh.Level.Level;
 import edu.miamioh.simulator.ParseRegWire;
+import edu.miamioh.simulator.WireRoleType;
 import edu.miamioh.verilogWorld.VerilogWorldController;
+import edu.miamioh.worldSimulator.ModulePort;
 
 public class WorldEditorController {
 	
@@ -38,7 +40,7 @@ public class WorldEditorController {
 	
 	private Level currentLevel;
 	
-	private ToolBarSelection selection;
+	private ToolBarSelectionType selection;
 	private int selectedRow;
 	private int selectedColumn;
 	
@@ -68,7 +70,7 @@ public class WorldEditorController {
 		inputProcessor = new WorldEditorInputProcessor();
 		multiplexer = new InputMultiplexer();
 		
-		selection = ToolBarSelection.NONE;
+		selection = ToolBarSelectionType.NONE;
 		blockSelection = BlockSelectionType.NONE;
 		blockID = 0;
 	}
@@ -151,7 +153,6 @@ public class WorldEditorController {
 		Stage blockStage = WorldEditorScreen.getScreen().getBlockStage();
 		Stage blockSelectedStage = WorldEditorScreen.getScreen().getBlockSelectedStage();
 		Stage toolStage = WorldEditorScreen.getScreen().getToolStage();
-		Stage simulatorStage = WorldEditorScreen.getScreen().getSimulatorStage();
 
 		resetMultiplexer();
 		
@@ -174,11 +175,7 @@ public class WorldEditorController {
 			case BLOCK_SELECTED:
 				multiplexer.addProcessor(blockSelectedStage);
 				break;
-				
-			case SIMULATOR:
-				multiplexer.addProcessor(simulatorStage);
-				break;
-				
+
 			default:
 				break;
 			
@@ -197,7 +194,6 @@ public class WorldEditorController {
 		Stage blockStage = WorldEditorScreen.getScreen().getBlockStage();
 		Stage blockSelectedStage = WorldEditorScreen.getScreen().getBlockSelectedStage();
 		Stage toolStage = WorldEditorScreen.getScreen().getToolStage();
-		Stage simulatorStage = WorldEditorScreen.getScreen().getSimulatorStage();
 		
 		multiplexer.removeProcessor(inputProcessor);
 		multiplexer.removeProcessor(optionStage);
@@ -205,8 +201,6 @@ public class WorldEditorController {
 		multiplexer.removeProcessor(blockStage);
 		multiplexer.removeProcessor(blockSelectedStage);
 		multiplexer.removeProcessor(toolStage);
-		multiplexer.removeProcessor(simulatorStage);
-		
 	}
 
 	/**
@@ -243,10 +237,10 @@ public class WorldEditorController {
 				
 			}
 
-			if(selection == ToolBarSelection.BLOCK_SELECTED) {
-				selection = ToolBarSelection.NONE;
+			if(selection == ToolBarSelectionType.BLOCK_SELECTED) {
+				selection = ToolBarSelectionType.NONE;
 			}else {
-				selection = ToolBarSelection.BLOCK_SELECTED;
+				selection = ToolBarSelectionType.BLOCK_SELECTED;
 				resetMultiplexer();
 				updateInputMultiplexer();
 				
@@ -257,7 +251,7 @@ public class WorldEditorController {
 			return;
 		}
 		
-		if (selection == ToolBarSelection.BLOCK) {
+		if (selection == ToolBarSelectionType.BLOCK) {
 						
 			switch(blockSelection) {
 						
@@ -293,8 +287,28 @@ public class WorldEditorController {
 	}
 	
 	public void connectBlocks(NormalBlock selectedBlock, NormalBlock targetBlock, 
-							  String selectedWire, String targetWire) {
+							  String selectedWireName, String targetWireName) {
 		
+		/*
+		 * Grab the wires
+		 */
+		ParseRegWire selectedWire = selectedBlock.getModuleWrapper().getModule().getHash_vars().get(selectedWireName);
+		ParseRegWire targetWire = targetBlock.getModuleWrapper().getModule().getHash_vars().get(targetWireName);
+		
+		/*
+		 * Find t
+		 */
+		boolean selectedIsInput = false;
+		boolean targetIsInput = false;
+		if(selectedWire.getRole() == WireRoleType.INPUT) {
+			selectedIsInput = true;
+		}
+		if(targetWire.getRole() == WireRoleType.INPUT) {
+			targetIsInput = true;
+		}
+		
+		ModulePort selectedPort = new ModulePort(selectedWireName, selectedIsInput);
+		targetBlock.getModuleWrapper().addPort(new ModulePort(targetWireName, selectedPort, targetWire, targetIsInput));
 	}
 	
 	public boolean changesMade() {
@@ -419,11 +433,11 @@ public class WorldEditorController {
 		return this.blockID;
 	}
 	
-	public ToolBarSelection getToolBarSelection() {
+	public ToolBarSelectionType getToolBarSelection() {
 		return selection;
 	}
 	
-	public void setToolBarSelection(ToolBarSelection selection) {
+	public void setToolBarSelection(ToolBarSelectionType selection) {
 		this.selection = selection;
 	}
 	

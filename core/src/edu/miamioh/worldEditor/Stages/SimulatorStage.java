@@ -7,8 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import edu.miamioh.Buttons.TextButtonActor;
 import edu.miamioh.verilogWorld.VerilogWorldController;
-import edu.miamioh.worldEditor.ChangeListeners.VerifyChangeListener;
-import edu.miamioh.worldEditor.ChangeListeners.ViewSimulatorChangeListener;
+import edu.miamioh.worldEditor.WorldEditorController;
 
 public class SimulatorStage {
 
@@ -26,11 +25,6 @@ public class SimulatorStage {
 		// of a color.
 		viewSimulatorActor = new TextButtonActor().createTextButton(Color.PURPLE, "VIEW\nSIMULATOR");
 		verifyActor = new TextButtonActor().createTextButton(Color.RED, "VERIFY");
-		
-		// Add the appropriate change listener to the actor which 
-		// is located at edu.miamioh.worldEditor.ChangeListeners.
-		viewSimulatorActor.addListener(new ViewSimulatorChangeListener());
-		verifyActor.addListener(new VerifyChangeListener());
 		
 		int windowHeight = VerilogWorldController.WINDOW_HEIGHT;
 		

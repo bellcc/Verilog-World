@@ -3,7 +3,10 @@ package edu.miamioh.worldEditor.ChangeListeners;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import edu.miamioh.worldEditor.ToolBarSelection;
+import edu.miamioh.Level.Level;
+import edu.miamioh.verilogWorld.VerilogWorldController;
+import edu.miamioh.verilogWorld.VerilogWorldMain;
+import edu.miamioh.worldEditor.ToolBarSelectionType;
 import edu.miamioh.worldEditor.WorldEditorController;
 
 public class SimulatorChangeListener extends ChangeListener {
@@ -13,18 +16,12 @@ public class SimulatorChangeListener extends ChangeListener {
 
 		System.out.println("Simulator Change Listener");
 		
-		ToolBarSelection selection = WorldEditorController.getCurrentController().getToolBarSelection();
+		WorldEditorController.getCurrentController().resetMultiplexer();
 		
-		if(selection == ToolBarSelection.SIMULATOR) {
-			selection = ToolBarSelection.NONE;
-		}else {
-			selection = ToolBarSelection.SIMULATOR;
-		}
+		Level currentLevel = WorldEditorController.getCurrentController().getCurrentLevel();
+		VerilogWorldController.getController().setLevel(currentLevel);
 		
-		WorldEditorController.getCurrentController().setToolBarSelection(selection);
-		
-		WorldEditorController.getCurrentController().updateInputMultiplexer();
-
+		VerilogWorldMain.getVerilogWorldMain().setWorldSimulatorScreen(currentLevel);
 	}
 
 }
