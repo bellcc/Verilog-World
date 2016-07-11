@@ -6,11 +6,7 @@ import java.util.TimerTask;
 
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.GameObjects.NormalBlock;
-import edu.miamioh.simulator.ModuleInstance;
-
 import edu.miamioh.simulator.Parse;
-import edu.miamioh.simulator.ParseRegWire;
-import edu.miamioh.simulator.RootModuleInstance;
 import edu.miamioh.simulator.RootModuleSimulator;
 import edu.miamioh.simulator.SimVisitor;
 import edu.miamioh.verilogWorld.VerilogWorldController;
