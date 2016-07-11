@@ -1,16 +1,11 @@
 package edu.miamioh.schematicRenderer;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Disposable;
-import edu.miamioh.Buttons.TextButtonActor;
-import edu.miamioh.worldSimulator.ChangeListeners.BackChangeListener;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 

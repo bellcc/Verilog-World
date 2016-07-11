@@ -15,7 +15,6 @@ public class BlankBlock extends NormalBlock {
 
 	@Override
 	public void updateProperties() {
-		// TODO Auto-generated method stub
 		
 	}
 }

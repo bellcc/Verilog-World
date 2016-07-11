@@ -2,11 +2,8 @@ package edu.miamioh.GameObjects.blocks;
 
 import com.badlogic.gdx.graphics.Color;
 
-import edu.miamioh.GameObjects.Block;
 import edu.miamioh.GameObjects.NormalBlock;
 import edu.miamioh.GameObjects.NormalBlockType;
-import edu.miamioh.simulator.ParseRegWire;
-import edu.miamioh.simulator.RootModuleInstance;
 
 public class ScooterBlock extends NormalBlock {
 	

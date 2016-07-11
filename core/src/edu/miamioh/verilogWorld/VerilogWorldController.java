@@ -16,7 +16,6 @@
 
 package edu.miamioh.verilogWorld;
 
-
 import java.io.File;
 
 import javax.swing.JTextPane;
@@ -25,7 +24,6 @@ import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.Configuration.ConfigurationParser;
 import edu.miamioh.Level.Level;
 import edu.miamioh.simulator.Parse;
-import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldSimulator.WorldSimulator;
 
 public class VerilogWorldController {
@@ -52,12 +50,7 @@ public class VerilogWorldController {
 		ConfigurationParser parser = new ConfigurationParser();
 		defaultConfig = parser.getDefaultConfiguration();
 	}
-	
-	/**
-	 * This may be used if non-default configuration settings are ever needed 
-	 * however by default the variables are defined within the "world.xml" file.
-	 * @param config
-	 */
+
 	public VerilogWorldController(Configuration config) {
 		
 		defaultConfig = config;

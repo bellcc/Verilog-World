@@ -14,7 +14,6 @@ import edu.miamioh.Level.Level;
 import edu.miamioh.Screens.ChallengesScreen;
 import edu.miamioh.Screens.MainMenuScreen;
 import edu.miamioh.Screens.PlayScreen;
-import edu.miamioh.schematicRenderer.SchematicRendererController;
 import edu.miamioh.schematicRenderer.SchematicRendererScreen;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.RootModuleSimulator;
@@ -68,13 +67,6 @@ public class VerilogWorldMain extends Game {
 		this.compiler = verilogWorldController.getCompiler();
 
 		schematicRendererScreen = new SchematicRendererScreen();
-
-//		worldEditorController = new WorldEditorController(verilogWorldController.getDefaultConfig(), 
-//														  verilogWorldController.getCurrentLevel());
-//		worldSimulatorController = new WorldSimulatorController(verilogWorldController.getDefaultConfig());
-//		
-//		worldEditorScreen = new WorldEditorScreen(worldEditorController);
-//		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
 
 		setMainMenuScreen();
 		

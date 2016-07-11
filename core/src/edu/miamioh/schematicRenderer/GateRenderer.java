@@ -1,17 +1,7 @@
 package edu.miamioh.schematicRenderer;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.BSpline;
-import com.badlogic.gdx.math.Path;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Array;
-import edu.miamioh.verilogWorld.VerilogWorldMain;
 
 import static edu.miamioh.schematicRenderer.SchematicRendererController.frame;
 import static edu.miamioh.schematicRenderer.SchematicRendererController.gateSize;
