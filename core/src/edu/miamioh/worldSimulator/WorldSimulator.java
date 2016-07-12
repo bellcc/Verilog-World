@@ -6,11 +6,7 @@ import java.util.TimerTask;
 
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.GameObjects.NormalBlock;
-import edu.miamioh.simulator.ModuleInstance;
-
 import edu.miamioh.simulator.Parse;
-import edu.miamioh.simulator.ParseRegWire;
-import edu.miamioh.simulator.RootModuleInstance;
 import edu.miamioh.simulator.RootModuleSimulator;
 import edu.miamioh.simulator.SimVisitor;
 import edu.miamioh.verilogWorld.VerilogWorldController;
@@ -36,8 +32,8 @@ public class WorldSimulator {
 		this.freq = 100;
 		this.shouldRun = false;
 		
-		this.clock = new ModulePort("Clock");
-		this.reset = new ModulePort("Reset");
+		this.clock = new ModulePort("Clock", false);
+		this.reset = new ModulePort("Reset", false);
 		reset.setValue(1); // Active low reset line
 		
 		// Construct timer to run the simulator at a certain frequency
@@ -192,6 +188,13 @@ public class WorldSimulator {
 //			}
 //		}
 //	}
+	
+	public void updateBlocks(ArrayList<Block> blocks) {
+		
+		for(Block block : blocks) {
+			this.blocks.add(block);
+		}
+	}
 	
 	public void updateModules() {
 		

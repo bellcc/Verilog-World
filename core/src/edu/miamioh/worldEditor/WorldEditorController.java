@@ -10,6 +10,7 @@
 package edu.miamioh.worldEditor;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -25,7 +26,10 @@ import edu.miamioh.GameObjects.Block;
 import edu.miamioh.GameObjects.NormalBlock;
 import edu.miamioh.GameObjects.blocks.WallBlock;
 import edu.miamioh.Level.Level;
+import edu.miamioh.simulator.ParseRegWire;
+import edu.miamioh.simulator.WireRoleType;
 import edu.miamioh.verilogWorld.VerilogWorldController;
+import edu.miamioh.worldSimulator.ModulePort;
 
 public class WorldEditorController {
 	
@@ -36,7 +40,7 @@ public class WorldEditorController {
 	
 	private Level currentLevel;
 	
-	private ToolBarSelection selection;
+	private ToolBarSelectionType selection;
 	private int selectedRow;
 	private int selectedColumn;
 	
@@ -58,6 +62,9 @@ public class WorldEditorController {
 	
 	private boolean paused;
 	
+	private NormalBlock selectedBlock;
+	private NormalBlock targetBlock;
+	
 	public WorldEditorController() {
 				
 		currentController = this;
@@ -66,7 +73,7 @@ public class WorldEditorController {
 		inputProcessor = new WorldEditorInputProcessor();
 		multiplexer = new InputMultiplexer();
 		
-		selection = ToolBarSelection.NONE;
+		selection = ToolBarSelectionType.NONE;
 		blockSelection = BlockSelectionType.NONE;
 		blockID = 0;
 	}
@@ -94,21 +101,6 @@ public class WorldEditorController {
 		
 		bufferWidth = config.getBufferWidth();
 		bufferHeight = config.getBufferHeight();
-	}
-	
-	private void resetParameters() {
-		
-		worldWidth = 0;
-		worldHeight = 0;
-		
-		gridWidth = 0;
-		gridHeight = 0;
-		
-		stepWidth = 0;
-		stepHeight = 0;
-		
-		bufferWidth = 0;
-		bufferHeight = 0;
 	}
 	
 	public void initWorld() {
@@ -156,6 +148,11 @@ public class WorldEditorController {
 		bufferHeight= config.getBufferHeight();
 
 	}
+
+	public void updateConnectionMode() {
+		Stage connectionStage = WorldEditorScreen.getScreen().getConnectionStage();
+		Gdx.input.setInputProcessor(connectionStage);
+	}
 	
 	public void updateInputMultiplexer() {		
 		
@@ -164,8 +161,7 @@ public class WorldEditorController {
 		Stage blockStage = WorldEditorScreen.getScreen().getBlockStage();
 		Stage blockSelectedStage = WorldEditorScreen.getScreen().getBlockSelectedStage();
 		Stage toolStage = WorldEditorScreen.getScreen().getToolStage();
-		Stage simulatorStage = WorldEditorScreen.getScreen().getSimulatorStage();
-
+		
 		resetMultiplexer();
 		
 		multiplexer.addProcessor(optionStage);
@@ -187,11 +183,7 @@ public class WorldEditorController {
 			case BLOCK_SELECTED:
 				multiplexer.addProcessor(blockSelectedStage);
 				break;
-				
-			case SIMULATOR:
-				multiplexer.addProcessor(simulatorStage);
-				break;
-				
+
 			default:
 				break;
 			
@@ -210,7 +202,7 @@ public class WorldEditorController {
 		Stage blockStage = WorldEditorScreen.getScreen().getBlockStage();
 		Stage blockSelectedStage = WorldEditorScreen.getScreen().getBlockSelectedStage();
 		Stage toolStage = WorldEditorScreen.getScreen().getToolStage();
-		Stage simulatorStage = WorldEditorScreen.getScreen().getSimulatorStage();
+		Stage connectionStage = WorldEditorScreen.getScreen().getConnectionStage();
 		
 		multiplexer.removeProcessor(inputProcessor);
 		multiplexer.removeProcessor(optionStage);
@@ -218,8 +210,7 @@ public class WorldEditorController {
 		multiplexer.removeProcessor(blockStage);
 		multiplexer.removeProcessor(blockSelectedStage);
 		multiplexer.removeProcessor(toolStage);
-		multiplexer.removeProcessor(simulatorStage);
-		
+		multiplexer.removeProcessor(connectionStage);
 	}
 
 	/**
@@ -238,14 +229,24 @@ public class WorldEditorController {
 				
 				System.out.println("Connect block at (" + selectedRow + ", " + selectedColumn + ") with (" + row + ", " + column + ").");
 				
-				WorldEditorScreen.getScreen().setConnectMode(false);
+				selectedBlock = (NormalBlock)currentLevel.getBlock(selectedRow, selectedColumn);
+				targetBlock = (NormalBlock)currentLevel.getBlock(row, column);
+				
+				VerilogWorldController.getController().getSim().getRootModuleSimulator().updateTargetBlock(selectedBlock);
+				ArrayList<String> selectedList = selectedBlock.getRootSim().getRootModuleInstance().getPorts_list();
+				
+				VerilogWorldController.getController().getSim().getRootModuleSimulator().updateTargetBlock(targetBlock);
+				ArrayList<String> targetList = targetBlock.getRootSim().getRootModuleInstance().getPorts_list();
+				
+				WorldEditorScreen.getScreen().setConnectModeWire(true, selectedList, targetList, selectedBlock, targetBlock);
+				this.updateConnectionMode();
 				
 			}
 
-			if(selection == ToolBarSelection.BLOCK_SELECTED) {
-				selection = ToolBarSelection.NONE;
+			if(selection == ToolBarSelectionType.BLOCK_SELECTED) {
+				selection = ToolBarSelectionType.NONE;
 			}else {
-				selection = ToolBarSelection.BLOCK_SELECTED;
+				selection = ToolBarSelectionType.BLOCK_SELECTED;
 				resetMultiplexer();
 				updateInputMultiplexer();
 				
@@ -256,7 +257,7 @@ public class WorldEditorController {
 			return;
 		}
 		
-		if (selection == ToolBarSelection.BLOCK) {
+		if (selection == ToolBarSelectionType.BLOCK) {
 						
 			switch(blockSelection) {
 						
@@ -289,6 +290,31 @@ public class WorldEditorController {
 			++blockID;
 		}
 		
+	}
+	
+	public void connectBlocks(NormalBlock selectedBlock, NormalBlock targetBlock, 
+							  String selectedWireName, String targetWireName) {
+		
+		/*
+		 * Grab the wires
+		 */
+		ParseRegWire selectedWire = selectedBlock.getModuleWrapper().getModule().getHash_vars().get(selectedWireName);
+		ParseRegWire targetWire = targetBlock.getModuleWrapper().getModule().getHash_vars().get(targetWireName);
+		
+		/*
+		 * Find t
+		 */
+		boolean selectedIsInput = false;
+		boolean targetIsInput = false;
+		if(selectedWire.getRole() == WireRoleType.INPUT) {
+			selectedIsInput = true;
+		}
+		if(targetWire.getRole() == WireRoleType.INPUT) {
+			targetIsInput = true;
+		}
+		
+		ModulePort selectedPort = new ModulePort(selectedWireName, selectedIsInput);
+		targetBlock.getModuleWrapper().addPort(new ModulePort(targetWireName, selectedPort, targetWire, targetIsInput));
 	}
 	
 	public boolean changesMade() {
@@ -413,11 +439,11 @@ public class WorldEditorController {
 		return this.blockID;
 	}
 	
-	public ToolBarSelection getToolBarSelection() {
+	public ToolBarSelectionType getToolBarSelection() {
 		return selection;
 	}
 	
-	public void setToolBarSelection(ToolBarSelection selection) {
+	public void setToolBarSelection(ToolBarSelectionType selection) {
 		this.selection = selection;
 	}
 	
@@ -447,6 +473,22 @@ public class WorldEditorController {
 	
 	public void setCurrentLevel(Level level) {
 		this.currentLevel = level;
+	}
+
+	public NormalBlock getSelectedBlock() {
+		return selectedBlock;
+	}
+
+	public void setSelectedBlock(NormalBlock selectedBlock) {
+		this.selectedBlock = selectedBlock;
+	}
+
+	public NormalBlock getTargetBlock() {
+		return targetBlock;
+	}
+
+	public void setTargetBlock(NormalBlock targetBlock) {
+		this.targetBlock = targetBlock;
 	}
 
 }

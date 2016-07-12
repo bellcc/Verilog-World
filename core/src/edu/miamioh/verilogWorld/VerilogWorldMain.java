@@ -10,11 +10,11 @@ package edu.miamioh.verilogWorld;
 import com.badlogic.gdx.Game;
 
 import edu.miamioh.Configuration.Configuration;
+import edu.miamioh.ErrorWindow.ErrorReportingWindow;
 import edu.miamioh.Level.Level;
 import edu.miamioh.Screens.ChallengesScreen;
 import edu.miamioh.Screens.MainMenuScreen;
 import edu.miamioh.Screens.PlayScreen;
-import edu.miamioh.schematicRenderer.SchematicRendererController;
 import edu.miamioh.schematicRenderer.SchematicRendererScreen;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.RootModuleSimulator;
@@ -51,6 +51,7 @@ public class VerilogWorldMain extends Game {
 		
 	private String	VERILOG_WORLD_DEVELOPMENT	= "VERILOG_WORLD_DEVELOPMENT";
 	
+	private ErrorReportingWindow errorWindow;
 	private RootModuleSimulator sim;
 	private Parse compiler;
 	
@@ -63,21 +64,26 @@ public class VerilogWorldMain extends Game {
 	public void create() {
 		
 		// Make controller and update the sim and compiler variables
+		errorWindow = new ErrorReportingWindow();
 		verilogWorldController = new VerilogWorldController();
 		this.sim = verilogWorldController.getSim().getRootModuleSimulator();
 		this.compiler = verilogWorldController.getCompiler();
 
 		schematicRendererScreen = new SchematicRendererScreen();
 
-//		worldEditorController = new WorldEditorController(verilogWorldController.getDefaultConfig(), 
-//														  verilogWorldController.getCurrentLevel());
-//		worldSimulatorController = new WorldSimulatorController(verilogWorldController.getDefaultConfig());
-//		
-//		worldEditorScreen = new WorldEditorScreen(worldEditorController);
-//		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
-
 		setMainMenuScreen();
-		
+//		ErrorInstance error0 = new ErrorInstance("Wall Block", 3, 7);
+//		error0.addError("0 <13, 5> Error parsing source file.");
+//		error0.addError("1 Problem with the program. Exiting...");
+//		error0.addError("2 <13, 5> Error parsing source file.");
+//		error0.addError("3 Problem with the program. Exiting...");
+//		error0.addError("4 <13, 5> Error parsing source file.");
+//		error0.addError("5 Problem with the program. Exiting...");
+//		error0.addError("6 <13, 5> Error parsing source file.");
+//		error0.addError("7 Problem with the program. Exiting...");
+//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(error0);
+//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().addError(new ErrorInstance("Controller Block", 2, 1));
+//		VerilogWorldMain.getVerilogWorldMain().getErrorWindow().display();
 	}
 	
 	public void setDirectoryScreen() {
@@ -131,6 +137,8 @@ public class VerilogWorldMain extends Game {
 		challengesScreen = new ChallengesScreen(getVerilogWorldMain());
 		this.setScreen(challengesScreen);
 	}
+	
+	public ErrorReportingWindow getErrorWindow() {return this.errorWindow;}
 
 	public void launchVerilogEditor(String fileName){
 		/*String pathToJar = getRootPath() + "/VerilogEditor.jar";

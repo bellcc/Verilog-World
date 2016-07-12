@@ -1,3 +1,11 @@
+
+/**
+ * @author Clark Bell
+ * @date   7-11-2016
+ * @info   The next change listener that takes the user from 
+ *         the world configuration screen to the world editor screen.
+ */
+
 package edu.miamioh.worldConfiguration;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;

@@ -3,8 +3,7 @@ package edu.miamioh.worldEditor.ChangeListeners;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import edu.miamioh.verilogWorld.VerilogWorldMain;
-import edu.miamioh.worldEditor.ToolBarSelection;
+import edu.miamioh.worldEditor.ToolBarSelectionType;
 import edu.miamioh.worldEditor.WorldEditorController;
 
 public class HomeChangeListener extends ChangeListener {
@@ -14,12 +13,12 @@ public class HomeChangeListener extends ChangeListener {
 		
 		System.out.println("Home Change Listener");
 		
-		ToolBarSelection selection = WorldEditorController.getCurrentController().getToolBarSelection();
+		ToolBarSelectionType selection = WorldEditorController.getCurrentController().getToolBarSelection();
 		
-		if(selection == ToolBarSelection.HOME) {
-			selection = ToolBarSelection.NONE;
+		if(selection == ToolBarSelectionType.HOME) {
+			selection = ToolBarSelectionType.NONE;
 		}else {
-			selection = ToolBarSelection.HOME;
+			selection = ToolBarSelectionType.HOME;
 		}
 		
 		WorldEditorController.getCurrentController().setToolBarSelection(selection);

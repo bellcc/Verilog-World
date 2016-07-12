@@ -22,6 +22,10 @@ import edu.miamioh.worldSimulator.ModuleWrapper;
 
 public abstract class NormalBlock extends Block {
 	
+	@Override
+	public String toString() {
+		return "NormalBlock [sourceFile=" + sourceFile + ", module=" + module + ", type=" + type + "]";
+	}
 	private static Parse compiler;
 	
 	private String sourceFile;
@@ -118,7 +122,7 @@ public abstract class NormalBlock extends Block {
 	public void makeUniqueFile() {
 
 		String template = type.toString() + ".v";
-		String pathToTemplate = Gdx.files.internal("../core/assets/modules/templates/" + template).file().getAbsolutePath();
+		String pathToTemplate = Gdx.files.internal("core/assets/modules/templates/" + template).file().getAbsolutePath();
 		File templateFile = new File(pathToTemplate);
 		
 		String uniqueName = "module" + this.getID() + ".v";

@@ -1,6 +1,6 @@
 
 /**
- * @author Chris Bell
+ * @author Clark Bell
  * @date   6-3-2016
  * @info   This class provides the functionality to 
  *         parse the default Verilog World settings as 
@@ -34,7 +34,6 @@ import edu.miamioh.GameObjects.blocks.LedBlock;
 import edu.miamioh.GameObjects.blocks.ScooterBlock;
 import edu.miamioh.GameObjects.blocks.WallBlock;
 import edu.miamioh.Level.Level;
-import edu.miamioh.worldEditor.WorldEditorController;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
@@ -186,6 +185,17 @@ public class ConfigurationParser {
 		return level;
 	}
 	
+	/**
+	 * This method will create a world.xml file at the specified 
+	 * location based on the level object. This includes blocks, 
+	 * their locations, the module, the type of block, and the 
+	 * connections made between that block and the other blocks.
+	 * 
+	 * @param level The level object that will be used to create 
+	 *              the xml file.
+	 * @param file The file which contains the location where the 
+	 *        file will be created.
+	 */
 	public void createWorld(Level level, File file) {
 		
 		Configuration config = level.getConfig();
@@ -255,6 +265,16 @@ public class ConfigurationParser {
 	
 	}
 
+	/**
+	 * This method will add and element to the document based on 
+	 * the title of the element and the content text of that title.
+	 * 
+	 * @param  doc The document to add the element to.
+	 * @param  title The title of the xml node.
+	 * @param  text The text to be contained within that xml node.
+	 * 
+	 * @return The element to be added to the xml document.
+	 */
 	private Element addElement(Document doc, String title, String text) {
 		
 		Element element = doc.createElement(title);
