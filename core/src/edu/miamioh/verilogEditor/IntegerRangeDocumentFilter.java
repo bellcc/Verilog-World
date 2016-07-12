@@ -6,9 +6,7 @@ import javax.swing.text.DocumentFilter;
 
 class IntegerRangeDocumentFilter extends DocumentFilter {
 	private MyTextPane				codeText;
-	private int						start;
-
-  public IntegerRangeDocumentFilter(MyTextPane codeText) {
+	public IntegerRangeDocumentFilter(MyTextPane codeText) {
 	  this.codeText = codeText;
   }
   
@@ -41,6 +39,5 @@ class IntegerRangeDocumentFilter extends DocumentFilter {
   }
   
   public void setStart(int start){
-	  this.start = start;
   }
 }
