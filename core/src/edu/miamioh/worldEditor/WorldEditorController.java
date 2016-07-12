@@ -62,6 +62,9 @@ public class WorldEditorController {
 	
 	private boolean paused;
 	
+	private NormalBlock selectedBlock;
+	private NormalBlock targetBlock;
+	
 	public WorldEditorController() {
 				
 		currentController = this;
@@ -145,6 +148,11 @@ public class WorldEditorController {
 		bufferHeight= config.getBufferHeight();
 
 	}
+
+	public void updateConnectionMode() {
+		Stage connectionStage = WorldEditorScreen.getScreen().getConnectionStage();
+		Gdx.input.setInputProcessor(connectionStage);
+	}
 	
 	public void updateInputMultiplexer() {		
 		
@@ -153,7 +161,7 @@ public class WorldEditorController {
 		Stage blockStage = WorldEditorScreen.getScreen().getBlockStage();
 		Stage blockSelectedStage = WorldEditorScreen.getScreen().getBlockSelectedStage();
 		Stage toolStage = WorldEditorScreen.getScreen().getToolStage();
-
+		
 		resetMultiplexer();
 		
 		multiplexer.addProcessor(optionStage);
@@ -194,6 +202,7 @@ public class WorldEditorController {
 		Stage blockStage = WorldEditorScreen.getScreen().getBlockStage();
 		Stage blockSelectedStage = WorldEditorScreen.getScreen().getBlockSelectedStage();
 		Stage toolStage = WorldEditorScreen.getScreen().getToolStage();
+		Stage connectionStage = WorldEditorScreen.getScreen().getConnectionStage();
 		
 		multiplexer.removeProcessor(inputProcessor);
 		multiplexer.removeProcessor(optionStage);
@@ -201,6 +210,7 @@ public class WorldEditorController {
 		multiplexer.removeProcessor(blockStage);
 		multiplexer.removeProcessor(blockSelectedStage);
 		multiplexer.removeProcessor(toolStage);
+		multiplexer.removeProcessor(connectionStage);
 	}
 
 	/**
@@ -219,21 +229,17 @@ public class WorldEditorController {
 				
 				System.out.println("Connect block at (" + selectedRow + ", " + selectedColumn + ") with (" + row + ", " + column + ").");
 				
-				NormalBlock selectedBlock = (NormalBlock)currentLevel.getBlock(selectedRow, selectedColumn);
+				selectedBlock = (NormalBlock)currentLevel.getBlock(selectedRow, selectedColumn);
+				targetBlock = (NormalBlock)currentLevel.getBlock(row, column);
+				
 				VerilogWorldController.getController().getSim().getRootModuleSimulator().updateTargetBlock(selectedBlock);
-				ArrayList<String> list = selectedBlock.getRootSim().getRootModuleInstance().getPorts_list();
-
-				for(int i=0;i<list.size();i++) {
-					
-					System.out.println(list.get(i).toString());
-					
-				}
+				ArrayList<String> selectedList = selectedBlock.getRootSim().getRootModuleInstance().getPorts_list();
 				
-				//NormalBlock selectedBlock = (NormalBlock)currentLevel.getBlock(selectedRow, selectedColumn);
-				//NormalBlock targetBlock = (NormalBlock)currentLevel.getBlock(row, column);
-				//connectBlocks(selectedBlock targetBlock, , );
+				VerilogWorldController.getController().getSim().getRootModuleSimulator().updateTargetBlock(targetBlock);
+				ArrayList<String> targetList = targetBlock.getRootSim().getRootModuleInstance().getPorts_list();
 				
-				WorldEditorScreen.getScreen().setConnectMode(false);
+				WorldEditorScreen.getScreen().setConnectModeWire(true, selectedList, targetList, selectedBlock, targetBlock);
+				this.updateConnectionMode();
 				
 			}
 
@@ -467,6 +473,22 @@ public class WorldEditorController {
 	
 	public void setCurrentLevel(Level level) {
 		this.currentLevel = level;
+	}
+
+	public NormalBlock getSelectedBlock() {
+		return selectedBlock;
+	}
+
+	public void setSelectedBlock(NormalBlock selectedBlock) {
+		this.selectedBlock = selectedBlock;
+	}
+
+	public NormalBlock getTargetBlock() {
+		return targetBlock;
+	}
+
+	public void setTargetBlock(NormalBlock targetBlock) {
+		this.targetBlock = targetBlock;
 	}
 
 }
