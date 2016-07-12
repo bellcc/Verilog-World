@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.*;
 
 import edu.miamioh.Buttons.TextButtonActor;
-import edu.miamioh.worldSimulator.ChangeListeners.BackChangeListener;
 
 /**
  * Creates a new stage for the Schematic Render screen for the Back button and
@@ -31,7 +30,7 @@ class BackStage {
 	
 	butt = new TextButtonActor().createTextButton(Color.BLUE, "Back");
 	
-	butt.addListener(new BackChangeListener());
+	butt.addListener(new SchematicBackChangeListener());
 	
 	int buttonWidth = 100;
 	int buttonHeight = 40;

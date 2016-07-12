@@ -14,8 +14,8 @@ class IntegerRangeDocumentFilter extends DocumentFilter {
   public void insertString(DocumentFilter.FilterBypass fb, int offset, String string,
       AttributeSet attr) throws BadLocationException {
 	  
-		    System.out.println("insert string");
-		    System.out.println(offset);
+//		    System.out.println("insert string");
+//		    System.out.println(offset);
 		    super.remove(fb, 0, codeText.getText().length());
 		    super.insertString(fb, offset, string, attr);
 	  

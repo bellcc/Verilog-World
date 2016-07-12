@@ -69,8 +69,6 @@ public class Parse {
 	public RootModuleInstance compileFileForEditor(String fileName)
 			throws IOException {
 		
-		errorText.setText("Compiling " + fileName + "...");
-		
 		ANTLRInputStream input = new ANTLRInputStream(
 				new FileInputStream(WorldEditorController.getCurrentController()
 						.getCurrentLevel().getProject().getAbsolutePath()
