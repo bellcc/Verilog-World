@@ -75,7 +75,7 @@ public class SchematicRendererScreen implements Screen {
     @Override
     public void render(float arg0) {
 	
-	Gdx.gl.glClearColor(255, 255, 255, 1);
+	Gdx.gl.glClearColor(200, 200, 200, 1);
 	Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	
 	schematic.render(schematicStage);
