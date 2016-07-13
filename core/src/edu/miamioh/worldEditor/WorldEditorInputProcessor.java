@@ -94,6 +94,13 @@ public class WorldEditorInputProcessor implements InputProcessor{
 	
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		
+		int width = WorldEditorController.getCurrentController().getWorldWidth();
+		int height = WorldEditorController.getCurrentController().getWorldHeight();
+		
+		if(width == 0 || height == 0) {
+			return true;
+		}
+		
 		if(!clicked) {
 			
 			clicked = true;

@@ -19,6 +19,7 @@ public class SchematicChangeListener extends ChangeListener {
 		
 		SchematicRendererScreen srs = VerilogWorldMain.getVerilogWorldMain()
 				.getSchematicRendererScreen();
+		
 		if(srs.schematic_is_Compiled()) {
 			VerilogWorldMain.getVerilogWorldMain().setSchematicRendererScreen();
 		} else {

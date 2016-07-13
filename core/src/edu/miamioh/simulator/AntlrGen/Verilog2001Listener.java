@@ -7,6 +7,7 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  * This interface defines a complete listener for a parse tree produced by
  * {@link Verilog2001Parser}.
  */
+@SuppressWarnings("deprecation")
 public interface Verilog2001Listener extends ParseTreeListener {
 	/**
 	 * Enter a parse tree produced by {@link Verilog2001Parser#SEQUENTIAL_ALWAYS}.

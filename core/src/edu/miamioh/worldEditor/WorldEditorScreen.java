@@ -20,9 +20,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import edu.miamioh.GameObjects.Block;
+import edu.miamioh.GameObjects.NormalBlock;
 import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.worldEditor.Stages.BlockSelectedStage;
 import edu.miamioh.worldEditor.Stages.BlockStage;
+import edu.miamioh.worldEditor.Stages.ConnectionStage;
 import edu.miamioh.worldEditor.Stages.HomeStage;
 import edu.miamioh.worldEditor.Stages.OptionStage;
 import edu.miamioh.worldEditor.Stages.ToolStage;
@@ -57,14 +59,17 @@ public class WorldEditorScreen implements Screen {
 	private Stage blockStage;
 	private Stage blockSelectedStage;
 	private Stage toolStage;
+	private Stage connectionStage;
 	
 	private boolean connectMode;
+	private boolean connectModeWire;
 	
 	private final int TOOLBAR_WIDTH = 150;
 	
 	public WorldEditorScreen() {
 		screen = this;
 		connectMode = false;
+		setConnectModeWire(false);
 	}
 	
 	public WorldEditorScreen(WorldEditorController controller) {
@@ -94,8 +99,9 @@ public class WorldEditorScreen implements Screen {
 		blockStage = new BlockStage().getStage();
 		blockSelectedStage = new BlockSelectedStage().getStage();
 		toolStage = new ToolStage().getStage();
+
 	}
-	
+		
 	public void updateWorldParameters() {
 				
 		windowWidth = VerilogWorldController.WINDOW_WIDTH;
@@ -115,11 +121,18 @@ public class WorldEditorScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		
+		//Gdx.input.setInputProcessor(connectionStage);
+		
 		camera.update();
 		renderer.setProjectionMatrix(camera.combined);
 		
 		Gdx.gl.glClearColor(255, 255, 255, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+				
+		if(connectModeWire) {
+			renderConnectionStage();
+			return;
+		}
 		
 		renderWorld();
 		
@@ -136,6 +149,13 @@ public class WorldEditorScreen implements Screen {
 		}
 		
 		renderToolBar();
+		
+	}
+	
+	private void renderConnectionStage() {
+		
+		connectionStage.act(Gdx.graphics.getDeltaTime());
+		connectionStage.draw();
 		
 	}
 	
@@ -550,6 +570,7 @@ public class WorldEditorScreen implements Screen {
 		homeStage.dispose();
 		blockStage.dispose();
 		toolStage.dispose();
+		connectionStage.dispose();
 	}
 	
 	public static WorldEditorScreen getScreen() {
@@ -602,6 +623,26 @@ public class WorldEditorScreen implements Screen {
 	
 	public boolean getConnectMode() {
 		return this.connectMode;
+	}
+	
+	public Stage getConnectionStage() {
+		return this.connectionStage;
+	}
+	
+	public void setConnectModeWire(boolean connectModeWire, ArrayList<String> selectedList, 
+			ArrayList<String> targetList, NormalBlock selectedBlock, NormalBlock targetBlock) {
+	
+		this.connectModeWire = connectModeWire;
+		connectionStage = new ConnectionStage().createConnectionStage(selectedList, targetList, selectedBlock, targetBlock);
+
+	}
+
+	public boolean getConnectModeWire() {
+		return connectModeWire;
+	}
+
+	public void setConnectModeWire(boolean connectModeWire) {
+		this.connectModeWire = connectModeWire;
 	}
 	
 }

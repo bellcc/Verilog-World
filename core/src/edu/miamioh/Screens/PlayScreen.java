@@ -51,10 +51,10 @@ public class PlayScreen implements Screen {
     
     public boolean challenges;
     public boolean tutorials;
-//    private ChallengesScreen challengeScreen;
+    private ChallengesScreen challengeScreen;
 
     public PlayScreen(VerilogWorldMain vwm) {
-//    	challengeScreen = new ChallengesScreen();    	
+    	challengeScreen = new ChallengesScreen();    	
     }
 
 
@@ -104,8 +104,8 @@ public class PlayScreen implements Screen {
         tutorialButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {	            	
-            	setTutorials(true);
-            	setChallenges(false);
+            	challengeScreen.setTutorials(true);
+            	challengeScreen.setChallenges(false);
             	VerilogWorldMain.getVerilogWorldMain().setChallengesScreen();	            	
             }
         });
@@ -113,8 +113,8 @@ public class PlayScreen implements Screen {
         challengesButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {	 
-            	setTutorials(false);
-            	setChallenges(true);
+            	challengeScreen.setTutorials(false);
+            	challengeScreen.setChallenges(true);
             	VerilogWorldMain.getVerilogWorldMain().setChallengesScreen();	            	
             }
         });
@@ -242,13 +242,5 @@ public class PlayScreen implements Screen {
 		buttonStyleB.font = skinB.getFont("default");
 		skinB.add("default", buttonStyleB);
     }
-	    
-	public void setTutorials(boolean tutorials) {
-		this.tutorials = tutorials;
-	}
-	    
-	public void setChallenges(boolean challenges) {
-		this.challenges = challenges;
-	}
 
 }

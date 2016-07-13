@@ -22,6 +22,10 @@ import edu.miamioh.worldSimulator.ModuleWrapper;
 
 public abstract class NormalBlock extends Block {
 	
+	@Override
+	public String toString() {
+		return "NormalBlock [sourceFile=" + sourceFile + ", module=" + module + ", type=" + type + "]";
+	}
 	private static Parse compiler;
 	
 	private String sourceFile;

@@ -6,9 +6,7 @@ import javax.swing.text.DocumentFilter;
 
 class IntegerRangeDocumentFilter extends DocumentFilter {
 	private MyTextPane				codeText;
-	private int						start;
-
-  public IntegerRangeDocumentFilter(MyTextPane codeText) {
+	public IntegerRangeDocumentFilter(MyTextPane codeText) {
 	  this.codeText = codeText;
   }
   
@@ -16,8 +14,8 @@ class IntegerRangeDocumentFilter extends DocumentFilter {
   public void insertString(DocumentFilter.FilterBypass fb, int offset, String string,
       AttributeSet attr) throws BadLocationException {
 	  
-		    System.out.println("insert string");
-		    System.out.println(offset);
+//		    System.out.println("insert string");
+//		    System.out.println(offset);
 		    super.remove(fb, 0, codeText.getText().length());
 		    super.insertString(fb, offset, string, attr);
 	  
@@ -41,6 +39,5 @@ class IntegerRangeDocumentFilter extends DocumentFilter {
   }
   
   public void setStart(int start){
-	  this.start = start;
   }
 }
