@@ -55,8 +55,6 @@ public class ImportProjectChangeListener extends ChangeListener {
 		
 		if(chooser.showOpenDialog(chooser) == JFileChooser.APPROVE_OPTION) {
 			
-			System.out.println(chooser.getSelectedFile());
-			
 			Level level = new Level();
 			level.setProject(new File(chooser.getSelectedFile().getAbsolutePath() + "/"));
 			WorldEditorController.getCurrentController().setCurrentLevel(level);
