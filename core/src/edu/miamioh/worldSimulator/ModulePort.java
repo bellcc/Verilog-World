@@ -87,6 +87,7 @@ public class ModulePort {
 		}
 	}
 	
+	public ParseRegWire getWire()					{return this.wire;}
 	public String getName()							{return this.name;}
 	public ModulePort getTargetPort() 				{return this.target;}
 	public void setIsInput(boolean value) 			{this.isInput = value;}

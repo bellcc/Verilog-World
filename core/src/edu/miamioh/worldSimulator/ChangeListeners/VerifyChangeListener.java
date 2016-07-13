@@ -12,6 +12,6 @@ public class VerifyChangeListener  extends ChangeListener {
 
 		System.out.println("Verify Change Listener");
 		
-		VerilogWorldController.getController().getSim().updateModules();
+		VerilogWorldController.getController().getSim().recompileBlocks();
 	}
 }
