@@ -25,9 +25,9 @@ public class WorldSimulator {
 	private ModulePort clock;
 	private ModulePort reset;
 	
-	public WorldSimulator(RootModuleSimulator sim, Level level) {
+	public WorldSimulator(RootModuleSimulator sim) {
 		this.modules = new ArrayList<>();
-		this.blocks = level.getBlockList();
+		this.blocks = null;
 		this.compiler = VerilogWorldController.getController().getCompiler();
 		this.sim = sim;
 		this.freq = 1;
@@ -193,11 +193,8 @@ public class WorldSimulator {
 //		}
 //	}
 	
-	public void updateBlocks(ArrayList<Block> blocks) {
-		
-		for(Block block : blocks) {
-			this.blocks.add(block);
-		}
+	public void setBlocks(ArrayList<Block> blocks) {
+		this.blocks = blocks;
 	}
 	
 	public void updateModules() {

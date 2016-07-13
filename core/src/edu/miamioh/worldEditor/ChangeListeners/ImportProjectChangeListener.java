@@ -71,7 +71,7 @@ public class ImportProjectChangeListener extends ChangeListener {
 			WorldEditorScreen.getScreen().updateWorldParameters();
 						
 			WorldSimulator sim = VerilogWorldController.getController().getSim();
-			sim.updateBlocks(level.getBlockList());
+			sim.setBlocks(level.getBlockList());
 			sim.updateModules();
 		}
 	}
