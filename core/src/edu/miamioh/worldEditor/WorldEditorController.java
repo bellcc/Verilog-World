@@ -313,6 +313,7 @@ public class WorldEditorController {
 		if(!(selectedIsInput ^ targetIsInput)) throw new InvalidModulePortException("Selected ports are incompatible. (Both inputs or both outputs)");
 		
 		ModulePort selectedPort = new ModulePort(selectedBlock, selectedWireName, selectedIsInput);
+		selectedBlock.getModuleWrapper().addPort(selectedPort);
 		targetBlock.getModuleWrapper().addPort(new ModulePort(targetBlock, targetWireName, selectedPort, targetWire, targetIsInput));
 	}
 	
