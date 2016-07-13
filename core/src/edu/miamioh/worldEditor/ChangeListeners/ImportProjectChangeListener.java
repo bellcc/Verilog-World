@@ -55,8 +55,6 @@ public class ImportProjectChangeListener extends ChangeListener {
 		
 		if(chooser.showOpenDialog(chooser) == JFileChooser.APPROVE_OPTION) {
 			
-			System.out.println(chooser.getSelectedFile());
-			
 			Level level = new Level();
 			level.setProject(new File(chooser.getSelectedFile().getAbsolutePath() + "/"));
 			WorldEditorController.getCurrentController().setCurrentLevel(level);
@@ -73,7 +71,7 @@ public class ImportProjectChangeListener extends ChangeListener {
 			WorldEditorScreen.getScreen().updateWorldParameters();
 						
 			WorldSimulator sim = VerilogWorldController.getController().getSim();
-			sim.updateBlocks(level.getBlockList());
+			sim.setBlocks(level.getBlockList());
 			sim.updateModules();
 		}
 	}

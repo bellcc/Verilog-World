@@ -23,7 +23,7 @@ public class DesktopLauncher {
 		//config.addIcon("game-32.png", FileType.Internal);
 
 		config.title = "Verilog World";
-		config.width = 600;
+		config.width = 800;
 		config.height = 600;
 		
 		config.backgroundFPS = 30;

@@ -542,7 +542,8 @@ public class WorldEditorScreen implements Screen {
 		homeStage = new HomeStage().getStage();
 		blockStage = new BlockStage().getStage();
 		toolStage = new ToolStage().getStage();
-
+		blockSelectedStage = new BlockSelectedStage().getStage();
+		
 		controller.updateInputMultiplexer();
 	}
 

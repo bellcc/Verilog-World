@@ -23,7 +23,7 @@ import edu.miamioh.verilogWorld.VerilogWorldController;
 
 public class ErrorInstance extends JPanel {
 	
-	public String moduleName;
+	public String header;
 	public JTextArea contents;
 	private JButton button;
 	
@@ -66,13 +66,17 @@ public class ErrorInstance extends JPanel {
 //		this.add(button);
 //	}
 	
+	public ErrorInstance(String header) {
+		this.header = header;
+	}
+	
 	public ErrorInstance(String blockName, int blockX, int blockY) {
-		this.moduleName = blockName + " (" + blockX + ", " + blockY + ")";
+		this(blockName + " (" + blockX + ", " + blockY + ")");
 		this.setLayout(null);
 		this.setBackground(new Color(0.7f, 0.7f, 1.0f, 1.0f));
 		
 		// Set up the label
-		JLabel label = new JLabel(this.moduleName);
+		JLabel label = new JLabel(this.header);
 		label.setLocation(8, -10);
 		label.setSize(200, LABEL_HEIGHT);
 		label.setFont(new Font(label.getFont().getFontName(), Font.PLAIN, 16));

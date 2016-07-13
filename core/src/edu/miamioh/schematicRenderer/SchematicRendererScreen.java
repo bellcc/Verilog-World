@@ -36,11 +36,11 @@ public class SchematicRendererScreen implements Screen {
      */
     public void setRoot_tree(ParseTree root_tree) {
 	schematic.setRoot_tree(root_tree);
-	if (schematic.getRoot_tree() == null) {
-	    System.out.println("The root_tree has been set to null.");
-	} else {
-	    System.out.println("The root_tree has successfully been set.");
-	}
+		// if (schematic.getRoot_tree() == null) {
+		// System.out.println("The root_tree has been set to null.");
+		// } else {
+		// System.out.println("The root_tree has successfully been set.");
+		// }
     }
     
     /**
@@ -75,7 +75,7 @@ public class SchematicRendererScreen implements Screen {
     @Override
     public void render(float arg0) {
 	
-	Gdx.gl.glClearColor(255, 255, 255, 1);
+	Gdx.gl.glClearColor(200, 200, 200, 1);
 	Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	
 	schematic.render(schematicStage);

@@ -28,6 +28,7 @@ import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
 import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.WorldEditorScreen;
+import edu.miamioh.worldSimulator.InvalidModulePortException;
 
 public class ConnectionStage {
 	
@@ -135,9 +136,12 @@ public class ConnectionStage {
 				System.out.println("Selected Block     : " + selectedBlock);
 				System.out.println("Target Block       : " + targetBlock);
 				
-				//WorldEditorController.getCurrentController().connectBlocks(selectedBlock, targetBlock, selectedWireName, targetWireName);
-				
-				
+				try {
+					WorldEditorController.getCurrentController().connectBlocks(selectedBlock, targetBlock, selectedWireName, targetWireName);
+				}catch (InvalidModulePortException e) {
+					e.printStackTrace();
+				}
+
 			}
 			
 		});

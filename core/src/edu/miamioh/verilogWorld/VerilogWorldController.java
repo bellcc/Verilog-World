@@ -60,9 +60,6 @@ public class VerilogWorldController {
 		
 		this.rootPath = System.getProperty("user.dir");
 
-		//If using IntelliJ...
-//		this.rootPath = rootPath.substring(0, rootPath.substring(0, rootPath.lastIndexOf("/")).lastIndexOf("/") ) + "/";
-
 		controller = this;
 		currentLevel = new Level();
 		try {
@@ -72,9 +69,6 @@ public class VerilogWorldController {
 		}
 		sim = new WorldSimulator(compiler.getRootModuleSimulator());
 		sim.setBlockList(currentLevel.getBlockList());
-		//TODO This needs to be set to the main menu controller.
-		//state = VerilogWorld.WORLD_SIMULATOR;
-		
 	}
 	
 	public Configuration getDefaultConfig()              {return this.defaultConfig;}
