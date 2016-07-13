@@ -16,6 +16,6 @@ begin
 	end
 end
 
-assign g = i;	
+assign a = i;	
 
 endmodule

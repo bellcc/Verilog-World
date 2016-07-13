@@ -29,7 +29,7 @@ public class WorldSimulator {
 		this.blocks = new ArrayList<>();
 		this.compiler = VerilogWorldController.getController().getCompiler();
 		this.sim = sim;
-		this.freq = 100;
+		this.freq = 1;
 		this.shouldRun = false;
 		
 		this.clock = new ModulePort("Clock", false);
@@ -90,8 +90,7 @@ public class WorldSimulator {
 	}
 	
 	public void executeCycle() {
-		System.out.printf("Cycle\n");
-		
+
 		if (compiler.isCompiled()) {
 			
 			System.out.printf("Cycle\n");
@@ -108,8 +107,18 @@ public class WorldSimulator {
 //				}
 //			}
 			
-			// Update clock
-			toggleSequClock();
+			// Update master sim clock
+			int value = (clock.getValue() == 0) ? 1 : 0;
+			clock.setValue(value);
+			
+			// Toggle the sequential block for every block
+			for(Block block : blocks) {
+				
+				NormalBlock norm = (NormalBlock)block;
+				
+				sim.updateTargetBlock(norm);
+				toggleSequClock();
+			}
 			
 			// Simulate block communication
 //			for(Block block : blocks) {
@@ -152,10 +161,6 @@ public class WorldSimulator {
 	public void toggleSequClock() {
 		
 		SimVisitor visitor = sim.getRootModuleInstance().getVisitor();
-		
-		// Update clock
-		int value = (clock.getValue() == 0) ? 1 : 0;
-		clock.setValue(value);
 		
 		/* toggle between sequential sims and combinational sims */
 		sim.setIsSequCycle(!sim.isSequCycle());
