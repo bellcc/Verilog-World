@@ -11,16 +11,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
-import javax.swing.border.LineBorder;
 
 public class ErrorReportingWindow extends JFrame {
-	
+
 	public static final int WIDTH = 400;
 	public static final int HEIGHT = 600;
 	

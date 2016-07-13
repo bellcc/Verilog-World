@@ -64,13 +64,16 @@ public class WorldEditorScreen implements Screen {
 	
 	private boolean connectMode;
 	private boolean connectModeWire;
+	private boolean blockConnection;
 	
 	private final int TOOLBAR_WIDTH = 150;
 	
 	public WorldEditorScreen() {
 		screen = this;
-		connectMode = false;
+		
+		setConnectMode(false);
 		setConnectModeWire(false);
+		setBlockConnection(false);
 	}
 	
 	public WorldEditorScreen(WorldEditorController controller) {
@@ -121,9 +124,7 @@ public class WorldEditorScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		
-		//Gdx.input.setInputProcessor(connectionStage);
-		
+
 		camera.update();
 		renderer.setProjectionMatrix(camera.combined);
 		
@@ -135,20 +136,24 @@ public class WorldEditorScreen implements Screen {
 			return;
 		}
 		
-		renderWorld();
+		renderLevel();
 		
 		if(controller.getToolBarSelection() == ToolBarSelectionType.BLOCK_SELECTED) {
 			renderSelectedBlock();
 			
-			int row = controller.getSelectedRow();
-			int column = controller.getSelectedColumn();
-			NormalBlock block = (NormalBlock)controller.getCurrentLevel().getBlock(row, column);
+//			int row = controller.getSelectedRow();
+//			int column = controller.getSelectedColumn();
+//			NormalBlock block = (NormalBlock)controller.getCurrentLevel().getBlock(row, column);
+//			
+//			ArrayList<ModulePort> list = block.getModuleWrapper().getPortsList();
+//			for(int i=0;i<list.size();i++) {
+//				System.out.println(list.get(i).getName());
+//			}
 			
-			ArrayList<ModulePort> list = block.getModuleWrapper().getPortsList();
-			for(int i=0;i<list.size();i++) {
-				System.out.println(list.get(i).getName());
-			}
-			
+		}
+		
+		if(blockConnection) {
+			renderBlockConnection();
 		}
 		
 		if(connectMode) {
@@ -159,7 +164,22 @@ public class WorldEditorScreen implements Screen {
 			renderConnectMode(controller.getCurrentLevel().getBlock(row, column));
 		}
 		
+		renderGrid();
 		renderToolBar();
+		
+	}
+	
+	private void renderBlockConnection() {
+				
+		int row = controller.getSelectedRow();
+		int column = controller.getSelectedColumn();
+		NormalBlock block = (NormalBlock)controller.getCurrentLevel().getBlock(row, column);
+		
+		ArrayList<ModulePort> list = block.getModuleWrapper().getPortsList();
+		for(int i=0;i<list.size();i++) {
+			System.out.println(list.get(i).getTargetPort().getName());
+			//System.out.println(list.get(i).getTargetPort().getBlock().getRow());
+		}
 		
 	}
 	
@@ -193,12 +213,6 @@ public class WorldEditorScreen implements Screen {
 	    renderer.rect((column * gridHeight) + bufferY, (row * gridWidth) + bufferX, gridWidth - (bufferX * 2), gridHeight - (bufferY * 2));
 	    renderer.end();
 		
-	}
-	
-	private void renderWorld() {
-		
-		renderLevel();
-		renderGrid();
 	}
 	
 	private void renderGrid() {
@@ -371,8 +385,6 @@ public class WorldEditorScreen implements Screen {
 		}
 		
 		renderSelectedBlock();
-		
-		//Render selection key.
 		
 	}
 	
@@ -655,6 +667,14 @@ public class WorldEditorScreen implements Screen {
 
 	public void setConnectModeWire(boolean connectModeWire) {
 		this.connectModeWire = connectModeWire;
+	}
+
+	public boolean getBlockConnection() {
+		return blockConnection;
+	}
+
+	public void setBlockConnection(boolean blockConnection) {
+		this.blockConnection = blockConnection;
 	}
 	
 }
