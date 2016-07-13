@@ -52,10 +52,12 @@ public class WorldSimulatorController {
 		currentLevel = WorldEditorController.getCurrentController().getCurrentLevel();
 	}
 	
-	public WorldSimulatorController(Configuration config, Level level) {
+	public WorldSimulatorController(Level level) {
 
 		this();
 
+		Configuration config = level.getConfig();
+		
 		worldWidth = config.getWorldWidth();
 		worldHeight = config.getWorldHeight();
 		

@@ -110,10 +110,8 @@ public class VerilogWorldMain extends Game {
 	}
 	
 	public void setWorldSimulatorScreen(Level level) {
-		
-		Configuration defaultConfig = verilogWorldController.getDefaultConfig();
-		
-		worldSimulatorController = new WorldSimulatorController(defaultConfig, level);
+				
+		worldSimulatorController = new WorldSimulatorController(level);
 		worldSimulatorScreen = new WorldSimulatorScreen(worldSimulatorController);
 		
 		this.setScreen(worldSimulatorScreen);

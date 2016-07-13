@@ -14,6 +14,8 @@ import static edu.miamioh.schematicRenderer.SchematicRendererController.topEdge;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import javax.swing.JOptionPane;
+
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import com.badlogic.gdx.graphics.Color;
@@ -124,12 +126,15 @@ class SchematicRenderer implements Disposable {
 		if (root_tree != null) {
 			SchematicVisitor<?> visitor = new SchematicVisitor<>(this);
 			try {
+				clearData();
 				visitor.visit(root_tree);
+				JOptionPane.showMessageDialog(null, "The schematic has been compiled! Return to the World Editor to view it.", "Schematic Compiler", JOptionPane.INFORMATION_MESSAGE);
+				this.is_Compiled(true);
 			} catch (Exception e) {
-				System.out.println(
-						"The schematic could not be compiled.\nThis is usually due to present conditionals (if-else's or always blocks).");
+				String msg = "The schematic could not be compiled.\nThis is usually due to present conditionals (if-else's or always blocks).";
+				JOptionPane.showMessageDialog(null, msg, "Schematic Compiler", JOptionPane.ERROR_MESSAGE);
+				this.is_Compiled(false);
 			}
-			this.is_Compiled(true);
 		}
 	}
 	

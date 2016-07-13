@@ -68,10 +68,7 @@ public class ErrorInstance extends JPanel {
 	
 	public ErrorInstance(String header) {
 		this.header = header;
-	}
-	
-	public ErrorInstance(String blockName, int blockX, int blockY) {
-		this(blockName + " (" + blockX + ", " + blockY + ")");
+		
 		this.setLayout(null);
 		this.setBackground(new Color(0.7f, 0.7f, 1.0f, 1.0f));
 		
@@ -106,6 +103,10 @@ public class ErrorInstance extends JPanel {
 		this.add(label);
 		this.add(contents);
 		this.add(button);
+	}
+	
+	public ErrorInstance(String blockName, int blockX, int blockY) {
+		this(blockName + " (" + blockX + ", " + blockY + ")");
 	}
 	
 	public void displayFullMessage() {

@@ -29,6 +29,7 @@ import edu.miamioh.worldEditor.Stages.HomeStage;
 import edu.miamioh.worldEditor.Stages.OptionStage;
 import edu.miamioh.worldEditor.Stages.ToolStage;
 import edu.miamioh.worldEditor.types.Point;
+import edu.miamioh.worldSimulator.ModulePort;
 
 public class WorldEditorScreen implements Screen {
 
@@ -138,6 +139,16 @@ public class WorldEditorScreen implements Screen {
 		
 		if(controller.getToolBarSelection() == ToolBarSelectionType.BLOCK_SELECTED) {
 			renderSelectedBlock();
+			
+			int row = controller.getSelectedRow();
+			int column = controller.getSelectedColumn();
+			NormalBlock block = (NormalBlock)controller.getCurrentLevel().getBlock(row, column);
+			
+			ArrayList<ModulePort> list = block.getModuleWrapper().getPortsList();
+			for(int i=0;i<list.size();i++) {
+				System.out.println(list.get(i).getName());
+			}
+			
 		}
 		
 		if(connectMode) {

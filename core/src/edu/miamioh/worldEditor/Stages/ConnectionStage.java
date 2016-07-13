@@ -139,6 +139,11 @@ public class ConnectionStage {
 				try {
 					WorldEditorController.getCurrentController().connectBlocks(selectedBlock, targetBlock, selectedWireName, targetWireName);
 				}catch (InvalidModulePortException e) {
+					
+					JOptionPane.showMessageDialog(new JFrame(),
+						    "These are incompatible ports. Try again.",
+						    null, JOptionPane.ERROR_MESSAGE);
+					
 					e.printStackTrace();
 				}
 
