@@ -7,7 +7,16 @@
 
 package edu.miamioh.Screens;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -31,7 +40,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import edu.miamioh.Configuration.ConfigurationParser;
+import edu.miamioh.Level.Level;
+import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
+import edu.miamioh.worldEditor.WorldEditorController;
+import edu.miamioh.worldEditor.WorldEditorScreen;
+import edu.miamioh.worldSimulator.WorldSimulator;
  
 public class ChallengesScreen implements Screen {
 		
@@ -154,7 +169,12 @@ public class ChallengesScreen implements Screen {
 	        
 
 	    if(getChallenges()) {
-	    	addLevelTest();
+	    	try {
+				createLevelList();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		        
 		   	for(int i = 0; i < levelArray.size(); i++){
 		   		mainTable.add(levelArray.get(i)).height(buttonHeight).width(buttonWidth);
@@ -162,7 +182,12 @@ public class ChallengesScreen implements Screen {
 		   	}
 	    }
 	    else if(getTutorials()) {
-	    	addTutorialTest();
+	    	try {
+				createTutorialList();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		        
 		    for(int i = 0; i < tutorialArray.size(); i++){
 		    	mainTable.add(tutorialArray.get(i)).height(buttonHeight).width(buttonWidth);
@@ -188,7 +213,7 @@ public class ChallengesScreen implements Screen {
         im1Button.setPosition(0, ((7 * Gdx.graphics.getHeight())/8) + 20);
         im2Button.setPosition(buttonWidth * 2, ((7 * Gdx.graphics.getHeight())/8) + 20);
         im3Button.setPosition(buttonWidth * 4, ((7 * Gdx.graphics.getHeight())/8) + 20);
-        nextButton.setPosition(Gdx.graphics.getWidth() - buttonWidth, 0);
+        nextButton.setPosition(viewport.getScreenWidth() - buttonWidth, 0);
         
         Skin scrollSkin = new Skin(Gdx.files.internal("uiskin.json"));
         
@@ -320,20 +345,48 @@ public class ChallengesScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
             	
+            	VerilogWorldMain.getVerilogWorldMain().setWorldEditorScreen(new Level());
+            	String path = "";
+            	String levelPath = "";
+            	String[] fileNameArray;
+
             	if(getChallenges()){
-    	        	for(int i = 0; i < levelArray.size(); i++) {
-    	        		if(levelArray.indexOf(levelArray.get(index)) == levelArray.indexOf(levelArray.get(i))){
-    	        			System.out.println("Play Level " + (index+1));
-    	        		}
-    	        	}
+		        	for(int i = 0; i < levelArray.size(); i++) {
+		        		if(levelArray.indexOf(levelArray.get(index)) == levelArray.indexOf(levelArray.get(i))){
+		                	path = VerilogWorldMain.getRootPath() + "/core/assets/levels";
+		                	fileNameArray = new File(path).list();
+		                	levelPath = path + "/" + fileNameArray[i];
+		        		}
+		        	}
             	}
             	else if(getTutorials()){
     	        	for(int i = 0; i < tutorialArray.size(); i++) {
     	        		if(tutorialArray.indexOf(tutorialArray.get(index)) == tutorialArray.indexOf(tutorialArray.get(i))){
-    	        			System.out.println("Play Tutorial " + (index+1));
-    	        		}
+		                	path = VerilogWorldMain.getRootPath() + "/core/assets/tutorials";
+		                	fileNameArray = new File(path).list();
+		                	levelPath = path + "/" + fileNameArray[i];    	        		
+		                }
     	        	}
             	}
+            	
+    			Level level = new Level();
+    			level.setProject(new File(levelPath + "/"));
+    			WorldEditorController.getCurrentController().setCurrentLevel(level);
+    			
+    			ConfigurationParser parser = new ConfigurationParser();
+    			level = parser.getConfiguration(new File(levelPath + "/world.xml"));
+    			level.setProject(new File(levelPath + "/"));
+    			
+    			String rootPath = level.getProject().getAbsolutePath();
+    			VerilogWorldController.getController().setRootPath(rootPath);
+    			
+    			WorldEditorController.getCurrentController().setCurrentLevel(level);
+    			WorldEditorController.getCurrentController().updateWorld(level);
+    			WorldEditorScreen.getScreen().updateWorldParameters();
+    						
+    			WorldSimulator sim = VerilogWorldController.getController().getSim();
+    			sim.setBlocks(level.getBlockList());
+    			sim.updateModules();
             }
         });
     }
@@ -389,7 +442,7 @@ public class ChallengesScreen implements Screen {
     public static void listen(int index) {
     	
     	ChallengesScreen.index = index;
-    	
+
     	if(textActorCheck) {
 			textArea.remove();
 			nextButton.remove();
@@ -398,16 +451,14 @@ public class ChallengesScreen implements Screen {
     	if(getChallenges()) {
         	for(int j = 0; j < levelDescription.size(); j++) {
         		if(levelDescription.indexOf(levelDescription.get(index)) == levelDescription.indexOf(levelDescription.get(j))){
-	            	String describe = "level " + (index+1) + "\n\n" + levelDescription.get(j);
-        			textArea = new TextArea(describe, textSkin);    	
+        			textArea = new TextArea(levelDescription.get(j), textSkin);    	
        			}
        		}
     	}
     	else if(getTutorials()) {
         	for(int j = 0; j < tutorialDescription.size(); j++) {
         		if(tutorialDescription.indexOf(tutorialDescription.get(index)) == tutorialDescription.indexOf(tutorialDescription.get(j))){
-	            	String describe = "tutorial " + (index+1) + "\n\n" + tutorialDescription.get(j);
-        			textArea = new TextArea(describe, textSkin);    	
+        			textArea = new TextArea(tutorialDescription.get(j), textSkin);    	
        			}
        		}
     	}
@@ -443,71 +494,68 @@ public class ChallengesScreen implements Screen {
     	return challenges;
     }    
     
-    public void addLevelTest() {
+    public void createLevelList() throws IOException {
+    	String path = VerilogWorldMain.getRootPath() + "/core/assets/levels";
+    	String description;
+    	String[] levelList = new File(path).list();
     	
-        Skin skinTest1 = new Skin();
-        Skin skinTest2 = new Skin();
-        Skin skinTest3 = new Skin();
-        Skin skinTest4 = new Skin();
-        Skin skinTest5 = new Skin();
-        Skin skinTest6 = new Skin();
-        Skin skinTest7 = new Skin();
-        Skin skinTest8 = new Skin();
-        Skin skinTest9 = new Skin();
-        Skin skinTest10 = new Skin();
-        Skin skinTest11 = new Skin();
-        Skin skinTest12 = new Skin();
-        Skin skinTest13 = new Skin();
-        Skin skinTest14 = new Skin();
-        Skin skinTest15 = new Skin();
+    	int x = new File(path).list().length;
+    	
+    	for(int i = 0; i < x; i++){
+    		Skin skin = new Skin();
+            TextButtonStyle textButtonStyle = new TextButtonStyle();
+            
+            BufferedReader br = new BufferedReader(new FileReader(path + "/" + levelList[i] + "/description.txt"));
+            try {
+                StringBuilder sb = new StringBuilder();
+                String line = br.readLine();
 
-        
-        TextButtonStyle textButtonStyle = new TextButtonStyle();
-        
-        addLevel("LEVEL 1", "testing 1st level description", skinTest1, textButtonStyle);
-        addLevel("LEVEL 2", "testing 2nd level description", skinTest2, textButtonStyle);
-        addLevel("LEVEL 3", "testing 3rd level description", skinTest3, textButtonStyle);
-        addLevel("LEVEL 4", "testing 4th level description", skinTest4, textButtonStyle);
-        addLevel("LEVEL 5", "testing 5th level description", skinTest5, textButtonStyle);
-        addLevel("LEVEL 6", "testing 6th level description", skinTest6, textButtonStyle);
-        addLevel("LEVEL 7", "testing 7th level description", skinTest7, textButtonStyle);
-        addLevel("LEVEL 8", "testing 8th level description", skinTest8, textButtonStyle);
-        addLevel("LEVEL 9", "testing 9th level description", skinTest9, textButtonStyle);
-        addLevel("LEVEL 10", "testing 10th level description", skinTest10, textButtonStyle);
-        addLevel("LEVEL 11", "testing 11th level description", skinTest11, textButtonStyle);
-        addLevel("LEVEL 12", "testing 12th level description", skinTest12, textButtonStyle);
-        addLevel("LEVEL 13", "testing 13th level description", skinTest13, textButtonStyle);
-        addLevel("LEVEL 14", "testing 14th level description", skinTest14, textButtonStyle);
-        addLevel("LEVEL 15", "testing 15th level description", skinTest15, textButtonStyle);
+                while (line != null) {
+                    sb.append(line);
+                    sb.append("\n");
+                    line = br.readLine();
+                }
+                description = sb.toString();
+            } finally {
+                br.close();
+            }
+           
+            addLevel(levelList[i], description, skin, textButtonStyle);
 
+    	}
         
     }
     
-    public void addTutorialTest() {
+    public void createTutorialList() throws IOException {
         
-        Skin skinTest1 = new Skin();
-        Skin skinTest2 = new Skin();
-        Skin skinTest3 = new Skin();
-        Skin skinTest4 = new Skin();
-        Skin skinTest5 = new Skin();
-        Skin skinTest6 = new Skin();
-        Skin skinTest7 = new Skin();
-        Skin skinTest8 = new Skin();
-        Skin skinTest9 = new Skin();
-        Skin skinTest10 = new Skin();
-        
-        TextButtonStyle textButtonStyle = new TextButtonStyle();
+    	String path = VerilogWorldMain.getRootPath() + "/core/assets/tutorials";
+    	String description;
+    	String[] tutorialList = new File(path).list();
     	
-        addTutorial("TUTORIAL 1", "testing 1st tutorial description", skinTest1, textButtonStyle);
-        addTutorial("TUTORIAL 2", "testing 2nd tutorial description", skinTest2, textButtonStyle);
-        addTutorial("TUTORIAL 3", "testing 3rd tutorial description", skinTest3, textButtonStyle);
-        addTutorial("TUTORIAL 4", "testing 4th tutorial description", skinTest4, textButtonStyle);
-        addTutorial("TUTORIAL 5", "testing 5th tutorial description", skinTest5, textButtonStyle);
-        addTutorial("TUTORIAL 6", "testing 6th tutorial description", skinTest6, textButtonStyle);
-        addTutorial("TUTORIAL 7", "testing 7th tutorial description", skinTest7, textButtonStyle);
-        addTutorial("TUTORIAL 8", "testing 8th tutorial description", skinTest8, textButtonStyle);
-        addTutorial("TUTORIAL 9", "testing 9th tutorial description", skinTest9, textButtonStyle);
-        addTutorial("TUTORIAL 10", "testing 10th tutorial description", skinTest10, textButtonStyle);
+    	int x = new File(path).list().length;
+    	
+    	for(int i = 0; i < x; i++){
+    		Skin skin = new Skin();
+            TextButtonStyle textButtonStyle = new TextButtonStyle();
+            
+            BufferedReader br = new BufferedReader(new FileReader(path + "/" + tutorialList[i] + "/description.txt"));
+            try {
+                StringBuilder sb = new StringBuilder();
+                String line = br.readLine();
+
+                while (line != null) {
+                    sb.append(line);
+                    sb.append("\n");
+                    line = br.readLine();
+                }
+                description = sb.toString();
+            } finally {
+                br.close();
+            }
+           
+            addTutorial(tutorialList[i], description, skin, textButtonStyle);
+
+    	}
     }
 }
 
