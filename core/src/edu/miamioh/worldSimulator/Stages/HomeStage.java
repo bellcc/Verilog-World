@@ -12,7 +12,6 @@ import edu.miamioh.worldSimulator.ChangeListeners.BackChangeListener;
 public class HomeStage {
 
 	private Stage stage;
-
 	private Actor backActor;
 	
 	public HomeStage() {
@@ -23,7 +22,7 @@ public class HomeStage {
 
 		backActor.addListener(new BackChangeListener());
 		
-		int windowHeight = VerilogWorldController.WINDOW_WIDTH;
+		int windowHeight = VerilogWorldController.WINDOW_HEIGHT;
 		
 		int actorHeight = 50;
 		int actorWidth = 100;

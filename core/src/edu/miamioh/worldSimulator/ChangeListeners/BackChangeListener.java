@@ -16,9 +16,6 @@ public class BackChangeListener extends ChangeListener {
 
 		System.out.println("Back Change Listener");
 
-		WorldSimulatorController.getController().resetMultiplexer();
-		VerilogWorldMain.getVerilogWorldMain().setWorldEditorScreen(WorldEditorController.getCurrentController().getCurrentLevel());
-		
 		Level level = VerilogWorldController.getController().getCurrentLevel();
 		VerilogWorldMain.getVerilogWorldMain().setWorldEditorScreen(level);
 		

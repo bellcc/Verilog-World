@@ -240,9 +240,7 @@ public class WorldEditorController {
 				ArrayList<String> targetList = targetBlock.getRootSim().getRootModuleInstance().getPorts_list();
 				
 				WorldEditorScreen.getScreen().setConnectModeWire(true, selectedList, targetList, selectedBlock, targetBlock);
-				this.updateConnectionMode();
-				
-				VerilogWorldController.getController().getSim().getRootModuleSimulator().updateTargetBlock(selectedBlock);
+				this.updateConnectionMode();				
 
 			}
 
