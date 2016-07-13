@@ -72,7 +72,7 @@ public class WorldSimulatorScreen implements Screen {
 		camera.setToOrtho(false, w, h);
 				
 		optionStage = new OptionStage().getStage();
-		homeStage = new HomeStage().getStage();		
+		homeStage = new HomeStage().getStage();
 		simulatorStage = new SimulatorStage().getStage();		
 	}
 	
@@ -227,7 +227,7 @@ public class WorldSimulatorScreen implements Screen {
 		controller.resetMultiplexer();
 		
 		optionStage = new OptionStage().getStage();
-		//homeStage = new HomeStage().getSchematicStage();
+		homeStage = new HomeStage().getStage();
 		simulatorStage = new SimulatorStage().getStage();
 
 		controller.updateInputMultiplexer();
