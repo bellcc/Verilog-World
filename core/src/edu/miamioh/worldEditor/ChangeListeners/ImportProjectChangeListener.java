@@ -72,7 +72,7 @@ public class ImportProjectChangeListener extends ChangeListener {
 						
 			WorldSimulator sim = VerilogWorldController.getController().getSim();
 			sim.setBlocks(level.getBlockList());
-			sim.updateModules();
+			sim.addDefaultPorts();
 		}
 	}
 

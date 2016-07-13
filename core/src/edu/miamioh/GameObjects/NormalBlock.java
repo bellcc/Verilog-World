@@ -90,22 +90,28 @@ public abstract class NormalBlock extends Block {
 		}
 	}
 	
+	public static int count = 0;
 	public void updateOutputs() {
 		
 		for(ModulePort port : module.getPortsList()) {
 		
 			if (!port.getIsInput()) { 
 				// Get the module wire corresponding to the port
-				ParseRegWire wire = module.getModule().getHash_vars().get(port.getName());
+				//ParseRegWire wire = port.getWire();
+				ParseRegWire wire = module.getModule().getHash_vars().get(port.getWire().getName());
 				
 				// If the output value is changed, notify the target block that it must recalculate itself
 				boolean shouldSimTargetBlock = port.getValue() != wire.getValue(0) ? true : false;
+				
+				if(this.getType() == NormalBlockType.Controller) {
+					System.out.println(" > " + wire.getValue(0));
+				}
 				
 				// Do the actual setting
 				port.setValue(wire.getValue(0));
 				
 				if(shouldSimTargetBlock) {
-					VerilogWorldController.getController().getSim().resimBlock(port.getTargetPort().getBlock());
+					//VerilogWorldController.getController().getSim().resimBlock(port.getTargetPort().getBlock());
 				}
 			}
 		}
@@ -137,7 +143,12 @@ public abstract class NormalBlock extends Block {
 			e.printStackTrace();
 		}
 		
-		this.module = new ModuleWrapper(newModule);
+		if (this.module == null) {
+			this.module = new ModuleWrapper(newModule);
+		}
+		else {
+			this.module.setRootModuleInstance(newModule);
+		}
 		
 		return this.module;
 	}
