@@ -32,8 +32,8 @@ public class WorldSimulator {
 		this.freq = 1;
 		this.shouldRun = false;
 		
-		this.clock = new ModulePort("Clock", false);
-		this.reset = new ModulePort("Reset", false);
+		this.clock = new ModulePort(null, "Clock", false);
+		this.reset = new ModulePort(null, "Reset", false);
 		reset.setValue(1); // Active low reset line
 		
 		// Construct timer to run the simulator at a certain frequency
@@ -95,18 +95,6 @@ public class WorldSimulator {
 			
 			System.out.printf("Cycle\n");
 			
-			// Simulate combination logic blocks
-//			for(Block block : blocks) {
-//				
-//				if (block instanceof NormalBlock) {
-//					NormalBlock normBlock = (NormalBlock)block;
-//					
-//					//Simulate
-//					sim.updateTargetBlock(normBlock);
-//					sim.simComb();
-//				}
-//			}
-			
 			// Update master sim clock
 			int value = (clock.getValue() == 0) ? 1 : 0;
 			clock.setValue(value);
@@ -120,35 +108,45 @@ public class WorldSimulator {
 				toggleSequClock();
 			}
 			
-			// Simulate block communication
-//			for(Block block : blocks) {
-//				
-//				if (block instanceof NormalBlock) {
-//					NormalBlock normBlock = (NormalBlock)block;
-//					
-//					normBlock.updatePortValues();
-//				}
-//			}
-			
 			// Simulate sequenctial blocks and update properties
 			for(Block block : blocks) {
 				
 				if (block instanceof NormalBlock) {
-					NormalBlock normBlock = (NormalBlock)block;
 					
-					//Simulate
-					sim.updateTargetBlock(normBlock);
-					sim.simSequ();
-					//sim.clean_sim_cycle();
-					
-					// Update
-					normBlock.updateProperties();
+					simBlock((NormalBlock)block);
 				}
 			}
 			
 			// Update clock
 			toggleSequClock();
 		}
+	}
+	
+	/*
+	 * Does the actual simulation of the block
+	 */
+	private void simBlock(NormalBlock block) {
+		
+		// Update input ports
+		block.updateInputs();
+		
+		//Simulate
+		sim.updateTargetBlock(block);
+		sim.simSequ();
+		//sim.clean_sim_cycle();
+		
+		// Update
+		block.updateProperties();
+		
+		// Update ouput port values
+		block.updateOutputs();
+	}
+	
+	/*
+	 * Re-simulates a given block if it's input ports have changed
+	 */
+	public void resimBlock(NormalBlock block) {
+		simBlock(block);
 	}
 	
 	public void toggleResetLine() {

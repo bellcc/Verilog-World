@@ -304,17 +304,11 @@ public class WorldEditorController {
 		/*
 		 * Find t
 		 */
-		boolean selectedIsInput = false;
-		boolean targetIsInput = false;
-		if(selectedWire.getRole() == WireRoleType.INPUT) {
-			selectedIsInput = true;
-		}
-		if(targetWire.getRole() == WireRoleType.INPUT) {
-			targetIsInput = true;
-		}
+		boolean selectedIsInput = selectedWire.getRole() == WireRoleType.INPUT ? true : false;
+		boolean targetIsInput = targetWire.getRole() == WireRoleType.INPUT ? true : false;
 		
-		ModulePort selectedPort = new ModulePort(selectedWireName, selectedIsInput);
-		targetBlock.getModuleWrapper().addPort(new ModulePort(targetWireName, selectedPort, targetWire, targetIsInput));
+		ModulePort selectedPort = new ModulePort(selectedBlock, selectedWireName, selectedIsInput);
+		targetBlock.getModuleWrapper().addPort(new ModulePort(targetBlock, targetWireName, selectedPort, targetWire, targetIsInput));
 	}
 	
 	public boolean changesMade() {

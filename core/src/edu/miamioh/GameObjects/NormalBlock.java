@@ -79,26 +79,49 @@ public abstract class NormalBlock extends Block {
 		// Connect module clock and reset inputs to global clock and reset ports
 		if(ports.contains("clk")) {
 			ParseRegWire wire = module.getModule().getHash_vars().get("clk");
-			module.addPort(new ModulePort("clk", clock, wire, true));
+			module.addPort(new ModulePort(this, "clk", clock, wire, true));
 		}
 		
 		if(ports.contains("rst")) {
 			ParseRegWire wire = module.getModule().getHash_vars().get("rst");
-			ModulePort resetPort = new ModulePort("rst", reset, wire, true);
+			ModulePort resetPort = new ModulePort(this, "rst", reset, wire, true);
 			resetPort.setValue(1); // Active-low
 			module.addPort(resetPort);
 		}
 	}
 	
-	public void updatePortValues() {
+	public void updateOutputs() {
+		
+		for(ModulePort port : module.getPortsList()) {
+		
+			if (!port.getIsInput()) { 
+				// Get the module wire corresponding to the port
+				ParseRegWire wire = module.getModule().getHash_vars().get(port.getName());
+				
+				// If the output value is changed, notify the target block that it must recalculate itself
+				boolean shouldSimTargetBlock = port.getValue() != wire.getValue(0) ? true : false;
+				
+				// Do the actual setting
+				port.setValue(wire.getValue(0));
+				
+				if(shouldSimTargetBlock) {
+					VerilogWorldController.getController().getSim().resimBlock(port.getTargetPort().getBlock());
+				}
+			}
+		}
+	}
+	
+	public void updateInputs() {
 		
 		for(ModulePort port : module.getPortsList()) {
 			
-			// Get the module wire corresponding to the port
-			ParseRegWire wire = module.getModule().getHash_vars().get(port.getName());
-			
-			wire.setValue(0, port.getValue(), false);
-			wire.setValue(1, port.getValue(), false);
+			if (port.getIsInput()) { 
+				// Get the module wire corresponding to the port
+				ParseRegWire wire = module.getModule().getHash_vars().get(port.getName());
+				
+				wire.setValue(0, port.getValue(), false);
+				wire.setValue(1, port.getValue(), false);
+			}
 		}
 	}
 

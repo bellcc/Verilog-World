@@ -8,18 +8,15 @@ import edu.miamioh.verilogWorld.VerilogWorldController;
 
 public class ModulePort {
 	
+	private NormalBlock block;
 	private ModulePort target;
 	private ParseRegWire wire;
 	private String name;
 	private int value;
 	private boolean isInput;
 	
-	public ModulePort() {
-		this("", false);
-	}
-	
-	public ModulePort(String name, boolean isInput) {
-		this(name, null, null, isInput);
+	public ModulePort(NormalBlock block, String name, boolean isInput) {
+		this(block, name, null, null, isInput);
 	}
 	
 	/*
@@ -36,6 +33,7 @@ public class ModulePort {
 			throw new InvalidModulePortException("ModulePort usage error: Module ports' inInput values are the same.");
 		}
 		
+		this.block = (NormalBlock)block;
 		this.name = portName;
 		this.isInput = isInput;
 		this.value = 0;
@@ -49,10 +47,11 @@ public class ModulePort {
 		ParseRegWire targetWire = sim.getRootModuleInstance().getHash_vars().get(targetWireName);
 		
 		// Connect the ports
-		this.target = new ModulePort(targetName, this, targetWire, targetIsInput);
+		this.target = new ModulePort((NormalBlock)targetBlock, targetName, this, targetWire, targetIsInput);
 	}
 	
-	public ModulePort(String name, ModulePort target, ParseRegWire wireTarget, boolean isInput) {
+	public ModulePort(NormalBlock block, String name, ModulePort target, ParseRegWire wireTarget, boolean isInput) {
+		this.block = block;
 		this.target = target;
 		this.wire = wireTarget;
 		this.isInput = isInput;
@@ -91,5 +90,7 @@ public class ModulePort {
 	public String getName()							{return this.name;}
 	public ModulePort getTargetPort() 				{return this.target;}
 	public void setIsInput(boolean value) 			{this.isInput = value;}
+	public boolean getIsInput()						{return this.isInput;}
 	public int getValue() 							{return this.value;}
+	public NormalBlock getBlock()					{return this.block;}
 }
