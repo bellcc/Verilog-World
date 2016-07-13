@@ -6,6 +6,7 @@ import java.util.TimerTask;
 
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.GameObjects.NormalBlock;
+import edu.miamioh.Level.Level;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.RootModuleSimulator;
 import edu.miamioh.simulator.SimVisitor;
@@ -24,9 +25,9 @@ public class WorldSimulator {
 	private ModulePort clock;
 	private ModulePort reset;
 	
-	public WorldSimulator(RootModuleSimulator sim) {
+	public WorldSimulator(RootModuleSimulator sim, Level level) {
 		this.modules = new ArrayList<>();
-		this.blocks = new ArrayList<>();
+		this.blocks = level.getBlockList();
 		this.compiler = VerilogWorldController.getController().getCompiler();
 		this.sim = sim;
 		this.freq = 1;

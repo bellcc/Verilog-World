@@ -29,6 +29,7 @@ import edu.miamioh.Level.Level;
 import edu.miamioh.simulator.ParseRegWire;
 import edu.miamioh.simulator.WireRoleType;
 import edu.miamioh.verilogWorld.VerilogWorldController;
+import edu.miamioh.worldSimulator.InvalidModulePortException;
 import edu.miamioh.worldSimulator.ModulePort;
 
 public class WorldEditorController {
@@ -293,7 +294,7 @@ public class WorldEditorController {
 	}
 	
 	public void connectBlocks(NormalBlock selectedBlock, NormalBlock targetBlock, 
-							  String selectedWireName, String targetWireName) {
+							  String selectedWireName, String targetWireName) throws InvalidModulePortException {
 		
 		/*
 		 * Grab the wires
@@ -306,6 +307,8 @@ public class WorldEditorController {
 		 */
 		boolean selectedIsInput = selectedWire.getRole() == WireRoleType.INPUT ? true : false;
 		boolean targetIsInput = targetWire.getRole() == WireRoleType.INPUT ? true : false;
+		
+		if(!(selectedIsInput ^ targetIsInput)) throw new InvalidModulePortException("Selected ports are incompatible. (Both inputs or both outputs)");
 		
 		ModulePort selectedPort = new ModulePort(selectedBlock, selectedWireName, selectedIsInput);
 		targetBlock.getModuleWrapper().addPort(new ModulePort(targetBlock, targetWireName, selectedPort, targetWire, targetIsInput));

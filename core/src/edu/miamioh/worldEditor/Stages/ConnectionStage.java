@@ -135,9 +135,7 @@ public class ConnectionStage {
 				System.out.println("Selected Block     : " + selectedBlock);
 				System.out.println("Target Block       : " + targetBlock);
 				
-				//WorldEditorController.getCurrentController().connectBlocks(selectedBlock, targetBlock, selectedWireName, targetWireName);
-				
-				
+				WorldEditorController.getCurrentController().connectBlocks(selectedBlock, targetBlock, selectedWireName, targetWireName);
 			}
 			
 		});

@@ -67,7 +67,7 @@ public class VerilogWorldController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		sim = new WorldSimulator(compiler.getRootModuleSimulator());
+		sim = new WorldSimulator(compiler.getRootModuleSimulator(), currentLevel);
 		sim.setBlockList(currentLevel.getBlockList());
 		//TODO This needs to be set to the main menu controller.
 		//state = VerilogWorld.WORLD_SIMULATOR;
