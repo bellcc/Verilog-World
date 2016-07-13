@@ -241,6 +241,8 @@ public class WorldEditorController {
 				WorldEditorScreen.getScreen().setConnectModeWire(true, selectedList, targetList, selectedBlock, targetBlock);
 				this.updateConnectionMode();
 				
+				VerilogWorldController.getController().getSim().getRootModuleSimulator().updateTargetBlock(selectedBlock);
+
 			}
 
 			if(selection == ToolBarSelectionType.BLOCK_SELECTED) {
