@@ -49,7 +49,7 @@ public class VerilogWorldMain extends Game {
 
 	private SchematicRendererScreen schematicRendererScreen;
 		
-	private String	VERILOG_WORLD_DEVELOPMENT	= "VERILOG_WORLD_DEVELOPMENT";
+	private static String	VERILOG_WORLD_DEVELOPMENT	= "VERILOG_WORLD_DEVELOPMENT";
 	
 	private ErrorReportingWindow errorWindow;
 	private RootModuleSimulator sim;
@@ -152,7 +152,7 @@ public class VerilogWorldMain extends Game {
 		thread.start();
 	}
 
-	public String getRootPath()
+	public static String getRootPath()
 	{
 		String path = null;
 		try
@@ -182,7 +182,7 @@ public class VerilogWorldMain extends Game {
 
 		return path;
 	}
-	public boolean isDevelopment()
+	public static boolean isDevelopment()
 	{
 		String env = System.getenv(VERILOG_WORLD_DEVELOPMENT);
 		return env != null && !env.equals("0");
