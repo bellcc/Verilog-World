@@ -83,7 +83,6 @@ public class WorldEditorController {
 
 		this();
 				
-		//resetParameters();
 		updateParameters(level.getConfig());		
 		this.currentLevel = level;
 			
