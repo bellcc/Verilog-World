@@ -34,6 +34,7 @@ import edu.miamioh.GameObjects.blocks.LedBlock;
 import edu.miamioh.GameObjects.blocks.ScooterBlock;
 import edu.miamioh.GameObjects.blocks.WallBlock;
 import edu.miamioh.Level.Level;
+import edu.miamioh.worldSimulator.ModulePort;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
@@ -87,50 +88,95 @@ public class ConfigurationParser {
 			NodeList worldList = doc.getElementsByTagName("world");
 			Node worldNode = worldList.item(0);
 			
-			NodeList blockList = worldNode.getChildNodes();
+			NodeList blockList = doc.getElementsByTagName("block");
 
 			for(int i=0;i<blockList.getLength();i++) {
-								
-				if(blockList.item(i).getNodeName().equals("block")) {
 					
-					Element blockElement = (Element) blockList.item(i);
-					
-					int row = Integer.parseInt(blockElement.getElementsByTagName("row").item(0).getTextContent());
-					int column = Integer.parseInt(blockElement.getElementsByTagName("column").item(0).getTextContent());
-					int id = Integer.parseInt(blockElement.getElementsByTagName("id").item(0).getTextContent());
-					String type = blockElement.getElementsByTagName("type").item(0).getTextContent();
-					
-					switch (type) {
-					
-						case "Blank":
-							level.addBlock(new BlankBlock(row, column, id));
-							level.getBlock(row, column).setID(id);
-							break;
-							
-						case "Wall":
-							level.addBlock(new WallBlock(row, column, id));
-							level.getBlock(row, column).setID(id);
-							break;
-							
-						case "Controller":
-							level.addBlock(new ControllerBlock(row, column, id));
-							level.getBlock(row, column).setID(id);
-							break;
-							
-						case "Scooter":
-							level.addBlock(new ScooterBlock(row, column, id));
-							level.getBlock(row, column).setID(id);
-							break;
-							
-						case "Led":
-							level.addBlock(new LedBlock(row, column, id));
-							level.getBlock(row, column).setID(id);
-							break;
-							
-					}
-					
+				Element blockElement = (Element) blockList.item(i);
+				
+				int row = Integer.parseInt(blockElement.getElementsByTagName("row").item(0).getTextContent());
+				int column = Integer.parseInt(blockElement.getElementsByTagName("column").item(0).getTextContent());
+				int id = Integer.parseInt(blockElement.getElementsByTagName("id").item(0).getTextContent());
+				String type = blockElement.getElementsByTagName("type").item(0).getTextContent();
+				
+				NormalBlock block = null;
+				switch (type) {
+				
+					case "Blank":
+						block = new BlankBlock(row, column, id);
+						level.addBlock(block);
+						block.setID(id);
+						block.compile();
+						break;
+						
+					case "Wall":
+						block = new WallBlock(row, column, id);
+						level.addBlock(block);
+						block.setID(id);
+						block.compile();
+						break;
+						
+					case "Controller":
+						block = new ControllerBlock(row, column, id);
+						level.addBlock(block);
+						block.setID(id);
+						block.compile();
+						break;
+						
+					case "Scooter":
+						block = new ScooterBlock(row, column, id);
+						level.addBlock(block);
+						block.setID(id);
+						block.compile();
+						break;
+						
+					case "Led":
+						block = new LedBlock(row, column, id);
+						level.addBlock(block);
+						block.setID(id);
+						block.compile();
+						break;
+						
 				}
 				
+			}
+			
+			NodeList portList = doc.getElementsByTagName("port");
+			
+			for(int i = 0; i < portList.getLength(); ++i) {
+				
+				Element portElement = (Element) portList.item(i);
+				
+				// Gather all the necessary information to construct a module port
+				int row = Integer.parseInt(portElement.getElementsByTagName("loc-row").item(0).getTextContent());
+				int col = Integer.parseInt(portElement.getElementsByTagName("loc-column").item(0).getTextContent());
+				String portName = portElement.getElementsByTagName("port-name").item(0).getTextContent();
+				boolean isInput = Boolean.parseBoolean(portElement.getElementsByTagName("is-input").item(0).getTextContent());
+				String wireName = portElement.getElementsByTagName("wire-name").item(0).getTextContent();
+				int targetRow = Integer.parseInt(portElement.getElementsByTagName("target-loc-row").item(0).getTextContent());
+				int targetCol = Integer.parseInt(portElement.getElementsByTagName("target-loc-column").item(0).getTextContent());
+				String targetPortName = portElement.getElementsByTagName("target-port-name").item(0).getTextContent();
+				boolean targetIsInput = Boolean.parseBoolean(portElement.getElementsByTagName("target-is-input").item(0).getTextContent());
+				String targetWireName = portElement.getElementsByTagName("target-wire-name").item(0).getTextContent();
+				
+				// Get the necessary blocks we are working with
+				NormalBlock block = (NormalBlock)level.getBlock(row, col);
+				NormalBlock targetBlock = (NormalBlock)level.getBlock(targetRow, targetCol);
+				
+				// Because there will port entry pairs (i.e. block 'A' has port 'X' whose target is 'Y' and block 'B'
+				// has port 'Y' whose target is 'X') we will only construct a new module port if it hasn't already been made
+				// by a previous run through this loop.
+				if (!block.getModuleWrapper().getPortsHash().containsKey(portName) ||
+						!targetBlock.getModuleWrapper().getPortsHash().containsKey(targetPortName)) {
+					
+					// Make the ports and add them to the blocks
+					ModulePort port = new ModulePort(block, portName, isInput, wireName, 
+						targetBlock, targetPortName, targetIsInput, targetWireName);
+					ModulePort targetPort = port.getTargetPort();
+					
+					block.getModuleWrapper().addPort(port);
+					targetBlock.getModuleWrapper().addPort(targetPort);
+				}
 			}
 			
 			if(worldNode.getNodeType() == Node.ELEMENT_NODE) {
