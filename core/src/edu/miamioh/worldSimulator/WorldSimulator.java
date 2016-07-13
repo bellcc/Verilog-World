@@ -16,6 +16,7 @@ public class WorldSimulator {
 	
 	private Parse compiler;
 	private RootModuleSimulator sim;
+	//TODO
 	private ArrayList<Block> blocks;
 	private ArrayList<ModuleWrapper> modules;
 	
