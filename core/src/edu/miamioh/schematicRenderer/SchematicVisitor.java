@@ -84,7 +84,7 @@ class SchematicVisitor<T>
 	lValue = gateInputs.pop();
 	rValue = gateInputs.pop();
 	
-	gateValue = "AddSub";
+	gateValue = "AddSub_";
 	GateType type = GateType.BLANK;
 	gateValue += getNumOfGates(type);
 	int level = schematic.getLevel(lValue) + 1;
@@ -715,7 +715,7 @@ class SchematicVisitor<T>
 	    // Return ID of a logic gate
 	    String id = getNewLogicType_String(exp);
 	    GateType gType = getNewLogicType_GateType(exp);
-	    id += getNumOfGates(gType);
+	    id += "_" + getNumOfGates(gType);
 	    return id;
 	} else
 	    return "";
