@@ -150,6 +150,14 @@ public class RootModuleSimulator {
 	}
 	
 	public void updateTargetBlock(NormalBlock block) {
+		
+		// If we are just loading the world from world.xml file, the block will have no module yet.
+		// This fixes that probelm
+		if(block.getModuleWrapper() == null) {
+			block.compile();
+		}
+		
+		// Update info
 		setRootModule(block.getModuleWrapper().getModule());
 		setRootTree(block.getModuleWrapper().getModule().getParseTree());
 		setSimVisitor(this.root_module.getVisitor());

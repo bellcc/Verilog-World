@@ -1,7 +1,9 @@
 package edu.miamioh.worldSimulator;
 
 import edu.miamioh.GameObjects.Block;
+import edu.miamioh.GameObjects.NormalBlock;
 import edu.miamioh.simulator.ParseRegWire;
+import edu.miamioh.simulator.RootModuleSimulator;
 import edu.miamioh.verilogWorld.VerilogWorldController;
 
 public class ModulePort {
@@ -24,9 +26,12 @@ public class ModulePort {
 	 * Adds a port for project from a file. The root module simulator must be set to the target block by
 	 * using the updateTargetBlock method.
 	 */
-	public ModulePort(String portName, boolean isInput, String wireName,
+	public ModulePort(Block block, String portName, boolean isInput, String wireName,
 					  Block targetBlock, String targetName, boolean targetIsInput, String targetWireName) throws InvalidModulePortException {
 		
+		RootModuleSimulator sim = VerilogWorldController.getController().getSim().getRootModuleSimulator();
+		
+		// Make sure input and output pair exists
 		if(!(isInput ^ targetIsInput)) {
 			throw new InvalidModulePortException("ModulePort usage error: Module ports' inInput values are the same.");
 		}
@@ -34,8 +39,16 @@ public class ModulePort {
 		this.name = portName;
 		this.isInput = isInput;
 		this.value = 0;
-		this.wire = VerilogWorldController.getController().getSim().getRootModuleSimulator().getRootModuleInstance().getHash_vars().get("wireName");
-		ParseRegWire targetWire = Block.getRootSim().getRootModuleInstance().getHash_vars().get(targetWireName);
+		
+		// Target the current block and get the wire
+		sim.updateTargetBlock((NormalBlock)block);
+		this.wire = sim.getRootModuleInstance().getHash_vars().get(wireName);
+
+		// Target the target block and get its wire
+		sim.updateTargetBlock((NormalBlock)targetBlock);
+		ParseRegWire targetWire = sim.getRootModuleInstance().getHash_vars().get(targetWireName);
+		
+		// Connect the ports
 		this.target = new ModulePort(targetName, this, targetWire, targetIsInput);
 	}
 	
@@ -46,7 +59,7 @@ public class ModulePort {
 		this.name = name;
 		this.value = 0;
 		
-		if (target != null) target.setTargetPort(this);
+		if (target != null && target.getTargetPort() == null) target.setTargetPort(this);
 	}
 	
 	public void setValue(int value) {
