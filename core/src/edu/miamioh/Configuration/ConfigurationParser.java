@@ -20,6 +20,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 
 import org.w3c.dom.Document;
@@ -36,12 +37,13 @@ import edu.miamioh.GameObjects.blocks.ScooterBlock;
 import edu.miamioh.GameObjects.blocks.WallBlock;
 import edu.miamioh.Level.Level;
 import edu.miamioh.worldSimulator.ModulePort;
+import edu.miamioh.worldSimulator.ModuleWrapper;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
 public class ConfigurationParser {
-
+	
 	private String defaultConfigurationPath = "default_world.xml";
 	
 	/**
@@ -54,7 +56,8 @@ public class ConfigurationParser {
 	 */
 	public Configuration getDefaultConfiguration() {
 		
-		//File file = Gdx.files.internal("core/assets/" + defaultConfigurationPath).file();
+		// File file = Gdx.files.internal("core/assets/" +
+		// defaultConfigurationPath).file();
 		File file = new File(defaultConfigurationPath);
 		Configuration config = getConfiguration(file).getConfig();
 		
@@ -358,8 +361,14 @@ public class ConfigurationParser {
 			
 			for (Block block : blockList) {
 				// Get the list of ports of the block
-				ArrayList<ModulePort> portList = ((NormalBlock) block)
-						.getModuleWrapper().getPortsList();
+				NormalBlock nblock = (NormalBlock) block;
+				ArrayList<ModulePort> portList;
+				try {
+					portList = nblock.getModuleWrapper().getPortsList();
+				} catch (NullPointerException npe) {
+					nblock.compile();
+					portList = nblock.getModuleWrapper().getPortsList();
+				}
 				// Create the ports
 				for (ModulePort port : portList) {
 					
@@ -434,6 +443,8 @@ public class ConfigurationParser {
 			pce.printStackTrace();
 		} catch (TransformerException tfe) {
 			tfe.printStackTrace();
+		} catch (NullPointerException npe) {
+			npe.printStackTrace();
 		}
 		
 	}
