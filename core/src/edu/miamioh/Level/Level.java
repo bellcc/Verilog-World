@@ -63,6 +63,9 @@ public class Level implements Comparable<Level>{
 					}
 				}
 				
+				// Delete the block's source file
+				block.deleteSourceFile();
+				
 				// Remove this block from the level. Implicitly destructs the ports in the ports list as well. 
 				blockList.remove(block);
 				return;

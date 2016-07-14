@@ -53,7 +53,7 @@ public class WorldSimulator {
 	
 	public void resetWorldSim() {
 		
-		if (compiler.isCompiled()) {
+//		if (compiler.isCompiled()) {
 			
 			System.out.println("Reset!");
 			
@@ -87,7 +87,11 @@ public class WorldSimulator {
 			
 			// Update clock
 			toggleResetLine();
-		}
+//		}
+//		else {
+//			recompileBlocks();
+//			resetWorldSim();
+//		}
 	}
 	
 	public void executeCycle() {

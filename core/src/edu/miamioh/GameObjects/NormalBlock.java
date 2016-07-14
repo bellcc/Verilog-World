@@ -157,6 +157,12 @@ public abstract class NormalBlock extends Block {
 		return this.module;
 	}
 	
+	public void deleteSourceFile() {
+		
+		File file = new File(sourceFile);
+		file.delete();
+	}
+	
 	public void makeUniqueFile() {
 
 		String template = type.toString() + ".v";
