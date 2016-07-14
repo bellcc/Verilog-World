@@ -25,4 +25,5 @@ public class ModuleWrapper {
 	public ArrayList<ModulePort> getPortsList() 			{return this.portsList;}
 	public Hashtable<String, ModulePort> getPortsHash() 	{return this.portsHash;}
 	public RootModuleInstance getModule() 					{return this.module;}
+	public void setRootModuleInstance(RootModuleInstance module) {this.module = module;}
 }

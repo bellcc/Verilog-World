@@ -47,8 +47,17 @@ public class VerilogWorldController {
 		
 		init();
 		
-		ConfigurationParser parser = new ConfigurationParser();
-		defaultConfig = parser.getDefaultConfiguration();
+		int worldWidth = 10;
+		int worldHeight = 10;
+		int bufferWidth = 25;
+		int bufferHeight = 25;
+		int gridWidth = 25;
+		int gridHeight = 25;
+		int stepWidth = 5;
+		int stepHeight = 5;
+		
+		defaultConfig = new Configuration(worldWidth, worldHeight, bufferWidth, bufferHeight, gridWidth, gridHeight, stepWidth, stepHeight);
+
 	}
 
 	public VerilogWorldController(Configuration config) {

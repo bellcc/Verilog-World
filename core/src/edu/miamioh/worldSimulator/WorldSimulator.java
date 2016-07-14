@@ -6,6 +6,7 @@ import java.util.TimerTask;
 
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.GameObjects.NormalBlock;
+import edu.miamioh.GameObjects.NormalBlockType;
 import edu.miamioh.Level.Level;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.RootModuleSimulator;
@@ -18,7 +19,6 @@ public class WorldSimulator {
 	private RootModuleSimulator sim;
 	//TODO
 	private ArrayList<Block> blocks;
-	private ArrayList<ModuleWrapper> modules;
 	
 	private int freq;
 	private boolean shouldRun;
@@ -27,7 +27,6 @@ public class WorldSimulator {
 	private ModulePort reset;
 	
 	public WorldSimulator(RootModuleSimulator sim) {
-		this.modules = new ArrayList<>();
 		this.blocks = null;
 		this.compiler = VerilogWorldController.getController().getCompiler();
 		this.sim = sim;
@@ -148,6 +147,7 @@ public class WorldSimulator {
 	 * Re-simulates a given block if it's input ports have changed
 	 */
 	public void resimBlock(NormalBlock block) {
+		sim.updateTargetBlock(block);
 		simBlock(block);
 	}
 	
@@ -198,20 +198,17 @@ public class WorldSimulator {
 		this.blocks = blocks;
 	}
 	
-	public void updateModules() {
+	public void addDefaultPorts() {
 		
-		// Clear module list so it can be remade with new modules
-		modules.clear();
-		
-		// Fill with new modules
 		for(Block block : blocks) {
-			if (block instanceof NormalBlock) {
-				NormalBlock normBlock = (NormalBlock)block;
-				
-				ModuleWrapper module = normBlock.compile();
-				normBlock.addDefaultPorts(clock, reset);
-				modules.add(module);
-			}
+			((NormalBlock)block).addDefaultPorts(clock, reset);
+		}
+	}
+	
+	public void recompileBlocks() {
+		
+		for(Block block : blocks) {
+			((NormalBlock)block).compile();
 		}
 	}
 	

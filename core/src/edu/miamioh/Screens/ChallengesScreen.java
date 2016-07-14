@@ -371,12 +371,15 @@ public class ChallengesScreen implements Screen {
     			WorldEditorController.getCurrentController().setCurrentLevel(level);
     			WorldEditorController.getCurrentController().updateWorld(level);
     			WorldEditorScreen.getScreen().updateWorldParameters();
-    						
+    			
     			WorldSimulator sim = VerilogWorldController.getController().getSim();
     			sim.setBlocks(level.getBlockList());
-    			sim.updateModules();
+    			sim.addDefaultPorts();
+    			
             }
+            
         });
+        
     }
     
     /*creates a button style the buttons*/
