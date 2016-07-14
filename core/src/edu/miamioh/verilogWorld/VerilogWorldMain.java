@@ -10,7 +10,6 @@ package edu.miamioh.verilogWorld;
 import com.badlogic.gdx.Game;
 
 import edu.miamioh.Configuration.Configuration;
-import edu.miamioh.ErrorWindow.ErrorInstance;
 import edu.miamioh.ErrorWindow.ErrorReportingWindow;
 import edu.miamioh.Level.Level;
 import edu.miamioh.Screens.ChallengesScreen;
