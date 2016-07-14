@@ -15,8 +15,8 @@ public class ModulePort {
 	private int value;
 	private boolean isInput;
 	
-	public ModulePort(NormalBlock block, String name, boolean isInput) {
-		this(block, name, null, null, isInput);
+	public ModulePort(NormalBlock block, String portName, ParseRegWire wire, boolean isInput) {
+		this(block, portName, null, wire, isInput);
 	}
 	
 	/*
@@ -43,11 +43,27 @@ public class ModulePort {
 		this.wire = sim.getRootModuleInstance().getHash_vars().get(wireName);
 
 		// Target the target block and get its wire
-		sim.updateTargetBlock((NormalBlock)targetBlock);
-		ParseRegWire targetWire = sim.getRootModuleInstance().getHash_vars().get(targetWireName);
+		ParseRegWire targetWire = null;
+		if (targetBlock != null) {
+			sim.updateTargetBlock((NormalBlock)targetBlock);
+			targetWire = sim.getRootModuleInstance().getHash_vars().get(targetWireName);
+		}
 		
 		// Connect the ports
-		this.target = new ModulePort((NormalBlock)targetBlock, targetName, this, targetWire, targetIsInput);
+		if (targetWire != null) {
+			this.target = new ModulePort((NormalBlock)targetBlock, targetName, this, targetWire, targetIsInput);
+		}
+		else {
+			if (targetName.equals("Clock")) {
+				this.target = VerilogWorldController.getController().getSim().getClockPort();
+			}
+			else if (targetName.equals("Reset")) {
+				this.target = VerilogWorldController.getController().getSim().getResetPort();
+			}
+			else {
+				System.out.println("Clock or Reset mismatch!");
+			}
+		}
 	}
 	
 	public ModulePort(NormalBlock block, String name, ModulePort target, ParseRegWire wireTarget, boolean isInput) {

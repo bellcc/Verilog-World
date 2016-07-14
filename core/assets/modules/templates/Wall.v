@@ -1,2 +1,2 @@
-module Wall(color);
+module Wall();
 endmodule

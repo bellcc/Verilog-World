@@ -2,6 +2,7 @@ package edu.miamioh.GameObjects;
 
 public enum NormalBlockType {
 	
+	NULL("NULL"),
 	Blank("Blank Block"),
 	Wall("Wall Block"),
 	Controller("Controller Block"),

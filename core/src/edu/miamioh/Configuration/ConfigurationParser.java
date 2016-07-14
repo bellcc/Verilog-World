@@ -165,7 +165,7 @@ public class ConfigurationParser {
 						.parseInt(portElement.getElementsByTagName("loc-row")
 								.item(0).getTextContent());
 				int col = Integer
-						.parseInt(portElement.getElementsByTagName("loc-column")
+						.parseInt(portElement.getElementsByTagName("loc-col")
 								.item(0).getTextContent());
 				String portName = portElement.getElementsByTagName("port-name")
 						.item(0).getTextContent();
@@ -180,7 +180,7 @@ public class ConfigurationParser {
 						portElement.getElementsByTagName("target-loc-row")
 								.item(0).getTextContent());
 				int targetCol = Integer.parseInt(
-						portElement.getElementsByTagName("target-loc-column")
+						portElement.getElementsByTagName("target-loc-col")
 								.item(0).getTextContent());
 				String targetPortName = portElement
 						.getElementsByTagName("target-port-name").item(0)
@@ -202,10 +202,8 @@ public class ConfigurationParser {
 				// has port 'Y' whose target is 'X') we will only construct a
 				// new module port if it hasn't already been made
 				// by a previous run through this loop.
-				if (!block.getModuleWrapper().getPortsHash()
-						.containsKey(portName)
-						|| !targetBlock.getModuleWrapper().getPortsHash()
-								.containsKey(targetPortName)) {
+				if (!block.getModuleWrapper().getPortsHash().containsKey(portName)
+				 || !targetBlock.getModuleWrapper().getPortsHash().containsKey(targetPortName)) {
 					
 					// Make the ports and add them to the blocks
 					ModulePort port = new ModulePort(block, portName, isInput,
@@ -214,7 +212,10 @@ public class ConfigurationParser {
 					ModulePort targetPort = port.getTargetPort();
 					
 					block.getModuleWrapper().addPort(port);
-					targetBlock.getModuleWrapper().addPort(targetPort);
+					
+					if(targetBlock != null) {
+						targetBlock.getModuleWrapper().addPort(targetPort);
+					}
 				}
 			}
 			

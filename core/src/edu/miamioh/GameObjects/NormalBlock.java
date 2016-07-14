@@ -32,11 +32,25 @@ public abstract class NormalBlock extends Block {
 	private ModuleWrapper module;
 	private NormalBlockType type;
 	
+	/*
+	 * Only used for constructing NullBlocks
+	 */
+	public NormalBlock(NormalBlockType type) {
+		this.type = type;
+		this.compiler = null;
+		this.sourceFile = null;
+		this.module = null;
+		
+		setID(-1);
+		setRow(-1);
+		setColumn(-1);
+	}
+	
 	public NormalBlock(NormalBlockType type, int row, int column, int id) {
 			
 		this.setID(id);
 		
-		if(compiler == null) {
+		if(compiler == null && type != NormalBlockType.NULL) {
 			compiler = VerilogWorldController.getController().getSim().getCompiler();
 		}
 
@@ -98,7 +112,8 @@ public abstract class NormalBlock extends Block {
 			if (!port.getIsInput()) { 
 				// Get the module wire corresponding to the port
 				//ParseRegWire wire = port.getWire();
-				ParseRegWire wire = module.getModule().getHash_vars().get(port.getWire().getName());
+				String wireName = port.getWire().getName();
+				ParseRegWire wire = module.getModule().getHash_vars().get(wireName);
 				
 				// If the output value is changed, notify the target block that it must recalculate itself
 				boolean shouldSimTargetBlock = port.getValue() != wire.getValue(0) ? true : false;
