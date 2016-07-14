@@ -153,7 +153,7 @@ public class WorldEditorScreen implements Screen {
 		}
 		
 		if(blockConnection) {
-			renderBlockConnection();
+			//renderBlockConnection();
 		}
 		
 		if(connectMode) {

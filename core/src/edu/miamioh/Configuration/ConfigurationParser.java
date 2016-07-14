@@ -25,6 +25,8 @@ import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import com.badlogic.gdx.Gdx;
+
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.GameObjects.NormalBlock;
 import edu.miamioh.GameObjects.blocks.BlankBlock;
@@ -39,8 +41,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
 public class ConfigurationParser {
-	
-	private String defaultConfigurationPath = "world.xml";
+
+	private String defaultConfigurationPath = "default_world.xml";
 	
 	/**
 	 * This method is used to parse the default "world.xml" file that contains
@@ -52,6 +54,7 @@ public class ConfigurationParser {
 	 */
 	public Configuration getDefaultConfiguration() {
 		
+		//File file = Gdx.files.internal("core/assets/" + defaultConfigurationPath).file();
 		File file = new File(defaultConfigurationPath);
 		Configuration config = getConfiguration(file).getConfig();
 		
