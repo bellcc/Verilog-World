@@ -131,7 +131,7 @@ class SchematicRenderer implements Disposable {
 				JOptionPane.showMessageDialog(null, "The schematic has been compiled! Return to the World Editor to view it.", "Schematic Compiler", JOptionPane.INFORMATION_MESSAGE);
 				this.is_Compiled(true);
 			} catch (Exception e) {
-				String msg = "The schematic could not be compiled.\nThis is usually due to present conditionals (if-else's or always blocks).";
+				String msg = "The schematic could not be compiled.\nConditionals are not supported.";
 				JOptionPane.showMessageDialog(null, msg, "Schematic Compiler", JOptionPane.ERROR_MESSAGE);
 				this.is_Compiled(false);
 			}
@@ -307,7 +307,7 @@ class SchematicRenderer implements Disposable {
 				scaleFactor = (int) (height / gateSize / numOfGatesVert);
 			} else {
 				scaleFactor = (int) (width / gateSize
-						/ (numOfGatesHoriz * 2 + 1));
+						/ (numOfGatesHoriz * 2 + 2));
 			}
 			
 			// If the calculated scaleFactor is too big or too small, limit it.
