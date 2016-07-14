@@ -87,6 +87,13 @@ public class ModulePort {
 		}
 	}
 	
+	// Removes this port from this block
+	public void remove() {
+		
+		this.block.getModuleWrapper().getPortsList().remove(this);
+		this.block.getModuleWrapper().getPortsHash().remove(this.getName());
+	}
+	
 	public ParseRegWire getWire()					{return this.wire;}
 	public String getName()							{return this.name;}
 	public ModulePort getTargetPort() 				{return this.target;}

@@ -12,8 +12,9 @@ public class BackChangeListener extends ChangeListener {
 
 	@Override
 	public void changed(ChangeEvent event, Actor actor) {
-
-		System.out.println("Back Change Listener");
+		
+		// Stop simulation
+		VerilogWorldController.getController().getSim().setShouldRun(false);
 
 		WorldSimulatorController.getController().resetMultiplexer();
 		

@@ -2,7 +2,7 @@ module Led(color, data);
 	output [23:0]color;
 	input data;
 
-	reg [23:0]colorLine;
+	reg colorLine;
 
 	assign color = colorLine;
 	

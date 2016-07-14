@@ -153,7 +153,7 @@ public class RootModuleSimulator {
 		
 		// If we are just loading the world from world.xml file, the block will have no module yet.
 		// This fixes that probelm
-		if(block.getModuleWrapper() == null) {
+		if(block.getModuleWrapper() == null || block.getModuleWrapper().getModule() == null) {
 			block.compile();
 		}
 		

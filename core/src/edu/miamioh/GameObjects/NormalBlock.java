@@ -103,6 +103,10 @@ public abstract class NormalBlock extends Block {
 				// If the output value is changed, notify the target block that it must recalculate itself
 				boolean shouldSimTargetBlock = port.getValue() != wire.getValue(0) ? true : false;
 				
+//				if(shouldSimTargetBlock) {
+//					System.out.println();
+//				}
+				
 				if(this.getType() == NormalBlockType.Controller) {
 					System.out.println(" > " + wire.getValue(0));
 				}
@@ -111,7 +115,7 @@ public abstract class NormalBlock extends Block {
 				port.setValue(wire.getValue(0));
 				
 				if(shouldSimTargetBlock) {
-					//VerilogWorldController.getController().getSim().resimBlock(port.getTargetPort().getBlock());
+					VerilogWorldController.getController().getSim().resimBlock(port.getTargetPort().getBlock());
 				}
 			}
 		}
