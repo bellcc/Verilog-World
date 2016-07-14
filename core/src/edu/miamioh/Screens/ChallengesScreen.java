@@ -9,14 +9,13 @@ package edu.miamioh.Screens;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+
+import org.apache.commons.io.FileUtils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -60,8 +59,7 @@ public class ChallengesScreen implements Screen {
     
     private TextButton backButton;
     private TextButton im1Button;
-    private TextButton im2Button;
-    private TextButton im3Button;
+
     private static TextButton nextButton;
     
     private TextButtonStyle buttonStyleB;
@@ -70,8 +68,7 @@ public class ChallengesScreen implements Screen {
 
     private Skin skinB;
     private Skin skinIm1;
-    private Skin skinIm2;
-    private Skin skinIm3;
+
     private static Skin textSkin;
     private Skin skinN;
     
@@ -118,16 +115,12 @@ public class ChallengesScreen implements Screen {
 	    	
     	skinB = new Skin();
 	   	skinIm1 = new Skin();
-	   	skinIm2 = new Skin();
-	   	skinIm3 = new Skin();
 	   	skinN = new Skin();
 	    	
 	   	textSkin = new Skin(Gdx.files.internal ("uiskin.json"));
 
     	buttonStyle(skinB, buttonStyleB);
     	buttonStyle(skinIm1, buttonStyleIm);
-    	buttonStyle(skinIm2, buttonStyleIm);
-    	buttonStyle(skinIm3, buttonStyleIm);
     	buttonStyle(skinN, buttonStyleN);
 	    	
 	    batch = new SpriteBatch();
@@ -163,8 +156,6 @@ public class ChallengesScreen implements Screen {
 	        
 	    backButton = new TextButton("BACK", skinB);
 	    im1Button = new TextButton("IMPORT", skinIm1);
-	    im2Button = new TextButton("IMPORT", skinIm2);
-	    im3Button = new TextButton("IMPORT", skinIm3);
 	    nextButton = new TextButton("NEXT", skinN);
 	        
 
@@ -201,18 +192,12 @@ public class ChallengesScreen implements Screen {
 	    backButton.setWidth(buttonWidth);
 	    im1Button.setHeight(buttonHeight);
         im1Button.setWidth(buttonWidth);
-        im2Button.setHeight(buttonHeight);
-        im2Button.setWidth(buttonWidth);
-        im3Button.setHeight(buttonHeight);
-        im3Button.setWidth(buttonWidth);
         nextButton.setHeight(buttonHeight);
         nextButton.setWidth(buttonWidth);
         
         
         backButton.setPosition(0, 0);
         im1Button.setPosition(0, ((7 * Gdx.graphics.getHeight())/8) + 20);
-        im2Button.setPosition(buttonWidth * 2, ((7 * Gdx.graphics.getHeight())/8) + 20);
-        im3Button.setPosition(buttonWidth * 4, ((7 * Gdx.graphics.getHeight())/8) + 20);
         nextButton.setPosition(viewport.getScreenWidth() - buttonWidth, 0);
         
         Skin scrollSkin = new Skin(Gdx.files.internal("uiskin.json"));
@@ -230,8 +215,6 @@ public class ChallengesScreen implements Screen {
         
         stage.addActor(backButton);
         stage.addActor(im1Button);
-        stage.addActor(im2Button);
-        stage.addActor(im3Button);
         stage.addActor(table);
         	       	        
         textAreaY = viewport.getScreenHeight()/8;
@@ -281,8 +264,6 @@ public class ChallengesScreen implements Screen {
         
         skinB.dispose();
         skinIm1.dispose();
-        skinIm2.dispose();
-        skinIm3.dispose();
         skinN.dispose();
         stage.dispose();
     }	    
@@ -311,33 +292,40 @@ public class ChallengesScreen implements Screen {
         im1Button.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	System.out.println("import Click Listener");
+            	
             	if(textActorCheck) {
         			textArea.remove();
         			nextButton.remove();
             	}
-            }
-        });
-        
-        im2Button.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-            	System.out.println("import Click Listener");
-            	if(textActorCheck) {
-        			textArea.remove();
-        			nextButton.remove();
-            	}
-            }
-        });
-        
-        im3Button.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-            	System.out.println("import Click Listener");
-            	if(textActorCheck) {
-        			textArea.remove();
-        			nextButton.remove();
-            	}
+            	        		        		        						        			        		
+        		JFileChooser chooser = new JFileChooser();
+        		chooser.setCurrentDirectory(new java.io.File("."));
+        		chooser.setDialogTitle("Select Directory Location");
+        		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        		
+        		chooser.setAcceptAllFileFilterUsed(false);
+        		
+        		if(chooser.showOpenDialog(chooser) == JFileChooser.APPROVE_OPTION) {
+        			
+        			File srcDir = new File(chooser.getSelectedFile().getAbsolutePath());
+        			File destDir = null;
+        			if(getChallenges()){
+        				destDir = new File(VerilogWorldMain.getRootPath() + "/core/assets/levels");
+        			}
+        			else if(getTutorials()){
+        				destDir = new File(VerilogWorldMain.getRootPath() + "/core/assets/tutorials");
+        			}
+					
+        			try {
+						FileUtils.copyDirectoryToDirectory(srcDir, destDir);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+        		}
+        		
+        		VerilogWorldMain.getVerilogWorldMain().setChallengesScreen();
+            	
             }
         });
         
