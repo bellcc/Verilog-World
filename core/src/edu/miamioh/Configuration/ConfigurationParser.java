@@ -58,6 +58,37 @@ public class ConfigurationParser {
 
 		return config;
 	}
+	
+	public String getDescription(File file) {
+		
+		String description = "";
+
+		try {
+
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(file);
+
+			doc.getDocumentElement().normalize();
+
+			NodeList worldList = doc.getElementsByTagName("world");
+			Node worldNode = worldList.item(0);
+
+			if (worldNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				Element worldElement = (Element) worldNode;
+
+				description = worldElement.getElementsByTagName("description").item(0).getTextContent();
+
+			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+
+		return description;
+	}
 
 	/**
 	 * This method is used to parse a non-default configuration file that is
@@ -74,6 +105,8 @@ public class ConfigurationParser {
 	 */
 	public Level getConfiguration(File file) {
 
+		System.out.println("Description: " + getDescription(file));
+		
 		Level level = new Level();
 		Configuration config = new Configuration();
 
