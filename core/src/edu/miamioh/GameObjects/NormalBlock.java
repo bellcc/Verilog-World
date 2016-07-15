@@ -157,9 +157,7 @@ public abstract class NormalBlock extends Block {
 	}
 	
 	public void makeUniqueFile() {
-		
-		System.out.println(System.getProperty("user.dir"));
-		
+				
 		String projectPath = WorldEditorController.getCurrentController().getCurrentLevel().getProject().getPath();
 		
 		String template = type.toString() + ".v";
