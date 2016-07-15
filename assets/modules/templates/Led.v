@@ -2,7 +2,7 @@ module Led(color, data);
 	output [23:0]color;
 	input data;
 
-	reg [23:0]colorLine;
+	reg colorLine;
 
 	assign color = colorLine;
 	
@@ -10,7 +10,7 @@ module Led(color, data);
 	begin
 		if (data == 0)
 		begin
-			colorLine = (200 << 16) | (200 << 8) | 200;
+			colorLine = (80 << 16) | (80 << 8) | 80;
 		end
 		else
 		begin
