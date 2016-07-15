@@ -10,9 +10,7 @@ public class HomeChangeListener extends ChangeListener {
 
 	@Override
 	public void changed(ChangeEvent arg0, Actor arg1) {
-		
-		System.out.println("Home Change Listener");
-		
+				
 		ToolBarSelectionType selection = WorldEditorController.getCurrentController().getToolBarSelection();
 		
 		if(selection == ToolBarSelectionType.HOME) {

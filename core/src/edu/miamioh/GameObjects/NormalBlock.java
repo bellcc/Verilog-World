@@ -125,9 +125,6 @@ public abstract class NormalBlock extends Block {
 //					System.out.println();
 //				}
 				
-				if(this.getType() == NormalBlockType.Controller) {
-					System.out.println(" > " + wire.getValue(0));
-				}
 				
 				// Do the actual setting
 				port.setValue(wire.getValue(0));

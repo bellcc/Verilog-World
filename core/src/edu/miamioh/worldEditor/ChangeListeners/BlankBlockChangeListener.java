@@ -10,9 +10,7 @@ public class BlankBlockChangeListener extends ChangeListener {
 
 	@Override
 	public void changed(ChangeEvent arg0, Actor arg1) {
-		
-		System.out.println("Blank Block Change Listener");
-		
+				
 		WorldEditorController.getCurrentController().toggleBlockSelection(BlockSelectionType.Block_Blank);
 	}
 	

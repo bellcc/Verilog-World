@@ -21,9 +21,7 @@ public class MainMenuChangeListener extends ChangeListener {
 
 	@Override
 	public void changed(ChangeEvent event, Actor actor) { 
-		
-		System.out.println("Main Menu Change Listener");
-		
+				
 		boolean changes = WorldEditorController.getCurrentController().changesMade();
 		
 		if(changes && WorldEditorController.getCurrentController().getCurrentLevel().getBlockList().size() != 0) {

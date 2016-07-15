@@ -20,8 +20,6 @@ public class ImportProjectChangeListener extends ChangeListener {
 
 	@Override
 	public void changed(ChangeEvent arg0, Actor arg1) {
-
-		System.out.println("Import Project Change Listener");
 		
 		boolean changes = WorldEditorController.getCurrentController().changesMade();
 		

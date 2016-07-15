@@ -23,8 +23,8 @@ public class SchematicChangeListener extends ChangeListener {
 		if(srs.schematic_is_Compiled()) {
 			VerilogWorldMain.getVerilogWorldMain().setSchematicRendererScreen();
 		} else {
-			System.out.println("Please compile the verilog module for this block before " +
-					"attempting to view its schematic design.");
+//			System.out.println("Please compile the verilog module for this block before " +
+//					"attempting to view its schematic design.");
 		}
 	}
 

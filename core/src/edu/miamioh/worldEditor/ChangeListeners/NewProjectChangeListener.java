@@ -13,8 +13,6 @@ public class NewProjectChangeListener extends ChangeListener {
 
 	@Override
 	public void changed(ChangeEvent arg0, Actor arg1) {
-
-		System.out.println("New Project Change Listener");
 		
 		boolean changes = WorldEditorController.getCurrentController().changesMade();
 		

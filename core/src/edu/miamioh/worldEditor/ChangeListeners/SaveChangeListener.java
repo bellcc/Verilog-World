@@ -13,8 +13,6 @@ public class SaveChangeListener extends ChangeListener {
 
 	@Override
 	public void changed(ChangeEvent arg0, Actor arg1) {
-
-		System.out.println("Save Change Listener");
 		
 		File file = WorldEditorController.getCurrentController().getCurrentLevel().getProject();
 		Level level = WorldEditorController.getCurrentController().getCurrentLevel();

@@ -10,8 +10,6 @@ public class ControllerBlockChangeListener extends ChangeListener {
 
 	@Override
 	public void changed(ChangeEvent event, Actor actor) {
-
-		System.out.println("Controller Block Change Listener");
 		
 		WorldEditorController.getCurrentController().toggleBlockSelection(BlockSelectionType.Block_Controller);
 	}

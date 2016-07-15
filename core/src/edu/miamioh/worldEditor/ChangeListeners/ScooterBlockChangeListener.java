@@ -10,8 +10,6 @@ public class ScooterBlockChangeListener extends ChangeListener {
 
 	@Override
 	public void changed(ChangeEvent event, Actor actor) {
-
-		System.out.println("Scooter Block Change Listener");
 		
 		WorldEditorController.getCurrentController().toggleBlockSelection(BlockSelectionType.Block_Scooter);
 	}

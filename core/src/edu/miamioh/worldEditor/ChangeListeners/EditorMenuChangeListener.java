@@ -16,7 +16,6 @@ public class EditorMenuChangeListener extends ChangeListener {
 	@Override
 	public void changed(ChangeEvent event, Actor actor) {
 
-		System.out.println("Editor Menu Change Listener");
 	}
 
 }

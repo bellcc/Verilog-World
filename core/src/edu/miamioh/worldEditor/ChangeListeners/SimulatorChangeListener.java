@@ -15,8 +15,6 @@ public class SimulatorChangeListener extends ChangeListener {
 
 	@Override
 	public void changed(ChangeEvent event, Actor actor) {
-
-		System.out.println("Simulator Change Listener");
 				
 		Level currentLevel = WorldEditorController.getCurrentController().getCurrentLevel();
 		

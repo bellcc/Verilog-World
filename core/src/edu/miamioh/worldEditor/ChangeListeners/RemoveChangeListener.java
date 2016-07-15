@@ -11,8 +11,6 @@ public class RemoveChangeListener extends ChangeListener {
 
 	@Override
 	public void changed(ChangeEvent event, Actor actor) {
-
-		System.out.println("Remove Change Listener");
 		
 		int row = WorldEditorController.getCurrentController().getSelectedRow();
 		int column = WorldEditorController.getCurrentController().getSelectedColumn();
