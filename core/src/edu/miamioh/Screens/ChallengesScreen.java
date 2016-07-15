@@ -118,7 +118,7 @@ public class ChallengesScreen implements Screen {
 	   	skinN = new Skin();
 	    
 	   	textSkin = new Skin(Gdx.files.internal ("uiskin.json"));
-
+	   	
     	buttonStyle(skinB, buttonStyleB);
     	buttonStyle(skinIm1, buttonStyleIm);
     	buttonStyle(skinN, buttonStyleN);
