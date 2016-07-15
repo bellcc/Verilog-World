@@ -167,9 +167,8 @@ public class OptionScreen implements Screen {
 	}
     
 	public String getImagePath() {
-    	File file = new File("../assets/images");
-    	String path = file.getAbsolutePath();
-    	return path;
+		String filePath = System.getProperty("user.dir") + "/assets/images";
+    	return filePath;
 	}
 
 }

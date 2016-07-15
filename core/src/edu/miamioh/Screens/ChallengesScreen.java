@@ -19,6 +19,7 @@ import org.apache.commons.io.FileUtils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -117,7 +118,8 @@ public class ChallengesScreen implements Screen {
 	   	skinIm1 = new Skin();
 	   	skinN = new Skin();
 	    
-	   	textSkin = new Skin(Gdx.files.internal ("uiskin.json"));
+	   	FileHandle fileHandle = new FileHandle(new File(System.getProperty("user.dir") + "/assets/uiskin.json"));
+	   	textSkin = new Skin(fileHandle);
 	   	
     	buttonStyle(skinB, buttonStyleB);
     	buttonStyle(skinIm1, buttonStyleIm);
@@ -200,7 +202,7 @@ public class ChallengesScreen implements Screen {
         im1Button.setPosition(0, ((7 * Gdx.graphics.getHeight())/8) + 20);
         nextButton.setPosition(viewport.getScreenWidth() - buttonWidth, 0);
         
-        Skin scrollSkin = new Skin(Gdx.files.internal("uiskin.json"));
+        Skin scrollSkin = new Skin(fileHandle);
         
         final Table table = new Table();
         
@@ -341,7 +343,7 @@ public class ChallengesScreen implements Screen {
             	if(getChallenges()){
 		        	for(int i = 0; i < levelArray.size(); i++) {
 		        		if(levelArray.indexOf(levelArray.get(index)) == levelArray.indexOf(levelArray.get(i))){
-		        	    	File file = new File("../assets/levels");
+		        	    	File file = new File(System.getProperty("user.dir") + "/assets/levels");
 		        	    	path = file.getAbsolutePath();
 		                	fileNameArray = new File(path).list();
 		                	levelPath = path + "/" + fileNameArray[i];
@@ -351,7 +353,7 @@ public class ChallengesScreen implements Screen {
             	else if(getTutorials()){
     	        	for(int i = 0; i < tutorialArray.size(); i++) {
     	        		if(tutorialArray.indexOf(tutorialArray.get(index)) == tutorialArray.indexOf(tutorialArray.get(i))){
-    	        	    	File file = new File("../assets/tutorials");
+    	        	    	File file = new File(System.getProperty("user.dir") + "/assets/tutorials");
     	        	    	path = file.getAbsolutePath();
     	        	    	fileNameArray = new File(path).list();
 		                	levelPath = path + "/" + fileNameArray[i];    	        		
@@ -489,7 +491,7 @@ public class ChallengesScreen implements Screen {
     
     public void createLevelList() throws IOException {
 
-    	File file = new File("../assets/levels");
+    	File file = new File(System.getProperty("user.dir") + "/assets/levels");
     	String path = file.getAbsolutePath();
     	
     	String description;
@@ -524,7 +526,7 @@ public class ChallengesScreen implements Screen {
     
     public void createTutorialList() throws IOException {
         
-    	File file = new File("../assets/tutorials");
+    	File file = new File(System.getProperty("user.dir") + "/assets/tutorials");
     	String path = file.getAbsolutePath();
 
     	String description;
@@ -557,9 +559,8 @@ public class ChallengesScreen implements Screen {
     }
     
 	public String getImagePath() {
-    	File file = new File("../assets/images");
-    	String path = file.getAbsolutePath();
-    	return path;
+		String filePath = System.getProperty("user.dir") + "/assets/images";
+    	return filePath;
 	}
 }
 
