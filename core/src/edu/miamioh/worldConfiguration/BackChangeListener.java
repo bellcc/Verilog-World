@@ -11,6 +11,8 @@ package edu.miamioh.worldConfiguration;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import edu.miamioh.Level.Level;
+import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
 
 public class BackChangeListener extends ChangeListener {
@@ -19,8 +21,9 @@ public class BackChangeListener extends ChangeListener {
 	public void changed(ChangeEvent arg0, Actor arg1) {
 
 		System.out.println("Back Change Listener");
-		
-		VerilogWorldMain.getVerilogWorldMain().setPlayScreen();
+				
+		Level level = VerilogWorldController.getController().getLevel();
+		VerilogWorldMain.getVerilogWorldMain().setWorldEditorScreen(level);
 	}
 
 }

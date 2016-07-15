@@ -1,6 +1,9 @@
 package edu.miamioh.GameObjects;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
@@ -154,13 +157,15 @@ public abstract class NormalBlock extends Block {
 	}
 	
 	public void makeUniqueFile() {
-
+				
+		String projectPath = WorldEditorController.getCurrentController().getCurrentLevel().getProject().getPath();
+		
 		String template = type.toString() + ".v";
-		String pathToTemplate = Gdx.files.internal("core/assets/modules/templates/" + template).file().getAbsolutePath();
+		String pathToTemplate = new File("").getAbsolutePath() + "/assets/modules/templates/" + template;
 		File templateFile = new File(pathToTemplate);
 		
 		String uniqueName = "module" + this.getID() + ".v";
-		String pathToUnique = WorldEditorController.getCurrentController().getCurrentLevel().getProject().getPath() + "/modules/" + uniqueName;
+		String pathToUnique = projectPath + "/modules/" + uniqueName;
 		File uniqueFile = new File(pathToUnique);
 		
 		if(!uniqueFile.exists()) {

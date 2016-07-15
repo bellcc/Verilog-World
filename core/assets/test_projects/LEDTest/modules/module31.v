@@ -10,7 +10,7 @@ module Led(color, data);
 	begin
 		if (data == 0)
 		begin
-			colorLine = (80 << 16) | (80 << 8) | 80;
+			colorLine = (200 << 16) | (200 << 8) | 200;
 		end
 		else
 		begin
