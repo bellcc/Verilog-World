@@ -33,7 +33,7 @@ public class WorldSimulator {
 		this.blocks = null;
 		this.compiler = VerilogWorldController.getController().getCompiler();
 		this.sim = sim;
-		this.freq = 1;
+		this.freq = 2;
 		this.shouldRun = false;
 		
 		this.clock = new ModulePort(new NullBlock(), "Clock", new ParseRegWire(null), false);
