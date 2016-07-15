@@ -6,6 +6,7 @@ import java.util.TimerTask;
 
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.GameObjects.NormalBlock;
+import edu.miamioh.GameObjects.NormalBlockType;
 import edu.miamioh.GameObjects.blocks.NullBlock;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.ParseRegWire;
@@ -53,64 +54,53 @@ public class WorldSimulator {
 	
 	public void resetWorldSim() {
 		
-//		if (compiler.isCompiled()) {
+		// Update master sim clock
+		int value = (reset.getValue() == 0) ? 1 : 0;
+		reset.setValue(value);
+		
+		// Bring reset line high in all blocks
+		for(Block block : blocks) {
 			
-			System.out.println("Reset!");
+			NormalBlock norm = (NormalBlock)block;
 			
-			// Update reset line
+			sim.updateTargetBlock(norm);
 			toggleResetLine();
+		}
 			
-			// Pass new reset line value to blocks and simulate block communication
-//			for(Block block : blocks) {
-//				
-//				if (block instanceof NormalBlock) {
-//					NormalBlock normBlock = (NormalBlock)block;
-//					
-//					normBlock.updatePortValues();
-//				}
-//			}
+		// Bring simulate the blocks to reset them
+		for(Block block : blocks) {
 			
-			// Simulate sequenctial blocks and update properties
-			for(Block block : blocks) {
+			if (block instanceof NormalBlock) {
+				NormalBlock normBlock = (NormalBlock)block;
 				
-				if (block instanceof NormalBlock) {
-					NormalBlock normBlock = (NormalBlock)block;
-					
-					//Simulate
-					sim.updateTargetBlock(normBlock);
-					sim.resetSimulation();
-					
-					// Update
-					normBlock.updateProperties();
-				}
+				//Simulate
+				sim.updateTargetBlock(normBlock);
+				simBlock((NormalBlock)normBlock);
+				
+				// Update
+				normBlock.updateProperties();
 			}
-			
-			// Update clock
-			toggleResetLine();
-//		}
-//		else {
-//			recompileBlocks();
-//			resetWorldSim();
-//		}
+		}
 	}
 	
 	public void executeCycle() {
 
 		if (compiler.isCompiled()) {
 			
-			System.out.printf("Cycle\n");
-			
 			// Update master sim clock
 			int value = (clock.getValue() == 0) ? 1 : 0;
 			clock.setValue(value);
 			
-			// Toggle the sequential block for every block
+			// toggle the sequential flag in the simulator
+			sim.setIsSequCycle(!sim.isSequCycle());
+			
+			// Reset sequential conditionals for all blocks
 			for(Block block : blocks) {
 				
 				NormalBlock norm = (NormalBlock)block;
 				
 				sim.updateTargetBlock(norm);
-				toggleSequClock();
+				resetSequentialConditionals();
 			}
 			
 			// Simulate sequenctial blocks and update properties
@@ -122,8 +112,8 @@ public class WorldSimulator {
 				}
 			}
 			
-			// Update clock
-			toggleSequClock();
+//			// Update clock
+//			toggleSequClock();
 		}
 	}
 	
@@ -157,46 +147,17 @@ public class WorldSimulator {
 	
 	public void toggleResetLine() {
 		
+		SimVisitor visitor = sim.getRootModuleInstance().getVisitor();
+		
 		sim.setResetLine(!sim.getResetLine());
-		int newValue = reset.getValue() == 1 ? 0 : 1;
-		reset.setValue(newValue);
 	}
 	
-	public void toggleSequClock() {
+	public void resetSequentialConditionals() {
 		
 		SimVisitor visitor = sim.getRootModuleInstance().getVisitor();
 		
-		/* toggle between sequential sims and combinational sims */
-		sim.setIsSequCycle(!sim.isSequCycle());
 		visitor.setCondProcess(false); // Reset conditional processed flag
 	}
-	
-//	public void sendClockSignal() {
-//		
-//		SimVisitor visitor = sim.getRootModuleInstance().getVisitor();
-//		int clockValue = clock.getValue();
-//		
-//		// Update root module clock
-//		ParseRegWire wire = sim.getRootModuleInstance().getHash_vars().get("clk");
-//		if (wire != null) {
-//			wire.setValue(visitor.getNewIndex(), 
-//						  clockValue, visitor.isInSequ() || !sim.getResetLine());
-//			wire.setValue(visitor.getOldIndex(), 
-//						  clockValue, visitor.isInSequ() || !sim.getResetLine());
-//		}
-//		
-//		// Update clock in all other modules
-//		for (ModuleInstance sub : sim.getRootModuleInstance().getSubModulesList()) {
-//			wire = sub.getHash_vars().get("clk");
-//			
-//			if (wire != null) {
-//				wire.setValue(visitor.getNewIndex(), 
-//							  clockValue, visitor.isInSequ() || !sim.getResetLine());
-//				wire.setValue(visitor.getOldIndex(), 
-//							  clockValue, visitor.isInSequ() || !sim.getResetLine());
-//			}
-//		}
-//	}
 	
 	public void setBlocks(ArrayList<Block> blocks) {
 		this.blocks = blocks;

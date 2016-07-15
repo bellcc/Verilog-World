@@ -10,6 +10,11 @@ always @(posedge clk or negedge rst) begin
 	end
 	else begin
 		i <= i + 4'd1;
+
+		if (i == 4'd10)
+		begin
+			i <= 4'd0;
+		end
 	end
 end
 	
