@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.GameObjects.Block;
+import edu.miamioh.GameObjects.NormalBlock;
+import edu.miamioh.worldSimulator.ModulePort;
 
 public class Level implements Comparable<Level>{
 	
@@ -52,7 +54,20 @@ public class Level implements Comparable<Level>{
 			int blockColumn = blockList.get(i).getColumn();
 			
 			if(blockRow == row && blockColumn == column) {
-				blockList.remove(i);
+				NormalBlock block = (NormalBlock)getBlock(blockRow, blockColumn);
+				
+				// Remove the ports on other blocks connecting to this block.
+				if (block.getModuleWrapper() != null) {
+					for(ModulePort port : block.getModuleWrapper().getPortsList()) {
+						port.getTargetPort().remove();
+					}
+				}
+				
+				// Delete the block's source file
+				block.deleteSourceFile();
+				
+				// Remove this block from the level. Implicitly destructs the ports in the ports list as well. 
+				blockList.remove(block);
 				return;
 			}
 		}

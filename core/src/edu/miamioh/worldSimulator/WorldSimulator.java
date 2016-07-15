@@ -6,9 +6,9 @@ import java.util.TimerTask;
 
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.GameObjects.NormalBlock;
-import edu.miamioh.GameObjects.NormalBlockType;
-import edu.miamioh.Level.Level;
+import edu.miamioh.GameObjects.blocks.NullBlock;
 import edu.miamioh.simulator.Parse;
+import edu.miamioh.simulator.ParseRegWire;
 import edu.miamioh.simulator.RootModuleSimulator;
 import edu.miamioh.simulator.SimVisitor;
 import edu.miamioh.verilogWorld.VerilogWorldController;
@@ -30,11 +30,11 @@ public class WorldSimulator {
 		this.blocks = null;
 		this.compiler = VerilogWorldController.getController().getCompiler();
 		this.sim = sim;
-		this.freq = 1;
+		this.freq = 2;
 		this.shouldRun = false;
 		
-		this.clock = new ModulePort(null, "Clock", false);
-		this.reset = new ModulePort(null, "Reset", false);
+		this.clock = new ModulePort(new NullBlock(), "Clock", new ParseRegWire(null), false);
+		this.reset = new ModulePort(new NullBlock(), "Reset", new ParseRegWire(null), false);
 		reset.setValue(1); // Active low reset line
 		
 		// Construct timer to run the simulator at a certain frequency
@@ -53,7 +53,7 @@ public class WorldSimulator {
 	
 	public void resetWorldSim() {
 		
-		if (compiler.isCompiled()) {
+//		if (compiler.isCompiled()) {
 			
 			System.out.println("Reset!");
 			
@@ -87,7 +87,11 @@ public class WorldSimulator {
 			
 			// Update clock
 			toggleResetLine();
-		}
+//		}
+//		else {
+//			recompileBlocks();
+//			resetWorldSim();
+//		}
 	}
 	
 	public void executeCycle() {
@@ -216,4 +220,6 @@ public class WorldSimulator {
 	public Parse getCompiler() {return this.compiler;}
 	public RootModuleSimulator getRootModuleSimulator () {return this.sim;}
 	public void setShouldRun(boolean value) {this.shouldRun = value;}
+	public ModulePort getClockPort() 		{return this.clock;}
+	public ModulePort getResetPort()		{return this.reset;}
 }

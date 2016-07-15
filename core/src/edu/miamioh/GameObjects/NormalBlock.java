@@ -35,11 +35,25 @@ public abstract class NormalBlock extends Block {
 	private ModuleWrapper module;
 	private NormalBlockType type;
 	
+	/*
+	 * Only used for constructing NullBlocks
+	 */
+	public NormalBlock(NormalBlockType type) {
+		this.type = type;
+		this.compiler = null;
+		this.sourceFile = null;
+		this.module = null;
+		
+		setID(-1);
+		setRow(-1);
+		setColumn(-1);
+	}
+	
 	public NormalBlock(NormalBlockType type, int row, int column, int id) {
 			
 		this.setID(id);
 		
-		if(compiler == null) {
+		if(compiler == null && type != NormalBlockType.NULL) {
 			compiler = VerilogWorldController.getController().getSim().getCompiler();
 		}
 
@@ -101,10 +115,15 @@ public abstract class NormalBlock extends Block {
 			if (!port.getIsInput()) { 
 				// Get the module wire corresponding to the port
 				//ParseRegWire wire = port.getWire();
-				ParseRegWire wire = module.getModule().getHash_vars().get(port.getWire().getName());
+				String wireName = port.getWire().getName();
+				ParseRegWire wire = module.getModule().getHash_vars().get(wireName);
 				
 				// If the output value is changed, notify the target block that it must recalculate itself
 				boolean shouldSimTargetBlock = port.getValue() != wire.getValue(0) ? true : false;
+				
+//				if(shouldSimTargetBlock) {
+//					System.out.println();
+//				}
 				
 				if(this.getType() == NormalBlockType.Controller) {
 					System.out.println(" > " + wire.getValue(0));
@@ -114,7 +133,7 @@ public abstract class NormalBlock extends Block {
 				port.setValue(wire.getValue(0));
 				
 				if(shouldSimTargetBlock) {
-					//VerilogWorldController.getController().getSim().resimBlock(port.getTargetPort().getBlock());
+					VerilogWorldController.getController().getSim().resimBlock(port.getTargetPort().getBlock());
 				}
 			}
 		}
@@ -154,6 +173,12 @@ public abstract class NormalBlock extends Block {
 		}
 		
 		return this.module;
+	}
+	
+	public void deleteSourceFile() {
+		
+		File file = new File(sourceFile);
+		file.delete();
 	}
 	
 	public void makeUniqueFile() {

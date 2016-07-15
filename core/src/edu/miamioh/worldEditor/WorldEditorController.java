@@ -233,12 +233,10 @@ public class WorldEditorController {
 				targetBlock = (NormalBlock)currentLevel.getBlock(row, column);
 				
 				VerilogWorldController.getController().getSim().getRootModuleSimulator().updateTargetBlock(selectedBlock);
-				ArrayList<String> selectedList = selectedBlock.getRootSim().getRootModuleInstance().getPorts_list();
 				
 				VerilogWorldController.getController().getSim().getRootModuleSimulator().updateTargetBlock(targetBlock);
-				ArrayList<String> targetList = targetBlock.getRootSim().getRootModuleInstance().getPorts_list();
 				
-				WorldEditorScreen.getScreen().setConnectModeWire(true, selectedList, targetList, selectedBlock, targetBlock);
+				WorldEditorScreen.getScreen().setConnectModeWire(true, selectedBlock, targetBlock);
 				this.updateConnectionMode();				
 
 			}
@@ -309,7 +307,7 @@ public class WorldEditorController {
 		
 		if(!(selectedIsInput ^ targetIsInput)) throw new InvalidModulePortException("Selected ports are incompatible. (Both inputs or both outputs)");
 		
-		ModulePort selectedPort = new ModulePort(selectedBlock, selectedWireName, selectedIsInput);
+		ModulePort selectedPort = new ModulePort(selectedBlock, selectedWireName, selectedWire, selectedIsInput);
 		selectedBlock.getModuleWrapper().addPort(selectedPort);
 		targetBlock.getModuleWrapper().addPort(new ModulePort(targetBlock, targetWireName, selectedPort, targetWire, targetIsInput));
 	}

@@ -653,11 +653,10 @@ public class WorldEditorScreen implements Screen {
 		return this.connectionStage;
 	}
 	
-	public void setConnectModeWire(boolean connectModeWire, ArrayList<String> selectedList, 
-			ArrayList<String> targetList, NormalBlock selectedBlock, NormalBlock targetBlock) {
+	public void setConnectModeWire(boolean connectModeWire, NormalBlock selectedBlock, NormalBlock targetBlock) {
 	
 		this.connectModeWire = connectModeWire;
-		connectionStage = new ConnectionStage().createConnectionStage(selectedList, targetList, selectedBlock, targetBlock);
+		connectionStage = new ConnectionStage().createConnectionStage(selectedBlock, targetBlock);
 
 	}
 

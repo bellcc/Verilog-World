@@ -23,13 +23,15 @@ public class Configuration {
 	private int stepWidth;
 	private int stepHeight;
 	
+	private String description;
+	
 	public Configuration() {
 		
-		this(0, 0, 0, 0, 0, 0, 0, 0);
+		this(0, 0, 0, 0, 0, 0, 0, 0, "");
 	}
 	
 	public Configuration(int worldWidth, int worldHeight, int bufferWidth, int bufferHeight, 
-			int gridWidth, int gridHeight, int stepWidth, int stepHeight) {
+			int gridWidth, int gridHeight, int stepWidth, int stepHeight, String description) {
 		this.worldWidth = worldWidth;
 		this.worldHeight = worldHeight;
 		this.bufferWidth = bufferWidth;
@@ -38,6 +40,7 @@ public class Configuration {
 		this.gridHeight = gridHeight;
 		this.stepWidth = stepWidth;
 		this.stepHeight = stepHeight;
+		this.description = description;
 	}
 
 	public int getWorldWidth() {
@@ -103,12 +106,20 @@ public class Configuration {
 	public void setGridHeight(int gridHeight) {
 		this.gridHeight = gridHeight;
 	}
+	
+	public String getDescription() {
+		return this.description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	@Override
 	public String toString() {
 		return "Configuration [worldWidth=" + worldWidth + ", worldHeight=" + worldHeight + ", bufferWidth=" + bufferWidth + ", bufferHeight="
 				+ bufferHeight + ", gridWidth=" + gridWidth + ", gridHeight=" + gridHeight + ", stepWidth=" + stepWidth
-				+ ", stepHeight=" + stepHeight + "]";
+				+ ", stepHeight=" + stepHeight + ", description: " + description + " ]";
 	}
 	
 }

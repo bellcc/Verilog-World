@@ -24,11 +24,14 @@ import edu.miamioh.Buttons.LabelActor;
 import edu.miamioh.Buttons.TextButtonActor;
 import edu.miamioh.GameObjects.NormalBlock;
 import edu.miamioh.Level.Level;
+import edu.miamioh.simulator.ParseRegWire;
+import edu.miamioh.simulator.WireRoleType;
 import edu.miamioh.verilogWorld.VerilogWorldController;
 import edu.miamioh.verilogWorld.VerilogWorldMain;
 import edu.miamioh.worldEditor.WorldEditorController;
 import edu.miamioh.worldEditor.WorldEditorScreen;
 import edu.miamioh.worldSimulator.InvalidModulePortException;
+import edu.miamioh.worldSimulator.ModulePort;
 
 public class ConnectionStage {
 	
@@ -38,7 +41,7 @@ public class ConnectionStage {
 	private int actorHeight = 30;
 	private int actorWidth = 300;
 	
-	public Stage createConnectionStage(ArrayList<String> selectedList, ArrayList<String> targetList, NormalBlock selectedBlock, NormalBlock targetBlock) {
+	public Stage createConnectionStage(NormalBlock selectedBlock, NormalBlock targetBlock) {
 
 		Stage stage = new Stage();
 		
@@ -51,12 +54,12 @@ public class ConnectionStage {
 		table.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		table.center();
 		
-		TableElement selected = constructTable(selectedGroup, selectedList, "Selected Block");
+		TableElement selected = constructTable(selectedGroup, selectedBlock, "Selected Block");
 		selectedGroup = selected.getGroup();
 		
 		table.add(selected.getTable());
 		
-		TableElement target = constructTable(targetGroup, targetList, "Target Block");
+		TableElement target = constructTable(targetGroup, targetBlock, "Target Block");
 		targetGroup = target.getGroup();
 		
 		table.add(target.getTable());
@@ -161,22 +164,29 @@ public class ConnectionStage {
 		return stage;
 	}
 	
-	private TableElement constructTable(ArrayList<CheckBox> group, ArrayList<String> list, String title) {
+	private TableElement constructTable(ArrayList<CheckBox> group, NormalBlock block, String title) {
 		
 		group = new ArrayList<CheckBox>();
 
 		Table table = new Table();
 
-		table.add(new LabelActor().createLabel(title, Color.CLEAR, Color.WHITE)).colspan(2);
+		String moduleName = block.getType().name + " - " + block.getModuleWrapper().getModule().getName();
+		table.add(new LabelActor().createLabel(moduleName, Color.CLEAR, Color.WHITE)).colspan(2);
 		table.row();
 		
-		for(int i=0;i<list.size();i++) {
-			CheckBox actor = new CheckBoxActor().createCheckBox("  " + list.get(i));
-			actor.setName(list.get(i));
+		ArrayList<String> portNameList = block.getModuleWrapper().getModule().getPorts_list();
+		
+		for(int i=0;i<portNameList.size();i++) {
+			String wireName = portNameList.get(i);
+			ParseRegWire wire = block.getModuleWrapper().getModule().getHash_vars().get(wireName);
+			String wireType = wire.getRole() == WireRoleType.INPUT ? "I" : "O";
+			String name = wireName + " - " + wireType;
+			CheckBox actor = new CheckBoxActor().createCheckBox("  " + name);
+			actor.setName(wireName);
 			group.add(actor);
 		}
 		
-		for(int i=0;i<list.size();i++) {			
+		for(int i=0;i<portNameList.size();i++) {			
 			table.add(group.get(i)).width(actorWidth).height(actorHeight);
 			table.row();
 		}
