@@ -55,8 +55,9 @@ public class VerilogWorldController {
 		int gridHeight = 25;
 		int stepWidth = 5;
 		int stepHeight = 5;
+		String description = "";
 		
-		defaultConfig = new Configuration(worldWidth, worldHeight, bufferWidth, bufferHeight, gridWidth, gridHeight, stepWidth, stepHeight);
+		defaultConfig = new Configuration(worldWidth, worldHeight, bufferWidth, bufferHeight, gridWidth, gridHeight, stepWidth, stepHeight, description);
 
 	}
 

@@ -44,10 +44,6 @@ public class PlayScreen implements Screen {
     private Skin skinC;
     private Skin skinS;
     private Skin skinB;
-//    private TextButton tutorialButton;
-//    private TextButton challengesButton;
-//    private TextButton sandboxButton;
-//    private TextButton backButton;
     
     public boolean challenges;
     public boolean tutorials;

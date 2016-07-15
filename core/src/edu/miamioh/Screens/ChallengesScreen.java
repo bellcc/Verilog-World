@@ -310,10 +310,10 @@ public class ChallengesScreen implements Screen {
         			File srcDir = new File(chooser.getSelectedFile().getAbsolutePath());
         			File destDir = null;
         			if(getChallenges()){
-        				destDir = new File(VerilogWorldMain.getRootPath() + "/core/assets/levels");
+        				destDir = new File("../assets/levels");
         			}
         			else if(getTutorials()){
-        				destDir = new File(VerilogWorldMain.getRootPath() + "/core/assets/tutorials");
+        				destDir = new File("../assets/tutorials");
         			}
 					
         			try {
@@ -341,7 +341,8 @@ public class ChallengesScreen implements Screen {
             	if(getChallenges()){
 		        	for(int i = 0; i < levelArray.size(); i++) {
 		        		if(levelArray.indexOf(levelArray.get(index)) == levelArray.indexOf(levelArray.get(i))){
-		                	path = VerilogWorldMain.getRootPath() + "/core/assets/levels";
+		        	    	File file = new File("../assets/levels");
+		        	    	path = file.getAbsolutePath();
 		                	fileNameArray = new File(path).list();
 		                	levelPath = path + "/" + fileNameArray[i];
 		        		}
@@ -350,8 +351,9 @@ public class ChallengesScreen implements Screen {
             	else if(getTutorials()){
     	        	for(int i = 0; i < tutorialArray.size(); i++) {
     	        		if(tutorialArray.indexOf(tutorialArray.get(index)) == tutorialArray.indexOf(tutorialArray.get(i))){
-		                	path = VerilogWorldMain.getRootPath() + "/core/assets/tutorials";
-		                	fileNameArray = new File(path).list();
+    	        	    	File file = new File("../assets/tutorials");
+    	        	    	path = file.getAbsolutePath();
+    	        	    	fileNameArray = new File(path).list();
 		                	levelPath = path + "/" + fileNameArray[i];    	        		
 		                }
     	        	}
@@ -486,7 +488,10 @@ public class ChallengesScreen implements Screen {
     }    
     
     public void createLevelList() throws IOException {
-    	String path = VerilogWorldMain.getRootPath() + "/core/assets/levels";
+
+    	File file = new File("../assets/levels");
+    	String path = file.getAbsolutePath();
+    	
     	String description;
     	String[] levelList = new File(path).list();
     	
@@ -519,7 +524,9 @@ public class ChallengesScreen implements Screen {
     
     public void createTutorialList() throws IOException {
         
-    	String path = VerilogWorldMain.getRootPath() + "/core/assets/tutorials";
+    	File file = new File("../assets/tutorials");
+    	String path = file.getAbsolutePath();
+
     	String description;
     	String[] tutorialList = new File(path).list();
     	

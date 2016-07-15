@@ -14,6 +14,7 @@ import edu.miamioh.ErrorWindow.ErrorReportingWindow;
 import edu.miamioh.Level.Level;
 import edu.miamioh.Screens.ChallengesScreen;
 import edu.miamioh.Screens.MainMenuScreen;
+import edu.miamioh.Screens.OptionScreen;
 import edu.miamioh.Screens.PlayScreen;
 import edu.miamioh.schematicRenderer.SchematicRendererScreen;
 import edu.miamioh.simulator.Parse;
@@ -46,6 +47,7 @@ public class VerilogWorldMain extends Game {
 	private MainMenuScreen mainMenuScreen;
 	private PlayScreen playScreen;
 	private ChallengesScreen challengesScreen;
+	private OptionScreen optionScreen;
 
 	private SchematicRendererScreen schematicRendererScreen;
 		
@@ -134,6 +136,11 @@ public class VerilogWorldMain extends Game {
 	public void setChallengesScreen() {
 		challengesScreen = new ChallengesScreen(getVerilogWorldMain());
 		this.setScreen(challengesScreen);
+	}
+	
+	public void setOptionScreen() {
+		optionScreen = new OptionScreen(getVerilogWorldMain());
+		this.setScreen(optionScreen);
 	}
 	
 	public ErrorReportingWindow getErrorWindow() {return this.errorWindow;}
