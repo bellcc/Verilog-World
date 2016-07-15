@@ -307,7 +307,7 @@ class SchematicRenderer implements Disposable {
 				scaleFactor = (int) (height / gateSize / numOfGatesVert);
 			} else {
 				scaleFactor = (int) (width / gateSize
-						/ (numOfGatesHoriz * 2 + 2));
+						/ (numOfGatesHoriz * 2 + 3));
 			}
 			
 			// If the calculated scaleFactor is too big or too small, limit it.
