@@ -11,6 +11,8 @@ public class ResetChangeListener  extends ChangeListener {
 	public void changed(ChangeEvent event, Actor actor) {
 
 		VerilogWorldController.getController().getSim().resetWorldSim();
+		VerilogWorldController.getController().getSim().executeCycle();
+		VerilogWorldController.getController().getSim().resetWorldSim();
 	}
 	
 }
