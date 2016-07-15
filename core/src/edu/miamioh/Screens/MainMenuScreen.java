@@ -6,6 +6,8 @@
 
 package edu.miamioh.Screens;
  
+import java.io.File;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -72,7 +74,7 @@ public class MainMenuScreen implements Screen {
         
         //sets up a background image for the menu
         batch2 = new SpriteBatch();
-        Texture backTex = new Texture(Gdx.files.internal("images/World.png"));
+        Texture backTex = new Texture(getImagePath() + "/World.png");
         sprite = new Sprite(backTex);
         sprite.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         
@@ -180,9 +182,9 @@ public class MainMenuScreen implements Screen {
     	skinE.add("default", font);
 		
     	//adds an image texture to the skin of each button
-		skinPg.add("textColor", new Texture(Gdx.files.internal("images/play game.png")));
-		skinO.add("textColor", new Texture(Gdx.files.internal("images/options.png")));
-		skinE.add("textColor", new Texture(Gdx.files.internal("images/exit.png")));
+		skinPg.add("textColor", new Texture(getImagePath() + "/play game.png"));
+		skinO.add("textColor", new Texture(getImagePath() + "/options.png"));
+		skinE.add("textColor", new Texture(getImagePath() + "/exit.png"));
 
 		//This sets up a style for each button
 		TextButtonStyle buttonStylePg = new TextButtonStyle();
@@ -205,6 +207,12 @@ public class MainMenuScreen implements Screen {
 		buttonStyleE.over = skinE.newDrawable("textColor", Color.LIGHT_GRAY);
 		buttonStyleE.font = skinE.getFont("default");
 		skinE.add("default", buttonStyleE);
+	}
+	
+	public String getImagePath() {
+    	File file = new File("../assets/images");
+    	String path = file.getAbsolutePath();
+    	return path;
 	}
 
 }
