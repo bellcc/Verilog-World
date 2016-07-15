@@ -116,7 +116,7 @@ public class ChallengesScreen implements Screen {
     	skinB = new Skin();
 	   	skinIm1 = new Skin();
 	   	skinN = new Skin();
-	    	
+	    
 	   	textSkin = new Skin(Gdx.files.internal ("uiskin.json"));
 	   	
     	buttonStyle(skinB, buttonStyleB);
@@ -135,7 +135,7 @@ public class ChallengesScreen implements Screen {
 	        
         //sets up a background image for the menu
 	    batch2 = new SpriteBatch();
-	    Texture backTex = new Texture(Gdx.files.internal("images/circuit_3.png"));
+	    Texture backTex = new Texture(getImagePath() + "/circuit_3.png");
 	    sprite = new Sprite(backTex);
 	    sprite.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
@@ -555,5 +555,11 @@ public class ChallengesScreen implements Screen {
 
     	}
     }
+    
+	public String getImagePath() {
+    	File file = new File("../assets/images");
+    	String path = file.getAbsolutePath();
+    	return path;
+	}
 }
 

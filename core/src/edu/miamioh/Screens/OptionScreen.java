@@ -6,6 +6,8 @@
 
 package edu.miamioh.Screens;
  
+import java.io.File;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -67,7 +69,7 @@ public class OptionScreen implements Screen {
         
         //set up a background image for the menu
         batch2 = new SpriteBatch();
-        Texture backTex = new Texture(Gdx.files.internal("images/circuit_0.png"));
+        Texture backTex = new Texture(getImagePath() + "/circuit_0.png");
         sprite = new Sprite(backTex);
         sprite.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         
@@ -152,7 +154,7 @@ public class OptionScreen implements Screen {
     	skinB.add("default", font);
 		
     	//adds an image texture to the skin of each button
-		skinB.add("textColor", new Texture(Gdx.files.internal("images/back.png")));
+		skinB.add("textColor", new Texture(getImagePath() + "/back.png"));
 		 		
 		//This sets up a style for each button
 		TextButtonStyle buttonStyleB = new TextButtonStyle();
@@ -162,6 +164,12 @@ public class OptionScreen implements Screen {
 		buttonStyleB.font = skinB.getFont("default");
 		skinB.add("default", buttonStyleB);
 		
+	}
+    
+	public String getImagePath() {
+    	File file = new File("../assets/images");
+    	String path = file.getAbsolutePath();
+    	return path;
 	}
 
 }
