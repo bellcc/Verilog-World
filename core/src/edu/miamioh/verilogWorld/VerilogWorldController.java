@@ -44,7 +44,7 @@ public class VerilogWorldController {
 	private String rootPath;
 
 	public VerilogWorldController() {
-		
+				
 		init();
 		
 		int worldWidth = 10;
