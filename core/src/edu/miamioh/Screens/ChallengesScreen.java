@@ -40,6 +40,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import edu.miamioh.Configuration.Configuration;
 import edu.miamioh.Configuration.ConfigurationParser;
 import edu.miamioh.Level.Level;
 import edu.miamioh.verilogWorld.VerilogWorldController;
@@ -312,10 +313,10 @@ public class ChallengesScreen implements Screen {
         			File srcDir = new File(chooser.getSelectedFile().getAbsolutePath());
         			File destDir = null;
         			if(getChallenges()){
-        				destDir = new File("../assets/levels");
+        				destDir = new File(System.getProperty("user.dir") + "/challenges");
         			}
         			else if(getTutorials()){
-        				destDir = new File("../assets/tutorials");
+        				destDir = new File(System.getProperty("user.dir") + "/tutorials");
         			}
 					
         			try {
@@ -343,7 +344,7 @@ public class ChallengesScreen implements Screen {
             	if(getChallenges()){
 		        	for(int i = 0; i < levelArray.size(); i++) {
 		        		if(levelArray.indexOf(levelArray.get(index)) == levelArray.indexOf(levelArray.get(i))){
-		        	    	File file = new File(System.getProperty("user.dir") + "/assets/levels");
+		        	    	File file = new File(System.getProperty("user.dir") + "/challenges");
 		        	    	path = file.getAbsolutePath();
 		                	fileNameArray = new File(path).list();
 		                	levelPath = path + "/" + fileNameArray[i];
@@ -353,7 +354,7 @@ public class ChallengesScreen implements Screen {
             	else if(getTutorials()){
     	        	for(int i = 0; i < tutorialArray.size(); i++) {
     	        		if(tutorialArray.indexOf(tutorialArray.get(index)) == tutorialArray.indexOf(tutorialArray.get(i))){
-    	        	    	File file = new File(System.getProperty("user.dir") + "/assets/tutorials");
+    	        	    	File file = new File(System.getProperty("user.dir") + "/tutorials");
     	        	    	path = file.getAbsolutePath();
     	        	    	fileNameArray = new File(path).list();
 		                	levelPath = path + "/" + fileNameArray[i];    	        		
@@ -491,7 +492,7 @@ public class ChallengesScreen implements Screen {
     
     public void createLevelList() throws IOException {
 
-    	File file = new File(System.getProperty("user.dir") + "/assets/levels");
+    	File file = new File(System.getProperty("user.dir") + "/challenges");
     	String path = file.getAbsolutePath();
     	
     	String description;
@@ -503,20 +504,10 @@ public class ChallengesScreen implements Screen {
     		Skin skin = new Skin();
             TextButtonStyle textButtonStyle = new TextButtonStyle();
             
-            BufferedReader br = new BufferedReader(new FileReader(path + "/" + levelList[i] + "/description.txt"));
-            try {
-                StringBuilder sb = new StringBuilder();
-                String line = br.readLine();
+            File tempFile = new File(System.getProperty("user.dir") + "/challenges/"+ levelList[i] + "/world.xml");
 
-                while (line != null) {
-                    sb.append(line);
-                    sb.append("\n");
-                    line = br.readLine();
-                }
-                description = sb.toString();
-            } finally {
-                br.close();
-            }
+            ConfigurationParser configPars = new ConfigurationParser();
+            description = configPars.getDescription(tempFile);
            
             addLevel(levelList[i], description, skin, textButtonStyle);
 
@@ -526,7 +517,7 @@ public class ChallengesScreen implements Screen {
     
     public void createTutorialList() throws IOException {
         
-    	File file = new File(System.getProperty("user.dir") + "/assets/tutorials");
+    	File file = new File(System.getProperty("user.dir") + "/tutorials");
     	String path = file.getAbsolutePath();
 
     	String description;
@@ -537,22 +528,12 @@ public class ChallengesScreen implements Screen {
     	for(int i = 0; i < x; i++){
     		Skin skin = new Skin();
             TextButtonStyle textButtonStyle = new TextButtonStyle();
-            
-            BufferedReader br = new BufferedReader(new FileReader(path + "/" + tutorialList[i] + "/description.txt"));
-            try {
-                StringBuilder sb = new StringBuilder();
-                String line = br.readLine();
 
-                while (line != null) {
-                    sb.append(line);
-                    sb.append("\n");
-                    line = br.readLine();
-                }
-                description = sb.toString();
-            } finally {
-                br.close();
-            }
-           
+            File tempFile = new File(System.getProperty("user.dir") + "/tutorials/"+ tutorialList[i] + "/world.xml");
+
+            ConfigurationParser configPars = new ConfigurationParser();
+            description = configPars.getDescription(tempFile);
+            
             addTutorial(tutorialList[i], description, skin, textButtonStyle);
 
     	}

@@ -1,0 +1,2 @@
+module Wall(color);
+endmodule
