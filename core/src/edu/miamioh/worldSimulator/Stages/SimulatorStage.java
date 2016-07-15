@@ -30,7 +30,6 @@ public class SimulatorStage {
 		stopActor = new TextButtonActor().createTextButton(Color.BLUE, "STOP");
 		verifyActor = new TextButtonActor().createTextButton(Color.PINK, "VERIFY");
 		resetActor = new TextButtonActor().createTextButton(Color.YELLOW, "TOGGLE");
-		kyleActor = new TextButtonActor().createTextButton(Color.BLUE, "KYLE");
 
 		startActor.addListener(new StartChangeListener());
 		stopActor.addListener(new StopChangeListener());
