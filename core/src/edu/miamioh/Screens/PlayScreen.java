@@ -6,6 +6,8 @@
 
 package edu.miamioh.Screens;
 
+import java.io.File;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -44,10 +46,6 @@ public class PlayScreen implements Screen {
     private Skin skinC;
     private Skin skinS;
     private Skin skinB;
-//    private TextButton tutorialButton;
-//    private TextButton challengesButton;
-//    private TextButton sandboxButton;
-//    private TextButton backButton;
     
     public boolean challenges;
     public boolean tutorials;
@@ -80,7 +78,7 @@ public class PlayScreen implements Screen {
         
         //sets up a background image for the menu
         batch2 = new SpriteBatch();
-        Texture backTex = new Texture(Gdx.files.internal("images/circuit_0.png"));
+        Texture backTex = new Texture(getImagePath() + "/circuit_0.png");
         sprite = new Sprite(backTex);
         sprite.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         
@@ -203,10 +201,10 @@ public class PlayScreen implements Screen {
 
 		
     	//adds an image texture to the skin of each button
-		skinT.add("textColor", new Texture(Gdx.files.internal("images/tutorials.png")));
-		skinC.add("textColor", new Texture(Gdx.files.internal("images/challenges.png")));
-		skinS.add("textColor", new Texture(Gdx.files.internal("images/sandbox.png")));
-		skinB.add("textColor", new Texture(Gdx.files.internal("images/back.png")));
+		skinT.add("textColor", new Texture(getImagePath() + "/tutorials.png"));
+		skinC.add("textColor", new Texture(getImagePath() + "/challenges.png"));
+		skinS.add("textColor", new Texture(getImagePath() + "/sandbox.png"));
+		skinB.add("textColor", new Texture(getImagePath() + "/back.png"));
 
     	
     	//This sets up a style for each button
@@ -243,4 +241,9 @@ public class PlayScreen implements Screen {
 		skinB.add("default", buttonStyleB);
     }
 
+	public String getImagePath() {
+    	File file = new File("../assets/images");
+    	String path = file.getAbsolutePath();
+    	return path;
+	}
 }
