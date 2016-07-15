@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import edu.miamioh.Buttons.TextButtonActor;
 import edu.miamioh.verilogWorld.VerilogWorldController;
+import edu.miamioh.worldSimulator.ChangeListeners.KyleChangeListener;
 import edu.miamioh.worldSimulator.ChangeListeners.ResetChangeListener;
 import edu.miamioh.worldSimulator.ChangeListeners.StartChangeListener;
 import edu.miamioh.worldSimulator.ChangeListeners.StopChangeListener;
@@ -20,6 +21,7 @@ public class SimulatorStage {
 	private Actor stopActor;
 	private Actor verifyActor;
 	private Actor resetActor;
+	private Actor kyleActor;
 	
 	public SimulatorStage() {
 		
@@ -29,11 +31,13 @@ public class SimulatorStage {
 		stopActor = new TextButtonActor().createTextButton(Color.BLUE, "STOP");
 		verifyActor = new TextButtonActor().createTextButton(Color.PINK, "VERIFY");
 		resetActor = new TextButtonActor().createTextButton(Color.YELLOW, "RESET");
+		kyleActor = new TextButtonActor().createTextButton(Color.BLUE, "KYLE");
 
 		startActor.addListener(new StartChangeListener());
 		stopActor.addListener(new StopChangeListener());
 		verifyActor.addListener(new VerifyChangeListener());
 		resetActor.addListener(new ResetChangeListener());
+		kyleActor.addListener(new KyleChangeListener());
 		
 		int windowHeight = VerilogWorldController.WINDOW_HEIGHT;
 		
@@ -52,6 +56,8 @@ public class SimulatorStage {
 		table.add(verifyActor).width(actorWidth).height(actorHeight);
 		table.row();
 		table.add(resetActor).width(actorWidth).height(actorHeight);
+		table.row();
+		table.add(kyleActor).width(actorWidth).height(actorHeight);
 		
 		stage.addActor(table);
 		

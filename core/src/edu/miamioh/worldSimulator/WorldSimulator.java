@@ -6,10 +6,7 @@ import java.util.TimerTask;
 
 import edu.miamioh.GameObjects.Block;
 import edu.miamioh.GameObjects.NormalBlock;
-import edu.miamioh.GameObjects.NormalBlockType;
-import edu.miamioh.GameObjects.blocks.BlankBlock;
 import edu.miamioh.GameObjects.blocks.NullBlock;
-import edu.miamioh.Level.Level;
 import edu.miamioh.simulator.Parse;
 import edu.miamioh.simulator.ParseRegWire;
 import edu.miamioh.simulator.RootModuleSimulator;
