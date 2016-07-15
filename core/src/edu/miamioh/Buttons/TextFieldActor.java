@@ -8,7 +8,10 @@
 
 package edu.miamioh.Buttons;
 
+import java.io.File;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
@@ -23,7 +26,7 @@ public class TextFieldActor {
 	 */
 	public TextField createTextField() {
 
-		Skin skin = new Skin(Gdx.files.internal ("uiskin.json"));
+		Skin skin = new Skin(new FileHandle(new File(System.getProperty("user.dir") + "/assets/uiskin.json")));
 		
 		TextField textField = new TextField("", skin);
 		return textField;
